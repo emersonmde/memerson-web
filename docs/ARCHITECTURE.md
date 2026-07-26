@@ -87,17 +87,42 @@ Connect the repo in the Cloudflare dashboard: build command `npm run build`, out
 directory `dist`. GitHub Actions + `cloudflare/wrangler-action` is the fallback if granting
 Cloudflare repo access is undesirable.
 
-### Manual, one-time setup (not covered by `wrangler.jsonc`)
+### One-time setup (not covered by `wrangler.jsonc`)
 
-These are zone- or account-level and must be done by hand:
+**Requires a human (interactive or dashboard-only):**
 
-1. `npx wrangler login`
-2. `wrangler r2 bucket create memerson-photos`
-3. `wrangler r2 bucket create memerson-photos-archive`
-4. Attach custom domain `photos.memerson.com` to `memerson-photos` (dashboard)
-5. Create an R2 API token (S3-compatible access key + secret) for the import script
-6. Bulk Redirects for `errorsignal.dev` and `memerson.dev` (§8)
-7. Decide `www.memerson.com` handling (redirect rule or second custom domain)
+1. `npx wrangler login` — browser OAuth. Writes credentials to a config file in `$HOME`,
+   so it is machine-wide and persists across shells, sessions, and reboots. Any terminal
+   works; it does not need to be a Claude Code session.
+2. **Create an R2 API token** (R2 → API → Manage API tokens). Yields an S3-compatible
+   Access Key ID + Secret. No wrangler command creates these. Needed only for bulk upload
+   — see below.
+3. Bulk Redirects for `errorsignal.dev` and `memerson.dev` (§8).
+4. Decide `www.memerson.com` handling (redirect rule or second custom domain).
+
+**Doable by wrangler once logged in** (no API token required):
+
+```bash
+wrangler r2 bucket create memerson-photos
+wrangler r2 bucket create memerson-photos-archive
+wrangler r2 bucket domain add memerson-photos --domain photos.memerson.com
+```
+
+### Why the import script needs an S3 API token when wrangler is already authenticated
+
+Two different auth protocols, not a permissions gap. R2's S3-compatible endpoint
+authenticates with **AWS SigV4**, which requires an Access Key ID and Secret; wrangler's
+OAuth bearer token cannot sign SigV4 requests.
+
+`wrangler r2 object` offers only `get`/`put`/`delete` — there is **no sync or bulk
+command**. Uploading ~1,300 objects (1,180 derivatives + 118 originals) that way means
+~1,300 separate Node process spawns with no concurrency, which is tens of minutes of pure
+startup overhead.
+
+So the token gates _only the bulk upload step_. Everything else in the photo pipeline can
+be built and tested without it: download originals from S3, write the import script,
+generate derivatives and LQIPs with `sharp`, verify the EXIF allowlist and manifest shape,
+and prove the R2 write path with a handful of `wrangler r2 object put` calls.
 
 ### Static asset limits
 
