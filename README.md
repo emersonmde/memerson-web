@@ -17,10 +17,11 @@ Markup is structured by meaning so it can be restyled without restructuring.
 
 ## Requirements
 
-Node 22 (pinned in `.nvmrc`; `create-astro` and Astro 7 require ≥22.12).
+Node 24 LTS (pinned in `.nvmrc` and `engines`). nvm's `default` alias resolves to 24, so a
+fresh terminal should already have it.
 
 ```bash
-nvm use
+nvm use          # only needed if your shell isn't already on 24
 npm install
 ```
 

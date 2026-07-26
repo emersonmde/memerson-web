@@ -33,7 +33,7 @@ AWS dependency).
 
 | Concern          | Choice                                                              |
 | ---------------- | ------------------------------------------------------------------- |
-| Runtime          | Node 22 (pinned in `.nvmrc`; Astro 7 requires ≥22.12)               |
+| Runtime          | Node 24 LTS "Krypton" (pinned in `.nvmrc` and `engines`)            |
 | Framework        | Astro 7, `output: 'static'`. No SSR adapter.                        |
 | Hosting          | Cloudflare Workers Static Assets, configured by `wrangler.jsonc`    |
 | CI/CD            | Cloudflare Workers Builds (builds on push to `main`)                |
@@ -91,14 +91,18 @@ Cloudflare repo access is undesirable.
 
 **Requires a human (interactive or dashboard-only):**
 
-1. `npx wrangler login` — browser OAuth. Writes credentials to a config file in `$HOME`,
-   so it is machine-wide and persists across shells, sessions, and reboots. Any terminal
-   works; it does not need to be a Claude Code session.
-2. **Create an R2 API token** (R2 → API → Manage API tokens). Yields an S3-compatible
+1. ~~`npx wrangler login`~~ — **done.** OAuth, authenticated as `emersonmde@protonmail.com`,
+   account ID `1ca7a385680f6485380fca3f1f7d91a1`. Credentials live in
+   `~/Library/Preferences/.wrangler/`, so they are machine-wide and persist across shells,
+   sessions, and reboots.
+2. **Enable R2 on the account** (dashboard → R2). Not yet done — until it is, every R2 API
+   call fails with `code: 10042 "Please enable R2 through the Cloudflare Dashboard"`,
+   including `wrangler r2 bucket list`. This gates all three wrangler commands below.
+3. **Create an R2 API token** (R2 → API → Manage API tokens). Yields an S3-compatible
    Access Key ID + Secret. No wrangler command creates these. Needed only for bulk upload
    — see below.
-3. Bulk Redirects for `errorsignal.dev` and `memerson.dev` (§8).
-4. Decide `www.memerson.com` handling (redirect rule or second custom domain).
+4. Bulk Redirects for `errorsignal.dev` and `memerson.dev` (§8).
+5. Decide `www.memerson.com` handling (redirect rule or second custom domain).
 
 **Doable by wrangler once logged in** (no API token required):
 

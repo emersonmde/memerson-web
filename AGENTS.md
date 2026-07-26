@@ -17,9 +17,20 @@ structural — most of the non-obvious constraints below are explained there in 
 
 ## Toolchain
 
-Requires **Node 22** (`.nvmrc`). Astro 7 needs ≥22.12, and the machine's nvm default is
-20.11.1 — so `nvm use` is required in a fresh shell or `npm` commands fail with an engine
-error.
+**Node 24** (latest LTS, "Krypton"), pinned in `.nvmrc` and `engines`. This machine's nvm
+`default` alias now resolves to 24, so a fresh terminal gets it without `nvm use`.
+
+Caveat: Homebrew also has a `node` (23.9.0) at `/opt/homebrew/bin/node`. nvm wins in
+interactive shells because `.zshrc` sources nvm after Homebrew's `shellenv`, but a
+**non-interactive** shell skips `.zshrc` and falls through to the Homebrew one. If a script
+reports an unexpected Node version, that's why — source nvm explicitly:
+
+```bash
+export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"; nvm use 24
+```
+
+Note also that nvm scopes `npm install -g` per Node version, so globals installed under one
+version vanish when you switch.
 
 ## Commands
 

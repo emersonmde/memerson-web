@@ -16,13 +16,15 @@ The bulk of the work. Everything works; nothing is visually designed yet.
 system, no committed layout language. Design is M3. The discipline here is to keep components
 structured by _meaning_ rather than appearance, so M3 can restyle without restructuring.
 
-- [x] Astro scaffold (Astro 7, Node 22 pinned in `.nvmrc`), `output: 'static'`, `site` set
+- [x] Astro scaffold (Astro 7, Node 24 pinned in `.nvmrc`), `output: 'static'`, `site` set
 - [x] `wrangler.jsonc` with assets config + `custom_domain: true` on `memerson.com`
 - [x] Content collections: `blog`, `projects`, `photos`
 - [x] Routes exist and build: landing, about, blog index, blog post, photos, 404, RSS
 - [x] `<Photo>` component for blog-post photo references
+- [x] `wrangler login` (OAuth, `emersonmde@protonmail.com`)
+- [ ] **Enable R2 on the Cloudflare account** (dashboard) — blocks all R2 work
 - [ ] Workers Builds connected; push to `main` deploys
-- [ ] `wrangler login` + first deploy to `memerson.com`
+- [ ] First deploy to `memerson.com`
 - [ ] Blog posts migrated from `emersonmde.github.io` (slugs preserved exactly)
 - [ ] Projects migrated from YAML
 - [ ] About/CV written (currently a placeholder)
