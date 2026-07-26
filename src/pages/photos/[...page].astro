@@ -1,0 +1,79 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Photo from '../../components/Photo.astro';
+import { PHOTOS_PAGE_SIZE } from '../../consts';
+
+// Paginated static pages: initial HTML never carries metadata for photos it isn't
+// showing. This is what makes the gallery scale. See docs/ARCHITECTURE.md §6.
+export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  const photos = (await getCollection('photos')).sort((a, b) => {
+    const at = a.data.takenAt?.valueOf() ?? 0;
+    const bt = b.data.takenAt?.valueOf() ?? 0;
+    return bt - at;
+  });
+
+  // paginate([]) emits no routes at all, which would leave /photos missing while
+  // the manifest is empty. Emit an explicit empty first page instead.
+  if (photos.length === 0) {
+    return [{ params: { page: undefined }, props: { photos: [] } }];
+  }
+
+  return paginate(photos, { pageSize: PHOTOS_PAGE_SIZE });
+};
+
+interface Props {
+  page?: Page<CollectionEntry<'photos'>>;
+  photos?: CollectionEntry<'photos'>[];
+}
+
+const { page, photos } = Astro.props;
+const items = page?.data ?? photos ?? [];
+
+// Real `sizes` matching the eventual column count. srcset + sizes is the entire
+// resolution-adaptation mechanism — no JS ladder. See docs/ARCHITECTURE.md §6.
+const SIZES = '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw';
+---
+
+<BaseLayout title="Photos" description="Personal photography gallery.">
+  <h1>Photos</h1>
+
+  {
+    items.length === 0 ? (
+      <p>
+        No photos yet. Run <code>npm run photos:import &lt;path&gt;</code> once the import
+        pipeline exists (docs/MILESTONES.md M1).
+      </p>
+    ) : (
+      <ul>
+        {items.map((photo) => (
+          <li>
+            <Photo id={photo.id} sizes={SIZES} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    page && (
+      <nav aria-label="Pagination">
+        {page.url.prev && (
+          <a href={page.url.prev} rel="prev">
+            Newer
+          </a>
+        )}
+        <span>
+          Page {page.currentPage} of {page.lastPage}
+        </span>
+        {page.url.next && (
+          <a href={page.url.next} rel="next">
+            Older
+          </a>
+        )}
+      </nav>
+    )
+  }
+</BaseLayout>

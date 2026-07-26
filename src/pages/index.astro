@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AUTHOR, SOCIAL } from '../consts';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout title="Projects" description={`${AUTHOR.name} — ${AUTHOR.summary}`}>
+  <section aria-labelledby="bio">
+    <h1 id="bio">{AUTHOR.name}</h1>
+    <p>{AUTHOR.summary}</p>
+    <ul>
+      <li><a href={SOCIAL.github}>GitHub</a></li>
+      <li><a href={SOCIAL.linkedin}>LinkedIn</a></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="projects">
+    <h2 id="projects">Projects</h2>
+    {
+      projects.length === 0 ? (
+        <p>No projects yet.</p>
+      ) : (
+        <ul>
+          {projects.map((project) => (
+            <li>
+              <h3>{project.data.name}</h3>
+              <p>{project.data.shortDescription}</p>
+              <p>{project.data.description}</p>
+              <ul>
+                {project.data.tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </ul>
+              <ul>
+                <li>
+                  <a href={project.data.github}>GitHub</a>
+                </li>
+                {project.data.demo && (
+                  <li>
+                    <a href={project.data.demo}>Demo</a>
+                  </li>
+                )}
+                {project.data.docs && (
+                  <li>
+                    <a href={project.data.docs}>Docs</a>
+                  </li>
+                )}
+                {project.data.crate && (
+                  <li>
+                    <a href={project.data.crate}>Crate</a>
+                  </li>
+                )}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</BaseLayout>

@@ -1,0 +1,24 @@
+{
+  // Assets-only Worker: no `main` script. Cloudflare serves ./dist directly.
+  // See docs/ARCHITECTURE.md §3.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "memerson-web",
+  "compatibility_date": "2026-07-26",
+
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+
+  // memerson.com is already on Cloudflare nameservers, so custom_domain
+  // creates the DNS record automatically with no zone migration.
+  "routes": [
+    {
+      "pattern": "memerson.com",
+      "custom_domain": true
+    }
+  ]
+
+  // No R2 binding: photo derivatives are served from photos.memerson.com
+  // (an R2 custom domain), not proxied through this Worker.
+}

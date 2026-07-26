@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AUTHOR, SOCIAL } from '../consts';
+---
+
+<BaseLayout title="About" description={`About ${AUTHOR.name}`}>
+  <article>
+    <h1>About</h1>
+
+    <p>
+      Content to be migrated from the old site. Placeholder so routing and layout are
+      exercised — see docs/MILESTONES.md M1.
+    </p>
+
+    <section aria-labelledby="links">
+      <h2 id="links">Links</h2>
+      <ul>
+        <li><a href={SOCIAL.github}>github.com/emersonmde</a></li>
+        <li><a href={SOCIAL.linkedin}>linkedin.com/in/emersonmde</a></li>
+        <li><a href="/photos">Photos</a></li>
+      </ul>
+    </section>
+  </article>
+</BaseLayout>
