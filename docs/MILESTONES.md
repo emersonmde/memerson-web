@@ -22,8 +22,8 @@ structured by _meaning_ rather than appearance, so M3 can restyle without restru
 - [x] Routes exist and build: landing, about, blog index, blog post, photos, 404, RSS
 - [x] `<Photo>` component for blog-post photo references
 - [x] `wrangler login` (OAuth, `emersonmde@protonmail.com`)
-- [ ] **Enable R2 on the Cloudflare account** (dashboard) — blocks all R2 work
-- [ ] Workers Builds connected; push to `main` deploys
+- [x] R2 enabled on the Cloudflare account (dashboard)
+- [ ] Workers Builds connected (needs GitHub remote + dashboard auth); push to `main` deploys
 - [ ] First deploy to `memerson.com`
 - [ ] Blog posts migrated from `emersonmde.github.io` (slugs preserved exactly)
 - [ ] Projects migrated from YAML

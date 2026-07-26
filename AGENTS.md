@@ -126,10 +126,11 @@ derivatives make it unnecessary.
   as an `astro check` hint.
 - **The photo commands don't exist yet.** `photos:import`, `photos:verify`, and
   `photos:rebuild` are fully specified in `docs/ARCHITECTURE.md` §5.7 but unimplemented —
-  M1 work. `sharp`, `exifr`, and `@aws-sdk/client-s3` are intentionally not installed yet.
-- **Bulk R2 uploads use the S3-compatible API** (`@aws-sdk/client-s3` against the R2
-  endpoint), not `wrangler r2 object put` — the latter is one process per object and far
-  too slow for ~1,200 objects.
+  M1 work. `sharp` and `exifr` are intentionally not installed yet.
+- **R2 uploads shell out to `wrangler r2 object put`** with a concurrency pool of ~8 — no
+  S3 API token, no `@aws-sdk/client-s3`. wrangler starts in ~0.61s, so ~1,300 objects take
+  ~3 min at concurrency 8, which isn't worth a second long-lived credential. Rationale in
+  `docs/ARCHITECTURE.md` §3.
 
 ## Related repos
 

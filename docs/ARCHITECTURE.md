@@ -95,14 +95,15 @@ Cloudflare repo access is undesirable.
    account ID `1ca7a385680f6485380fca3f1f7d91a1`. Credentials live in
    `~/Library/Preferences/.wrangler/`, so they are machine-wide and persist across shells,
    sessions, and reboots.
-2. **Enable R2 on the account** (dashboard → R2). Not yet done — until it is, every R2 API
-   call fails with `code: 10042 "Please enable R2 through the Cloudflare Dashboard"`,
-   including `wrangler r2 bucket list`. This gates all three wrangler commands below.
-3. **Create an R2 API token** (R2 → API → Manage API tokens). Yields an S3-compatible
-   Access Key ID + Secret. No wrangler command creates these. Needed only for bulk upload
-   — see below.
+2. ~~**Enable R2 on the account**~~ — **done.** (Before this, every R2 call failed with
+   `code: 10042 "Please enable R2 through the Cloudflare Dashboard"`. R2 is gated because
+   it is a billable storage product; Workers is not gated and needs no equivalent step.)
+3. **Workers Builds**: push the repo to GitHub, then authorize Cloudflare's GitHub app in
+   the dashboard. Local `npm run deploy` works without this.
 4. Bulk Redirects for `errorsignal.dev` and `memerson.dev` (§8).
 5. Decide `www.memerson.com` handling (redirect rule or second custom domain).
+
+**No R2 API token is needed.** See below.
 
 **Doable by wrangler once logged in** (no API token required):
 
@@ -112,21 +113,37 @@ wrangler r2 bucket create memerson-photos-archive
 wrangler r2 bucket domain add memerson-photos --domain photos.memerson.com
 ```
 
-### Why the import script needs an S3 API token when wrangler is already authenticated
+### Uploads use wrangler, not the S3 API
 
-Two different auth protocols, not a permissions gap. R2's S3-compatible endpoint
-authenticates with **AWS SigV4**, which requires an Access Key ID and Secret; wrangler's
-OAuth bearer token cannot sign SigV4 requests.
+**Decision: no S3 API token.** Uploads shell out to `wrangler r2 object put` with a small
+concurrency pool.
 
-`wrangler r2 object` offers only `get`/`put`/`delete` — there is **no sync or bulk
-command**. Uploading ~1,300 objects (1,180 derivatives + 118 originals) that way means
-~1,300 separate Node process spawns with no concurrency, which is tens of minutes of pure
-startup overhead.
+The alternative was R2's S3-compatible endpoint via `@aws-sdk/client-s3`. That endpoint
+authenticates with **AWS SigV4**, which needs a long-lived Access Key ID + Secret —
+wrangler's OAuth token cannot sign SigV4, so it would mean a second credential, created by
+hand in the dashboard, stored somewhere, and rotated eventually.
 
-So the token gates _only the bulk upload step_. Everything else in the photo pipeline can
-be built and tested without it: download originals from S3, write the import script,
-generate derivatives and LQIPs with `sharp`, verify the EXIF allowlist and manifest shape,
-and prove the R2 write path with a handful of `wrangler r2 object put` calls.
+Measured cost of the wrangler path: process startup is **~0.61s**, and `r2 object put`
+supports `--file`, `--content-type`, and `--cache-control`. There is no sync or bulk
+command, so it is one process per object:
+
+| Objects                 | Sequential | Concurrency 8 |
+| ----------------------- | ---------- | ------------- |
+| ~1,300 (full migration) | ~20 min    | **~3 min**    |
+| ~11 (one new photo)     | ~7 s       | ~7 s          |
+
+Three minutes, once, is not worth a permanent second credential. And the wrangler path
+directly serves the "works from any machine years from now" goal (§5.7): OAuth refreshes
+itself, so there is no access key to lose, and `wrangler login` is the only auth step for
+the entire project.
+
+Implementation notes: spawn `node_modules/.bin/wrangler` directly rather than through
+`npx` to avoid resolution overhead, cap concurrency around 8, and retry a failed object
+rather than restarting the run.
+
+Revisit only if the library grows large enough that migration time actually matters — the
+manifest and key layout are unaffected either way, so switching later is a local change to
+one upload function.
 
 ### Static asset limits
 
@@ -318,10 +335,8 @@ Behaviour:
 4. Derive the slug: `<YYYY-MM-DD from EXIF>-<first 8 of sourceHash>`. Deterministic,
    collision-free, no manual naming. Falls back to file mtime if EXIF has no date.
 5. Generate derivatives and the LQIP with `sharp`.
-6. Upload derivatives to `memerson-photos`, the original to `memerson-photos-archive`.
-   Bulk upload uses the **S3-compatible API** via `@aws-sdk/client-s3` pointed at the R2
-   endpoint — `wrangler r2 object put` is one process per object and far too slow for
-   ~1,200 objects.
+6. Upload derivatives to `memerson-photos`, the original to `memerson-photos-archive`, via
+   `wrangler r2 object put` with a concurrency pool of ~8 (see §3 — no S3 token needed).
 7. Append entries to `src/data/photos.json`, sorted by `takenAt`.
 8. Print each new slug so it can be pasted into a blog post.
 
