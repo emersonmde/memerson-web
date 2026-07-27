@@ -11,8 +11,15 @@
 
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-/** Matches --nav-h in global.css. The charge originates under the pinned nav. */
-const NAV_H = 52;
+/**
+ * Where the charge originates, as a fraction of viewport height.
+ *
+ * It used to be the nav height, so the run only began once the rail's origin
+ * had already scrolled under the header — the start of the line was gone before
+ * the charge left it. Starting a fifth of the way down keeps the origin, the
+ * charge and the first few plates in frame together.
+ */
+const START_AT = 0.2;
 
 /**
  * Sample the accent ramp. Lightness and chroma are locked; only hue moves,
@@ -35,23 +42,24 @@ const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
  *   cg = 0  when the rail's origin reaches the underside of the pinned header
  *   cg = 1  when the rail's terminal enters the viewport
  *
- * which gives `span = H - vh + NAV_H` and `cg = (NAV_H - top) / span`.
+ * which gives `span = H - vh + start` and `cg = (start - top) / span`.
  *
  * The useful consequence: substituting back, the head's viewport position is
- * `NAV_H + cg * (vh - NAV_H)` — a linear sweep from under the nav to the bottom
- * of the screen. **The head is always on screen by construction**, and the
+ * `start + cg * (vh - start)` — a linear sweep from a fifth of the way down to
+ * the bottom of the screen. **The head is always on screen by construction**, and the
  * charge necessarily outruns the scroll (H/span ≈ 2.3× for a 1500px rail at
  * vh 900). That ratio self-adjusts to rail length rather than being a tuned
  * constant, which matters because the rail grows with every project added.
  */
 function chargeOf(railBox: DOMRect, vh: number): number {
-  const span = railBox.height - vh + NAV_H;
+  const start = vh * START_AT;
+  const span = railBox.height - vh + start;
 
   // Rail shorter than the visible area: its terminal is on screen before the
   // charge would even start, so there is no run to animate.
-  if (span <= 0) return railBox.top <= NAV_H ? 1 : 0;
+  if (span <= 0) return railBox.top <= start ? 1 : 0;
 
-  return clamp01((NAV_H - railBox.top) / span);
+  return clamp01((start - railBox.top) / span);
 }
 
 /**
@@ -194,6 +202,28 @@ function onScroll() {
 }
 
 let listening = false;
+let observer: ResizeObserver | undefined;
+
+/**
+ * Recompute on layout change, not just on scroll.
+ *
+ * Expanding a plate reflows every row beneath it and changes the rail's height,
+ * but fires no scroll event — so the charge, the head and the node hues all
+ * stayed at their pre-expansion values until the next scroll nudged them. The
+ * visible symptom was hues jumping to their new rows while the glow stayed put,
+ * because the two are computed from different measurements and only one of them
+ * was stale.
+ *
+ * A ResizeObserver on the rail scope catches this, plus font loading, plus
+ * anything else that moves the rows.
+ */
+function watchLayout() {
+  observer?.disconnect();
+  observer = new ResizeObserver(() => onScroll());
+  document
+    .querySelectorAll('[data-rail-scope]')
+    .forEach((scope) => observer!.observe(scope));
+}
 
 function start() {
   if (REDUCED.matches) {
@@ -206,8 +236,12 @@ function start() {
   if (!listening) {
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', onScroll, { passive: true });
+    // <details> does not bubble `toggle` in every engine, so capture it.
+    document.addEventListener('toggle', onScroll, true);
     listening = true;
   }
+
+  watchLayout();
 
   // Web fonts land after first paint and reflow every plate, which moves every
   // node the rail hues were sampled from. Re-measure once they are ready.
@@ -232,3 +266,5 @@ REDUCED.addEventListener('change', () => {
     start();
   }
 });
+
+export {};

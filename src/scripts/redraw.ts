@@ -29,3 +29,5 @@ if (line) {
     setTimeout(() => line.classList.remove('is-running'), DURATION);
   });
 }
+
+export {};

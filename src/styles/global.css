@@ -232,7 +232,7 @@ img {
   width: 150px;
   height: 1.5px;
   rotate: 19deg;
-  animation: shootA 21s cubic-bezier(0.2, 0.4, 0.5, 1) infinite;
+  animation: shootA 24s linear infinite;
 }
 
 .shot-b {
@@ -241,7 +241,7 @@ img {
   width: 110px;
   height: 1px;
   rotate: 14deg;
-  animation: shootB 34s cubic-bezier(0.2, 0.4, 0.5, 1) 6s infinite;
+  animation: shootB 37s linear 9s infinite;
 }
 
 .scanlines {
@@ -700,43 +700,63 @@ a.sec-aside:hover {
   }
 }
 
+/*
+ * A shooting star is mostly *not* happening: the animation spends ~95% of its
+ * cycle idle and a fraction of a second visible.
+ *
+ * The old version applied `cubic-bezier(.2,.4,.5,1)` across the whole cycle,
+ * including the idle hold. Easing is defined over the full duration, so the
+ * visible slice inherited whatever slope the curve happened to have there —
+ * which is why a star could appear to hang still, crawl, or stall before
+ * vanishing. The travel is now linear and the shaping lives in the keyframe
+ * offsets, where it only affects the part you can see. Opacity and transform
+ * also change together at every stop, so the star can never be visible while
+ * stationary.
+ */
 @keyframes shootA {
   0%,
-  90% {
+  95.9% {
     opacity: 0;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
-  91% {
+  96% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  96.4% {
     opacity: 1;
   }
-  98% {
-    opacity: 0.85;
-    transform: translateX(660px);
+  99.4% {
+    opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translateX(720px);
+    transform: translate3d(760px, 250px, 0);
   }
 }
 
 @keyframes shootB {
   0%,
-  93% {
+  97.4% {
     opacity: 0;
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
-  94% {
+  97.5% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  97.9% {
     opacity: 1;
   }
-  99% {
-    opacity: 0.7;
-    transform: translateX(520px);
+  99.5% {
+    opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translateX(560px);
+    transform: translate3d(560px, 150px, 0);
   }
 }
+
 
 /*
  * Reduced motion. Note this does more than stop animation: `.resolve` starts at

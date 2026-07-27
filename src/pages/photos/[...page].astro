@@ -111,7 +111,12 @@ const remaining = Math.max(0, total - shown);
           No photos yet. Run <code>npm run photos:import -- &lt;path&gt;</code>.
         </p>
       ) : (
-        <div class="sheet">
+        <div
+          class="sheet"
+          data-sheet
+          data-total={total}
+          data-next={page?.url.next ?? undefined}
+        >
           {items.map((photo, i) => (
             <PhotoThumb
               photo={photo}
@@ -126,9 +131,11 @@ const remaining = Math.max(0, total - shown);
       )
     }
 
+    <p class="sheet-count" data-sheet-status aria-live="polite"></p>
+
     {
       page && page.lastPage > 1 && (
-        <nav class="sheet-more" aria-label="Pagination">
+        <nav class="sheet-more" data-pager aria-label="Pagination">
           {page.url.prev ? (
             <a href={page.url.prev} rel="prev" class="sheet-more-link">
               <span class="sheet-more-rule" />
@@ -155,8 +162,11 @@ const remaining = Math.max(0, total - shown);
     }
   </section>
 
+  {/* Infinite scroll trips on this; the nav below is the no-JS path. */}
+  <div data-sentinel aria-hidden="true"></div>
+
   <script>
-    import '../../scripts/lightbox';
+    import '../../scripts/gallery';
   </script>
 </BaseLayout>
 
@@ -254,6 +264,24 @@ const remaining = Math.max(0, total - shown);
   .sheet-more-at {
     color: var(--faint);
   }
+
+  .sheet-count {
+    margin: 0;
+    padding-top: 24px;
+    text-align: center;
+    font: 500 10px var(--mono);
+    letter-spacing: 0.2em;
+    color: var(--faint);
+    transition: opacity 0.2s;
+  }
+
+  .sheet-count[data-loading] {
+    opacity: 0.45;
+  }
+
+  [data-sentinel] {
+    height: 1px;
+  }
 </style>
 
 <style is:global>
@@ -284,9 +312,9 @@ const remaining = Math.max(0, total - shown);
     inset: -12%;
     background-position: center;
     background-size: cover;
-    filter: blur(80px) saturate(1.4);
-    opacity: 0.5;
-    transform: scale(1.16);
+    filter: blur(70px) saturate(2.2) brightness(1.35);
+    opacity: 0.95;
+    transform: scale(1.2);
     transition: background-image 0.45s ease;
     pointer-events: none;
   }
@@ -299,7 +327,7 @@ const remaining = Math.max(0, total - shown);
   .lb-wash {
     position: absolute;
     inset: 0;
-    background: rgba(3, 4, 10, 0.9);
+    background: rgba(3, 4, 10, 0.82);
   }
 
   .lb-vignette {
