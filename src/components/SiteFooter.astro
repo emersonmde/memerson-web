@@ -1,0 +1,37 @@
+---
+import { SOCIAL } from '../consts';
+
+/**
+ * "Say something" — the tilted grid floor and horizon line.
+ *
+ * The location is deliberately not a real one. The mockup's `SEATTLE ·
+ * 47.6°N 122.3°W` was dropped (a home city is its owner's call, not a
+ * mockup's) and replaced with an Easter egg that keeps the *form* of a
+ * location line while pointing somewhere else entirely.
+ *
+ * 43.3°S 11.4°W is the genuine selenographic position of Tycho crater on the
+ * Moon — the TMA-1 excavation site in 2001: A Space Odyssey. The coordinates
+ * are real and check out; they are simply not on this planet. It also happens
+ * to be the one choice that honours the mockup's own note that this world is
+ * "vacuum, not street", which is why the page has a star field and no rain.
+ *
+ * The mockup's `matthew@memerson.com` is still omitted — it is not
+ * corroborated anywhere in this repo and an unverified address invites
+ * bounced mail. See docs/UI-DESIGN.md §8.
+ */
+---
+
+<footer class="foot">
+  <div class="foot-floor" data-fx="tilt" aria-hidden="true"></div>
+  <div class="foot-horizon" aria-hidden="true"></div>
+  <div class="foot-body">
+    <span class="foot-title">Say something</span>
+    <span class="foot-links">
+      <a href={SOCIAL.github}>GITHUB ↗</a>
+      <a href={SOCIAL.linkedin}>LINKEDIN ↗</a>
+      <a href="/rss.xml">RSS ↗</a>
+    </span>
+    <span class="foot-note">TYCHO · LUNA · 43.3°S 11.4°W · NO TRACKERS, NO ANALYTICS</span
+    >
+  </div>
+</footer>

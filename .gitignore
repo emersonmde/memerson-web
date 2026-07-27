@@ -2,6 +2,8 @@
 dist/
 # generated types
 .astro/
+# wrangler / miniflare local state and cache — machine-local, never committed
+.wrangler/
 
 # dependencies
 node_modules/

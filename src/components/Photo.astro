@@ -27,7 +27,23 @@ if (!photo) {
 
 const { width, height, variants, formats, lqip } = photo.data;
 const text = caption ?? photo.data.caption;
-const alt = photo.data.title ?? text ?? '';
+
+// No titles or captions exist yet — they get backfilled over time (see
+// docs/ARCHITECTURE.md §6). Until then `alt=""` would mark every gallery image
+// decorative, which is wrong: they are the content. Fall back to the date the
+// manifest already knows rather than shipping 118 unlabelled images.
+const takenAt = photo.data.takenAt;
+const alt =
+  photo.data.title ??
+  text ??
+  (takenAt
+    ? `Photograph taken ${takenAt.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC',
+      })}`
+    : 'Photograph');
 
 const srcSet = (format: string) =>
   variants.map((w) => `${PHOTOS_BASE_URL}/photos/${id}/${w}.${format} ${w}w`).join(', ');
@@ -60,3 +76,54 @@ const fallback = `${PHOTOS_BASE_URL}/photos/${id}/${widest}.webp`;
   </picture>
   {text && <figcaption>{text}</figcaption>}
 </figure>
+
+<style>
+  /*
+   * A gallery photo dropped into a post. It breaks the 68ch prose measure on
+   * purpose — the text column is for reading and a photograph is not text, so
+   * it gets the wider frame and the corner brackets the rest of the system
+   * uses for "this is a thing, not a paragraph".
+   */
+  figure {
+    position: relative;
+    margin: 34px 0;
+    max-width: 900px;
+  }
+
+  figure::before,
+  figure::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+  }
+
+  figure::before {
+    left: -1px;
+    top: -1px;
+    border-left: 1px solid var(--cyan);
+    border-top: 1px solid var(--cyan);
+  }
+
+  figure::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 1px solid var(--cyan);
+    border-bottom: 1px solid var(--cyan);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  figcaption {
+    margin-top: 10px;
+    font: 400 9.5px var(--mono);
+    letter-spacing: 0.16em;
+    color: var(--faint);
+    text-transform: uppercase;
+  }
+</style>

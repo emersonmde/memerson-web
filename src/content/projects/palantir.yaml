@@ -1,0 +1,13 @@
+name: palantir
+language: c
+shortDescription: DNS resolver with caching
+description: >-
+  RFC 1035 compliant DNS resolver implementing query parsing, response
+  construction, and answer caching. Low-level socket programming with custom
+  packet serialization. Built to understand DNS internals.
+tags:
+  - networking
+  - dns
+  - rfc
+github: https://github.com/emersonmde/palantir
+order: 8

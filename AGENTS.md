@@ -9,11 +9,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Design decisions and their rationale live in `docs/`. Read them before changing anything
 structural — most of the non-obvious constraints below are explained there in full.
 
-| Doc                    | Contents                                                       |
-| ---------------------- | -------------------------------------------------------------- |
-| `docs/CONTEXT.md`      | Background, current state, DNS, the AWS teardown situation     |
-| `docs/ARCHITECTURE.md` | Technical design: hosting, content model, photo infrastructure |
-| `docs/MILESTONES.md`   | Delivery plan M1–M4, with what is and isn't done               |
+| Doc                    | Contents                                                           |
+| ---------------------- | ------------------------------------------------------------------ |
+| `docs/CONTEXT.md`      | Background, current state, DNS, mail, the AWS situation            |
+| `docs/ARCHITECTURE.md` | Technical design: hosting, content model, photo infrastructure     |
+| `docs/UI-DESIGN.md`    | The "Neon District" design system — tokens, motion, scroll effects |
+| `docs/MILESTONES.md`   | Delivery plan, with what is and isn't done                         |
+| `docs/design/`         | The imported mockups, kept as the design source of record          |
 
 ## Toolchain
 
@@ -88,20 +90,34 @@ rejected — see `docs/ARCHITECTURE.md` §5.1–5.2.
 `custom_domain: true` on `memerson.com`. **There is deliberately no R2 binding** — photos
 are served from an R2 custom domain rather than proxied through the Worker.
 
-Deployment normally happens via Cloudflare Workers Builds on push to `main`. One-time
-manual setup (wrangler login, R2 buckets, the photos custom domain, an R2 API token, Bulk
-Redirects) is listed in `docs/ARCHITECTURE.md` §3 and **none of it is done yet**.
+**`memerson.com` is live** (2026-07-27). Deploy with `npm run deploy`.
+
+Deployment is intended to run via Cloudflare Workers Builds on push to `main`, but that is
+**not connected yet** — this repo has no GitHub remote, and authorizing Cloudflare's GitHub
+app is dashboard-only.
+
+One-time setup from `docs/ARCHITECTURE.md` §3 that **is** done: `wrangler login`, R2
+enabled, both buckets created, `photos.memerson.com` attached, custom domain bound. No R2
+API token was needed. Still outstanding: Workers Builds, the `errorsignal.dev` Bulk
+Redirects (M2), and mail hardening (SPF/DKIM/DMARC/DNSSEC).
 
 ## Hard constraints
 
-**The site is deliberately unstyled.** There is no global stylesheet and no visual
-identity. Do not add styling, colors, fonts, or a CSS framework unless the task is
-explicitly milestone M3. Markup is structured by meaning so it can be restyled without
-restructuring — keep it that way.
+**The site is styled, and the design is imported — not invented here.** It is
+"Neon District", designed separately in Claude Design. **Read `docs/UI-DESIGN.md` before
+touching anything visual**, and treat `docs/design/` as the source of record. Do not
+introduce new colours, fonts, or spacing values ad hoc: everything is a token in
+`src/styles/global.css`, and the accent ramp in particular locks lightness and chroma and
+moves only hue, which is what stops sampled colours fighting each other.
+
+**Desktop only, deliberately.** The mockups specify desktop layouts and the mobile pass is
+separate future work. Do not add breakpoints piecemeal — `docs/UI-DESIGN.md` §9 lists what
+a real mobile pass has to deal with.
 
 **Do not carry anything over from the old site's visual design.** No Sonokai palette, no
-tmux status bar, no terminal/TUI framing. Only _content_ migrates. Older notes suggesting
-otherwise were reversed; see the reversal note in `docs/CONTEXT.md`.
+tmux status bar, no terminal/TUI framing. Only _content_ migrated. Older notes suggesting
+otherwise were reversed; see the reversal note in `docs/CONTEXT.md`. (Neon District is a
+new design, not the old one — the resemblance is that both are dark and monospace-heavy.)
 
 **`src/data/photos.json` is generated.** Written by the import script. The only
 hand-editable fields are `title`, `caption`, and `tags`.
@@ -124,9 +140,23 @@ derivatives make it unnecessary.
   silent fallback.
 - **Astro 7 bundles Zod 4.** Use `z.url()`; `z.string().url()` is deprecated and shows up
   as an `astro check` hint.
-- **The photo commands don't exist yet.** `photos:import`, `photos:verify`, and
-  `photos:rebuild` are fully specified in `docs/ARCHITECTURE.md` §5.7 but unimplemented —
-  M1 work. `sharp` and `exifr` are intentionally not installed yet.
+- **`npm run photos:import` needs `--` before its arguments**, or npm swallows them:
+  `npm run photos:import -- ~/Desktop/photos`. Same for `photos:rebuild`.
+- **Non-interactive shells get the wrong Node**, which breaks wrangler (it requires
+  ≥22) and therefore every photo command. Source nvm first — see Toolchain above.
+- **`sharp` output metadata is asserted, not assumed.** `derive.mjs` re-reads every
+  derivative and throws if `exif`/`icc`/`iptc`/`xmp` survived. Don't remove that check to
+  save time; publishing GPS is the failure it exists to prevent.
+- **The archive key's extension isn't in the manifest.** Originals land at
+  `originals/<slug>.<ext>` where `ext` follows the source format, so `verify` and `rebuild`
+  match on the `originals/<slug>.` prefix instead of reconstructing a filename.
+- **Never infer a DNS record's type at an apex from what `dig` returns.** Cloudflare
+  flattens an apex CNAME into synthetic A/AAAA answers, so the resolver and the dashboard
+  legitimately disagree. This cost hours once already. MX and TXT are never proxied, so
+  for mail records `dig` _is_ ground truth.
+- **A Worker custom domain and its DNS record are provisioned separately.** If
+  `workers/domains` lists the hostname but it does not resolve, run `wrangler deploy`
+  again rather than detaching the binding.
 - **R2 uploads shell out to `wrangler r2 object put`** with a concurrency pool of ~8 — no
   S3 API token, no `@aws-sdk/client-s3`. wrangler starts in ~0.61s, so ~1,300 objects take
   ~3 min at concurrency 8, which isn't worth a second long-lived credential. Rationale in

@@ -1,0 +1,41 @@
+---
+import { SITE_TITLE } from '../consts';
+
+/**
+ * The nav labels are the design's (SYSTEMS / PHOTOS / LOG), the hrefs are the
+ * real routes. Those differ on purpose: blog slugs are a contract that has to
+ * survive the errorsignal.dev redirect in M2, so the URL cannot become /log.
+ * See docs/UI-DESIGN.md §7.
+ */
+interface Props {
+  /** Which nav item is the current section. */
+  active?: 'systems' | 'photos' | 'log' | 'about';
+  /** Home shows the wordmark; inner pages show it as a way back. */
+  back?: boolean;
+}
+
+const { active, back = false } = Astro.props;
+
+const LINKS = [
+  { key: 'systems', label: 'SYSTEMS', href: '/' },
+  { key: 'photos', label: 'PHOTOS', href: '/photos' },
+  { key: 'log', label: 'LOG', href: '/blog' },
+  { key: 'about', label: 'ABOUT', href: '/about' },
+] as const;
+---
+
+<nav class="nav" aria-label="Main">
+  <a class="nav-mark" href="/">{back ? '← ' : ''}M.EMERSON</a>
+  {
+    LINKS.map((link) => (
+      <a
+        href={link.href}
+        aria-current={active === link.key ? 'page' : undefined}
+        title={link.key === 'log' ? `${SITE_TITLE} — writing` : undefined}
+      >
+        {link.label}
+      </a>
+    ))
+  }
+</nav>
+<div class="nav-fade" aria-hidden="true"></div>

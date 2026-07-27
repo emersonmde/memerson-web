@@ -1,0 +1,31 @@
+---
+/**
+ * The star field. Fixed to the viewport, not the page: the sky is infinitely
+ * far away, so it does not move when you walk. Three depth layers plus the
+ * occasional shooting star. See docs/UI-DESIGN.md §5.1.
+ *
+ * Purely decorative and inert — aria-hidden so it never reaches a screen
+ * reader or the tab order.
+ */
+interface Props {
+  /** Shooting stars are hero-only; quieter pages leave them off. */
+  shooting?: boolean;
+}
+
+const { shooting = false } = Astro.props;
+---
+
+<div class="sky" aria-hidden="true">
+  <div class="sky-far"></div>
+  <div class="sky-mid"></div>
+  <div class="sky-near"></div>
+  {
+    shooting && (
+      <>
+        <span class="shot shot-a" />
+        <span class="shot shot-b" />
+      </>
+    )
+  }
+  <div class="sky-dim"></div>
+</div>

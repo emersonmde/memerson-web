@@ -1,0 +1,13 @@
+name: double_barrel
+language: rust
+shortDescription: 6502 CPU emulator
+description: >-
+  Cycle-accurate emulation of the MOS 6502 processor. Implements the full
+  instruction set with proper addressing modes. Foundation for retro computing
+  projects (NES, Apple II, C64).
+tags:
+  - emulator
+  - "6502"
+  - retro
+github: https://github.com/emersonmde/double_barrel
+order: 10

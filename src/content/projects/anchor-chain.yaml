@@ -1,0 +1,15 @@
+name: anchor-chain
+language: rust
+shortDescription: LLM orchestration framework
+description: >-
+  Type-safe LLM workflow orchestration with compile-time chain validation.
+  Async-first design enables parallel node execution. Supports OpenAI and
+  Anthropic with a unified trait-based interface.
+tags:
+  - llm
+  - async
+  - crate
+github: https://github.com/emersonmde/anchor-chain
+docs: https://docs.rs/anchor-chain
+crate: https://crates.io/crates/anchor-chain
+order: 2

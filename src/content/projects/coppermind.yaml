@@ -1,0 +1,14 @@
+name: coppermind
+language: rust
+shortDescription: Client-side semantic search
+description: >-
+  Hybrid search engine combining vector similarity (HNSW) with BM25 keyword
+  matching, fused via Reciprocal Rank Fusion. Compiles to WASM and runs
+  JinaBERT embeddings client-side using Candle. Zero server dependencies.
+tags:
+  - wasm
+  - ml
+  - search
+github: https://github.com/emersonmde/coppermind
+demo: https://errorsignal.dev/coppermind/
+order: 1

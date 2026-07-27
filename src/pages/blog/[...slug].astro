@@ -2,33 +2,323 @@
 import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { AUTHOR } from '../../consts';
+import { readingTime } from '../../lib/readingTime';
 
+/**
+ * Mockup 6d — the post. 68ch serif measure, one lit edge on code, and the rail
+ * reduced to a reading-progress hairline. See docs/UI-DESIGN.md §7.
+ */
 export async function getStaticPaths() {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
-  return posts.map((post) => ({
+  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+  );
+
+  // Prev/next are computed here so each page gets its neighbours as props
+  // rather than re-reading the whole collection per route.
+  return posts.map((post, i) => ({
     params: { slug: post.id },
-    props: { post },
+    props: {
+      post,
+      // The list is newest-first, so the *next* index is the older post.
+      newer: i > 0 ? posts[i - 1] : undefined,
+      older: i < posts.length - 1 ? posts[i + 1] : undefined,
+    },
   }));
 }
 
-type Props = { post: CollectionEntry<'blog'> };
+type Props = {
+  post: CollectionEntry<'blog'>;
+  newer?: CollectionEntry<'blog'>;
+  older?: CollectionEntry<'blog'>;
+};
 
-const { post } = Astro.props;
+const { post, newer, older } = Astro.props;
 const { Content } = await render(post);
+
+const stamp = post.data.date
+  .toLocaleDateString('en-CA', { timeZone: 'UTC' })
+  .replace(/-/g, '.');
+const minutes = readingTime(post.body);
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
-  <article>
-    <h1>{post.data.title}</h1>
-    <time datetime={post.data.date.toISOString()}>
-      {
-        post.data.date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
-      }
-    </time>
-    <Content />
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  active="log"
+  back={true}
+>
+  <div class="progress" data-fx="progress" aria-hidden="true"></div>
+
+  <article class="post">
+    <div class="post-crumb">/ LOG / {post.id.toUpperCase()}</div>
+
+    <h1 class="post-h1" data-fx="resolve">{post.data.title}</h1>
+
+    <div class="post-meta">
+      <span>{AUTHOR.name.toUpperCase()}</span>
+      <span>{stamp}</span>
+      <span>{minutes}</span>
+    </div>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      (newer || older) && (
+        <nav class="post-nav" aria-label="More posts">
+          {older ? (
+            <a class="post-nav-item" href={`/blog/${older.id}`} rel="prev">
+              <div class="post-nav-dir">← PREVIOUS</div>
+              <div class="post-nav-title">{older.data.title}</div>
+            </a>
+          ) : (
+            <span />
+          )}
+          {newer && (
+            <a class="post-nav-item post-nav-next" href={`/blog/${newer.id}`} rel="next">
+              <div class="post-nav-dir">NEXT →</div>
+              <div class="post-nav-title">{newer.data.title}</div>
+            </a>
+          )}
+        </nav>
+      )
+    }
   </article>
 </BaseLayout>
+
+<style>
+  /* The rail, reduced to a hairline. Sits directly under the nav. */
+  .progress {
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    height: 2px;
+    width: 0;
+    z-index: 10;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+  }
+
+  .post {
+    position: relative;
+    padding: 92px var(--gutter) 70px;
+  }
+
+  .post-crumb {
+    font: 400 9.5px var(--mono);
+    letter-spacing: 0.24em;
+    color: var(--cyan);
+    margin-bottom: 18px;
+  }
+
+  .post-h1 {
+    margin: 0;
+    max-width: 640px;
+    font: 700 44px/1.08 var(--display);
+    letter-spacing: -0.04em;
+    color: var(--tx-hi);
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 22px;
+    margin: 22px 0 34px;
+    font: 400 9.5px var(--mono);
+    letter-spacing: 0.16em;
+    color: var(--faint);
+  }
+
+  .post-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 640px;
+    margin-top: 46px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(142, 180, 255, 0.1);
+  }
+
+  .post-nav-item {
+    max-width: 240px;
+  }
+
+  .post-nav-next {
+    text-align: right;
+  }
+
+  .post-nav-dir {
+    font: 400 9px var(--mono);
+    letter-spacing: 0.18em;
+    color: var(--faint);
+    margin-bottom: 6px;
+  }
+
+  .post-nav-title {
+    font: 300 16px/1.4 var(--serif);
+    color: var(--tx-read);
+    transition: color 0.16s;
+  }
+
+  .post-nav-item:hover .post-nav-title {
+    color: var(--tx);
+  }
+</style>
+
+<style is:global>
+  /* ---------------------------------------------------------------------
+   * Prose. Global rather than scoped because this styles markdown Astro
+   * renders inside <Content />, which never receives the scope attribute.
+   *
+   * This is the one place the neon drops away entirely: serif, 68ch, hairline
+   * rules. See docs/UI-DESIGN.md §3.
+   * ------------------------------------------------------------------- */
+
+  .prose {
+    max-width: 68ch;
+    font: 300 19px/1.68 var(--serif);
+    color: var(--tx-read);
+  }
+
+  .prose > * {
+    margin: 0 0 22px;
+  }
+
+  /* The opening paragraph carries a touch more weight and light. */
+  .prose > p:first-of-type {
+    font-weight: 400;
+    color: var(--tx-body);
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    font-family: var(--display);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--tx-hi);
+    margin: 44px 0 14px;
+    line-height: 1.15;
+  }
+
+  .prose h1 {
+    font-size: 32px;
+  }
+  .prose h2 {
+    font-size: 26px;
+  }
+  .prose h3 {
+    font-size: 21px;
+  }
+  .prose h4 {
+    font-size: 18px;
+  }
+
+  .prose a {
+    color: var(--cyan);
+    text-decoration: underline;
+    text-decoration-color: oklch(0.8 0.17 200 / 0.4);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.16s;
+  }
+
+  .prose a:hover {
+    text-decoration-color: var(--cyan);
+  }
+
+  .prose strong {
+    color: var(--tx);
+    font-weight: 500;
+  }
+
+  .prose em {
+    font-style: italic;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 22px;
+  }
+
+  .prose li {
+    margin-bottom: 8px;
+  }
+
+  .prose li::marker {
+    color: var(--faint);
+  }
+
+  /* Inline code steps out of the serif and into the mono voice. */
+  .prose :not(pre) > code {
+    font: 400 15px var(--mono);
+    color: var(--tx);
+    background: rgba(142, 180, 255, 0.08);
+    padding: 1px 5px;
+  }
+
+  /* One lit edge, and only one. */
+  .prose pre {
+    position: relative;
+    padding: 18px 20px;
+    background: rgba(8, 11, 19, 0.9);
+    border-left: 2px solid var(--cyan);
+    box-shadow: -8px 0 30px -18px var(--cyan);
+    overflow-x: auto;
+    font: 400 12.5px/1.85 var(--mono);
+  }
+
+  .prose pre code {
+    font: inherit;
+    background: none;
+    padding: 0;
+    color: #b7c3d6;
+  }
+
+  .prose blockquote {
+    padding: 0 0 0 22px;
+    border-left: 1px solid rgba(142, 180, 255, 0.24);
+    font: 300 italic 21px/1.6 var(--serif);
+    color: #dde5f2;
+  }
+
+  .prose blockquote p {
+    margin: 0;
+  }
+
+  .prose hr {
+    border: 0;
+    border-top: 1px solid rgba(142, 180, 255, 0.14);
+    margin: 40px 0;
+  }
+
+  /* Colocated screenshots and diagrams, via astro:assets. */
+  .prose img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--hairline);
+  }
+
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font: 400 13px/1.7 var(--mono);
+    color: var(--tx-read);
+  }
+
+  .prose th,
+  .prose td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(142, 180, 255, 0.12);
+  }
+
+  .prose th {
+    color: var(--dim);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 10px;
+  }
+</style>

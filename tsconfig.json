@@ -1,5 +1,6 @@
 {
   "extends": "astro/tsconfigs/strict",
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "// exclude": "docs/design holds the verbatim design source imported from Claude Design. It is a reference artefact, not project code — type-checking it only produces noise about someone else's generated bundle.",
+  "exclude": ["dist", "docs/design"]
 }

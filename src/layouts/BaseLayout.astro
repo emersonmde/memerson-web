@@ -1,17 +1,36 @@
 ---
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL } from '../consts';
+import Sky from '../components/Sky.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import '../styles/global.css';
 
+/**
+ * Neon District. Design system in docs/UI-DESIGN.md; tokens in
+ * src/styles/global.css. Desktop-only by decision — see UI-DESIGN §9.
+ */
 interface Props {
   title: string;
   description?: string;
+  active?: 'systems' | 'photos' | 'log' | 'about';
+  /** Shooting stars are hero-only, so they default off. */
+  shooting?: boolean;
+  /** Inner pages point the wordmark back home. */
+  back?: boolean;
+  /** Pages that supply their own footer (the home page's contact block). */
+  footer?: boolean;
 }
 
-const { title, description = SITE_DESCRIPTION } = Astro.props;
-const canonical = new URL(Astro.url.pathname, SITE_URL).href;
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  active,
+  shooting = false,
+  back = false,
+  footer = true,
+} = Astro.props;
 
-// Deliberately unstyled. No global stylesheet, no visual identity — that is M3.
-// Markup here is structured by meaning so it can be restyled without restructuring.
-// See docs/CONTEXT.md and docs/MILESTONES.md.
+const canonical = new URL(Astro.url.pathname, SITE_URL).href;
 ---
 
 <!doctype html>
@@ -19,8 +38,14 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#03040a" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#03040a" />
 
     <title>{title} | {SITE_TITLE}</title>
     <meta name="description" content={description} />
@@ -30,28 +55,47 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/icon.png', SITE_URL).href} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:image" content={new URL('/icon.png', SITE_URL).href} />
 
     <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
+
+    <!-- Self-hosted; nothing here reaches a third party. UI-DESIGN §3. -->
+    <link
+      rel="preload"
+      href="/fonts/space-grotesk-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/jetbrains-mono-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
   </head>
   <body>
-    <header>
-      <a href="/">{SITE_TITLE}</a>
-      <nav aria-label="Main">
-        <ul>
-          <li><a href="/">Projects</a></li>
-          <li><a href="/blog">Blog</a></li>
-          <li><a href="/photos">Photos</a></li>
-          <li><a href="/about">About</a></li>
-        </ul>
-      </nav>
-    </header>
+    <a class="skip" href="#main">SKIP TO CONTENT</a>
 
-    <main>
-      <slot />
-    </main>
+    <Sky shooting={shooting} />
 
-    <footer>
-      <p>&copy; {new Date().getFullYear()} {SITE_TITLE}</p>
-    </footer>
+    <SiteHeader active={active} back={back} />
+
+    <div class="page">
+      <main id="main">
+        <slot />
+      </main>
+
+      {footer && <SiteFooter />}
+    </div>
+
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <script>
+      import '../scripts/fx';
+    </script>
   </body>
 </html>

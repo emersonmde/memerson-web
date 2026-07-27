@@ -1,0 +1,14 @@
+name: reprisedb
+language: rust
+shortDescription: LSM Tree key-value store
+description: >-
+  Disk-persistent key-value store using Log-Structured Merge Trees. MemTable
+  (B-Tree) buffers writes before flushing to SSTables. Implements compaction
+  with last-write-wins conflict resolution. Protocol Buffers for on-disk
+  encoding.
+tags:
+  - storage
+  - lsm-tree
+  - database
+github: https://github.com/emersonmde/reprisedb
+order: 6

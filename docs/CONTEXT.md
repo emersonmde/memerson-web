@@ -15,17 +15,22 @@ A personal site, not a photo site. Roughly in order of importance:
 - **Blog** — long-form technical writing.
 - **Photos** — a personal photography gallery. Real, but not the primary use case.
 
-## Visual design: deliberately undecided
+## Visual design: settled
 
-**Nothing is carried over from the old site's visual design.** No Sonokai palette, no tmux
-status bar, no terminal/TUI framing. The new design is a clean slate and will be developed
-as its own phase, in its own doc (`docs/UI-DESIGN.md`), after the content architecture and
-data layer are working.
+The site is designed. It is **"Neon District"**, produced separately in Claude Design and
+imported 2026-07-26. The system is documented in [UI-DESIGN.md](./UI-DESIGN.md) and the
+source mockups are kept in [`design/`](./design/).
+
+**Nothing was carried over from the old site's visual design.** No Sonokai palette, no tmux
+status bar, no terminal/TUI framing. Neon District is a new design that happens to share
+the old one's darkness and fondness for monospace — that resemblance is not inheritance.
 
 > Reversal note: an earlier version of this file said to keep the Sonokai palette and tmux
 > status bar. That decision was reversed — the new design must not be constrained by the
 > old one. If you are reading this in a fresh session, ignore any suggestion to port the
 > old look.
+
+Desktop only, deliberately; the mobile pass is separate future work.
 
 What _is_ carried over is **content**, not styling: blog posts (markdown), project entries
 (YAML), and the photo library. The old repo stays in git as history.
@@ -38,20 +43,43 @@ almost nobody used.
 
 ### DNS
 
-| Domain            | Nameservers                                     | Currently serves                   |
-| ----------------- | ----------------------------------------------- | ---------------------------------- |
-| `memerson.com`    | Cloudflare (`nicole`/`randy.ns.cloudflare.com`) | CF-proxied 404 page                |
-| `errorsignal.dev` | Cloudflare                                      | GitHub Pages (the live Astro site) |
-| `memerson.dev`    | **Route 53** (`ns-*.awsdns-*`)                  | Old CRA site via CloudFront        |
+| Domain            | Nameservers                                     | Currently serves                      |
+| ----------------- | ----------------------------------------------- | ------------------------------------- |
+| `memerson.com`    | Cloudflare (`nicole`/`randy.ns.cloudflare.com`) | **This site** — live since 2026-07-27 |
+| `photos.…com`     | Cloudflare (R2 custom domain)                   | Photo derivatives from R2             |
+| `errorsignal.dev` | Cloudflare                                      | GitHub Pages (the old Astro site)     |
+| `memerson.dev`    | **Route 53** (`ns-*.awsdns-*`)                  | Old CRA site via CloudFront           |
+| `memerson.net`    | **Route 53**                                    | Nothing — ACM validation records only |
 
-`memerson.com` is already on Cloudflare nameservers, so `custom_domain: true` binds
-without any nameserver migration. `memerson.dev` is the only domain still on AWS DNS and
-needs its own decision (redirect to `memerson.com`).
+Binding `memerson.com` was not the no-op it looked like. A **proxied CNAME at the apex**
+had to be deleted first, and it was invisible to `dig` because Cloudflare flattens an apex
+CNAME into synthetic A/AAAA answers. Full account in
+[ARCHITECTURE §3](./ARCHITECTURE.md#3-hosting-and-deployment).
+
+`errorsignal.dev` is still the site people actually reach until the redirect lands (M2).
+**It is a shared host**, not just the old site: several other repos publish to it through
+GitHub Pages (the `coppermind` WASM demo, Rust docs, other static assets). That is why the
+cutover redirect is path-scoped rather than domain-wide — see
+[ARCHITECTURE §8](./ARCHITECTURE.md).
+
+`memerson.dev` and `memerson.net` are the two zones still on AWS DNS. Both need a decision;
+`memerson.dev` blocks its half of the redirect work.
+
+**Mail lives on this zone too.** `MX` points at `smtp.google.com` (Google Workspace) and
+there is a Google site-verification `TXT` at the apex. Neither was touched by the apex
+work, and both are unaffected by proxying — Cloudflare never proxies MX or TXT. SPF, DKIM,
+DMARC and DNSSEC are **not** configured yet.
 
 ### The photos are a live AWS runtime dependency
 
+> **Update (2026-07-26):** all 118 photos are now in R2 with the manifest committed, so
+> the _data_ dependency is gone and the S3 bucket is safe to delete. What is described
+> below still runs on `errorsignal.dev` and still calls API Gateway — tearing down the API
+> stack breaks that site's photos page, which is fine once it redirects to `memerson.com`
+> (M2), and not before.
+
 The current gallery (`PhotoGallery.tsx` on `errorsignal.dev`) does a **runtime fetch** to
-`https://knsfeilz9j.execute-api.us-east-1.amazonaws.com/dev/photos` → Lambda
+`https://<api-id>.execute-api.us-east-1.amazonaws.com/dev/photos` → Lambda
 `list_photos` → `s3:list_objects_v2` on `memerson-public-photos`.
 
 **Tearing down the API stack breaks the photos page on the currently-live site.** Photo
@@ -73,20 +101,66 @@ the old `srcset` is broken.
   timestamp embedded in the key prefix. EXIF in the originals is the only real metadata
   that exists anywhere.
 
-### AWS teardown scope
+### AWS teardown scope — inventoried 2026-07-26
 
-The CDK app (`~/workspace/memerson/infrastructure`) is larger than just photos:
+The CDK app (`~/workspace/memerson/infrastructure`) is larger than just photos. An earlier
+version of this section listed the stacks from the CDK source; below is what is **actually
+deployed**, which is not the same list.
 
-`Route53Stack`, `CloudFrontStack`, `CognitoStack`, `S3Stack`, `ApiStack`,
-`PipelineStack`, `AmplifyStack`, `BackupStack`, `PostHogReverseProxyStack`,
-`MinecraftStack` (has its own DNS record).
+**Stacks actually in CloudFormation (9):**
 
-Some of this is probably already dead. It needs an inventory before anything is deleted.
-The PostHog reverse proxy implies analytics currently runs on the live site — decide
-whether that carries over.
+| Stack                              | Last updated | Notes                                  |
+| ---------------------------------- | ------------ | -------------------------------------- |
+| `MemersonApiStack`                 | 2024-05-04   | The photos API. Blocks nothing now.    |
+| `MemersonS3Stack`                  | 2024-05-05   | Photo buckets.                         |
+| `MemersonCloudFrontStack`          | 2024-05-04   | Serves `memerson.dev`.                 |
+| `MemersonRoute53Stack`             | 2024-05-04   | `memerson.dev` zone.                   |
+| `MemersonCognitoStack`             | 2024-03-15   | No known consumer.                     |
+| `MemersonPostHogReverseProxyStack` | 2024-03-15   | **Nothing references it** — see below. |
+| `MemersonReactPipelineStack`       | 2024-02-11   | CI for the dead CRA site.              |
+| `MemersonBackupStack`              | 2022-08-06   | Glacier, $0.10/mo.                     |
+| `CDKToolkit`                       | 2021-10-18   | CDK bootstrap. Delete last.            |
+
+**`AmplifyStack` and `MinecraftStack` are not deployed** — they exist only in the CDK
+source. Open decision #6 is therefore already answered for the _stack_; see the orphaned
+resources below for the part that still costs money.
+
+**Analytics (open decision #1) answers itself:** `errorsignal.dev` serves **no analytics
+script at all** — no PostHog, no Plausible. The reverse-proxy stack is dead weight, and the
+Plausible setup described in the `plausible-analytics` blog post is no longer wired up. So
+this is not "migrate analytics", it is "decide whether to start having analytics".
+
+**Orphaned resources with no owning stack** — this is where the non-S3 spend is:
+
+- EC2 `<instance-id>` ("Minecraft", `t2.medium`) — **stopped since 2023-02-01**.
+  Stopped instances are free, but its **30 GB EBS volume** is not (~$2.40/mo).
+- **Unassociated Elastic IP `<elastic-ip>`** — ~$3.60/mo for an address attached to
+  nothing. This plus the volume is the `VPC` + `EC2 - Other` line on the bill.
+- Secret `github-access-token` in Secrets Manager (~$0.40/mo).
+- KMS keys, ~$3.22 in July — several CMKs at $1/mo each.
+
+**Photo buckets: there are four, not one.** Verified by sha256 against the committed
+manifest — **every photo in all of them is already migrated**, so none block deletion:
+
+| Bucket                       | Contents                                                           |
+| ---------------------------- | ------------------------------------------------------------------ |
+| `memerson-public-photos`     | 472 objects, 956 MB — the set that was migrated.                   |
+| `memerson-photos`            | 118 objects, 893 MB — flat copies of the same originals.           |
+| `memerson-api-photos`        | 120 objects, 560 MB — 24 photos × 5 tiers; all 24 in the manifest. |
+| `memerson-cloudfront-photos` | **empty**.                                                         |
+
+Plus `memerson-dev-client` (26 objects, the 2020 CRA build) and several CDK/pipeline
+artifact buckets.
+
+**Route 53 has two zones, not one:** `memerson.dev` _and_ `memerson.net` (undocumented
+until now). `memerson.net` holds only NS/SOA and ACM validation CNAMEs — no site. Both
+zones bill $0.50/mo.
+
+**Current spend:** $18.97 month-to-date (July), $3.69 for the tail of June. S3 is the
+largest line at $9.39, and the redundant photo buckets are most of it.
 
 Note: local AWS CLI is authenticated as the account **root** user
-(`arn:aws:iam::600879026835:root`).
+(`arn:aws:iam::<aws-account-id>:root`).
 
 ## Related repos
 
@@ -102,11 +176,17 @@ Note: local AWS CLI is authenticated as the account **root** user
 
 - **Don't enable Cloudflare Images** — $5/month minimum once switched on. Pre-generating
   derivatives locally avoids it entirely.
-- **The photos only exist in S3 right now.** They must be in R2 before any AWS teardown.
+- ~~**The photos only exist in S3 right now.**~~ Migrated 2026-07-26: 118 photos, 1,160
+  derivatives in `memerson-photos`, 118 originals in the private archive. Seven photos
+  were narrower than 2560px so they carry fewer than five widths — hence 1,160 rather
+  than the 1,180 §5.5 estimated.
 - **Don't port the old `srcset`** — it emits bare URLs with no `w`/`x` descriptors and no
   `sizes`, so the browser cannot pick a size. Emit real descriptors.
 - **Public variants cap at 2560px.** Full-resolution originals are not exposed publicly.
 - **Archived originals still contain GPS EXIF.** The originals archive bucket must be
-  private. Only derivatives (metadata-stripped) are public.
+  private. Only derivatives (metadata-stripped) are public. Measured at import: none of
+  these 118 files actually carried GPS, but they do carry camera/lens and serial-bearing
+  `MakerNote` blobs, and the next import may well carry GPS — the rule stands regardless
+  of what one batch happened to contain.
 - **No R2 binding is needed in `wrangler.jsonc`.** Photos are served from an R2 custom
   domain, not proxied through the Worker. An earlier note in this file said otherwise.

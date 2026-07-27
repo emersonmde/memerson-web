@@ -1,0 +1,14 @@
+name: atium
+language: rust
+shortDescription: Computer algebra system
+description: >-
+  CAS with expression parsing, algebraic simplification, and symbolic
+  manipulation. Renders mathematical output via Typst. Supports term rewriting,
+  expression flattening, and like-term combination.
+tags:
+  - math
+  - parser
+  - typst
+github: https://github.com/emersonmde/atium
+docs: https://emersonmde.github.io/atium/atium/index.html
+order: 11

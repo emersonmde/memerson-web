@@ -1,9 +1,85 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+/**
+ * Not in the mockup — extended from the design language. The sign flickers
+ * harder than the hero's, which is the one place a "failing neon" reading is
+ * earned rather than decorative.
+ */
 ---
 
-<BaseLayout title="Not Found" description="Page not found.">
-  <h1>404</h1>
-  <p>That page doesn't exist.</p>
-  <p><a href="/">Back to the start</a></p>
+<BaseLayout title="Not found" description="That page doesn't exist." shooting={true}>
+  <section class="nf">
+    <div class="nf-kicker">SIGNAL LOST — DISTRICT 09</div>
+    <div class="nf-sign-wrap">
+      <h1 class="nf-sign">404</h1>
+      <div class="nf-echo" aria-hidden="true">404</div>
+    </div>
+    <p class="nf-body">That page doesn't exist, or it moved and nothing forwarded it.</p>
+    <div class="nf-links">
+      <a class="btn-ghost" href="/">← SYSTEMS</a>
+      <a class="btn-ghost" href="/photos">PHOTOS</a>
+      <a class="btn-ghost" href="/blog">THE LOG</a>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .nf {
+    position: relative;
+    padding: 150px var(--gutter) 140px;
+  }
+
+  .nf-kicker {
+    font: 500 10px var(--mono);
+    letter-spacing: 0.3em;
+    color: var(--faint);
+    margin-bottom: 22px;
+  }
+
+  .nf-sign-wrap {
+    position: relative;
+    width: 420px;
+  }
+
+  /* Faster than the hero's flicker: this tube is failing, not idling. Still
+     one property animating, per the motion law. */
+  .nf-sign {
+    margin: 0;
+    font: 700 116px/0.9 var(--display);
+    letter-spacing: -0.055em;
+    color: var(--tx-hi);
+    text-shadow:
+      -1.5px 0 0 oklch(0.68 0.26 348 / 0.3),
+      1.5px 0 0 oklch(0.82 0.17 66 / 0.36),
+      0 0 16px oklch(0.82 0.17 66 / 0.5),
+      0 0 70px oklch(0.82 0.17 66 / 0.3);
+    animation: neonFlicker 4s steps(1, end) infinite;
+  }
+
+  .nf-echo {
+    font: 700 116px/0.9 var(--display);
+    letter-spacing: -0.055em;
+    color: var(--tx-hi);
+    text-shadow: 0 0 16px oklch(0.82 0.17 66 / 0.8);
+    transform: scaleY(-1);
+    opacity: 0.13;
+    filter: blur(2.6px);
+    mask-image: linear-gradient(transparent 46%, #000);
+    -webkit-mask-image: linear-gradient(transparent 46%, #000);
+    height: 74px;
+    overflow: hidden;
+  }
+
+  .nf-body {
+    margin: 28px 0 24px;
+    max-width: 460px;
+    font: 400 14px/1.8 var(--mono);
+    color: #94a2b8;
+  }
+
+  .nf-links {
+    display: flex;
+    gap: 8px;
+  }
+</style>

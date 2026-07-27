@@ -1,0 +1,15 @@
+name: nenya
+language: rust
+shortDescription: Adaptive PID rate limiter
+description: >-
+  Rate limiter using a PID controller for dynamic limit adjustment based on
+  traffic patterns. Sliding window TPS calculation with configurable Kp/Ki/Kd
+  tuning. Includes Sentinel, a gRPC sidecar service.
+tags:
+  - pid
+  - grpc
+  - crate
+github: https://github.com/emersonmde/nenya
+docs: https://docs.rs/nenya
+crate: https://crates.io/crates/nenya
+order: 5

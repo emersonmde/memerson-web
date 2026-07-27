@@ -1,0 +1,767 @@
+/*
+ * Neon District — the whole design system.
+ * Imported from the Claude Design project; documented in docs/UI-DESIGN.md.
+ *
+ * Read §2 of that doc before changing any token. The accent ramp in particular
+ * locks lightness and chroma and moves only hue, which is what keeps sampled
+ * colours from fighting each other.
+ */
+
+/* ---------------------------------------------------------------------------
+ * Fonts — self-hosted variable woff2. See docs/UI-DESIGN.md §3 for why these
+ * are not loaded from Google.
+ * ------------------------------------------------------------------------ */
+
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('/fonts/space-grotesk-var.woff2') format('woff2-variations');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono-var.woff2') format('woff2-variations');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/newsreader-var.woff2') format('woff2-variations');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/newsreader-italic-var.woff2') format('woff2-variations');
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------------------
+ * Tokens
+ * ------------------------------------------------------------------------ */
+
+:root {
+  /* Surfaces */
+  --void: #03040a;
+  --ink: #05070d;
+  --plate: #080b13;
+  --lift: #0b1120;
+  --chrome: #04060c;
+  --hairline: rgba(142, 180, 255, 0.13);
+  --hairline-soft: rgba(142, 180, 255, 0.09);
+  --hairline-strong: rgba(142, 180, 255, 0.28);
+
+  /* Text */
+  --tx-hi: #f4f7fd;
+  --tx: #dee5f3;
+  --tx-body: #c6d0e0;
+  --tx-read: #a9b4c6;
+  --dim: #8492a8;
+  --dim-2: #8f9db3;
+  --faint: #4d5869;
+  --faint-2: #3d4657;
+
+  /* The ramp. Lightness and chroma locked; only hue moves. */
+  --sodium: oklch(0.82 0.17 66);
+  --cyan: oklch(0.8 0.17 200);
+  --violet: oklch(0.8 0.17 286);
+
+  /* Type */
+  --display: 'Space Grotesk', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --serif: Newsreader, Georgia, serif;
+
+  /* Geometry. The rail offset is measured from the gutter — see UI-DESIGN §9. */
+  --gutter: 70px;
+  --rail-offset: 56px;
+  --nav-h: 52px;
+
+  /* Ambient intensity. Both are dialled down under reduced-motion. */
+  --scan: 0.045;
+  --sky: 1;
+}
+
+/* ---------------------------------------------------------------------------
+ * Base
+ * ------------------------------------------------------------------------ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--tx);
+  font-family: var(--display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* Skip link — the nav is sticky and the star field is inert, so keyboard users
+   need a way past both. */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--chrome);
+  border: 1px solid var(--cyan);
+  color: var(--tx);
+  font: 500 10px var(--mono);
+  letter-spacing: 0.2em;
+}
+
+.skip:focus {
+  left: 12px;
+  top: 12px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Ambient layers — sky, scanlines. Both fixed: the sky is infinitely far away,
+ * so it does not move when you walk. See docs/UI-DESIGN.md §5.1.
+ * ------------------------------------------------------------------------ */
+
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: var(--sky);
+}
+
+.sky-far,
+.sky-mid,
+.sky-near {
+  position: absolute;
+  inset: -8%;
+}
+
+.sky-far {
+  animation: skyDrift 90s ease-in-out infinite alternate;
+  background-image:
+    radial-gradient(1.6px 1.6px at 8% 12%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.4px 1.4px at 23% 61%, rgba(214, 236, 255, 0.7), transparent),
+    radial-gradient(1.8px 1.8px at 39% 27%, rgba(255, 246, 232, 0.8), transparent),
+    radial-gradient(1.4px 1.4px at 54% 78%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.6px 1.6px at 71% 41%, rgba(214, 236, 255, 0.75), transparent),
+    radial-gradient(1.4px 1.4px at 86% 16%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.8px 1.8px at 94% 66%, rgba(255, 238, 214, 0.7), transparent);
+}
+
+.sky-mid {
+  animation: twinkle 9s ease-in-out infinite;
+  background-image:
+    radial-gradient(1px 1px at 15% 34%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 31% 8%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 47% 52%, rgba(214, 236, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 62% 19%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 79% 88%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 91% 37%, rgba(214, 236, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 5% 71%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 68% 62%, rgba(255, 255, 255, 0.4), transparent);
+}
+
+.sky-near {
+  opacity: 0.5;
+  background-image:
+    radial-gradient(0.8px 0.8px at 11% 47%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(0.8px 0.8px at 26% 22%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.8px 0.8px at 43% 84%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(0.8px 0.8px at 58% 36%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.8px 0.8px at 74% 72%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.8px 0.8px at 88% 51%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(0.8px 0.8px at 36% 66%, rgba(255, 255, 255, 0.35), transparent);
+}
+
+/* Never brighter than 40% below the hero. */
+.sky-dim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(3, 4, 10, 0) 0%,
+    rgba(3, 4, 10, 0.42) 46%,
+    rgba(3, 4, 10, 0.62) 100%
+  );
+}
+
+.shot {
+  position: absolute;
+  display: block;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(210, 238, 255, 0.2) 40%, #ffffff);
+  box-shadow: 0 0 10px rgba(190, 225, 255, 0.9);
+}
+
+.shot-a {
+  left: 62%;
+  top: 14%;
+  width: 150px;
+  height: 1.5px;
+  rotate: 19deg;
+  animation: shootA 21s cubic-bezier(0.2, 0.4, 0.5, 1) infinite;
+}
+
+.shot-b {
+  left: 26%;
+  top: 52%;
+  width: 110px;
+  height: 1px;
+  rotate: 14deg;
+  animation: shootB 34s cubic-bezier(0.2, 0.4, 0.5, 1) 6s infinite;
+}
+
+.scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  opacity: var(--scan);
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(190, 215, 255, 0.9) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+/* Content sits above the sky, below the scanlines and the nav. */
+.page {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------------------------------------------------------------------------
+ * Chrome — nav and footer
+ * ------------------------------------------------------------------------ */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 0 var(--gutter);
+  background: var(--chrome);
+  border-bottom: 1px solid var(--hairline-soft);
+}
+
+.nav-mark {
+  font: 500 11px var(--mono);
+  letter-spacing: 0.3em;
+  color: var(--tx);
+  margin-right: auto;
+}
+
+.nav a,
+.nav-link {
+  font: 500 10px var(--mono);
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  transition: color 0.16s;
+}
+
+.nav a:hover {
+  color: var(--tx-hi);
+}
+
+.nav [aria-current='page'] {
+  color: var(--cyan);
+}
+
+/* The nav's lower falloff, so content scrolling under it dissolves rather than
+   hard-clipping at the border. */
+.nav-fade {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 7;
+  height: 18px;
+  margin-bottom: -18px;
+  pointer-events: none;
+  background: linear-gradient(180deg, var(--chrome), rgba(4, 6, 12, 0.7) 45%, rgba(4, 6, 12, 0));
+}
+
+.foot {
+  position: relative;
+  height: 290px;
+  overflow: hidden;
+  border-top: 1px solid rgba(142, 180, 255, 0.08);
+}
+
+.foot-floor {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: -14%;
+  height: 80%;
+  transform-origin: bottom;
+  transform: perspective(900px) rotateX(34deg);
+  background-image:
+    linear-gradient(rgba(142, 180, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(142, 180, 255, 0.2) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(#000, transparent 84%);
+  -webkit-mask-image: linear-gradient(#000, transparent 84%);
+}
+
+.foot-horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 44%;
+  height: 1px;
+  background: var(--cyan);
+  box-shadow:
+    0 0 12px var(--cyan),
+    0 0 60px oklch(0.8 0.18 200 / 0.6);
+}
+
+.foot-body {
+  position: absolute;
+  left: var(--gutter);
+  top: 0;
+  padding-top: 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.foot-title {
+  font: 700 26px var(--display);
+  letter-spacing: -0.03em;
+  color: var(--tx-hi);
+}
+
+.foot-links {
+  display: flex;
+  gap: 22px;
+  font: 400 10px var(--mono);
+  letter-spacing: 0.18em;
+}
+
+.foot-links a {
+  color: var(--dim);
+  transition: color 0.16s;
+}
+
+.foot-links a:hover {
+  color: var(--cyan);
+}
+
+/*
+ * Clears the horizon rather than landing on it. The mockup's 8px put this line
+ * at ~128px and the horizon sits at 44% of 290px = ~128px, so the text was
+ * printed straight through a glowing cyan rule. It was survivable with the
+ * mockup's shorter string and is not with a longer one.
+ */
+.foot-note {
+  font: 400 9px var(--mono);
+  letter-spacing: 0.2em;
+  color: var(--faint-2);
+  margin-top: 30px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Section headers — the sticky numbered marker (docs/UI-DESIGN.md §5.4)
+ * ------------------------------------------------------------------------ */
+
+.sec {
+  position: relative;
+  padding: 0 var(--gutter) 80px;
+}
+
+.sec + .sec {
+  border-top: 1px solid rgba(142, 180, 255, 0.08);
+}
+
+.sec-head {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 36px;
+  margin: 0 calc(var(--gutter) * -1) 16px;
+  padding: 0 var(--gutter);
+  background: rgba(3, 4, 10, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--hairline-soft);
+  font: 500 9.5px var(--mono);
+  letter-spacing: 0.24em;
+  color: var(--dim);
+}
+
+.sec-num {
+  color: var(--n, var(--cyan));
+}
+
+.sec-rule {
+  width: 20px;
+  height: 1px;
+  background: var(--hairline-strong);
+}
+
+.sec-name {
+  color: var(--tx);
+}
+
+.sec-aside {
+  margin-left: auto;
+  color: var(--faint);
+  font: 500 9.5px var(--mono);
+  letter-spacing: 0.16em;
+}
+
+a.sec-aside {
+  color: var(--dim);
+  transition: color 0.16s;
+}
+
+a.sec-aside:hover {
+  color: var(--cyan);
+}
+
+/*
+ * Starts unresolved; fx.ts focuses it as it enters. See §5.2.
+ *
+ * Selected by the same `data-fx` attribute the script dispatches on, rather
+ * than a parallel class — one hook, so the two can't drift apart.
+ */
+[data-fx='resolve'] {
+  opacity: 0.15;
+  filter: blur(13px);
+  letter-spacing: 0.055em;
+  will-change: opacity, filter, letter-spacing;
+}
+
+.sec-title {
+  display: block;
+  font: 700 54px/1 var(--display);
+  letter-spacing: -0.045em;
+  color: var(--tx-hi);
+  padding: 34px 0 10px;
+}
+
+.sec-lede {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 900px;
+  margin-bottom: 24px;
+}
+
+.sec-lede p {
+  margin: 0;
+  max-width: 520px;
+  font: 400 12px/1.8 var(--mono);
+  color: var(--dim);
+}
+
+/* ---------------------------------------------------------------------------
+ * Plates — the core interactive material (docs/UI-DESIGN.md §6)
+ * ------------------------------------------------------------------------ */
+
+.plate {
+  position: relative;
+  background: rgba(8, 11, 19, 0.86);
+  border: 1px solid var(--hairline);
+  transition:
+    background 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Lift in value, not position. */
+.plate:hover,
+.plate[open] {
+  background: rgba(11, 17, 32, 0.94);
+  border-color: var(--h, var(--cyan));
+  box-shadow:
+    0 0 44px -16px var(--h, var(--cyan)),
+    inset 0 1px 0 rgba(220, 240, 255, 0.1);
+}
+
+.bracket {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+}
+
+.bracket-tl {
+  left: 0;
+  top: 0;
+  border-left: 1px solid var(--h, var(--cyan));
+  border-top: 1px solid var(--h, var(--cyan));
+}
+
+.bracket-tr {
+  right: 0;
+  top: 0;
+  border-right: 1px solid var(--h, var(--cyan));
+  border-top: 1px solid var(--h, var(--cyan));
+}
+
+.bracket-bl {
+  left: 0;
+  bottom: 0;
+  border-left: 1px solid var(--h, var(--cyan));
+  border-bottom: 1px solid var(--h, var(--cyan));
+}
+
+.bracket-br {
+  right: 0;
+  bottom: 0;
+  border-right: 1px solid var(--h, var(--cyan));
+  border-bottom: 1px solid var(--h, var(--cyan));
+}
+
+/* The charge that runs the top edge on hover. */
+.plate-charge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--h, var(--cyan)), transparent);
+  background-size: 32% 100%;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.plate:hover .plate-charge {
+  opacity: 1;
+  animation: travel 1.6s linear infinite;
+}
+
+.tag {
+  font: 400 9px var(--mono);
+  letter-spacing: 0.1em;
+  color: #9fb0c8;
+  border: 1px solid rgba(142, 180, 255, 0.16);
+  padding: 3px 7px;
+}
+
+/* Album/filter chip. Unused until photos carry albums — docs/UI-DESIGN.md §8. */
+.chip {
+  font: 500 9.5px var(--mono);
+  letter-spacing: 0.18em;
+  padding: 6px 11px;
+  cursor: pointer;
+  color: #9fb0c8;
+  border: 1px solid rgba(142, 180, 255, 0.16);
+  background: transparent;
+  transition: all 0.16s;
+}
+
+.chip[aria-pressed='true'] {
+  color: var(--void);
+  background: var(--cyan);
+  border-color: var(--cyan);
+}
+
+.btn-ghost {
+  font: 500 9.5px var(--mono);
+  letter-spacing: 0.12em;
+  color: var(--h, var(--cyan));
+  border: 1px solid var(--h, var(--cyan));
+  padding: 5px 10px;
+  background: none;
+  cursor: pointer;
+  transition: all 0.16s;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 22px -6px var(--h, var(--cyan));
+}
+
+/* ---------------------------------------------------------------------------
+ * Motion
+ * ------------------------------------------------------------------------ */
+
+@keyframes travel {
+  from {
+    background-position: -45% 0;
+  }
+  to {
+    background-position: 145% 0;
+  }
+}
+
+@keyframes neonFlicker {
+  0%,
+  17%,
+  19%,
+  21%,
+  58%,
+  60%,
+  100% {
+    opacity: 1;
+  }
+  18%,
+  20%,
+  59% {
+    opacity: 0.42;
+  }
+  18.5% {
+    opacity: 0.72;
+  }
+}
+
+@keyframes fogSlow {
+  0% {
+    transform: translate3d(-6%, 2%, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(8%, -5%, 0) scale(1.2);
+  }
+  100% {
+    transform: translate3d(-6%, 2%, 0) scale(1.05);
+  }
+}
+
+@keyframes plateIn {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes lbIn {
+  from {
+    opacity: 0;
+    transform: scale(0.988);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes skyDrift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-26px, 18px, 0);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes shootA {
+  0%,
+  90% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  91% {
+    opacity: 1;
+  }
+  98% {
+    opacity: 0.85;
+    transform: translateX(660px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(720px);
+  }
+}
+
+@keyframes shootB {
+  0%,
+  93% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  94% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0.7;
+    transform: translateX(520px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(560px);
+  }
+}
+
+/*
+ * Reduced motion. Note this does more than stop animation: `.resolve` starts at
+ * 15% opacity and 13px of blur, so simply freezing it would leave every heading
+ * permanently unreadable. It has to be forced to its *end* state.
+ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-fx='resolve'] {
+    opacity: 1 !important;
+    filter: none !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .shot {
+    display: none;
+  }
+}

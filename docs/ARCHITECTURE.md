@@ -1,11 +1,10 @@
 # memerson-web — Technical Architecture
 
 Scope: stack, hosting, content model, and photo infrastructure. **This document contains no
-visual design decisions** — see [CONTEXT.md](./CONTEXT.md#visual-design-deliberately-undecided).
-UI design is a later phase with its own doc (`docs/UI-DESIGN.md`).
+visual design decisions** — those live in [UI-DESIGN.md](./UI-DESIGN.md).
 
-Read [CONTEXT.md](./CONTEXT.md) first for current-state facts (DNS, the S3 bucket, the live
-AWS dependency).
+Read [CONTEXT.md](./CONTEXT.md) first for current-state facts (DNS, mail, the S3 bucket,
+the live AWS dependency).
 
 ---
 
@@ -71,8 +70,26 @@ Assets-only Worker — no `main` script needed:
 }
 ```
 
-`custom_domain: true` creates the DNS record automatically. `memerson.com` is already on
-Cloudflare nameservers, so this binds with no zone migration.
+`custom_domain: true` creates the DNS record automatically, and `memerson.com` is already
+on Cloudflare nameservers so no zone migration was needed. **Live since 2026-07-27.**
+
+Two things about that first bind are worth keeping, because both cost hours:
+
+**It will not bind over anything already at the apex.** Cloudflare returns
+`100117 — Hostname 'memerson.com' already has externally managed DNS records`. What was
+actually there was a single proxied **CNAME**, but `dig` reported **A and AAAA** records,
+because Cloudflare flattens an apex CNAME into synthetic address answers — a CNAME cannot
+legally coexist with the apex SOA and NS records, so it is resolved server-side at query
+time. The stored record and the resolved answer are therefore allowed to differ, and only
+the dashboard shows the truth. **Never infer the stored record type at an apex from what
+resolves.** No wrangler OAuth scope grants `dns_records` write either, so clearing it is
+always a human, dashboard-only step.
+
+**The binding and its DNS record are provisioned separately.** The first successful deploy
+created the binding — API reported `enabled: true` with an issued `cert_id` — and then no
+address record appeared for 15+ minutes. A second, byte-identical `wrangler deploy`
+created it in seconds. If `workers/domains` lists the hostname but the name does not
+resolve, deploy again rather than detaching and re-attaching.
 
 **No R2 binding.** Photos are served directly from an R2 custom domain (§5.2), not proxied
 through the Worker. Binding R2 would require a Worker script and add a hop for no benefit.
@@ -92,26 +109,38 @@ Cloudflare repo access is undesirable.
 **Requires a human (interactive or dashboard-only):**
 
 1. ~~`npx wrangler login`~~ — **done.** OAuth, authenticated as `emersonmde@protonmail.com`,
-   account ID `1ca7a385680f6485380fca3f1f7d91a1`. Credentials live in
+   account ID `<cloudflare-account-id>`. Credentials live in
    `~/Library/Preferences/.wrangler/`, so they are machine-wide and persist across shells,
    sessions, and reboots.
 2. ~~**Enable R2 on the account**~~ — **done.** (Before this, every R2 call failed with
    `code: 10042 "Please enable R2 through the Cloudflare Dashboard"`. R2 is gated because
    it is a billable storage product; Workers is not gated and needs no equivalent step.)
-3. **Workers Builds**: push the repo to GitHub, then authorize Cloudflare's GitHub app in
-   the dashboard. Local `npm run deploy` works without this.
-4. Bulk Redirects for `errorsignal.dev` and `memerson.dev` (§8).
-5. Decide `www.memerson.com` handling (redirect rule or second custom domain).
+3. ~~**Clear the apex record** so `custom_domain` can bind~~ — **done 2026-07-27.** It was
+   a proxied CNAME, not the A/AAAA that `dig` reported. See above.
+4. **Workers Builds**: push the repo to GitHub, then authorize Cloudflare's GitHub app in
+   the dashboard. Local `npm run deploy` works without this. **Still outstanding.**
+5. Bulk Redirects for `errorsignal.dev` (§8). `memerson.dev` needs a Route 53 change first.
+6. Decide `www.memerson.com` handling (redirect rule or second custom domain).
+7. Mail hardening on the zone: SPF, DKIM, DMARC for Google Workspace, plus DNSSEC. The
+   `MX` (`smtp.google.com`) and the Google site-verification `TXT` are already in place and
+   were untouched by the apex work. Not started.
 
 **No R2 API token is needed.** See below.
 
-**Doable by wrangler once logged in** (no API token required):
+**Doable by wrangler once logged in** (no API token required) — ~~all three~~ **done**:
 
 ```bash
 wrangler r2 bucket create memerson-photos
 wrangler r2 bucket create memerson-photos-archive
-wrangler r2 bucket domain add memerson-photos --domain photos.memerson.com
+wrangler r2 bucket domain add memerson-photos \
+  --domain photos.memerson.com --zone-id <memerson.com zone> --min-tls 1.2
 ```
+
+`domain add` requires `--zone-id`, which wrangler cannot look up itself; it comes from
+`GET /client/v4/zones?name=memerson.com` using the same OAuth token
+(`<memerson.com-zone-id>`). Verified after the fact: `memerson-photos-archive`
+has no custom domain and its `r2.dev` URL is disabled, so the originals are unreachable
+publicly — which is what makes it safe for them to retain GPS EXIF.
 
 ### Uploads use wrangler, not the S3 API
 
@@ -139,7 +168,13 @@ the entire project.
 
 Implementation notes: spawn `node_modules/.bin/wrangler` directly rather than through
 `npx` to avoid resolution overhead, cap concurrency around 8, and retry a failed object
-rather than restarting the run.
+rather than restarting the run. Buffers are piped to `--pipe` over stdin, so derivatives
+never touch the local disk.
+
+One gap: **wrangler has no object-listing command**, which `photos:verify` needs in order
+to find orphans. It uses the REST endpoint
+`/accounts/{account}/r2/buckets/{bucket}/objects` with the OAuth token wrangler already
+stored at login — so the "one credential for the whole project" property still holds.
 
 Revisit only if the library grows large enough that migration time actually matters — the
 manifest and key layout are unaffected either way, so switching later is a local change to
@@ -466,13 +501,37 @@ moment to do this — changing keys later means rewriting every URL that was eve
 
 ### Redirects
 
-Cloudflare Bulk Redirects (zone-level, manual):
+**`errorsignal.dev` is a shared host, so the redirect is path-scoped, not domain-wide.**
+Decided 2026-07-27, and it is the non-obvious part of the cutover.
 
-- `errorsignal.dev/*` → `memerson.com/*`, preserving blog post paths where slugs match.
-- `memerson.dev/*` → `memerson.com/*`. Requires moving the zone off Route 53 or changing
-  Route 53 records — this one is not free of AWS.
+Several independent repos publish to `errorsignal.dev` through GitHub Pages — the
+`coppermind` WASM demo, Rust documentation, other static assets. Only the Astro site's own
+paths move to `memerson.com`; everything else keeps serving from that domain.
 
-Blog slugs should be preserved exactly so existing links and any search ranking survive.
+Redirect exactly these, and nothing else:
+
+| From               | To                     |
+| ------------------ | ---------------------- |
+| `/`                | `memerson.com/`        |
+| `/about`           | `memerson.com/about`   |
+| `/blog`, `/blog/*` | same path              |
+| `/photos`          | `memerson.com/photos`  |
+| `/rss.xml`         | `memerson.com/rss.xml` |
+
+**Allowlist rather than denylist**, deliberately. Redirecting `/*` and carving out known
+project paths looks equivalent and is not: it breaks every _future_ GitHub Pages project
+the moment it is published, silently, because nothing prompts anyone to add a new
+exclusion. Enumerating what moves fails safe — an unlisted path keeps working.
+
+Blog slugs are preserved exactly, so `/blog/<slug>` is 1:1 and existing links and search
+ranking survive. The one shape change is that the old single `/photos` page is now
+paginated (`/photos`, `/photos/2`…), so `/photos` maps to the new first page.
+
+`memerson.dev/*` → `memerson.com/*` is a separate job and requires moving the zone off
+Route 53 or changing Route 53 records — that one is not free of AWS.
+
+**Post-deploy check:** `errorsignal.dev/coppermind/` must still return 200. That is the
+assertion that catches an over-broad rule.
 
 ---
 
@@ -494,13 +553,16 @@ derivatives make it unnecessary.
 
 ## 10. Open decisions
 
-| #   | Question                                       | Notes                                                                                                                          |
-| --- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | Analytics?                                     | Old site ran PostHog behind an AWS reverse proxy. Cloudflare Web Analytics is free and needs no proxy. Decide before teardown. |
-| 2   | `memerson.dev` — redirect or drop?             | Currently linked from the live site. Needs a Route 53 change either way.                                                       |
-| 3   | `www.memerson.com`                             | Redirect rule vs. second custom domain.                                                                                        |
-| 4   | RSS scope                                      | Blog only, or blog + photos?                                                                                                   |
-| 5   | Archive originals in R2, or keep offline only? | Recommendation: R2 private. ~$0.02/month and it removes any dependency on a specific local disk.                               |
-| 6   | Minecraft stack                                | Has its own DNS record. Still wanted, or delete with the rest?                                                                 |
+| #     | Question                                       | Notes                                                                                                                                                                                             |
+| ----- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Analytics?                                     | **Reframed 2026-07-26:** the live site runs _no_ analytics script. Nothing to migrate — this is a decision to start or not. Cloudflare Web Analytics is free and needs no proxy.                  |
+| 2     | `memerson.dev` — redirect or drop?             | Currently linked from the live site. Needs a Route 53 change either way.                                                                                                                          |
+| 3     | `www.memerson.com`                             | Redirect rule vs. second custom domain.                                                                                                                                                           |
+| 4     | RSS scope                                      | Blog only, or blog + photos?                                                                                                                                                                      |
+| 5     | Archive originals in R2, or keep offline only? | **Settled:** done, private archive bucket, 118 originals. Cost is negligible as predicted.                                                                                                        |
+| ~~6~~ | ~~Minecraft stack~~                            | **Closed:** never deployed as a stack. What exists is an instance stopped since 2023-02 plus an orphaned EBS volume and Elastic IP (~$6/mo) — a deletion task, not a decision.                    |
+| 7     | `memerson.net`                                 | **New:** a second Route 53 zone found during the 2026-07-26 AWS inventory. ACM validation records only, no site. Drop it?                                                                         |
+| ~~8~~ | ~~The `coppermind` WASM demo~~                 | **Settled 2026-07-27:** the demo stays on `errorsignal.dev`, along with the other GitHub Pages projects sharing that domain. The redirect is path-scoped to the Astro site's own routes — see §8. |
 
-Items 1, 2, and 6 block AWS teardown. The rest do not.
+Items 1 and 2 block the AWS teardown (tracked outside the milestones — see
+CONTEXT.md). The rest do not block anything.

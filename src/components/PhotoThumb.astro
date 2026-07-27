@@ -1,0 +1,151 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { PHOTOS_BASE_URL } from '../consts';
+
+/**
+ * A gallery thumbnail: dim by default, lights on hover. Used by both the home
+ * page preview strip and the contact sheet.
+ *
+ * Unlike <Photo>, this emits no <figure>/<figcaption> — it is a tile in a grid,
+ * and its label is chrome rather than a caption.
+ */
+interface Props {
+  photo: CollectionEntry<'photos'>;
+  sizes: string;
+  /** Overlay label, bottom-left. */
+  label?: string;
+  /** Fixed height for the masonry sheet; omitted, the tile keeps aspect ratio. */
+  height?: string;
+  /** Hover-revealed metadata, top-right. */
+  meta?: string;
+  /** Index within the page, for the lightbox to address. */
+  index?: number;
+  loading?: 'lazy' | 'eager';
+}
+
+const { photo, sizes, label, height, meta, index, loading = 'lazy' } = Astro.props;
+const { id, variants, formats, lqip, aspectRatio } = photo.data;
+
+const srcSet = (format: string) =>
+  variants.map((w) => `${PHOTOS_BASE_URL}/photos/${id}/${w}.${format} ${w}w`).join(', ');
+
+const widest = Math.max(...variants);
+const full = `${PHOTOS_BASE_URL}/photos/${id}/${widest}.webp`;
+
+const alt = photo.data.title ?? photo.data.caption ?? '';
+---
+
+{
+  /*
+  The tile is a real link to the full image, so it works with no JS at all.
+  The lightbox intercepts the click and reuses these data attributes rather
+  than duplicating the manifest into a second payload on the page.
+*/
+}
+<a
+  class="tile"
+  href={full}
+  data-tile
+  data-index={index}
+  data-avif={formats.includes('avif') ? srcSet('avif') : undefined}
+  data-webp={formats.includes('webp') ? srcSet('webp') : undefined}
+  data-alt={alt}
+  data-label={label}
+  data-meta={meta}
+  data-ar={aspectRatio}
+  style={`--ar:${aspectRatio};${height ? `--h:${height};` : ''}`}
+>
+  <picture>
+    {
+      formats.includes('avif') && (
+        <source type="image/avif" srcset={srcSet('avif')} sizes={sizes} />
+      )
+    }
+    {
+      formats.includes('webp') && (
+        <source type="image/webp" srcset={srcSet('webp')} sizes={sizes} />
+      )
+    }
+    <img
+      src={full}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      style={`background-image:url(${lqip});background-size:cover;background-position:center`}
+    />
+  </picture>
+  <span class="tile-wash" aria-hidden="true"></span>
+  {label && <span class="tile-label">{label}</span>}
+  {meta && <span class="tile-meta">{meta}</span>}
+</a>
+
+<style>
+  .tile {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: var(--ink);
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.2s;
+  }
+
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 54px -18px var(--cyan);
+  }
+
+  /*
+   * Two sizing modes from one rule. With --h set (the masonry sheet) the fixed
+   * height wins and aspect-ratio is ignored, because width and height are both
+   * definite. With --h unset, `height` is invalid at computed-value time and
+   * falls back to auto, leaving aspect-ratio in charge. Either way the ratio
+   * comes from the manifest, so no tile ever reflows when the image lands.
+   */
+  .tile img {
+    width: 100%;
+    height: var(--h);
+    aspect-ratio: var(--ar);
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Dim by default; one tile lights at a time. */
+  .tile-wash {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 4, 10, 0.6);
+    transition: background 0.2s;
+    pointer-events: none;
+  }
+
+  .tile:hover .tile-wash {
+    background: rgba(3, 4, 10, 0.14);
+  }
+
+  .tile-label {
+    position: absolute;
+    left: 9px;
+    bottom: 7px;
+    font: 400 8.5px var(--mono);
+    letter-spacing: 0.14em;
+    color: #c7d2e2;
+    pointer-events: none;
+  }
+
+  .tile-meta {
+    position: absolute;
+    right: 9px;
+    top: 8px;
+    font: 400 8px var(--mono);
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+
+  .tile:hover .tile-meta {
+    opacity: 1;
+  }
+</style>

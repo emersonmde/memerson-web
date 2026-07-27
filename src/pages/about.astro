@@ -1,24 +1,203 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { AUTHOR, SOCIAL } from '../consts';
+
+const photoCount = (await getCollection('photos')).length;
+
+/**
+ * Not in the mockup — extended from the design language. See UI-DESIGN §7.
+ *
+ * The choice made here: About is a *reading* page, so it takes the log's serif
+ * measure rather than the index's mono. The skills block stays mono because it
+ * is metadata, which is exactly the split §3 describes.
+ */
+const SKILLS = [
+  { label: 'LANGUAGES', value: 'Rust, Java, Python, C, TypeScript' },
+  { label: 'SYSTEMS', value: 'AWS, DynamoDB, PostgreSQL, Linux' },
+  {
+    label: 'INTERESTS',
+    value:
+      'Distributed systems, storage engines, protocols, algorithms, operating systems, emulators',
+  },
+];
+
+const LINKS = [
+  { label: 'GITHUB', value: 'github.com/emersonmde', href: SOCIAL.github },
+  { label: 'LINKEDIN', value: 'linkedin.com/in/emersonmde', href: SOCIAL.linkedin },
+  { label: 'PHOTOS', value: `${photoCount} frames`, href: '/photos' },
+  { label: 'RSS', value: '/rss.xml', href: '/rss.xml' },
+];
 ---
 
-<BaseLayout title="About" description={`About ${AUTHOR.name}`}>
-  <article>
-    <h1>About</h1>
+<BaseLayout
+  title="About"
+  description={`About ${AUTHOR.name} — ${AUTHOR.summary}.`}
+  active="about"
+  back={true}
+>
+  <article class="about">
+    <div class="about-crumb">/ ABOUT</div>
 
-    <p>
-      Content to be migrated from the old site. Placeholder so routing and layout are
-      exercised — see docs/MILESTONES.md M1.
-    </p>
+    <h1 class="about-h1" data-fx="resolve">Matthew Emerson</h1>
 
-    <section aria-labelledby="links">
-      <h2 id="links">Links</h2>
-      <ul>
-        <li><a href={SOCIAL.github}>github.com/emersonmde</a></li>
-        <li><a href={SOCIAL.linkedin}>linkedin.com/in/emersonmde</a></li>
-        <li><a href="/photos">Photos</a></li>
-      </ul>
+    <div class="about-prose">
+      <p>
+        I'm {AUTHOR.name}, a {AUTHOR.summary} at Amazon.
+      </p>
+      <p>
+        I lead a cross-functional team of software engineers and applied scientists
+        building AI/ML features for talent acquisition. We focus on rapid experimentation
+        with LLMs and agentic systems to transform hiring workflows at scale.
+      </p>
+      <p>
+        Outside of work, I'm drawn to systems programming and understanding how things
+        work at a fundamental level. I spend my free time building databases, consensus
+        protocols, emulators, and other low-level systems.
+      </p>
+    </div>
+
+    <section class="about-block" aria-labelledby="skills">
+      <h2 class="about-h2" id="skills">01 — SKILLS</h2>
+      <dl class="rows-dl">
+        {
+          SKILLS.map((skill) => (
+            <div class="rows-row">
+              <dt>{skill.label}</dt>
+              <dd>{skill.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="about-block" aria-labelledby="links">
+      <h2 class="about-h2" id="links">02 — ELSEWHERE</h2>
+      <div class="links">
+        {
+          LINKS.map((link) => (
+            <a class="link-row" href={link.href}>
+              <span class="link-label">{link.label}</span>
+              <span class="link-arrow">→</span>
+              <span class="link-value">{link.value}</span>
+            </a>
+          ))
+        }
+      </div>
     </section>
   </article>
 </BaseLayout>
+
+<style>
+  .about {
+    position: relative;
+    padding: 92px var(--gutter) 70px;
+  }
+
+  .about-crumb {
+    font: 400 9.5px var(--mono);
+    letter-spacing: 0.24em;
+    color: var(--cyan);
+    margin-bottom: 18px;
+  }
+
+  .about-h1 {
+    margin: 0 0 28px;
+    font: 700 54px/1.05 var(--display);
+    letter-spacing: -0.045em;
+    color: var(--tx-hi);
+  }
+
+  .about-prose {
+    max-width: 62ch;
+    font: 300 19px/1.68 var(--serif);
+    color: var(--tx-read);
+  }
+
+  .about-prose p {
+    margin: 0 0 20px;
+  }
+
+  .about-prose p:first-child {
+    font-weight: 400;
+    color: var(--tx-body);
+  }
+
+  .about-block {
+    margin-top: 48px;
+    max-width: 760px;
+  }
+
+  .about-h2 {
+    margin: 0 0 16px;
+    font: 500 9.5px var(--mono);
+    letter-spacing: 0.24em;
+    color: var(--faint);
+    font-weight: 500;
+  }
+
+  .rows-dl {
+    margin: 0;
+  }
+
+  .rows-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 20px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(142, 180, 255, 0.1);
+  }
+
+  .rows-row dt {
+    font: 400 9.5px var(--mono);
+    letter-spacing: 0.16em;
+    color: var(--faint);
+    padding-top: 4px;
+  }
+
+  .rows-row dd {
+    margin: 0;
+    font: 400 13px/1.7 var(--mono);
+    color: var(--tx-read);
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .link-row {
+    display: grid;
+    grid-template-columns: 130px 20px 1fr;
+    gap: 20px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-top: 1px solid rgba(142, 180, 255, 0.1);
+    transition: background 0.16s;
+  }
+
+  .link-row:hover {
+    background: rgba(142, 180, 255, 0.03);
+  }
+
+  .link-label {
+    font: 400 9.5px var(--mono);
+    letter-spacing: 0.16em;
+    color: var(--faint);
+  }
+
+  .link-arrow {
+    color: var(--faint-2);
+    font: 400 11px var(--mono);
+  }
+
+  .link-value {
+    font: 400 13px var(--mono);
+    color: var(--cyan);
+    transition: color 0.16s;
+  }
+
+  .link-row:hover .link-value {
+    color: var(--sodium);
+  }
+</style>
