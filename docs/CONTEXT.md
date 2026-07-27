@@ -47,7 +47,7 @@ almost nobody used.
 | ----------------- | ----------------------------------------------- | ------------------------------------- |
 | `memerson.com`    | Cloudflare (`nicole`/`randy.ns.cloudflare.com`) | **This site** — live since 2026-07-27 |
 | `photos.…com`     | Cloudflare (R2 custom domain)                   | Photo derivatives from R2             |
-| `errorsignal.dev` | Cloudflare                                      | GitHub Pages (the old Astro site)     |
+| `errorsignal.dev` | Cloudflare                                      | GitHub Pages — redirects + 3 projects |
 | `memerson.dev`    | **Route 53** (`ns-*.awsdns-*`)                  | Old CRA site via CloudFront           |
 | `memerson.net`    | **Route 53**                                    | Nothing — ACM validation records only |
 
@@ -56,12 +56,12 @@ had to be deleted first, and it was invisible to `dig` because Cloudflare flatte
 CNAME into synthetic A/AAAA answers. Full account in
 [ARCHITECTURE §3](./ARCHITECTURE.md#3-hosting-and-deployment).
 
-`errorsignal.dev` is the site people reach until the redirect lands (M2) — written
-2026-07-27, live once the old repo's Pages workflow runs. **It is a shared host**, not just
-the old site: several other repos publish to it through GitHub Pages (the `coppermind` WASM
-demo, Rust docs, other static assets). That is why the cutover redirect lives in the old
-site's own repo rather than on the domain — see
-[ARCHITECTURE §8](./ARCHITECTURE.md).
+**`errorsignal.dev` now redirects to `memerson.com`** — live 2026-07-27, so `memerson.com`
+is the site people reach. **It is a shared host**, not just the old site: three other repos
+publish to it through GitHub Pages — `coppermind` (the WASM demo), `daedalus` (the Rust
+docs) and `vilya` — and all three were verified still serving after the cutover. That is
+why the redirect lives in the old site's own repo rather than on the domain: nothing
+domain-wide can reach them. See [ARCHITECTURE §8](./ARCHITECTURE.md).
 
 `memerson.dev` and `memerson.net` are the two zones still on AWS DNS. Both need a decision;
 `memerson.dev` blocks its half of the redirect work.
@@ -93,17 +93,22 @@ removed.
 ### The photos are a live AWS runtime dependency
 
 > **Update (2026-07-26):** all 118 photos are now in R2 with the manifest committed, so
-> the _data_ dependency is gone and the S3 bucket is safe to delete. What is described
-> below still runs on `errorsignal.dev` and still calls API Gateway — tearing down the API
-> stack breaks that site's photos page, which is fine once it redirects to `memerson.com`
-> (M2), and not before.
+> the _data_ dependency is gone and the S3 bucket is safe to delete.
+>
+> **Update (2026-07-27): the API stack is now safe to tear down too.** What is described
+> below no longer runs anywhere — `errorsignal.dev/photos` is a redirect page, and the
+> gallery that called API Gateway was deleted along with the rest of the old site's
+> implementation. Nothing reaches that endpoint now.
 
-The current gallery (`PhotoGallery.tsx` on `errorsignal.dev`) does a **runtime fetch** to
+The old gallery (`PhotoGallery.tsx` on `errorsignal.dev`) did a **runtime fetch** to
 `https://<api-id>.execute-api.us-east-1.amazonaws.com/dev/photos` → Lambda
 `list_photos` → `s3:list_objects_v2` on `memerson-public-photos`.
 
-**Tearing down the API stack breaks the photos page on the currently-live site.** Photo
-data must be in R2 with a committed manifest before any AWS teardown.
+**This is the dependency that blocked the AWS teardown, and it is fully discharged.** Photo
+data had to be in R2 with a committed manifest first (done 2026-07-26), and the last caller
+had to stop existing (done 2026-07-27, when the old site became redirects). Nothing now
+reaches API Gateway. The whole reason this site forbids request-time data fetching for
+content is to avoid recreating this situation — see `AGENTS.md`.
 
 Secondary problems with that Lambda: `list_objects_v2` is unpaginated (1000-object cap),
 and it derives `srcSet` from filename sort order with `1x`/`2x` descriptors — which is why
@@ -145,10 +150,12 @@ deployed**, which is not the same list.
 source. Open decision #6 is therefore already answered for the _stack_; see the orphaned
 resources below for the part that still costs money.
 
-**Analytics (open decision #1) answers itself:** `errorsignal.dev` serves **no analytics
-script at all** — no PostHog, no Plausible. The reverse-proxy stack is dead weight, and the
-Plausible setup described in the `plausible-analytics` blog post is no longer wired up. So
-this is not "migrate analytics", it is "decide whether to start having analytics".
+**Analytics (open decision #1) answered itself, then was decided:** `errorsignal.dev` served
+**no analytics script at all** — no PostHog, no Plausible. The reverse-proxy stack is dead
+weight, and the Plausible setup described in the `plausible-analytics` blog post was no
+longer wired up. So it was never "migrate analytics", it was "decide whether to start". As
+of 2026-07-27 the answer is **no** — see [MILESTONES M2](./MILESTONES.md). The proxy stack
+has no future use.
 
 **Orphaned resources with no owning stack** — this is where the non-S3 spend is:
 
@@ -184,11 +191,11 @@ Note: local AWS CLI is authenticated as the account **root** user
 
 ## Related repos
 
-| Repo                               | Status                                                                                                                                                       |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `~/workspace/emersonmde.github.io` | Current live site (`errorsignal.dev`, Astro + GitHub Pages). Source for **content** migration: blog posts, projects YAML, favicons. Archive once redirected. |
-| `~/workspace/memerson`             | Old CRA site + the CDK stacks for the AWS infra being torn down. Keep until teardown is done.                                                                |
-| `~/workspace/emersonmde`           | GitHub profile README, not a website. Leave alone.                                                                                                           |
+| Repo                               | Status                                                                                                                                                                                                                                                                                       |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `~/workspace/emersonmde.github.io` | The old site, **retired 2026-07-27** — now nothing but redirect pages to `memerson.com`. Its TUI implementation was deleted in the same change (still in git history); `src/content/` was kept as the source of record for the **content** migration: blog posts, projects YAML. Archive it. |
+| `~/workspace/memerson`             | Old CRA site + the CDK stacks for the AWS infra being torn down. Keep until teardown is done.                                                                                                                                                                                                |
+| `~/workspace/emersonmde`           | GitHub profile README, not a website. Leave alone.                                                                                                                                                                                                                                           |
 
 `/add-dir ~/workspace/emersonmde.github.io` to read the old site from a session.
 

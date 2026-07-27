@@ -103,13 +103,16 @@ are served from an R2 custom domain rather than proxied through the Worker.
 **`memerson.com` is live** (2026-07-27). Deploy with `npm run deploy`.
 
 Deployment is intended to run via Cloudflare Workers Builds on push to `main`, but that is
-**not connected yet** — this repo has no GitHub remote, and authorizing Cloudflare's GitHub
-app is dashboard-only.
+**not connected yet.** The repo is now public at `github.com/emersonmde/memerson-web`, so
+the remaining step is authorizing Cloudflare's GitHub app, which is dashboard-only. Until
+then `npm run deploy` is the only thing that ships — a push to `main` deploys nothing.
 
 One-time setup from `docs/ARCHITECTURE.md` §3 that **is** done: `wrangler login`, R2
 enabled, both buckets created, `photos.memerson.com` attached, custom domain bound. No R2
-API token was needed. Still outstanding: Workers Builds, the `errorsignal.dev` Bulk
-Redirects (M2), and mail hardening (SPF/DKIM/DMARC/DNSSEC).
+API token was needed. Still outstanding: Workers Builds and mail hardening
+(SPF/DKIM/DMARC/DNSSEC). The `errorsignal.dev` cutover is **done** (2026-07-27) and was
+never Bulk Redirects — the redirects live in the old site's own repo, deliberately. See
+`docs/ARCHITECTURE.md` §8.
 
 ## Hard constraints
 
@@ -186,8 +189,10 @@ derivatives make it unnecessary.
 
 ## Related repos
 
-- `~/workspace/emersonmde.github.io` — the current live site (`errorsignal.dev`). Source
-  for content migration: blog posts, projects YAML, favicons. Use
+- `~/workspace/emersonmde.github.io` — the old site (`errorsignal.dev`), **retired
+  2026-07-27**. It now builds nothing but redirect pages to `memerson.com`; the TUI
+  implementation was deleted and lives only in git history. `src/content/` was kept as the
+  source of record for the content migration (blog posts, projects YAML). Use
   `/add-dir ~/workspace/emersonmde.github.io` to read it.
 - `~/workspace/memerson` — old CRA site plus the CDK stacks being torn down.
 - `~/workspace/emersonmde` — GitHub profile README, not a website. Leave alone.

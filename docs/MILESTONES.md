@@ -96,22 +96,29 @@ Pages cannot emit a 301, so these are meta-refresh redirects. Full reasoning and
       photo sha256-matched against the committed manifest. Clears the way for the teardown.
 - [x] **Decide analytics** — **no analytics.** Decided 2026-07-27; reasoning below.
 - [x] **Add self-redirects to `emersonmde.github.io`** for `/`, `/about`, `/blog`,
-      `/blog/<slug>`, `/photos`, `/rss.xml` — written 2026-07-27, 10 routes building.
-- [x] Verify old blog URLs land correctly — 1:1 as expected. Every redirect target in the
-      build was fetched against live `memerson.com` and all nine return 200. The one shape
+      `/blog/<slug>`, `/photos`, `/rss.xml` — **live 2026-07-27** (commit `e5f8e05`, Pages
+      workflow green).
+- [x] Verify old blog URLs land correctly — 1:1 as expected. All nine redirect pages were
+      fetched from live `errorsignal.dev`: each returns 200, carries a 0-second refresh, a
+      matching `rel="canonical"`, and no `noindex`; every target returns 200 on
+      `memerson.com`. Bare paths (`/about`) still 301 to the trailing-slash form first,
+      which is Pages' own behaviour and lands on the redirect page either way. The one shape
       change is `/photos` → now paginated `/photos/2..4`, and the old single `/photos` maps
       to the new first page.
-- [ ] Verify the **fall-through** still works after the redirect lands —
-      `errorsignal.dev/coppermind/` must still return 200. This is the check that catches
-      an over-broad rule. Baseline recorded pre-change: it returns 200 today. Cannot be
-      re-run until the old repo's Pages workflow has redeployed.
-- [ ] Archive `emersonmde.github.io` **only** once the redirect is confirmed — and note
-      that archiving the Astro site's repo does not affect the other repos publishing to
-      the same domain, and does not take the deployed Pages site down. It does stop the
-      Actions workflow, so archive last.
+- [x] Verify the **fall-through** still works after the redirect lands. **Confirmed
+      2026-07-27**, and wider than the single check this line asked for: three project sites
+      publish to the domain and all three still serve their own content —
+      `/coppermind/` (the WASM demo), `/daedalus/` (the Rust docs) and `/vilya/`. `/rss.xml`
+      is valid XML served as `application/xml`, and an unknown path returns a real 404 with
+      the moved notice rather than a redirect.
+- [ ] Archive `emersonmde.github.io` **only** once the redirect is confirmed — that
+      condition is now met. Archiving does not affect the other repos publishing to the same
+      domain and does not take the deployed Pages site down; it does stop the Actions
+      workflow, so nothing further can be deployed from it without unarchiving. Archive
+      last.
 
 **Exit criteria:** old URLs resolve to their new equivalents and `errorsignal.dev` is
-retired.
+retired. — **Met**, pending only the archive flag.
 
 ### Analytics: none — decided 2026-07-27
 

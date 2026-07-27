@@ -121,9 +121,8 @@ Cloudflare repo access is undesirable.
    `github.com/emersonmde/memerson-web`. Authorizing Cloudflare's GitHub app in the
    dashboard is **still outstanding**, and is the whole of what remains. Local
    `npm run deploy` works without it.
-5. ~~Cutover redirects~~ — **written 2026-07-27** in the **old site's repo**, not this zone
-   (§8); awaiting its Pages deploy. `memerson.dev` is separate and needs a Route 53 change
-   first.
+5. ~~Cutover redirects~~ — **live 2026-07-27**, in the **old site's repo** rather than this
+   zone (§8), and verified. `memerson.dev` is separate and needs a Route 53 change first.
 6. Decide `www.memerson.com` handling (redirect rule or second custom domain).
 7. Mail hardening on the zone: SPF, DKIM, DMARC for Google Workspace, plus DNSSEC. The
    `MX` (`smtp.google.com`) and the Google site-verification `TXT` are already in place and
@@ -570,9 +569,17 @@ kept from over-matching. Not worth it up front.
 `memerson.dev/*` → `memerson.com/*` is a separate job and requires moving the zone off
 Route 53 or changing Route 53 records — that one is not free of AWS.
 
-**Post-cutover check:** `errorsignal.dev/coppermind/` must still return 200 and still be
-the demo. With the repo-level approach that should hold automatically, which is the point
-— but verify it anyway, because "should hold automatically" is how outages start.
+**Post-cutover check — done 2026-07-27, and it held.** `errorsignal.dev/coppermind/` still
+returns 200 and is still the demo. The check was widened while it was being run: three
+repos publish to the domain, not one, and `/daedalus/` (Rust docs) and `/vilya/` are intact
+too. With the repo-level approach this holds automatically, which is the point — but it was
+verified anyway, because "should hold automatically" is how outages start.
+
+The redirects themselves were verified against the live site rather than the build: all
+nine pages return 200 with a 0-second refresh, a matching `rel="canonical"` and no
+`noindex`, and every target returns 200 on `memerson.com`. `/rss.xml` serves as
+`application/xml` and parses. An unknown path returns a real 404 carrying the moved notice,
+not a redirect.
 
 ---
 
