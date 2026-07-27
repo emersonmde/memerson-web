@@ -397,10 +397,31 @@ Economics: 118 photos → 14 shoots, so the human decision count is ~14 optional
 than 118 labels. Even a 50% error rate costs minutes to fix. Inaccuracy is cheap here;
 silent re-derivation is not.
 
-#### Where albums go in the UI: filtered sheet, not a second view
+#### One viewer, many subsets
 
-**Decided against a separate album view.** The existing contact sheet already generalises,
-and the code makes this nearly free — verified by reading it, not assumed:
+**Albums, tags and dates are not three features. They are one.** Each is a different way of
+selecting a subset of the library; none of them is structurally special, and none of them
+justifies its own viewer. Corrected 2026-07-27 — an earlier draft of this section treated
+albums as their own thing and then asked whether the stream should be broken into
+per-section masonry blocks. **Both were wrong.** The constraint is explicit:
+
+> `/photos` and the lightbox stay exactly as they are today. One masonry sheet, one
+> lightbox, no headers mid-flow, no sectioning.
+
+So the model is a single viewer fed different item lists:
+
+| Route                  | Subset     |
+| ---------------------- | ---------- |
+| `/photos`              | everything |
+| `/photos/album/<slug>` | one album  |
+| `/photos/tag/<slug>`   | one tag    |
+| `/photos/<year>`       | one year   |
+
+Identical component, identical lightbox, identical infinite scroll. Only the item list and
+the header copy differ. This is **less** code than treating albums separately, not more.
+
+The existing contact sheet already generalises, and the code makes it nearly free —
+verified by reading it, not assumed:
 
 - **The lightbox derives its collection from the DOM.** `gallery.ts` re-reads
   `grid.querySelectorAll('a[data-tile]')` on every `show()` rather than snapshotting at
@@ -411,29 +432,34 @@ and the code makes this nearly free — verified by reading it, not assumed:
 - A second view would mean a second masonry and a second lightbox kept in sync — precisely
   the class of bug that already left the gallery inert on `/photos/2` once.
 
-The shape:
-
-- **`/photos` stays exactly as it is** — the whole stream, newest first. It is the default
-  and the primary. Nothing about the current experience changes.
-- **`/photos/album/<slug>`** renders the same sheet component, filtered, paginated the same
-  way.
-- **Discovery is contextual first.** When a photo belongs to an album, the lightbox footer
-  names it as a link. Albums are found by browsing into them, rather than from a hub that
-  has to be consulted first — which is the right default when most photos are in none.
-- **Plus a short index** of named albums for the direct-link and no-JS path. A quiet line,
-  not a chip row implying a partition.
-
 **Consequence for the mockup's five accents:** they become implementable, but only named
 albums get one and misc photos keep the default cyan. That is better than the mockup
 intended — the accent then _means_ "this frame is part of something" instead of being
 decoration.
 
-**Open, and worth deciding before building:** whether the flat stream also gets **shoot or
-date headers**. It is the natural way to make a large misc library navigable, and it makes
-"name this shoot" the only curation act there is. But `column-count: 4` orders items _down_
-each column and cannot carry a full-width header mid-flow, so headers force the sheet into
-one masonry block per section. That is a real change to the thing Matthew likes, and it
-interacts with the bin-packing item at the top of M4.
+#### The actual gap is navigation, and it is undesigned
+
+The viewer needs no redesign and should not get one. What has never been designed is
+**how a person reaches a subset, and how they learn one exists.** The mockups' only answer
+was the album chip row, and that assumes subsets partition the library — which is exactly
+the assumption this section overturns. So there is nothing to implement against.
+
+**This is worth a new mockup rather than an invented answer**, on the same grounds as the
+rest of the design: `docs/design/` is the source of record, and UI invented here has a habit
+of not matching. What to ask for, kept tight so the artifact is usable:
+
+- **In scope:** the sheet header when it is showing a subset (what it is, how many, the way
+  back to everything); how a subset is entered in the first place; how the lightbox reveals
+  that the current photo has an album / tags / a date worth clicking; and whether an index
+  of existing subsets exists at all, or discovery is purely contextual.
+- **Explicitly out of scope:** the tile grid, the masonry, the lightbox chrome, the bloom,
+  the thumbnail strip. Those are done and are not being revisited.
+- **Constraints to hand over:** desktop only; existing tokens in `src/styles/global.css`;
+  and the governing fact — **subsets are sparse.** Most photos have no album and never will,
+  and the misc fraction grows over time. Any affordance implying a partition is wrong.
+
+Drop the exported HTML into `docs/design/` alongside the existing mockups and it becomes
+the spec, same as `Neon District Mockups.dc.html` did.
 
 ### Keeping this path open
 
