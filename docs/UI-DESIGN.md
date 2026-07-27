@@ -185,6 +185,42 @@ data is used instead, or where a designed element could not be honoured.
 | `SEATTLE · 47.6°N 122.3°W`           | **Unverified** — location asserted nowhere | Replaced with an Easter egg. See below.                 |
 | `EMERSON` on the hero sign           | The wordmark is `M.EMERSON`                | Sign is now `M.EMERSON`, sized to the word.             |
 
+### Mockup annotation is not site copy
+
+A mockup explains itself to whoever is reviewing it. Several of those explanations were
+carried into the build as if they were the site's own words, and shipped:
+
+| Shipped as copy                                                     | What it actually was                    |
+| ------------------------------------------------------------------- | --------------------------------------- |
+| "TUBE FEEDS THE RAIL"                                               | Telling a reviewer what to watch        |
+| "The wash behind a photo is the photo — nothing samples a palette." | Design rationale, from §6 of the mockup |
+| "END OF RAIL"                                                       | A label for the rail component          |
+
+Removed 2026-07-27. `SCROLL ↓` was kept — it is a real affordance rather than an
+explanation. `END OF RAIL` became **`END OF LINE`**: still marks the end of the run, but
+it is a Tron nod that sits well with the footer's light-cycle grid, and it reads as voice
+rather than as a part label.
+
+**The test when importing a mockup:** would this sentence make sense to a visitor who has
+never seen the design document? "Nothing samples a palette" is an answer to a question only
+a reviewer asked. `MEMERSON.COM — DISTRICT 09 / PERSONAL` passes — it is the design's
+fiction, not an instruction, and the 404's `SIGNAL LOST — DISTRICT 09` is the same voice.
+
+### Contact sheet: tiles are not dimmed by default
+
+The mockup washes every tile to 60% black and lights one on hover. That reads well against
+placeholder gradients and badly against photographs — a contact sheet exists to be
+_browsed_, and a grid of uniformly murky images defeats its only job.
+
+Inverted: an 18% wash keeps tiles seated against the near-black page rather than glaring
+off it, and hover clears it entirely. The date label moved from always-on to hover, with
+the rest of the metadata — it is chrome, not a caption, and permanently stamping it across
+a photograph is exactly what a contact sheet should not do. Nothing is lost to a screen
+reader: the date is in the image's `alt`.
+
+"One tile lights" survives as a lift in contrast rather than as a penalty on the other
+twenty-nine.
+
 **Album chips.** There is no album field in the manifest schema and `tags` is empty for
 every photo. Rather than invent five albums, the filter row is left out and the header
 keeps its real stat block. Year is the obvious first real filter — the manifest has

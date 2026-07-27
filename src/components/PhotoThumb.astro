@@ -4,7 +4,7 @@ import { PHOTOS_BASE_URL } from '../consts';
 import { photoAlt } from '../lib/photoAlt';
 
 /**
- * A gallery thumbnail: dim by default, lights on hover. Used by both the home
+ * A gallery thumbnail. Used by both the home
  * page preview strip and the contact sheet.
  *
  * Unlike <Photo>, this emits no <figure>/<figcaption> — it is a tile in a grid,
@@ -131,19 +131,34 @@ const alt = photoAlt(photo);
     display: block;
   }
 
-  /* Dim by default; one tile lights at a time. */
+  /*
+   * The mockup dims every tile to 60% black and lights one on hover. That reads
+   * well with placeholder gradients and badly with photographs: a contact sheet
+   * exists to be *browsed*, and a grid of uniformly murky images defeats the
+   * one job it has.
+   *
+   * Inverted here. A trace of wash keeps the tiles seated against the near-black
+   * page rather than glaring off it; hover clears it completely. The "one tile
+   * lights" idea survives as a lift in contrast, not as a penalty on the other
+   * twenty-nine.
+   */
   .tile-wash {
     position: absolute;
     inset: 0;
-    background: rgba(3, 4, 10, 0.6);
+    background: rgba(3, 4, 10, 0.18);
     transition: background 0.2s;
     pointer-events: none;
   }
 
   .tile:hover .tile-wash {
-    background: rgba(3, 4, 10, 0.14);
+    background: transparent;
   }
 
+  /*
+   * Chrome, not caption — so it appears on hover with the rest of the metadata
+   * rather than sitting permanently on top of the photograph. The date is still
+   * in the image's alt text, so nothing is lost to a screen reader.
+   */
   .tile-label {
     position: absolute;
     left: 9px;
@@ -152,6 +167,13 @@ const alt = photoAlt(photo);
     letter-spacing: 0.14em;
     color: #c7d2e2;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    text-shadow: 0 1px 6px rgba(3, 4, 10, 0.9);
+  }
+
+  .tile:hover .tile-label {
+    opacity: 1;
   }
 
   .tile-meta {
@@ -160,10 +182,11 @@ const alt = photoAlt(photo);
     top: 8px;
     font: 400 8px var(--mono);
     letter-spacing: 0.12em;
-    color: var(--dim);
+    color: #c7d2e2;
     opacity: 0;
     transition: opacity 0.2s;
     pointer-events: none;
+    text-shadow: 0 1px 6px rgba(3, 4, 10, 0.9);
   }
 
   .tile:hover .tile-meta {

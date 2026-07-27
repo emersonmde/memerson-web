@@ -34,6 +34,7 @@ const years = photos
   .map((p) => p.data.takenAt?.getUTCFullYear())
   .filter(Boolean) as number[];
 const yearSpan = years.length ? `${Math.min(...years)} — ${Math.max(...years)}` : '';
+const bodies = new Set(photos.map((p) => p.data.camera).filter(Boolean)).size;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const railHue = (index: number) => hueForIndex(index, projects.length);
@@ -84,7 +85,7 @@ const isoDate = (d: Date | null) =>
           <span class="tube-bar"><span class="tube-spec"></span></span>
           <span class="tube-cap"></span>
         </div>
-        <span class="tube-note">TUBE FEEDS THE RAIL<br />SCROLL ↓</span>
+        <span class="tube-note">SCROLL ↓</span>
       </div>
 
       <div class="bio">
@@ -157,7 +158,7 @@ const isoDate = (d: Date | null) =>
         ))
       }
 
-      <div class="rail-end"><span class="rail-end-rule"></span>END OF RAIL</div>
+      <div class="rail-end"><span class="rail-end-rule"></span>END OF LINE</div>
     </div>
   </section>
 
@@ -173,8 +174,7 @@ const isoDate = (d: Date | null) =>
 
     <div class="sec-lede">
       <p>
-        {photos.length} frames, {yearSpan}. The wash behind a photo is the photo — nothing
-        samples a palette.
+        {photos.length} frames, {yearSpan}, across {bodies} cameras.
       </p>
       <a class="sec-aside" href="/photos">ALL {photos.length} FRAMES ↗</a>
     </div>
