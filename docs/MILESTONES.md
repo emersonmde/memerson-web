@@ -25,7 +25,13 @@ styles on top of this markup and needed almost no structural change to it.
 - [x] `<Photo>` component for blog-post photo references
 - [x] `wrangler login` (OAuth, `emersonmde@protonmail.com`)
 - [x] R2 enabled on the Cloudflare account (dashboard)
-- [ ] Workers Builds connected (needs GitHub remote + dashboard auth); push to `main` deploys
+- [ ] Workers Builds connected; push to `main` deploys. **Half done as of 2026-07-27:** the
+      repo is now public at `github.com/emersonmde/memerson-web` and `main` is pushed, which
+      was the blocker. What is left is authorizing Cloudflare's GitHub app and picking the
+      repo, and that is dashboard-only — no wrangler command or API token reaches it.
+      `wrangler deployments list` still reports `Source: Unknown (deployment)` for every
+      deployment, which is what a CLI deploy looks like; a Workers Builds deploy would name
+      the commit.
 - [x] First deploy to `memerson.com` — **live 2026-07-27.** All 13 routes 200, 404 returns
       404, fonts/icons/manifest serve, photos load from R2.
 - [x] Blog posts migrated from `emersonmde.github.io` (slugs preserved exactly)
@@ -39,9 +45,9 @@ styles on top of this markup and needed almost no structural change to it.
       4 pages, real `w` descriptors, intrinsic dimensions on every `<img>`, LQIP inlined
       (22 KB across the whole manifest). The `paginate([])` guard is now dormant but kept.
 
-**One item left:** **Workers Builds**, which needs a GitHub remote (this repo has none)
-plus authorizing Cloudflare's GitHub app in the dashboard. `npm run deploy` covers
-deployment until then, so nothing depends on it.
+**One item left:** **Workers Builds**. The GitHub remote it was waiting on now exists;
+only the dashboard authorization remains. `npm run deploy` covers deployment until then, so
+nothing depends on it.
 
 **Exit criteria:** `memerson.com` serves the real site with all content and all photos. The
 API Gateway photo dependency is gone. Ugly, but complete and honest. — **Met.**
@@ -88,25 +94,68 @@ Pages cannot emit a 301, so these are meta-refresh redirects. Full reasoning and
 
 - [x] Confirm the S3 photo buckets hold nothing unmigrated — all four inventoried, every
       photo sha256-matched against the committed manifest. Clears the way for the teardown.
-- [ ] **Decide analytics.** Not a migration: `errorsignal.dev` serves no analytics script
-      at all today, so this is a decision to _start_, not to port. Cloudflare Web Analytics
-      is free and needs no proxy. Note the footer currently claims "NO TRACKERS, NO
-      ANALYTICS" — adding any would mean changing that line.
-- [ ] **Add self-redirects to `emersonmde.github.io`** for `/`, `/about`, `/blog`,
-      `/blog/<slug>`, `/photos`, `/rss.xml`. Astro's `redirects` config emits these as
-      static meta-refresh pages, which is the only mechanism GitHub Pages supports.
-- [ ] Verify old blog URLs land correctly — path structure is unchanged and all five slugs
-      are preserved, so this is 1:1. The one shape change is `/photos` → now paginated
-      `/photos/2..4`, and the old single `/photos` maps to the new first page.
+- [x] **Decide analytics** — **no analytics.** Decided 2026-07-27; reasoning below.
+- [x] **Add self-redirects to `emersonmde.github.io`** for `/`, `/about`, `/blog`,
+      `/blog/<slug>`, `/photos`, `/rss.xml` — written 2026-07-27, 10 routes building.
+- [x] Verify old blog URLs land correctly — 1:1 as expected. Every redirect target in the
+      build was fetched against live `memerson.com` and all nine return 200. The one shape
+      change is `/photos` → now paginated `/photos/2..4`, and the old single `/photos` maps
+      to the new first page.
 - [ ] Verify the **fall-through** still works after the redirect lands —
       `errorsignal.dev/coppermind/` must still return 200. This is the check that catches
-      an over-broad rule.
+      an over-broad rule. Baseline recorded pre-change: it returns 200 today. Cannot be
+      re-run until the old repo's Pages workflow has redeployed.
 - [ ] Archive `emersonmde.github.io` **only** once the redirect is confirmed — and note
       that archiving the Astro site's repo does not affect the other repos publishing to
-      the same domain.
+      the same domain, and does not take the deployed Pages site down. It does stop the
+      Actions workflow, so archive last.
 
 **Exit criteria:** old URLs resolve to their new equivalents and `errorsignal.dev` is
 retired.
+
+### Analytics: none — decided 2026-07-27
+
+The bar set for adopting Cloudflare Web Analytics was that it report **unique users**, be
+free, and be trivial to run. It fails the first, and by design rather than by omission:
+Cloudflare's beacon is deliberately cookieless and does not fingerprint by IP or User
+Agent, so it has no way to recognise a returning person. What it reports is **page views**
+and **visits**, where a visit is a page view whose HTTP referer is a different hostname.
+That is a fine metric; it just is not the one that was being asked for, and it is not worth
+a script on every page to get it.
+
+Cloudflare's dashboard already gives per-route request counts for `memerson.com` with no
+client script at all, which covers the practical question ("is anyone reading this?")
+without shipping anything.
+
+So the site ships no analytics. The footer's `NO TRACKERS, NO ANALYTICS` was **removed
+anyway** — the claim was true, but advertising an absence turns it into a promise, and the
+promise is the part that ages badly. See [UI-DESIGN §8](./UI-DESIGN.md).
+
+### How the redirects were built, and one deviation
+
+Not via Astro's `redirects:` config, which was the plan of record. That config emits the
+right meta refresh but also stamps `<meta name="robots" content="noindex">` on every
+redirect page — and noindex blocks the old URL from Search outright instead of passing its
+signals to the new one, which is the opposite of a site move. Google's canonicalization
+guidance says not to use noindex for this. The pages are hand-written instead, via
+`src/layouts/Moved.astro` in the old repo: instant (0-second) meta refresh, which
+[Google documents as a permanent redirect](https://developers.google.com/search/docs/crawling-indexing/301-redirects),
+plus `rel="canonical"` at the new URL, and no robots directive.
+
+**`/rss.xml` is the exception.** A meta refresh cannot work there: GitHub Pages serves
+`.xml` as XML, so an HTML redirect document at that path arrives as a parse error rather
+than a redirect. It stays a valid feed — channel link pointing at `memerson.com`, one item
+announcing the move — which is both readable in an aggregator and a plain link for a
+crawler. There are no known subscribers, so nothing is being disrupted either way.
+
+**`/404` deliberately does not redirect.** Every real old URL has its own redirect page, so
+anything reaching the 404 is a path that never existed; funnelling those to a homepage
+reads as a soft 404. It is also the 404 for the project sites sharing the domain.
+
+The old repo's TUI implementation — React components, the tmux shell, the Sonokai
+stylesheet — was deleted in the same change, along with the React integration and font
+dependencies. A redirect-only site should build as one. It is all still in git history, and
+`src/content/` was left intact since it remains the source of record for the migration.
 
 ---
 

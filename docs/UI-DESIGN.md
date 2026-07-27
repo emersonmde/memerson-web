@@ -282,7 +282,7 @@ one-line addition in `SiteFooter.astro` if wanted.
 The location became an **Easter egg** instead of either a real city or nothing:
 
 ```
-TYCHO · LUNA · 43.3°S 11.4°W · NO TRACKERS, NO ANALYTICS
+TYCHO · LUNA · 43.3°S 11.4°W
 ```
 
 `43.3°S 11.4°W` is the real selenographic position of **Tycho crater** — the TMA-1
@@ -294,6 +294,13 @@ It is also the choice that agrees with the design's own brief. The mockup's note
 this world is **"vacuum, not street"** — which is why rain was cut and a star field kept.
 A street-level reference (Chiba, Kowloon, the Bradbury Building were the alternatives)
 would have contradicted that; a crater on the Moon does not.
+
+**`NO TRACKERS, NO ANALYTICS` was dropped from the line in M2**, when analytics was
+actually decided. The site still ships no analytics of any kind, so the claim was true —
+but a footer that advertises the absence of something makes the absence a promise, and the
+promise is the part that ages badly. The behaviour is now simply the behaviour: no beacon
+script, no third-party requests, nothing to attest to. See
+[MILESTONES M2](./MILESTONES.md) for the reasoning behind the decision itself.
 
 ---
 
