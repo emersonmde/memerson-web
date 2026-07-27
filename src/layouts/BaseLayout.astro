@@ -3,6 +3,7 @@ import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL } from '../consts';
 import Sky from '../components/Sky.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 
 /**
@@ -76,6 +77,9 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
       type="font/woff2"
       crossorigin
     />
+
+    {/* Mockup 6g, "Redraw". See docs/UI-DESIGN.md §5.5. */}
+    <ClientRouter />
   </head>
   <body>
     <a class="skip" href="#main">SKIP TO CONTENT</a>
@@ -93,9 +97,11 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
     </div>
 
     <div class="scanlines" aria-hidden="true"></div>
+    <div class="redraw" aria-hidden="true"></div>
 
     <script>
       import '../scripts/fx';
+      import '../scripts/redraw';
     </script>
   </body>
 </html>

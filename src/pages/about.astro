@@ -37,7 +37,10 @@ const LINKS = [
   back={true}
 >
   <article class="about">
-    <div class="about-crumb">/ ABOUT</div>
+    <nav class="about-crumb" aria-label="Breadcrumb">
+      <a href="/">/</a>
+      <span aria-current="page">ABOUT</span>
+    </nav>
 
     <h1 class="about-h1" data-fx="resolve">Matthew Emerson</h1>
 
@@ -95,10 +98,24 @@ const LINKS = [
   }
 
   .about-crumb {
+    display: flex;
+    gap: 8px;
     font: 400 9.5px var(--mono);
     letter-spacing: 0.24em;
-    color: var(--cyan);
     margin-bottom: 18px;
+  }
+
+  .about-crumb a {
+    color: var(--cyan);
+    transition: color 0.16s;
+  }
+
+  .about-crumb a:hover {
+    color: var(--sodium);
+  }
+
+  .about-crumb [aria-current] {
+    color: var(--dim);
   }
 
   .about-h1 {

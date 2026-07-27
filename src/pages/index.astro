@@ -34,7 +34,6 @@ const years = photos
   .map((p) => p.data.takenAt?.getUTCFullYear())
   .filter(Boolean) as number[];
 const yearSpan = years.length ? `${Math.min(...years)} — ${Math.max(...years)}` : '';
-const bodies = new Set(photos.map((p) => p.data.camera).filter(Boolean)).size;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const railHue = (index: number) => hueForIndex(index, projects.length);
@@ -111,8 +110,11 @@ const isoDate = (d: Date | null) =>
     </div>
 
     <div class="rail-track" aria-hidden="true"></div>
-    <div class="rail-live" data-fx="rail" aria-hidden="true"></div>
+    <div class="rail-glow" aria-hidden="true">
+      <div class="rail-live" data-fx="rail"></div>
+    </div>
     <div class="rail-head" data-fx="head" aria-hidden="true"></div>
+    <div class="rail-terminal" data-fx="terminal" aria-hidden="true"></div>
 
     <div class="rows">
       {
@@ -135,13 +137,13 @@ const isoDate = (d: Date | null) =>
                   <span class="plate-blurb">{project.data.shortDescription}</span>
                 </span>
                 <span class="plate-mark" aria-hidden="true" />
-              </summary>
 
-              <div class="plate-tags">
-                {project.data.tags.map((tag) => (
-                  <span class="tag">{tag}</span>
-                ))}
-              </div>
+                <div class="plate-tags">
+                  {project.data.tags.map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              </summary>
 
               <div class="plate-detail">
                 <p>{project.data.description}</p>
@@ -174,7 +176,7 @@ const isoDate = (d: Date | null) =>
 
     <div class="sec-lede">
       <p>
-        {photos.length} frames, {yearSpan}, across {bodies} cameras.
+        {photos.length} frames, {yearSpan}.
       </p>
       <a class="sec-aside" href="/photos">ALL {photos.length} FRAMES ↗</a>
     </div>
@@ -462,18 +464,43 @@ const isoDate = (d: Date | null) =>
     padding-bottom: 86px;
   }
 
+  /*
+   * The run starts at the very top of the section, i.e. *behind* the sticky
+   * header, so the charge emerges from under it rather than appearing in open
+   * space below it.
+   */
   .rail-track,
+  .rail-glow,
   .rail-live {
     position: absolute;
     left: var(--gutter);
-    top: 52px;
+    top: 0;
     bottom: 86px;
     width: 3px;
     border-radius: 2px;
   }
 
+  .rail-live {
+    inset: 0;
+    width: auto;
+  }
+
   .rail-track {
     background: rgba(142, 180, 255, 0.09);
+  }
+
+  /*
+   * The glow lives on a wrapper, not on the masked element.
+   *
+   * `box-shadow` on the masked rail was clipped away by its own mask — a mask
+   * only paints within the element's box, and a shadow is drawn outside it. The
+   * result was a rail with almost no glow, and none at all past the charge
+   * front. A filter on the parent is applied to the already-masked child, so the
+   * glow follows the charge exactly and stops where it stops.
+   */
+  .rail-glow {
+    filter: drop-shadow(0 0 5px oklch(0.8 0.17 200 / 0.7))
+      drop-shadow(0 0 16px oklch(0.8 0.17 200 / 0.35));
   }
 
   /*
@@ -482,7 +509,6 @@ const isoDate = (d: Date | null) =>
    */
   .rail-live {
     background: linear-gradient(180deg, var(--sodium), var(--cyan) 50%, var(--violet));
-    box-shadow: 0 0 9px -1px oklch(0.8 0.17 200 / 0.55);
     mask-image: linear-gradient(
       180deg,
       #000 0,
@@ -500,7 +526,7 @@ const isoDate = (d: Date | null) =>
   .rail-head {
     position: absolute;
     left: calc(var(--gutter) - 4px);
-    top: 52px;
+    top: 0;
     margin-top: -116px;
     width: 11px;
     height: 116px;
@@ -514,6 +540,27 @@ const isoDate = (d: Date | null) =>
       rgba(190, 225, 255, 0.4) 62%,
       rgba(255, 255, 255, 0.95)
     );
+  }
+
+  /*
+   * The terminal mirrors `.tube-cap` at the other end of the run: the tube is
+   * capped where the charge enters, and capped again where it lands. It sits
+   * dark until the charge actually reaches it — `--lit` is set by fx.ts.
+   */
+  .rail-terminal {
+    position: absolute;
+    left: calc(var(--gutter) - 1.5px);
+    bottom: 80px;
+    width: 6px;
+    height: 15px;
+    border-radius: 1px;
+    background: linear-gradient(180deg, #5d6272, #20242e);
+    box-shadow: 0 0 calc(10px * var(--lit, 0))
+      oklch(0.8 0.17 286 / calc(0.8 * var(--lit, 0)));
+    transition:
+      box-shadow 0.28s ease,
+      filter 0.28s ease;
+    filter: brightness(calc(1 + 0.6 * var(--lit, 0)));
   }
 
   .rows {
@@ -534,8 +581,10 @@ const isoDate = (d: Date | null) =>
     border-radius: 50%;
     opacity: 0.12;
     background: var(--h);
-    box-shadow: 0 0 14px var(--h);
     z-index: 1;
+    transition:
+      opacity 0.18s ease,
+      box-shadow 0.18s ease;
   }
 
   .offshoot {
@@ -544,22 +593,30 @@ const isoDate = (d: Date | null) =>
     top: 26px;
     width: 51px;
     height: 1px;
+    opacity: 0.15;
     background: linear-gradient(90deg, var(--h), transparent);
+    transition: opacity 0.18s ease;
   }
 
   /* Plates are <details> so they open with no JS at all. */
+  /*
+   * No padding on the plate itself. It used to carry `16px 18px 15px`, which
+   * put a dead ring around the <summary> — clicking near the card's edge, or
+   * anywhere in the tag row, did nothing. The padding now lives on the children
+   * so the summary spans the entire collapsed card and all of it is clickable.
+   */
   .plate {
-    padding: 16px 18px 15px;
     overflow: hidden;
   }
 
   .plate summary {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 20px;
+    gap: 8px 20px;
     align-items: baseline;
     cursor: pointer;
     list-style: none;
+    padding: 16px 18px 15px;
   }
 
   .plate summary::-webkit-details-marker {
@@ -606,15 +663,16 @@ const isoDate = (d: Date | null) =>
   }
 
   .plate-tags {
+    grid-column: 1 / -1;
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
-    margin-top: 12px;
+    margin-top: 4px;
   }
 
   /* The detail wipes down on the same plate — no modal, no navigation. */
   .plate-detail {
-    margin-top: 14px;
+    margin: 0 18px 15px;
     padding-top: 14px;
     border-top: 1px solid rgba(142, 180, 255, 0.14);
     animation: plateIn 0.26s cubic-bezier(0.2, 0.85, 0.2, 1);

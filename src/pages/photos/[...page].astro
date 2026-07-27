@@ -51,7 +51,6 @@ const years = all
   .filter(Boolean) as number[];
 const yearSpan = years.length ? `${Math.min(...years)} — ${Math.max(...years)}` : '';
 const distinctYears = new Set(years).size;
-const bodies = new Set(all.map((p) => p.data.camera).filter(Boolean)).size;
 
 // One column's worth of width at the sheet's four columns.
 const SIZES = '(max-width: 900px) 45vw, 260px';
@@ -98,8 +97,7 @@ const remaining = Math.max(0, total - shown);
       <div>
         <h1 class="sheet-title" data-fx="resolve">Photographs</h1>
         <p class="sheet-lede">
-          {total} frames, {yearSpan}. Shot on {bodies} cameras, from a 6D to whatever phone
-          was in my pocket.
+          {total} frames, {yearSpan}.
         </p>
       </div>
       <div class="sheet-stats">

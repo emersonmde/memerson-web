@@ -51,7 +51,12 @@ const minutes = readingTime(post.body);
   <div class="progress" data-fx="progress" aria-hidden="true"></div>
 
   <article class="post">
-    <div class="post-crumb">/ LOG / {post.id.toUpperCase()}</div>
+    <nav class="post-crumb" aria-label="Breadcrumb">
+      <a href="/">/</a>
+      <a href="/blog">LOG</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{post.id.toUpperCase()}</span>
+    </nav>
 
     <h1 class="post-h1" data-fx="resolve">{post.data.title}</h1>
 
@@ -107,10 +112,25 @@ const minutes = readingTime(post.body);
   }
 
   .post-crumb {
+    display: flex;
+    gap: 8px;
     font: 400 9.5px var(--mono);
     letter-spacing: 0.24em;
-    color: var(--cyan);
+    color: var(--faint);
     margin-bottom: 18px;
+  }
+
+  .post-crumb a {
+    color: var(--cyan);
+    transition: color 0.16s;
+  }
+
+  .post-crumb a:hover {
+    color: var(--sodium);
+  }
+
+  .post-crumb [aria-current] {
+    color: var(--dim);
   }
 
   .post-h1 {
