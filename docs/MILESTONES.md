@@ -213,7 +213,8 @@ remaining three items are scope the mockup never covered, not unfinished work ag
 
 **Design/data gaps** carried from the import are tabulated in
 [UI-DESIGN §8](./UI-DESIGN.md) — most notably the album filter chips, which have no data
-behind them and are omitted rather than invented.
+behind them and are omitted rather than invented. **M4 later concluded they are the wrong
+affordance regardless**, not merely unpopulated; see "Shoots and albums".
 
 ---
 
@@ -230,10 +231,11 @@ locked in during M1.
 - [x] Infinite scroll (IntersectionObserver appending paginated blocks) — **done
       2026-07-27**, together with a lightbox that runs across page boundaries.
 - [ ] Trimmed search/random index
-- [ ] **Tag and date filtering.** This is what unblocks the mockup's album filter chips —
-      they are designed and styled (`.chip` in `global.css`) but omitted because no album
-      or tag data exists. `takenAt` is populated for all 118, so year is the cheapest
-      first real filter; it needs filtered routes.
+- [ ] **Filtered routes** — `/photos/album/<slug>`, and year as the cheapest first filter
+      (`takenAt` is populated for all 118). These render the **existing** sheet component
+      filtered, not a new view; see "Shoots and albums" below for why that is close to free.
+      Note the mockup's `.chip` filter row is styled in `global.css` but is **not** the
+      right affordance here — it implies a partition, and this library is mostly misc.
 - [ ] `Save-Data` handling
 
 ### Metadata extraction — the thing everything else waits on
@@ -277,7 +279,10 @@ Implementation notes for whenever it happens:
 - **Backfillable without local originals**, from the archive bucket or the existing 640px
   derivative. `photos:rebuild` already re-derives from the archive.
 - If albums exist, the accent can simply come _from the album_ and no extraction is needed
-  at all — which is the cheapest version of this feature and worth checking first.
+  at all — which is the cheapest version of this feature and worth checking first. Given the
+  reframe below, that also means **most photos would have no accent**, since most belong to
+  no album. That is fine, and arguably the point: an accent that only appears on album
+  frames carries meaning, where one on every frame is decoration.
 
 **2. AI-assisted titles, captions and tags** (Matthew's proposal). Replaces what would
 otherwise be 118 rows of manual data entry:
@@ -301,42 +306,134 @@ Two things to get right:
   photograph; it cannot know that this was the third pass at the forge or which trip it
   was from. Expect to keep titles sparse and let tags carry the search index.
 
-### Albums, via shoots
+### Shoots and albums
 
-**Open, and a likely direction.** The mockups show five invented albums. Today there are at
-most two real ones — a Dover trip and the PA Ren Faire — with the rest miscellaneous, so a
-five-album filter row over the current 118 photos would mostly say "MISC". That is an
-argument about _the current collection_, not about albums, and it changes the moment more
-photos are uploaded.
+Reframed 2026-07-27 after looking at the actual gap distribution and after Matthew
+described what the library is going to become. **The earlier version of this section was
+wrong in two ways, both recorded below**, because the corrections are the useful part.
 
-**The useful observation is that the library already has structure: shoots.** Clustering
-`takenAt` on gaps over 24 hours yields 16 of them, with no new metadata and no model:
+#### The library is a stream, not a collection of albums
 
-| Photos | Date       | Camera                 |
-| ------ | ---------- | ---------------------- |
-| 32     | 2022-10-29 | Canon EOS R6           |
-| 16     | 2021-08-16 | iPhone 12 Pro + EOS R6 |
-| 14     | 2022-09-04 | Canon EOS R6           |
-| 10     | 2021-11-27 | EOS R6 + iPhone 13 Pro |
-| 10     | 2022-04-15 | Canon EOS R6           |
-| 9      | 2022-05-22 | Canon EOS R6           |
-| 8      | 2017-07-04 | Canon EOS 6D           |
-| 7      | 2022-02-21 | iPhone 13 Pro          |
+This is the governing fact and everything else follows from it. **Most photos belong to no
+album and never will.** The plan is to keep importing interesting frames rather than only
+portfolio work, so the misc fraction _grows_ over time. The named albums Matthew has in
+mind today are roughly three: **aquarium, Disney (~2023), air show** — and note that
+**none of them are in the manifest yet**, which currently runs 2017-06-18 → 2022-10-29.
 
-Eight further shoots are 1–3 photos each. The top eight hold 106 of 118, and the 32-photo
-shoot on 2022-10-29 is visibly the Ren Faire.
+So the mockup's album filter row, read as a partition of the library, is not just
+unpopulated — it is the wrong shape. A chip row over this library is 90% "MISC". Albums are
+a **sparse overlay on a flat stream**, and the UI has to treat them that way.
 
-**The path Matthew has in mind:** derive shoots automatically, then name them — by category
-and date, e.g. "Ren Faire · Oct 2022". That is a good shape, because the expensive part
-(deciding which photos belong together) is free and automatic, and the part that needs a
-human is one short string per shoot rather than a label on all 118 photos. It also scales:
-a new upload becomes a new shoot without anyone maintaining a taxonomy, and it degrades
-gracefully — an unnamed shoot is still a valid group, just displayed by date.
+#### Threshold: 7 days, not 24 hours
 
-If that lands, the mockups' album filter row and the five per-album accents both become
-implementable as designed, and the accent needs no colour extraction at all.
+The old 24-hour figure came from a plausible-sounding default, not from the data. The data
+disagrees. Cluster count against threshold over the real 118:
 
-Nothing is committed to yet, and nothing in the code prevents any of it — see below.
+| Threshold | 0.5d | 1d  | 2d  | 3d  | 5d  | 7d  | 14d | 21d |
+| --------- | ---- | --- | --- | --- | --- | --- | --- | --- |
+| Shoots    | 17   | 16  | 15  | 14  | 14  | 14  | 14  | 13  |
+
+**The count is flat from 3 to 14 days.** That plateau is the signal: inside it the threshold
+is not making the decision, the library's own structure is. Within a shoot the median gap
+between consecutive frames is **10 minutes** (p75 = 1.3h); between shoots the gaps run 15,
+37, 45, 52, 54 days. The band from 2.6 days to 15 days is nearly empty.
+
+24 hours sits in the contested zone rather than the plateau, and three of fourteen groups
+turn on noise there:
+
+- **2021-08-16 → 08-18** (16 frames, iPhone 12 Pro + R6) — a multi-day trip whose largest
+  internal gap is **14.4h**. It survives a 24h threshold by nine hours. That is luck, not
+  margin, and it is exactly the "sparse import from a trip" case.
+- **2017-06-18 → 06-19** — a gap of exactly **1.0 day**. A coin flip.
+- **2019-09-24 → 09-27** — a **2.6-day** gap that 24h splits and 7d keeps together.
+
+**The two failure modes are not symmetric, which is what settles the choice.** Splitting a
+vacation across sparse days is fixed by a larger threshold. Conflating two subjects shot on
+the same day is fixed by _no_ threshold at all — both are hours apart, so capture time
+carries zero information about the distinction. Raising the threshold therefore costs
+nothing on the case it cannot help and fixes the case it can. **Use 7 days, and treat
+intra-day subject splits as a permanently manual operation.**
+
+The one signal that would resolve same-day subjects is GPS, and it is off the table by
+policy rather than difficulty: the EXIF allowlist drops it, and `photos.json` is in a public
+repo, so storing coordinates would publish them.
+
+Caveat to revisit: the 3–14d plateau is a property of a **sparse** library. As imports get
+denser it will narrow. That is survivable because of the next point.
+
+#### The real risk is recomputation, not accuracy
+
+**Clustering must run once, over the new batch only, and never over the whole library
+again.** If it re-derives on every import, a single new photo landing in a gap can merge two
+shoots that were already named, group identity shifts underneath stored names, and manual
+corrections are silently destroyed. _That_ is the failure that compounds over years; a wrong
+split, fixed once, does not.
+
+So the heuristic is a **labour-saver, not a rule** — a migration, not a runtime computation.
+Two details make it hold:
+
+- **Key a shoot by its earliest date** (`"2022-10-29"`), never an index, so nothing
+  renumbers when a shoot is added, split or merged.
+- **Keep the human-readable names in a separate small file** keyed by shoot id, so renaming
+  touches one line rather than 32 photo rows.
+
+Because the threshold only ever applies to unassigned new photos, it can differ per import
+without disturbing anything already named — which is what makes the narrowing plateau a
+non-problem.
+
+#### An album is a name applied to one or more shoots
+
+This is the whole model, and it needs no new machinery:
+
+- **`shoot`** — automatic, on every photo, stable, never recomputed.
+- **Naming a shoot is what creates or joins an album.** Unnamed shoots are misc. There is no
+  MISC bucket to maintain and no taxonomy to invent — misc is simply the absence of a name,
+  which requires no action and scales to any number of photos.
+- **Several shoots may share one album name.** This is required, not incidental: aquarium
+  visits span years, and an air show recurs annually. An album is therefore _not_ the same
+  as a shoot, even though a single-trip album like Disney will usually be one.
+
+Economics: 118 photos → 14 shoots, so the human decision count is ~14 optional names rather
+than 118 labels. Even a 50% error rate costs minutes to fix. Inaccuracy is cheap here;
+silent re-derivation is not.
+
+#### Where albums go in the UI: filtered sheet, not a second view
+
+**Decided against a separate album view.** The existing contact sheet already generalises,
+and the code makes this nearly free — verified by reading it, not assumed:
+
+- **The lightbox derives its collection from the DOM.** `gallery.ts` re-reads
+  `grid.querySelectorAll('a[data-tile]')` on every `show()` rather than snapshotting at
+  open. Render a filtered set of tiles and the lightbox scopes itself correctly, with no
+  parameterisation.
+- **Infinite scroll is driven by `data-next` on the container**, so a paginated album route
+  behaves identically to `/photos`.
+- A second view would mean a second masonry and a second lightbox kept in sync — precisely
+  the class of bug that already left the gallery inert on `/photos/2` once.
+
+The shape:
+
+- **`/photos` stays exactly as it is** — the whole stream, newest first. It is the default
+  and the primary. Nothing about the current experience changes.
+- **`/photos/album/<slug>`** renders the same sheet component, filtered, paginated the same
+  way.
+- **Discovery is contextual first.** When a photo belongs to an album, the lightbox footer
+  names it as a link. Albums are found by browsing into them, rather than from a hub that
+  has to be consulted first — which is the right default when most photos are in none.
+- **Plus a short index** of named albums for the direct-link and no-JS path. A quiet line,
+  not a chip row implying a partition.
+
+**Consequence for the mockup's five accents:** they become implementable, but only named
+albums get one and misc photos keep the default cyan. That is better than the mockup
+intended — the accent then _means_ "this frame is part of something" instead of being
+decoration.
+
+**Open, and worth deciding before building:** whether the flat stream also gets **shoot or
+date headers**. It is the natural way to make a large misc library navigable, and it makes
+"name this shoot" the only curation act there is. But `column-count: 4` orders items _down_
+each column and cannot carry a full-width header mid-flow, so headers force the sheet into
+one masonry block per section. That is a real change to the thing Matthew likes, and it
+interacts with the bin-packing item at the top of M4.
 
 ### Keeping this path open
 
