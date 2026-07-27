@@ -48,12 +48,32 @@ const FIELD_ORDER = [
   'tags',
 ];
 
+/**
+ * Put the known fields in a stable order for readable diffs, then **keep
+ * anything else the entry carries**.
+ *
+ * The preservation matters more than the ordering. This used to build a fresh
+ * object from FIELD_ORDER alone, which silently deleted any other key on every
+ * write — so hand-adding, say, an `album` to a photo would survive right up
+ * until the next `photos:import` and then vanish with no error and no output.
+ * That quietly foreclosed adding fields to the manifest without also editing
+ * this file, which is exactly the kind of trap that is invisible until it has
+ * already eaten someone's work.
+ *
+ * Unknown fields sort after the known ones so the diff stays legible.
+ */
 function normalise(entry) {
   const ordered = {};
   for (const field of FIELD_ORDER) ordered[field] = entry[field] ?? null;
+
   ordered.variants = entry.variants ?? [];
   ordered.formats = entry.formats ?? [];
   ordered.tags = entry.tags ?? [];
+
+  for (const [key, value] of Object.entries(entry)) {
+    if (!(key in ordered)) ordered[key] = value;
+  }
+
   return ordered;
 }
 

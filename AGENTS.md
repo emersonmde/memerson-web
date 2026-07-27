@@ -120,7 +120,11 @@ otherwise were reversed; see the reversal note in `docs/CONTEXT.md`. (Neon Distr
 new design, not the old one — the resemblance is that both are dark and monospace-heavy.)
 
 **`src/data/photos.json` is generated.** Written by the import script. The only
-hand-editable fields are `title`, `caption`, and `tags`.
+hand-editable fields _today_ are `title`, `caption`, and `tags`.
+
+The writer preserves any other field it finds, so the schema can grow (an `album` is a live
+possibility — see MILESTONES M4) without the import silently deleting it. Adding one means
+declaring it in `src/content.config.ts`, or the collection layer strips it.
 
 **Photo privacy is a hard requirement.** EXIF handling is an allowlist, never a denylist —
 GPS plus camera/lens serials, owner fields, and vendor `MakerNote` blobs are all dropped.

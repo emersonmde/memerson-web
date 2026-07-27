@@ -354,7 +354,7 @@ by `lb.grad`, which is a _placeholder gradient standing in for the photo_, and w
 image behind it the layer read as decoration rather than as the photo. It was implemented
 as a flat wash and corrected 2026-07-27.
 
-Per-photo **accent** colour (brackets, counter, tile hover) is a separate question. It
-would need metadata, and it is currently **recommended against** — the five accents in the
-mockups were per-album, there are no real albums, and the accent appears on 1px brackets
-where it carries almost no colour anyway. Reasoning in MILESTONES M4.
+Per-photo **accent** colour (brackets, counter, tile hover) is a separate question and is
+**still open**. The five accents in the mockups are per-album, so it is coupled to whether
+albums happen — and if they do, the accent can come straight from the album with no colour
+extraction at all. Tracked in MILESTONES M4.

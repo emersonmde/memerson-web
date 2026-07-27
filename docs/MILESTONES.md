@@ -185,19 +185,20 @@ locked in during M1.
 
 Two independent pipelines, both writing into the manifest. Neither exists yet.
 
-**1. Derived colour metadata — probably not needed. Recommend dropping.**
+**1. Derived colour metadata** (mechanical, no model involved).
 
-Two things resolved this, and both point the same way.
+One thing is settled: the lightbox's ambient glow **is the photograph**, blurred and
+saturated behind itself (Signal 4c; implemented 2026-07-27). It needs no metadata, and it
+is the preferred treatment. Nothing below changes that.
 
-The lightbox's ambient glow **is the photograph**, blurred and saturated behind itself
-(Signal 4c; implemented 2026-07-27). Matthew confirmed he prefers it to any palette-derived
-alternative. So the headline use case for colour metadata no longer exists.
+What colour metadata would be for is the **per-photo accent** — the tile hover glow, the
+lightbox brackets, the counter. This is **open**, not decided. It becomes more attractive
+if albums happen (see below), since the five accents in the mockups are per-album.
 
-That leaves only the per-photo **accent** — the tile hover glow, the lightbox brackets, the
-counter. If that is ever wanted, the rule is a hard constraint, not a free choice:
+If it is built, one rule holds regardless of how it is triggered:
 
-> **Any extracted colour must snap to the nearest of the design's five photo accents.**
-> Never apply a raw sampled colour.
+> **A sampled colour must snap to one of the design's five photo accents.** Never apply a
+> raw extracted colour.
 
 | Accent               | Album in the mockups |
 | -------------------- | -------------------- |
@@ -208,15 +209,20 @@ counter. If that is ever wanted, the rule is a hard constraint, not a free choic
 | `oklch(.72 .22 332)` | NIGHT — magenta      |
 
 The reasoning is §2's: a raw dominant colour off a photograph is usually desaturated, and a
-grey-brown sky sampled literally produces a grey-brown glow that reads as a rendering bug.
-Snapping to a fixed five keeps every accent on-palette by construction. Compare in **oklch
-hue space**, and store the chosen accent rather than a hex — storing a hex invites someone
-to use it directly, which is the failure this rule exists to prevent.
+grey-brown sky sampled literally gives a grey-brown glow that reads as a rendering bug.
+Snapping to a fixed five keeps every accent on-palette by construction.
 
-But weigh that against what it buys: the accent appears on 1px brackets and a small counter.
-It carries almost no colour information at that size, and the bloom already delivers the
-"this matches the photograph" feeling at full strength. **Recommendation: skip it** unless
-the accent becomes visually prominent in a future design revision.
+Implementation notes for whenever it happens:
+
+- Dominant hue via `sharp`'s `.stats()` or a resize-to-tiny-and-quantise pass.
+- Compare in **oklch hue space**, not RGB distance — the palette is defined in oklch and
+  perceptual hue distance is what is being asked about.
+- Store the chosen accent (or its index), not a raw hex. A stored hex invites someone to
+  use it directly, which is the one thing the rule above forbids.
+- **Backfillable without local originals**, from the archive bucket or the existing 640px
+  derivative. `photos:rebuild` already re-derives from the archive.
+- If albums exist, the accent can simply come _from the album_ and no extraction is needed
+  at all — which is the cheapest version of this feature and worth checking first.
 
 **2. AI-assisted titles, captions and tags** (Matthew's proposal). Replaces what would
 otherwise be 118 rows of manual data entry:
@@ -240,14 +246,16 @@ Two things to get right:
   photograph; it cannot know that this was the third pass at the forge or which trip it
   was from. Expect to keep titles sparse and let tags carry the search index.
 
-### Albums: don't add the field
+### Albums, via shoots
 
-The mockups show five albums. They were invented. Matthew has at most two real ones — a
-Dover trip and the PA Ren Faire — and considers the rest miscellaneous. That is not a
-taxonomy, and a five-album filter row over 118 photos would mostly say "MISC".
+**Open, and a likely direction.** The mockups show five invented albums. Today there are at
+most two real ones — a Dover trip and the PA Ren Faire — with the rest miscellaneous, so a
+five-album filter row over the current 118 photos would mostly say "MISC". That is an
+argument about _the current collection_, not about albums, and it changes the moment more
+photos are uploaded.
 
-**The library is already structured, just not by album — by shoot.** Clustering `takenAt`
-on gaps over 24 hours yields 16 shoots, with no new metadata and no model:
+**The useful observation is that the library already has structure: shoots.** Clustering
+`takenAt` on gaps over 24 hours yields 16 of them, with no new metadata and no model:
 
 | Photos | Date       | Camera                 |
 | ------ | ---------- | ---------------------- |
@@ -260,17 +268,35 @@ on gaps over 24 hours yields 16 shoots, with no new metadata and no model:
 | 8      | 2017-07-04 | Canon EOS 6D           |
 | 7      | 2022-02-21 | iPhone 13 Pro          |
 
-Eight further shoots are 1–3 photos each. The top eight account for 106 of 118, and the
-32-photo shoot on 2022-10-29 is visibly the Ren Faire.
+Eight further shoots are 1–3 photos each. The top eight hold 106 of 118, and the 32-photo
+shoot on 2022-10-29 is visibly the Ren Faire.
 
-So: **no `album` field.** Group by shoot, derived at build time from `takenAt`, and let the
-two groupings that deserve names get them from `tags`. This is strictly better than an album
-taxonomy — no schema change, no backfill, no decision about what counts as an album, and it
-stays correct as photos are added. If a grouping needs a name, that is two strings of manual
-input rather than a field every photo has to carry.
+**The path Matthew has in mind:** derive shoots automatically, then name them — by category
+and date, e.g. "Ren Faire · Oct 2022". That is a good shape, because the expensive part
+(deciding which photos belong together) is free and automatic, and the part that needs a
+human is one short string per shoot rather than a label on all 118 photos. It also scales:
+a new upload becomes a new shoot without anyone maintaining a taxonomy, and it degrades
+gracefully — an unnamed shoot is still a valid group, just displayed by date.
 
-This also removes the last reason to want per-photo accent colours: the five accents were
-_per album_, and there are no albums.
+If that lands, the mockups' album filter row and the five per-album accents both become
+implementable as designed, and the accent needs no colour extraction at all.
+
+Nothing is committed to yet, and nothing in the code prevents any of it — see below.
+
+### Keeping this path open
+
+The manifest writer used to rebuild every entry from a fixed field list, silently dropping
+anything else on each write. Adding an `album` by hand would have survived until the next
+`photos:import` and then vanished with no error. **Fixed 2026-07-27** — unknown fields are
+now preserved, verified by round-tripping `album` and `accent` through a write.
+
+What is still required to add a field later, none of it destructive:
+
+- Add it to `FIELD_ORDER` in `scripts/photos/lib/manifest.mjs` so it sorts with the known
+  fields rather than trailing them. Optional — it is preserved either way.
+- Add it to the `photos` schema in `src/content.config.ts`. Zod strips undeclared keys at
+  the collection layer, so a field will sit in the JSON but be invisible to templates until
+  declared. Non-destructive, but it is the reason a new field appears to "not work".
 
 **Exit criteria:** gallery stays fast and browsable at 1,000+ photos.
 

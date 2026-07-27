@@ -315,8 +315,15 @@ preference.
 }
 ```
 
-`title`, `caption`, and `tags` are the only hand-authored fields. They start empty and get
+`title`, `caption`, and `tags` are the hand-authored fields today. They start empty and get
 backfilled; the schema accepts them from day one so no migration is needed later.
+
+**The schema is expected to grow.** `writeManifest` preserves any field it does not
+recognise, so a new one — an `album`, a derived accent colour — can be added without the
+import silently erasing it. Two follow-ups when that happens: add it to `FIELD_ORDER` in
+`scripts/photos/lib/manifest.mjs` so it sorts with the known fields, and declare it in
+`src/content.config.ts`, because Zod strips undeclared keys and the field will otherwise be
+invisible to templates. Neither is destructive. See MILESTONES M4.
 
 ### 5.5 Derivative ladder
 
