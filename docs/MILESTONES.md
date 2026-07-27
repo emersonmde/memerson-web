@@ -111,14 +111,16 @@ Pages cannot emit a 301, so these are meta-refresh redirects. Full reasoning and
       `/coppermind/` (the WASM demo), `/daedalus/` (the Rust docs) and `/vilya/`. `/rss.xml`
       is valid XML served as `application/xml`, and an unknown path returns a real 404 with
       the moved notice rather than a redirect.
-- [ ] Archive `emersonmde.github.io` **only** once the redirect is confirmed — that
-      condition is now met. Archiving does not affect the other repos publishing to the same
-      domain and does not take the deployed Pages site down; it does stop the Actions
-      workflow, so nothing further can be deployed from it without unarchiving. Archive
-      last.
+- [ ] Archive `emersonmde.github.io`. The precondition — redirect confirmed — is met, but
+      **deliberately deferred 2026-07-27**: leaving the repo active keeps the option of
+      pushing a fix to the redirects without an unarchive round-trip, and the redirects have
+      only had one day of real traffic. Archiving does not affect the other repos publishing
+      to the same domain and does not take the deployed Pages site down; it only stops the
+      Actions workflow. Nothing depends on doing it.
 
 **Exit criteria:** old URLs resolve to their new equivalents and `errorsignal.dev` is
-retired. — **Met**, pending only the archive flag.
+retired. — **Met 2026-07-27.** The repo's archive flag is bookkeeping, not function: the
+domain already serves nothing but redirects.
 
 ### Analytics: none — decided 2026-07-27
 
@@ -360,8 +362,11 @@ What is still required to add a field later, none of it destructive:
 - M1 → the AWS teardown is a hard dependency: photos had to be in R2 before the S3 bucket
   and API stack die. **That dependency is now discharged** — the manifest is committed and
   every S3 photo was verified against it, so the teardown is unblocked.
-- M2 and M4 are independent of each other. M2 is the higher priority of the two: until the
-  redirect lands, `errorsignal.dev` is still the site people reach.
+- ~~M2 and M4 are independent of each other. M2 is the higher priority of the two: until
+  the redirect lands, `errorsignal.dev` is still the site people reach.~~ **Settled
+  2026-07-27** — the redirect landed, so `memerson.com` is the site people reach and **M4
+  is the next milestone.** What remains outside it is scope M3 never covered (mobile,
+  accessibility, light mode) plus the Workers Builds dashboard step.
 - M4 has an internal order that is easy to get wrong. **Backfilling captions and tags comes
   first** — search, filtering, and the album chips are all cheap once there is something to
   search, and all impossible before.
