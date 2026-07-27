@@ -124,6 +124,38 @@ finding focus, not a fade-up. Body copy never does this.
 One gradient, one mask. A single uninterrupted `linear-gradient` runs the whole index; a
 `mask-image` with a `--cg` (charge) custom property reveals it from the top as you scroll.
 
+**The charge outruns the scroll.** It is defined by two anchors rather than a tuned speed,
+in `src/lib/rail.ts`:
+
+```
+cg = 0  when the rail's origin reaches 20% down the viewport
+cg = 1  when the rail's terminal enters the viewport
+      span = height - viewportHeight + origin
+      cg   = clamp01((origin - top) / span)
+```
+
+Substituting back, the head's viewport position is `origin + cg * (vh - origin)` — a linear
+sweep from a fifth of the way down to the bottom of the screen, so **the head is on screen
+for the whole run by construction**. The multiplier (`height / span`, ≈2.75× on the current
+rail) falls out of the geometry and self-adjusts as projects are added, instead of being a
+constant that silently decays. Covered by `tests/rail.test.ts` across rail lengths from
+400px to 9000px.
+
+**The glow lives on a wrapper, not on the masked rail.** A mask paints only within the
+element's box and a `box-shadow` is drawn outside it, so the shadow was clipped to a 3px
+column and vanished past the charge front. A filter on the parent applies to the
+already-masked child, so the glow follows the charge and stops where it stops.
+
+**Nodes light from the charge, not from their own scroll position.** An offshoot should
+kindle because the charge arrived. The two only agree while the charge runs at exactly
+scroll speed, which it no longer does.
+
+**Layout changes recompute.** Expanding a plate reflows every row and changes the rail's
+height but fires no scroll event, so a `ResizeObserver` on the rail scope plus a captured
+`toggle` listener drive the recalculation. Without them the hues jumped to their new rows
+while the glow held its old position — the two are computed from different measurements and
+only one was being refreshed.
+
 **There are no per-segment gradients and no stops.** An earlier iteration had nine
 separate segments and it kinked visibly at every seam — the charge is one mask sliding
 down one gradient, so it physically cannot. A blurred "head" element rides the leading
@@ -154,7 +186,7 @@ only chrome the log gets — no breadcrumb, no back-to-top.
 | Route            | Mockup | Notes                                                        |
 | ---------------- | ------ | ------------------------------------------------------------ |
 | `/`              | 6a     | Sign, rail, 11 project plates, photo + log previews, contact |
-| `/photos/[page]` | 6b     | Masonry contact sheet, lightbox                              |
+| `/photos/[page]` | 6b     | Contact sheet, lightbox, infinite scroll                     |
 | `/blog`          | 6c     | Year-grouped, serif, sticky year                             |
 | `/blog/[slug]`   | 6d     | 68ch serif, lit code edge, reading progress                  |
 | `/about`         | —      | Not in the mockup; extended from the language. See §8.       |
@@ -205,6 +237,20 @@ rather than as a part label.
 never seen the design document? "Nothing samples a palette" is an answer to a question only
 a reviewer asked. `MEMERSON.COM — DISTRICT 09 / PERSONAL` passes — it is the design's
 fiction, not an instruction, and the 404's `SIGNAL LOST — DISTRICT 09` is the same voice.
+
+### Pagination is invisible to the reader
+
+`/photos/2`, `/photos/3` … are real pages — they work without JS, they are crawlable, and
+they keep the initial HTML small. With JS they disappear: the sheet grows as you scroll and
+the lightbox runs through the whole library, pulling the next page in when you step off the
+end rather than stopping or wrapping. The paginated nav is the no-JS path and is hidden once
+`src/scripts/gallery.ts` is running.
+
+Two things to know before touching it. Astro fires `astro:page-load` on the **first** load
+as well as on router swaps, so the module must guard against initialising twice — otherwise
+you get two observers pulling pages and two stacked lightboxes. And a router swap does not
+re-execute a script the previous page already loaded, which is why navigating between
+paginated pages once left the sheet completely inert.
 
 ### Contact sheet: tiles are not dimmed by default
 

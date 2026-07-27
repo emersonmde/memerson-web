@@ -11,6 +11,7 @@ hosted on Cloudflare Workers Static Assets. No SSR adapter, no runtime data fetc
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical design: hosting, content model, photo infrastructure     |
 | [docs/UI-DESIGN.md](docs/UI-DESIGN.md)       | The "Neon District" design system — tokens, motion, scroll effects |
 | [docs/MILESTONES.md](docs/MILESTONES.md)     | Delivery plan and what is actually done                            |
+| [docs/TESTING.md](docs/TESTING.md)           | What the tests guard, and how they are written                     |
 | [docs/design/](docs/design/)                 | The imported mockups, kept as the design source of record          |
 
 ## Requirements
@@ -33,17 +34,20 @@ export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"; nvm use 24
 
 ## Commands
 
-| Command           | Does                                  |
-| ----------------- | ------------------------------------- |
-| `npm run dev`     | Dev server                            |
-| `npm run build`   | Build to `./dist`                     |
-| `npm run preview` | Serve the build locally               |
-| `npm run check`   | `astro check` — types and diagnostics |
-| `npm run format`  | Prettier                              |
-| `npm run deploy`  | Build, then `wrangler deploy`         |
+| Command             | Does                                  |
+| ------------------- | ------------------------------------- |
+| `npm run dev`       | Dev server                            |
+| `npm run build`     | Build to `./dist`                     |
+| `npm run preview`   | Serve the build locally               |
+| `npm run check`     | `astro check` — types and diagnostics |
+| `npm test`          | Build, then the full test suite       |
+| `npm run test:unit` | Pure logic only, no build             |
+| `npm run format`    | Prettier                              |
+| `npm run deploy`    | Build, then `wrangler deploy`         |
 
-There is no test suite. `npm run check` at zero and a successful `npm run build` are the
-verification gates. Start the dev server detached with `npx astro dev --background`, then
+`npm run check` at zero and `npm test` green are the verification gates. The suite uses
+Node's built-in test runner — no framework, no dependencies — and asserts invariants rather
+than pixel values, so it survives content changes. See [TESTING.md](docs/TESTING.md). Start the dev server detached with `npx astro dev --background`, then
 `astro dev stop` / `status` / `logs`.
 
 ### Photos

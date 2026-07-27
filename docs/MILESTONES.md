@@ -129,13 +129,9 @@ in [`design/`](./design/) and the system is documented in [UI-DESIGN.md](./UI-DE
       `--faint` metadata colour are the two things most likely to fail contrast.
 - [ ] Light mode — not designed. The system is committed to a dark surface stack; a light
       variant would be a second design, not a token flip.
-- [ ] **Mockup 6g — the "Redraw" page transition.** The one designed thing not built: a
-      scan line sweeps down, the outgoing page erases above it, the incoming page is
-      already underneath. 380ms. It needs Astro's `<ClientRouter />`, which adds a
-      client-side router to a site that is otherwise plain static navigation — a real
-      architectural change, so it is a decision rather than an oversight. Deferred also
-      because animations are being revised, and building the current version first would
-      likely waste the work.
+- [x] **Mockup 6g — the "Redraw" page transition** — done 2026-07-27 via
+      `<ClientRouter />` and `src/scripts/redraw.ts`. Needs a real browser to judge; the
+      380ms wipe cannot be seen headless.
 
 ### Review pass, 2026-07-27
 
@@ -173,7 +169,8 @@ locked in during M1.
       **Partly done in M3**: the sheet is `column-count: 4` over real manifest aspect
       ratios, which is the documented no-JS fallback. Bin-packing would fix the
       down-the-column reading order; grid-lanes is still not interoperable.
-- [ ] Infinite scroll (IntersectionObserver appending paginated blocks)
+- [x] Infinite scroll (IntersectionObserver appending paginated blocks) — **done
+      2026-07-27**, together with a lightbox that runs across page boundaries.
 - [ ] Trimmed search/random index
 - [ ] **Tag and date filtering.** This is what unblocks the mockup's album filter chips —
       they are designed and styled (`.chip` in `global.css`) but omitted because no album

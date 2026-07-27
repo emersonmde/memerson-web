@@ -9,17 +9,9 @@
  * exactly once per frame.
  */
 
-const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
+import { chargeDistance, chargeOf, clamp01, nodeLit } from '../lib/rail';
 
-/**
- * Where the charge originates, as a fraction of viewport height.
- *
- * It used to be the nav height, so the run only began once the rail's origin
- * had already scrolled under the header — the start of the line was gone before
- * the charge left it. Starting a fifth of the way down keeps the origin, the
- * charge and the first few plates in frame together.
- */
-const START_AT = 0.2;
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 /**
  * Sample the accent ramp. Lightness and chroma are locked; only hue moves,
@@ -27,39 +19,9 @@ const START_AT = 0.2;
  * `hueAt` in `src/lib/ramp.ts` and the formula in docs/UI-DESIGN.md §2.
  */
 function hueAt(t: number): string {
-  const u = Math.max(0, Math.min(1, t));
+  const u = clamp01(t);
   const h = u < 0.5 ? 66 + (200 - 66) * (u * 2) : 200 + (286 - 200) * ((u - 0.5) * 2);
   return `oklch(.80 .17 ${h.toFixed(1)})`;
-}
-
-const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
-
-/**
- * How far the charge has run, 0–1, from the rail's own geometry.
- *
- * Two anchors define it, and everything else falls out of them:
- *
- *   cg = 0  when the rail's origin reaches the underside of the pinned header
- *   cg = 1  when the rail's terminal enters the viewport
- *
- * which gives `span = H - vh + start` and `cg = (start - top) / span`.
- *
- * The useful consequence: substituting back, the head's viewport position is
- * `start + cg * (vh - start)` — a linear sweep from a fifth of the way down to
- * the bottom of the screen. **The head is always on screen by construction**, and the
- * charge necessarily outruns the scroll (H/span ≈ 2.3× for a 1500px rail at
- * vh 900). That ratio self-adjusts to rail length rather than being a tuned
- * constant, which matters because the rail grows with every project added.
- */
-function chargeOf(railBox: DOMRect, vh: number): number {
-  const start = vh * START_AT;
-  const span = railBox.height - vh + start;
-
-  // Rail shorter than the visible area: its terminal is on screen before the
-  // charge would even start, so there is no run to animate.
-  if (span <= 0) return railBox.top <= start ? 1 : 0;
-
-  return clamp01((start - railBox.top) / span);
 }
 
 /**
@@ -79,11 +41,11 @@ function runRails(vh: number) {
     const railBox = rail.getBoundingClientRect();
     if (railBox.height < 8) return;
 
-    const cg = chargeOf(railBox, vh);
+    const cg = chargeOf(railBox.top, railBox.height, vh);
     rail.style.setProperty('--cg', `${(cg * 100).toFixed(2)}%`);
 
     // Distance the head has travelled along the rail, in rail-local px.
-    const chargeY = cg * railBox.height;
+    const chargeY = chargeDistance(cg, railBox.height);
 
     const head = scope.querySelector<HTMLElement>('[data-fx="head"]');
     if (head) {
@@ -109,7 +71,7 @@ function runRails(vh: number) {
 
       // A 40px ramp centred on the node, so it kindles as the head sweeps past
       // rather than snapping on.
-      const lit = clamp01((chargeY - nodeY + 20) / 40);
+      const lit = nodeLit(chargeY, nodeY);
 
       dot.style.background = hue;
       dot.style.opacity = (0.1 + lit * 0.9).toFixed(3);

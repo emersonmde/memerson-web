@@ -41,6 +41,8 @@ npm run dev              # dev server
 npm run build            # build to ./dist
 npm run preview          # serve the build
 npm run check            # astro check — types + diagnostics; keep at 0 errors
+npm test                 # build, then the full suite
+npm run test:unit        # pure logic only, no build (~0.1s)
 npm run format           # prettier
 npm run deploy           # build, then wrangler deploy (needs `wrangler login` first)
 npx wrangler deploy --dry-run   # validate wrangler.jsonc without deploying
@@ -49,8 +51,16 @@ npx wrangler deploy --dry-run   # validate wrangler.jsonc without deploying
 Start the dev server in background mode so it doesn't block: `npx astro dev --background`,
 then `astro dev stop` / `status` / `logs [--follow]`.
 
-There is no test suite. `npm run check` and a successful `npm run build` are the
-verification gates.
+**Verification gates: `npm run check` at 0 and `npm test` green.** The suite uses Node's
+built-in runner — no framework, no dependencies — and `node --test` needs file paths or a
+glob, not a bare directory.
+
+Tests assert **invariants, not pixel values**, because content changes constantly: every
+project lengthens the rail, every photo lengthens the gallery. A test that would break
+when a plate gets taller is testing the wrong thing. See `docs/TESTING.md`.
+
+Real-browser behaviour (infinite scroll, lightbox, transitions) is _not_ covered — it was
+verified over the Chrome DevTools Protocol, and `docs/TESTING.md` records how.
 
 ## Architecture
 
@@ -154,6 +164,14 @@ derivatives make it unnecessary.
 - **The archive key's extension isn't in the manifest.** Originals land at
   `originals/<slug>.<ext>` where `ext` follows the source format, so `verify` and `rebuild`
   match on the `originals/<slug>.` prefix instead of reconstructing a filename.
+- **Put pure logic in `src/lib/` so it can be tested.** The rail geometry lives in
+  `src/lib/rail.ts` for exactly this reason; `src/scripts/fx.ts` reads the DOM and calls it.
+- **Astro fires `astro:page-load` on the first load too**, so anything listening to it must
+  be safe to run twice — otherwise you get two observers and two lightboxes. And a router
+  swap does _not_ re-execute a script the previous page already loaded, which is what once
+  left the gallery inert on `/photos/2`.
+- **`[hidden]` loses to any author `display` rule.** `global.css` has a global override;
+  without it, hiding a flex container by setting the attribute silently does nothing.
 - **Never infer a DNS record's type at an apex from what `dig` returns.** Cloudflare
   flattens an apex CNAME into synthetic A/AAAA answers, so the resolver and the dashboard
   legitimately disagree. This cost hours once already. MX and TXT are never proxied, so

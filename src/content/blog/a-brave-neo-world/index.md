@@ -31,7 +31,7 @@ Python or RubyMine for Ruby but that often results in managing multiple
 applications and switching between them or accepting some tradeoffs by using
 language specific plugins in IntelliJ.
 
-## Back To The Future
+### Back To The Future
 
 I saw coworkers, streamers, and YouTubers using NeoVim and noticed these new
 setups looked far better than what was available when I was daily driving Vim.
@@ -57,7 +57,7 @@ learn the LunarVim abstractions on top of the underlying plugins and NeoVim
 config. I ended up abandonding the exparimient and returning to the world of
 JetBrains.
 
-## NeoVim Kickstart
+### NeoVim Kickstart
 
 After a few more months had past, I came across
 [NeoVim Kickstart](https://github.com/nvim-lua/kickstart.nvim), a small well
@@ -80,7 +80,7 @@ a plugin that manages external tooling such as LSP servers, linters, and
 formatters. Most of these work just out of the box with minimal config. Java
 on the other hand, took a lot of trial and error.
 
-## Lombok
+### Lombok
 
 Mason can automatically install and configure the
 [Eclipse JDT Language Server](https://github.com/eclipse-jdtls/eclipse.jdt.ls)
@@ -96,7 +96,7 @@ outside of Mason. In the end I realized this would be painful to maintain in
 the future. Some of the links had to be hard coded, some required special
 handlers to verify checksums, and all of the steps required seemed fragile.
 
-## This Is The Way
+### This Is The Way
 
 I decided to start over, leaning on Mason to download and maintain the JDT
 language server and the Lombok JAR but instead of using Mason-LspConfig I would
@@ -257,7 +257,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 ```
 
-## Whats Left?
+### Whats Left?
 
 Java was the only real gap to fill. Besides Java, I added `vim-tmux-navigator`:
 

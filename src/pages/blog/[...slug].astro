@@ -211,10 +211,10 @@ const minutes = readingTime(post.body);
     color: var(--tx-body);
   }
 
-  .prose h1,
   .prose h2,
   .prose h3,
-  .prose h4 {
+  .prose h4,
+  .prose h5 {
     font-family: var(--display);
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -223,17 +223,22 @@ const minutes = readingTime(post.body);
     line-height: 1.15;
   }
 
-  .prose h1 {
-    font-size: 32px;
-  }
+  /*
+   * One level lower than the raw tag suggests: astro.config.mjs demotes every
+   * heading inside a post so the page keeps a single h1. An authored `#` lands
+   * here as h2 and should still look like a top-level section head.
+   */
   .prose h2 {
-    font-size: 26px;
+    font-size: 30px;
   }
   .prose h3 {
-    font-size: 21px;
+    font-size: 24px;
   }
   .prose h4 {
-    font-size: 18px;
+    font-size: 20px;
+  }
+  .prose h5 {
+    font-size: 17px;
   }
 
   .prose a {

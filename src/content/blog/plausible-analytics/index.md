@@ -12,7 +12,7 @@ projects. However, I still hope to provide value to others who may be
 exploring these topics for the first time. While the first goal is mostly
 subjective, the second is more easily measured.
 
-# The World of Analytics
+## The World of Analytics
 
 In my day job, analytics is often a crucial part of the software we build.
 Metrics and statistics are collected for just about anything measurable,
@@ -34,7 +34,7 @@ incredible powerful, it's overkill for my needs. Plausible is exactly what I
 was looking for: a simple, open source, privacy-friendly alternative to
 Google Analytics.
 
-# Setting Up Plausible
+## Setting Up Plausible
 
 Setting up Plausible can be incredibly simple. All you need to get started
 is an account and a script provided by Plausible that records events. Each
@@ -99,7 +99,7 @@ a previous personal website. The biggest downside was I haven't touched it in
 over 2 years. After cutting through the deprecation messages and cobwebs it was
 easier than I expected to get the new endpoint working.
 
-## API Gateway Proxy
+### API Gateway Proxy
 
 In Plausible's guide on [setting up a proxy](https://plausible.io/docs/proxy/introduction),
 they provide samples for many different hosting services but none for API
@@ -140,7 +140,7 @@ updated with the new values.
 ></script>
 ```
 
-## Referral Metrics
+### Referral Metrics
 
 One of the metrics I was interested in seeing was to see how many people
 followed the link from my blog to my older site which mainly hosts my
@@ -155,7 +155,7 @@ supports using a `ref` query parameter that can be set on any shared links.
 With this in place, metrics from both of my domains are now being flowing in
 with the correct referral source despite using an ad blocker.
 
-# Profit
+## Profit
 
 So what do you get after all of this? Plausible provides a dashboard to view
 aggregated user metrics. The data updates in near real time and allows you

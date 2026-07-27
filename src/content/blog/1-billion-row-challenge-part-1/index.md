@@ -37,7 +37,7 @@ compiler tricks, and JVM internals I could use. Most of which I barely knew the
 name of let alone how to use them. I was excited to dive in and learn as much
 as I could about what pushing the limits of Java would look like in practice.
 
-## The Rules
+### The Rules
 
 The rules of the challenge are simple:
 
@@ -50,7 +50,7 @@ The [README](https://github.com/gunnarmorling/1brc/blob/main/README.md)
 describes how to create the dataset which resulted in a ~13GB file. With my
 measurements generated, I was ready to dive in.
 
-## My Plan
+### My Plan
 
 From my brief exploration in C, I knew memory mapping a file was a fast way to
 read large files, leaning on the operating system to manage
@@ -73,7 +73,7 @@ My overall approach was:
 - Parse the chunk into weather stations and temperature values
 - Update the ConcurrentHashMap with the min, mean, and max temperature values
 
-# First Attempt
+## First Attempt
 
 I was pretty familiar with Java's [ExecutorService](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html)
 and [Collections API](https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html)
@@ -83,7 +83,7 @@ provides [RandomAccessFile](https://docs.oracle.com/javase/8/docs/api/java/io/Ra
 and [FileChannel](https://docs.oracle.com/javase/8/docs/api/java/nio/channels/FileChannel.html)
 which can be used to memory map a file. Just what I was looking for!
 
-## Putting It All Together
+### Putting It All Together
 
 First up, memory mapping the file and setting up the HashMap:
 
@@ -176,7 +176,7 @@ private static void processLine(String line,
 }
 ```
 
-## JVM Settings
+### JVM Settings
 
 At my day job, I've built many Java services both large and small. I was
 familiar with the process of tuning the JVM and garbage collection but have
@@ -260,7 +260,7 @@ threads to perform the garbage collection concurrently with the application
 threads. Thankfully this is already set as the default in newer versions of
 GraalVM.
 
-## The Results
+### The Results
 
 I eagerly ran the program and waited for the results. The first run finished
 in just 79 seconds. I thought for sure this was blazing fast and went to the
@@ -271,7 +271,7 @@ at a mere 6 seconds. Granted this was likely benchmarked on much better
 hardware that wasn't running IntelliJ, I knew I had to step up my game to even
 be in the same league.
 
-# Attempt #2
+## Attempt #2
 
 I was well aware of the vast performance difference between some of the Java
 APIs despite them doing the same thing. I thought maybe it would be faster
@@ -313,7 +313,7 @@ data or splitting the lines. It would have been easy to run this through a
 profiler and see exactly what the problem was but who wants to spoil the
 ending of this journey? It was time to dig deeper!
 
-## A wild SIMD appears
+### A wild SIMD appears
 
 SIMD, single instruction multiple data, is a feature of most modern CPUs that
 executes the same operation on multiple data points in parallel (Figure 1).
@@ -359,7 +359,7 @@ increase the memory usage and introduce additional overhead to copy the data
 into the vector but was hoping the parallel processing would more than make up
 for the difference.
 
-## See What Sticks
+### See What Sticks
 
 In addition to SIMD, I thought this would be a great opportunity to try out
 other new Java features from recent releases that boasted performance
@@ -384,7 +384,7 @@ win-win proposal to me.
 public record TemperatureRecord(String station, double temperature) {}
 ```
 
-## Send It
+### Send It
 
 Ready to be blown away, I ran the program and.. it was about the same, this
 time around 63 seconds. This could easily be chalked up to a few extra
@@ -398,7 +398,7 @@ architecture only supports 2 data lanes for double values. This meant
 that the Vector API was only processing 2 temperature values at a time, not
 exactly the parallel processing I was hoping for.
 
-# Back To The Basics
+## Back To The Basics
 
 At this point I exhausted all the ideas I set out to test and started to
 look at how other entries were able to process the file so quickly. The
@@ -456,7 +456,7 @@ String resultString = IntStream.range(0, processors + 2).parallel().mapToObj(i -
 .collect(Collectors.joining(", "));
 ```
 
-## Make It So
+### Make It So
 
 With some hesitation, I ran the program and was surprised to see it finished
 in almost half the time at 33 seconds. Overall I was pretty happy with the
@@ -465,7 +465,7 @@ result. I could spend many more hours trying to learn the deprecated
 control structures and generic APIs for to squeeze out even more performance,
 but I'll save that exploration for another day.
 
-# Lessons Learned
+## Lessons Learned
 
 It seems abundantly obvious in retrospect but optimal performance is much
 more a function of good design and fundamentals than it is about clever

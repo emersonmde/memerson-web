@@ -70,6 +70,25 @@ there is a Google site-verification `TXT` at the apex. Neither was touched by th
 work, and both are unaffected by proxying — Cloudflare never proxies MX or TXT. SPF, DKIM,
 DMARC and DNSSEC are **not** configured yet.
 
+### Photo timestamps: the R6 clock is wrong
+
+`takenAt` stores the camera's wall clock, tagged `Z`. That is deliberate — EXIF carries no
+timezone, so interpreting it in the importing machine's zone would make slugs depend on
+where the import ran. Displaying what the camera showed is also more meaningful than a UTC
+instant.
+
+**Every file does carry an `OffsetTime`** (−04:00, −05:00 …) which the EXIF allowlist
+deliberately drops. Adding it later would let true instants be reconstructed, but it would
+also shift dates for evening shots, and slugs embed the date — so it is a URL-breaking
+change, not a free one.
+
+Separately, and unrelated to that: **the Canon R6's clock is roughly twelve hours off** for
+at least the 2022-10-29 shoot. Those frames are stamped 02:08–06:00 while shot at ISO 100,
+1/250 — bright daylight. So the displayed dates for that shoot may be a day out, and any
+claim about _what time of day_ these photos were taken is unsupportable. This was caught
+while fact-checking a line of copy that said "mostly at unreasonable hours"; the line was
+removed.
+
 ### The photos are a live AWS runtime dependency
 
 > **Update (2026-07-26):** all 118 photos are now in R2 with the manifest committed, so
