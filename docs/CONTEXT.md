@@ -59,7 +59,7 @@ CNAME into synthetic A/AAAA answers. Full account in
 `errorsignal.dev` is still the site people actually reach until the redirect lands (M2).
 **It is a shared host**, not just the old site: several other repos publish to it through
 GitHub Pages (the `coppermind` WASM demo, Rust docs, other static assets). That is why the
-cutover redirect is path-scoped rather than domain-wide — see
+cutover redirect lives in the old site's own repo rather than on the domain — see
 [ARCHITECTURE §8](./ARCHITECTURE.md).
 
 `memerson.dev` and `memerson.net` are the two zones still on AWS DNS. Both need a decision;

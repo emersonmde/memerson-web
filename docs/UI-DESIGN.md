@@ -220,22 +220,46 @@ would have contradicted that; a crater on the Moon does not.
 Not done. Desktop-only was a deliberate choice, not an oversight — the mockups specify
 desktop layouts and the mobile design is its own piece of work.
 
-### The governing constraint: fluid, not snapping
+### The governing constraint: elements morph, they don't just shrink
 
-The requirement is that the site **transitions smoothly at any window size**, not that it
-has a phone layout and a desktop layout with a jump between them. That rules out a
-breakpoint-first approach and argues for:
+**This is stronger than "responsive".** The requirement is not that the desktop layout
+scales down and reflows — it is that the design's _elements themselves_ transform
+continuously as the window narrows, arriving at the mobile design by a smooth path rather
+than a jump.
 
-- `clamp()` on anything whose value is arbitrary rather than meaningful — the gutter, the
-  sign size, section padding.
-- **Container queries** over viewport media queries where a component's layout depends on
-  its own width rather than the page's.
-- Breakpoints reserved for genuine **reflows** — where an arrangement stops making sense,
-  not where a number needs to shrink.
+The worked example, from Matthew:
 
-The tokens already support this: every dimension that matters is a custom property in
-`:root`, so the fluid pass is largely a matter of giving those properties `clamp()` values
-rather than touching component CSS.
+> The electric bar next to projects could smoothly shrink until it's just a left border of
+> the projects container, removing the whitespace.
+
+Read that carefully, because it sets the standard. The rail does not get thinner and keep
+its 56px of empty offset. It **becomes a different thing** — a glowing left edge on the
+plate itself — and the whitespace it used to need goes away with it. Same element, same
+meaning ("this run of projects is one connected thing"), continuously re-expressed at a
+width where a detached spine no longer earns its space.
+
+This is the same idea as the motion law in §4, applied across width instead of time:
+**energy travels, objects hold still.** A rail collapsing into a border is the object
+holding still while the light re-forms around it. A rail that abruptly disappears at
+`768px` and is replaced by a border is a cut, and cuts are what this design does not do.
+
+Implications for how it gets built:
+
+- `clamp()` and calculated values over discrete breakpoints, so intermediate widths are
+  _designed states_, not accidents between two designed states.
+- **Container queries** where a component's shape depends on its own width rather than the
+  page's — the plates are the obvious case.
+- Where a genuine reflow is unavoidable, it should still be reached by interpolation
+  (a gap going to zero, an offset going to zero, an opacity crossing) rather than a
+  `display` swap.
+- Breakpoints are a last resort, and each one is a place where the smoothness promise is
+  being broken — so each needs a reason.
+
+The tokens support this: every dimension that matters is a custom property in `:root`, so
+much of the work is giving those properties fluid values. But the rail example shows that
+**token interpolation alone is not sufficient** — `--rail-offset → 0` has to be
+accompanied by the rail's own geometry changing from a detached 3px bar to a border on the
+plate. That is per-element design work, not a global find-and-replace.
 
 ### Two phases, deliberately separate
 
@@ -247,12 +271,18 @@ mobile mockup arrives, because it invents no visual design:
 - Guarantee no horizontal overflow and no overlapping text at any width.
 - Sensible `column-count` reduction on the contact sheet.
 
-**Phase 2 — the actual mobile design**, from a mockup. Everything with a real visual
-decision in it: what the nav becomes, how the rail reads on a narrow screen, whether the
-lightbox stays a lightbox on touch, what happens to the footer floor.
+**Phase 2 — the transformations**, from a mockup. Each is a decision about what an element
+_becomes_, and none can be guessed:
 
-Doing phase 2 before there is a mockup means inventing a design that then gets thrown
-away. Doing phase 1 early is free.
+- The rail → a glowing left border on the plates (the one example we have).
+- The nav → ?
+- The lightbox on touch → ?
+- The footer's tilted floor → ?
+- The hero sign and its reflection → ?
+
+Doing phase 2 before there is a mockup means inventing transformations that get thrown
+away — and unlike ordinary responsive work, a wrong guess here is not "slightly off
+spacing", it is the wrong element becoming the wrong thing. Phase 1 is free; phase 2 waits.
 
 ### The specific things that will fight back
 
@@ -305,6 +335,25 @@ Flagged by Matthew, not yet designed:
 
 - Lightbox revisions.
 - Animation changes.
-- **A lightbox background glow keyed to the photograph's own colours** — this needs new
-  manifest metadata, and is tracked in MILESTONES M4 rather than here, because the design
-  cannot be implemented until the data exists.
+- The **mobile transformations** (§9), which are the largest outstanding piece.
+
+### The ambient bloom, and why it needed no metadata
+
+Worth recording, because the obvious assumption is wrong. The lightbox's glow behind the
+photograph looks like it should require extracting a colour from the image. It does not —
+Signal 4c settles it:
+
+> _"ambient bloom is a blurred copy of the photo itself, so it works on real images"_
+
+The glow **is** the photograph: the smallest derivative, blurred to 80px and saturated,
+sitting behind itself. Nothing samples a palette, nothing is stored, and it works on any
+image by construction.
+
+This was missed on first implementation — the Neon District mockup shows the bloom driven
+by `lb.grad`, which is a _placeholder gradient standing in for the photo_, and with no real
+image behind it the layer read as decoration rather than as the photo. It was implemented
+as a flat wash and corrected 2026-07-27.
+
+Per-photo **accent** colour (brackets, counter, tile hover) is a separate question and does
+need metadata — but it must classify to one of the design's five photo accents rather than
+using a sampled colour. See MILESTONES M4.

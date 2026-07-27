@@ -99,8 +99,10 @@ Two traps from the first bind, both written up in ARCHITECTURE §3:
   lists the hostname but it doesn't resolve, just deploy again.
 
 Still outstanding: **Workers Builds** (needs a GitHub remote — this repo has none yet —
-plus authorizing Cloudflare's GitHub app), the **Bulk Redirects** from `errorsignal.dev`,
-and **mail hardening** (SPF/DKIM/DMARC/DNSSEC — MX for Google Workspace is already live).
+plus authorizing Cloudflare's GitHub app), the **cutover redirects** (added to the old
+site's own repo, not the domain — `errorsignal.dev` is shared with other GitHub Pages
+projects), and **mail hardening** (SPF/DKIM/DMARC/DNSSEC — MX for Google Workspace is
+already live).
 
 ## Layout
 

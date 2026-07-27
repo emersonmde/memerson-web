@@ -78,12 +78,12 @@ has externally managed DNS records`). It was invisible to `dig`, because Cloudfl
 What remains here is Cloudflare- and GitHub-side: pointing the old URLs at the new site
 and closing down `errorsignal.dev`.
 
-**`errorsignal.dev` is a shared host, so the redirect is path-scoped.** Several separate
-repos publish to that domain through GitHub Pages — the `coppermind` WASM demo, Rust docs,
-other static assets — and they keep working from it. Only the Astro site's own routes
-(`/`, `/about`, `/blog`, `/blog/*`, `/photos`, `/rss.xml`) move to `memerson.com`. The rule
-is an **allowlist**, because redirecting `/*` with carve-outs would silently break every
-_future_ project the day it is published. Full table in
+**The redirect goes in the old Astro repo, not on the domain.** `errorsignal.dev` is a
+shared host — several separate repos publish to it through GitHub Pages (the `coppermind`
+WASM demo, Rust docs, other static assets) and they keep working from it. Putting the
+redirect in `emersonmde.github.io` means the other repos are untouched _by construction_,
+with no domain-level rule that a future project could accidentally match. Caveat: GitHub
+Pages cannot emit a 301, so these are meta-refresh redirects. Full reasoning and scope in
 [ARCHITECTURE §8](./ARCHITECTURE.md).
 
 - [x] Confirm the S3 photo buckets hold nothing unmigrated — all four inventoried, every
@@ -92,8 +92,9 @@ _future_ project the day it is published. Full table in
       at all today, so this is a decision to _start_, not to port. Cloudflare Web Analytics
       is free and needs no proxy. Note the footer currently claims "NO TRACKERS, NO
       ANALYTICS" — adding any would mean changing that line.
-- [ ] **Redirect the Astro site's paths only — not the whole domain.** Decided 2026-07-27;
-      the full rule and its rationale are in [ARCHITECTURE §8](./ARCHITECTURE.md).
+- [ ] **Add self-redirects to `emersonmde.github.io`** for `/`, `/about`, `/blog`,
+      `/blog/<slug>`, `/photos`, `/rss.xml`. Astro's `redirects` config emits these as
+      static meta-refresh pages, which is the only mechanism GitHub Pages supports.
 - [ ] Verify old blog URLs land correctly — path structure is unchanged and all five slugs
       are preserved, so this is 1:1. The one shape change is `/photos` → now paginated
       `/photos/2..4`, and the old single `/photos` maps to the new first page.
@@ -160,18 +161,53 @@ locked in during M1.
 
 Two independent pipelines, both writing into the manifest. Neither exists yet.
 
-**1. Derived colour metadata** (mechanical, no model involved). Needed for the designed
-lightbox glow keyed to each photograph's own palette, and cheap to compute:
+**1. Derived colour metadata** (mechanical, no model involved).
 
-- A dominant colour and/or a small palette per photo, via `sharp`'s `.stats()` or a
-  resize-to-tiny-and-quantise pass.
+First, a correction to an earlier assumption in this file: **the lightbox's ambient glow
+does not need this.** Signal 4c settles it — _"ambient bloom is a blurred copy of the photo
+itself, so it works on real images."_ The glow is the photograph, blurred and saturated
+behind itself. Nothing samples a palette, so it needs no metadata at all. That is
+implemented as of 2026-07-27.
+
+What colour metadata is actually for is the **per-photo accent** — the tile hover glow, the
+lightbox brackets, the counter. And the rule there is a constraint, not a free choice:
+
+> **The extracted colour must snap to the nearest of the design's existing neons.** Never
+> apply a raw sampled colour.
+
+Both design documents define the same five photo accents:
+
+| Accent               | Album in the mockups |
+| -------------------- | -------------------- |
+| `oklch(.82 .16 62)`  | REN FAIRE — amber    |
+| `oklch(.80 .15 148)` | LANDSCAPE — green    |
+| `oklch(.80 .15 200)` | CARIBBEAN — cyan     |
+| `oklch(.80 .13 252)` | AVIATION — blue      |
+| `oklch(.72 .22 332)` | NIGHT — magenta      |
+
+So the job is **classification, not extraction**: compute a dominant hue, then pick the
+closest of these five and store _which one_, not an arbitrary hex.
+
+This matters for the same reason §2's ramp locks lightness and chroma. A raw dominant
+colour from a photograph is usually desaturated and muddy — a grey-brown sky sampled
+literally produces a grey-brown glow, which reads as a rendering bug rather than a design.
+Snapping to a fixed five keeps every accent on-palette by construction, no matter what the
+photograph looks like.
+
+Implementation notes:
+
+- Dominant hue via `sharp`'s `.stats()` or a resize-to-tiny-and-quantise pass.
+- Compare in **oklch hue space**, not RGB distance — the palette is defined in oklch and
+  perceptual hue distance is the thing being asked about.
+- Store the chosen accent (or its index). Storing a raw hex invites someone to use it
+  directly later, which is exactly the failure mode this rule exists to prevent.
 - Schema addition to `src/data/photos.json` + `content.config.ts`.
 - **Backfillable without local originals** — this is exactly what the private archive
   bucket is for. `photos:rebuild` already re-derives from archived originals, so extending
   it, or adding a `photos:remeta` sibling, backfills all 118 with no downloads from
-  anywhere but R2.
-- Do this one **first**: it unblocks a design change, is deterministic, and needs no
-  review pass.
+  anywhere but R2. It can equally run off the existing 640px derivative.
+- Note this is the same five-way classification an album field would give, so it may
+  overlap with, or be superseded by, the tagging work below.
 
 **2. AI-assisted titles, captions and tags** (Matthew's proposal). Replaces what would
 otherwise be 118 rows of manual data entry:

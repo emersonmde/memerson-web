@@ -16,6 +16,7 @@ interface Slide {
   alt: string;
   label: string;
   meta: string;
+  bloom?: string;
 }
 
 const tiles = Array.from(document.querySelectorAll<HTMLAnchorElement>('a[data-tile]'));
@@ -29,6 +30,7 @@ function initLightbox(tiles: HTMLAnchorElement[]) {
     alt: tile.dataset.alt || '',
     label: tile.dataset.label || '',
     meta: tile.dataset.meta || '',
+    bloom: tile.dataset.bloom,
   }));
 
   let index = 0;
@@ -43,6 +45,7 @@ function initLightbox(tiles: HTMLAnchorElement[]) {
   root.setAttribute('aria-label', 'Photo viewer');
 
   root.innerHTML = `
+    <div class="lb-bloom"></div>
     <div class="lb-wash" data-close></div>
     <div class="lb-vignette"></div>
     <div class="lb-bar">
@@ -77,6 +80,7 @@ function initLightbox(tiles: HTMLAnchorElement[]) {
   const q = <T extends Element>(sel: string) => root.querySelector<T>(sel)!;
 
   const els = {
+    bloom: q<HTMLElement>('.lb-bloom'),
     counter: q<HTMLElement>('.lb-counter'),
     avif: q<HTMLSourceElement>('.lb-avif'),
     webp: q<HTMLSourceElement>('.lb-webp'),
@@ -96,6 +100,10 @@ function initLightbox(tiles: HTMLAnchorElement[]) {
     else els.avif.removeAttribute('srcset');
     if (slide.webp) els.webp.srcset = slide.webp;
     else els.webp.removeAttribute('srcset');
+
+    // Ambient bloom: the photograph itself, blurred. Nothing samples a palette,
+    // so it works on any image without extracting or storing a single colour.
+    els.bloom.style.backgroundImage = slide.bloom ? `url("${slide.bloom}")` : '';
 
     els.img.src = slide.href;
     els.img.alt = slide.alt;

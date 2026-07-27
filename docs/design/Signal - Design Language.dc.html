@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#05070d;--panel:#0a0e18;--panel2:#0d1220;--line:rgba(142,180,255,.13);--line2:rgba(142,180,255,.28);--tx:#dee5f3;--dim:#8492a8;--faint:#4d5869;--a1:oklch(.80 .15 205);--a2:oklch(.72 .18 342);--a3:oklch(.85 .14 82);--glow:.6;--scan:.05}
+*{box-sizing:border-box}
+body{margin:0;background:#0b0d12;color:var(--tx);font-family:"Space Grotesk",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--a1);text-decoration:none}a:hover{color:var(--a3)}
+.dv-turn{padding:52px 56px 44px;border-bottom:1px solid rgba(255,255,255,.06);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dv-tid{font:500 10px "JetBrains Mono",monospace;padding:3px 7px;background:var(--a1);color:#04070c;border-radius:3px;text-decoration:none}
+.dv-tname{font:500 13px/1.2 "Space Grotesk",sans-serif;color:var(--tx);letter-spacing:.02em}
+.dv-opts{display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px;max-width:100%}
+.dv-oid{font:500 10.5px "JetBrains Mono",monospace;padding:3px 7px;background:rgba(142,180,255,.12);color:var(--tx);border-radius:3px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:9px;font:400 11.5px/1.3 "JetBrains Mono",monospace;color:var(--dim);letter-spacing:.02em}
+.dv-card{max-width:100%;background:var(--ink);border:1px solid var(--line);border-radius:4px;overflow:hidden;position:relative}
+.dv-opt:target .dv-oid{background:var(--a3);color:#0a0700}
+.dv-next{margin:26px 0 0;font:400 11.5px/1.7 "JetBrains Mono",monospace;color:var(--faint)}
+@keyframes trace{to{stroke-dashoffset:-2400}}
+@keyframes drift{to{transform:translate3d(-44px,-44px,0)}}
+@keyframes breathe{0%,100%{opacity:.35}50%{opacity:.9}}
+@keyframes sweepY{0%{transform:translateY(-120%)}100%{transform:translateY(820%)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flick{0%,96%,100%{opacity:1}97%{opacity:.25}}
+@keyframes aperture{0%{clip-path:inset(0 0 0 0);opacity:1}100%{clip-path:inset(50% 0 50% 0);opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes bar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+@keyframes travel{from{background-position:-45% 0}to{background-position:145% 0}}
+@keyframes travelY{from{background-position:0 -45%}to{background-position:0 145%}}
+@keyframes neonFlicker{0%,17%,19%,21%,58%,60%,100%{opacity:1}18%,20%,59%{opacity:.42}18.5%{opacity:.72}}
+@keyframes hazeDrift{0%{transform:translate3d(-4%,0,0) scale(1)}50%{transform:translate3d(6%,-3%,0) scale(1.12)}100%{transform:translate3d(-4%,0,0) scale(1)}}
+@keyframes ash{0%{transform:translateY(0);opacity:0}12%{opacity:.75}100%{transform:translateY(-190px);opacity:0}}
+@keyframes crtOut{0%{transform:scaleY(1);filter:brightness(1) saturate(1)}72%{transform:scaleY(.03);filter:brightness(2.4) saturate(1.6)}100%{transform:scaleY(.005);filter:brightness(3.2)}}
+@keyframes crtIn{0%{transform:scaleY(.005) scaleX(1.05);filter:brightness(3.2)}40%{transform:scaleY(.32) scaleX(1);filter:brightness(1.7)}100%{transform:scaleY(1);filter:brightness(1)}}
+@keyframes fillY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes nodeOn{from{opacity:.18;box-shadow:none}to{opacity:1}}
+@keyframes hazeUp{from{transform:translateY(0) scale(1)}to{transform:translateY(-70px) scale(1.14)}}
+@keyframes glowPulse{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes gateT{0%{transform:translateY(0) scaleY(0)}30%{transform:translateY(0) scaleY(1)}50%{transform:translateY(0) scaleY(1)}100%{transform:translateY(-102%) scaleY(1)}}
+@keyframes gateB{0%{transform:translateY(0) scaleY(0)}30%{transform:translateY(0) scaleY(1)}50%{transform:translateY(0) scaleY(1)}100%{transform:translateY(102%) scaleY(1)}}
+@keyframes gateLine{0%{transform:scaleX(0);opacity:1}18%{transform:scaleX(1);opacity:1}70%{opacity:1}100%{transform:scaleX(1);opacity:0}}
+@keyframes warpOut{0%{transform:scale(1);filter:blur(0) brightness(1);opacity:1}100%{transform:scale(1.04);filter:blur(8px) brightness(1.7);opacity:0}}
+@keyframes warpIn{0%{transform:scale(.982);filter:blur(9px) brightness(1.5);opacity:0}100%{transform:scale(1);filter:blur(0) brightness(1);opacity:1}}
+@keyframes streak{0%{transform:scaleX(0);opacity:0}22%{opacity:1}100%{transform:scaleX(1);opacity:0}}
+@keyframes panelIn{from{opacity:0;clip-path:inset(0 0 100% 0);transform:translateY(-5px)}to{opacity:1;clip-path:inset(0 0 0 0);transform:none}}
+@keyframes sweepX{0%{transform:translateX(-140%) skewX(-14deg)}100%{transform:translateX(240%) skewX(-14deg)}}
+@keyframes fogSlow{0%{transform:translate3d(-6%,2%,0) scale(1.05)}50%{transform:translate3d(8%,-5%,0) scale(1.22)}100%{transform:translate3d(-6%,2%,0) scale(1.05)}}
+@keyframes lbIn{from{opacity:0;transform:scale(.986)}to{opacity:1;transform:none}}
+@keyframes rainDrop{0%{transform:translateY(-30%);opacity:0}20%{opacity:.7}100%{transform:translateY(240%);opacity:0}}
+@keyframes pulseDown{0%{background-position:0 -22%;opacity:0}5%{opacity:1}26%{background-position:0 122%;opacity:1}31%{opacity:0}100%{background-position:0 122%;opacity:0}}
+@keyframes drawOut{from{clip-path:inset(0 0 0 0)}to{clip-path:inset(100% 0 0 0)}}
+@keyframes lineDown{0%{transform:translateY(0);opacity:0}8%{opacity:1}92%{opacity:1}100%{transform:translateY(378px);opacity:0}}
+@keyframes iris{0%{transform:scale(46)}44%{transform:scale(0)}56%{transform:scale(0)}100%{transform:scale(46)}}
+@keyframes starDrift{to{transform:translate3d(0,-70px,0)}}
+@keyframes resolveIn{from{opacity:0;filter:blur(10px);letter-spacing:.04em}to{opacity:1;filter:blur(0);letter-spacing:-.045em}}
+@keyframes tiltIn{from{transform:perspective(900px) rotateX(30deg) translateY(30px);opacity:.35}to{transform:perspective(900px) rotateX(4deg) translateY(0);opacity:1}}
+@keyframes plateIn{from{opacity:0;clip-path:inset(0 0 100% 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+@keyframes shift{from{transform:translateY(40px)}to{transform:translateY(-40px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t4">
+<div class="dv-thd"><a class="dv-tid" href="#t4">4</a><span class="dv-tname">SPINE + PLATES — glass out, Starcraft plates back, ramped rail</span></div>
+<p style="max-width:880px;margin:0 0 30px;font:400 13px/1.75 'JetBrains Mono',monospace;color:#8492a8">Glass is gone from the index — it fought the neon and read soft. The plates from <a class="dv-oid" href="#2d">2d</a> are back, now <span style="color:#dee5f3">hanging off the spine</span>: each node's offshoot and brackets take their colour from the rail's own gradient at that height (sodium at the top, cyan mid, violet at the end), and a charge pulses down the rail every seven seconds. Click a plate to open it — the detail draws in on the same dark plate, no glass anywhere (<a class="dv-oid" href="#4a">4a</a>). Lightbox rebuilt for real photos in <a class="dv-oid" href="#4c">4c</a>, scroll effects in <a class="dv-oid" href="#4b">4b</a>, and two transitions with a single light event each — the double flash is gone (<a class="dv-oid" href="#4d">4d</a>, <a class="dv-oid" href="#4e">4e</a>).</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="4a">
+<div class="dv-olabel"><a class="dv-oid" href="#4a">4a</a>LANDING v2 — hero dissolves into the spine, plates hang off it · SCROLL, WATCH THE RAIL PULSE, CLICK A PLATE</div>
+<div class="dv-card" style="width:1160px">
+  <div style="position:relative;height:740px;overflow-y:auto;background:#03040a">
+    <div style="position:sticky;top:0;height:0;z-index:5"><div style="position:absolute;top:0;left:0;right:0;height:740px;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(190,215,255,.04) 0 1px,transparent 1px 3px)"></div></div>
+    <div style="position:relative">
+      <div style="position:absolute;left:0;right:0;top:0;height:960px;overflow:hidden;pointer-events:none">
+        <div style="position:absolute;inset:0;animation:shift linear both;animation-timeline:scroll(nearest);background-image:radial-gradient(1.5px 1.5px at 12% 18%,rgba(255,255,255,.9),transparent),radial-gradient(1px 1px at 26% 42%,rgba(255,255,255,.7),transparent),radial-gradient(1.5px 1.5px at 41% 12%,rgba(210,235,255,.85),transparent),radial-gradient(1px 1px at 58% 33%,rgba(255,255,255,.6),transparent),radial-gradient(2px 2px at 72% 22%,rgba(255,240,220,.8),transparent),radial-gradient(1px 1px at 84% 46%,rgba(255,255,255,.55),transparent),radial-gradient(1px 1px at 92% 15%,rgba(210,235,255,.7),transparent),radial-gradient(1px 1px at 19% 62%,rgba(255,255,255,.5),transparent),radial-gradient(1.5px 1.5px at 66% 68%,rgba(255,255,255,.6),transparent)"></div>
+        <div style="position:absolute;inset:-25%;background:radial-gradient(closest-side at 24% 40%,oklch(.55 .2 288 / .45),transparent 68%);filter:blur(38px);animation:fogSlow 30s ease-in-out infinite"></div>
+        <div style="position:absolute;inset:-25%;background:radial-gradient(closest-side at 76% 28%,oklch(.80 .18 200 / .26),transparent 66%);filter:blur(34px);animation:fogSlow 38s ease-in-out reverse infinite"></div>
+        <div style="position:absolute;left:24%;top:-20%;width:20%;height:120%;background:linear-gradient(180deg,oklch(.80 .18 200 / .12),transparent 74%);transform:rotate(13deg);filter:blur(13px)"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(180deg,transparent,#03040a)"></div>
+      </div>
+      <div style="position:relative;height:620px;padding:0 70px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.3em;color:#4d5869;margin-bottom:24px">ERRORSIGNAL.DEV — DISTRICT 09 / PERSONAL</div>
+        <div style="font:700 112px/.9 'Space Grotesk',sans-serif;letter-spacing:-.055em;color:#f4f7fd;text-shadow:-1.5px 0 0 oklch(.68 .26 348 / .32),1.5px 0 0 oklch(.80 .18 200 / .38),0 0 16px oklch(.80 .18 200 / .5),0 0 70px oklch(.80 .18 200 / .38);animation:neonFlicker 15s steps(1,end) infinite">EMERSON</div>
+        <div style="font:700 112px/.9 'Space Grotesk',sans-serif;letter-spacing:-.055em;color:#f4f7fd;text-shadow:0 0 16px oklch(.80 .18 200 / .8);transform:scaleY(-1);opacity:.15;filter:blur(2.5px);mask-image:linear-gradient(transparent 44%,#000);-webkit-mask-image:linear-gradient(transparent 44%,#000);height:80px;overflow:hidden">EMERSON</div>
+        <div style="display:flex;align-items:flex-end;gap:34px;margin-top:16px">
+          <p style="margin:0;max-width:560px;font:400 14px/1.8 'JetBrains Mono',monospace;color:#94a2b8">Matthew Emerson — Software Development Manager at Amazon, leading engineers and applied scientists on LLM and agentic systems for hiring. Nine systems below, written after hours, mostly in Rust.</p>
+          <div style="font:400 10px/1.9 'JetBrains Mono',monospace;letter-spacing:.14em;color:#4d5869;border-left:1px solid rgba(142,180,255,.16);padding-left:16px">RUST · C<br>JAVA · PYTHON<br>TYPESCRIPT</div>
+        </div>
+      </div>
+      <div style="position:absolute;left:70px;top:556px;width:118px;height:3px;border-radius:2px;background:oklch(.82 .17 66);box-shadow:0 0 9px oklch(.82 .17 66),0 0 30px oklch(.82 .17 66 / .6);overflow:hidden"><span style="position:absolute;inset:-2px;background:linear-gradient(90deg,transparent,#fff7e6,transparent);background-size:34% 100%;background-repeat:no-repeat;filter:blur(1.5px);animation:travel 3.2s cubic-bezier(.45,0,.55,1) infinite"></span></div>
+      <div style="position:absolute;left:70px;top:556px;width:3px;height:64px;border-radius:2px;background:linear-gradient(180deg,oklch(.82 .17 66),oklch(.81 .17 100));box-shadow:0 0 9px oklch(.82 .17 66 / .8)"></div>
+      <div style="position:absolute;left:200px;top:550px;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#4d5869;animation:glowPulse 3.6s ease-in-out infinite">SCROLL ↓ — 09 SYSTEMS ON THE RAIL</div>
+      <div style="position:relative;padding:0 70px 100px">
+        <div style="position:absolute;left:70px;top:0;bottom:100px;width:3px;background:rgba(142,180,255,.09);border-radius:2px"></div>
+        <div style="position:absolute;left:70px;top:0;bottom:100px;width:3px;border-radius:2px;transform-origin:top;background:linear-gradient(180deg,oklch(.81 .17 100),oklch(.80 .17 200) 50%,oklch(.80 .17 286));box-shadow:0 0 8px oklch(.80 .17 200 / .6);animation:fillY linear both;animation-timeline:scroll(nearest);animation-range:4% 86%"></div>
+        <div style="position:absolute;left:69px;top:0;bottom:100px;width:5px;border-radius:3px;background:linear-gradient(180deg,transparent,#ffffff,transparent);background-size:100% 20%;background-repeat:no-repeat;filter:blur(1.5px);animation:pulseDown 7s cubic-bezier(.4,0,.6,1) infinite"></div>
+        <div style="padding-left:56px">
+          <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#4d5869;padding:6px 0 14px">THE INDEX — 09 SYSTEMS, RUST UNLESS NOTED</div>
+          <sc-for list="{{ railPlates }}" as="p" hint-placeholder-count="9">
+            <div style="position:relative;padding-bottom:12px">
+              <span style="position:absolute;left:-57px;top:26px;width:9px;height:9px;border-radius:50%;background:{{ p.hue }};box-shadow:0 0 14px {{ p.hue }};animation:nodeOn linear both;animation-timeline:view();animation-range:entry 6% cover 26%"></span>
+              <span style="position:absolute;left:-48px;top:30px;width:48px;height:1px;background:linear-gradient(90deg,{{ p.hue }},transparent)"></span>
+              <div onClick="{{ p.toggle }}" style="--h:{{ p.hue }};position:relative;background:#080b13;border:1px solid rgba(142,180,255,.14);padding:16px 18px 15px;cursor:pointer;overflow:hidden;transition:all .18s cubic-bezier(.2,.8,.2,1)" style-hover="background:#0b1120;border-color:var(--h);box-shadow:0 0 44px -16px var(--h),inset 0 1px 0 rgba(220,240,255,.1)">
+                <span style="position:absolute;left:0;top:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--h),transparent);background-size:32% 100%;background-repeat:no-repeat;opacity:0;transition:opacity .2s" style-hover="opacity:1;animation:travel 1.6s linear infinite"></span>
+                <span style="position:absolute;left:0;top:0;width:9px;height:9px;border-left:1px solid var(--h);border-top:1px solid var(--h)"></span>
+                <span style="position:absolute;right:0;top:0;width:9px;height:9px;border-right:1px solid var(--h);border-top:1px solid var(--h)"></span>
+                <span style="position:absolute;left:0;bottom:0;width:9px;height:9px;border-left:1px solid var(--h);border-bottom:1px solid var(--h)"></span>
+                <span style="position:absolute;right:0;bottom:0;width:9px;height:9px;border-right:1px solid var(--h);border-bottom:1px solid var(--h)"></span>
+                <div style="display:grid;grid-template-columns:1fr auto;gap:20px;align-items:baseline">
+                  <span style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+                    <span style="font:400 10px 'JetBrains Mono',monospace;letter-spacing:.14em;color:var(--h)">{{ p.num }}</span>
+                    <span style="font:700 26px 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#f2f6fd">{{ p.name }}</span>
+                    <span style="font:400 11.5px 'JetBrains Mono',monospace;color:#8f9db3">{{ p.blurb }}</span>
+                  </span>
+                  <span style="font:500 9px 'JetBrains Mono',monospace;letter-spacing:.16em;color:var(--h)">{{ p.mark }}</span>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+                  <sc-for list="{{ p.tags }}" as="t" hint-placeholder-count="3">
+                    <span style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#9fb0c8;border:1px solid rgba(142,180,255,.16);padding:3px 7px">{{ t }}</span>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(142,180,255,.14);animation:plateIn .26s cubic-bezier(.2,.85,.2,1)">
+                    <p style="margin:0;max-width:680px;font:400 12.5px/1.85 'JetBrains Mono',monospace;color:#b7c3d6">{{ p.detail }}</p>
+                    <div style="display:flex;gap:8px;margin-top:14px">
+                      <a href="https://github.com/emersonmde" style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--h);border:1px solid var(--h);padding:5px 10px" style-hover="background:rgba(255,255,255,.08);box-shadow:0 0 22px -6px var(--h)">SOURCE ↗</a>
+                      <a href="#4a" style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:#8f9db3;border:1px solid rgba(142,180,255,.18);padding:5px 10px" style-hover="color:#f2f6fd;border-color:rgba(220,240,255,.4)">/SYSTEMS/{{ p.name }} ↗</a>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+          <div style="display:flex;align-items:center;gap:14px;padding-top:26px;font:400 10px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#4d5869"><span style="width:34px;height:1px;background:oklch(.80 .17 286 / .6)"></span>END OF RAIL — <a href="#4c" style="color:oklch(.80 .17 286)">PHOTOGRAPHS ↗</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="4b">
+<div class="dv-olabel"><a class="dv-oid" href="#4b">4b</a>SCROLL EFFECTS — four candidates, scroll-driven, no libraries · SCROLL SLOWLY ↓</div>
+<div class="dv-card" style="width:700px">
+  <div style="position:relative;height:640px;overflow-y:auto;background:#03040a">
+    <div style="position:relative;height:400px;overflow:hidden;border-bottom:1px solid rgba(142,180,255,.1)">
+      <div style="position:absolute;inset:-20% 0;animation:starDrift linear both;animation-timeline:scroll(nearest);background-image:radial-gradient(1.5px 1.5px at 14% 22%,rgba(255,255,255,.9),transparent),radial-gradient(1px 1px at 33% 48%,rgba(255,255,255,.7),transparent),radial-gradient(2px 2px at 61% 18%,rgba(255,240,220,.8),transparent),radial-gradient(1px 1px at 78% 52%,rgba(255,255,255,.6),transparent),radial-gradient(1.5px 1.5px at 88% 28%,rgba(210,235,255,.8),transparent)"></div>
+      <div style="position:absolute;inset:-25%;background:radial-gradient(closest-side at 40% 55%,oklch(.55 .2 288 / .5),transparent 66%);filter:blur(34px);animation:fogSlow 28s ease-in-out infinite"></div>
+      <div style="position:absolute;left:26px;bottom:26px">
+        <div style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.22em;color:oklch(.80 .18 200);margin-bottom:8px">01 — NEBULA PARALLAX</div>
+        <div style="font:700 30px 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd">Stars drift, fog stays</div>
+        <p style="margin:8px 0 0;max-width:420px;font:400 11px/1.7 'JetBrains Mono',monospace;color:#8492a8">Two layers at different rates tied to scroll position. Cheap, silent, and it makes the hero feel like a window rather than a page.</p>
+      </div>
+    </div>
+    <div style="position:relative;height:400px;display:flex;align-items:center;padding:0 26px;border-bottom:1px solid rgba(142,180,255,.1);overflow:hidden">
+      <div>
+        <div style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.22em;color:oklch(.82 .17 66);margin-bottom:10px">02 — TYPE RESOLVES ON ENTRY</div>
+        <div style="font:700 46px/1 'Space Grotesk',sans-serif;color:#f2f6fd;animation:resolveIn linear both;animation-timeline:view();animation-range:entry 8% cover 42%">Out of focus,<br>into focus.</div>
+        <p style="margin:14px 0 0;max-width:420px;font:400 11px/1.7 'JetBrains Mono',monospace;color:#8492a8">Headings arrive blurred with open tracking and resolve as they enter view — a lens finding focus, not a fade-up. Body text never does this.</p>
+      </div>
+    </div>
+    <div style="position:relative;height:400px;overflow:hidden;border-bottom:1px solid rgba(142,180,255,.1)">
+      <div style="position:absolute;left:-20%;right:-20%;bottom:-10%;height:78%;transform-origin:bottom;animation:tiltIn linear both;animation-timeline:view();animation-range:entry 0% cover 55%;background-image:linear-gradient(rgba(142,180,255,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(142,180,255,.22) 1px,transparent 1px);background-size:52px 52px;mask-image:linear-gradient(#000,transparent 82%);-webkit-mask-image:linear-gradient(#000,transparent 82%)"></div>
+      <div style="position:absolute;left:0;right:0;bottom:31%;height:1px;background:oklch(.80 .18 200);box-shadow:0 0 12px oklch(.80 .18 200),0 0 50px oklch(.80 .18 200 / .7)"></div>
+      <div style="position:absolute;left:26px;top:26px">
+        <div style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.22em;color:oklch(.80 .18 200);margin-bottom:8px">03 — GRID HORIZON TILT</div>
+        <div style="font:700 30px 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd">The floor lies down</div>
+        <p style="margin:8px 0 0;max-width:400px;font:400 11px/1.7 'JetBrains Mono',monospace;color:#8492a8">A grid plane rotates from 30° to 4° as the section enters. Use once per page, at the very bottom, as the footer floor.</p>
+      </div>
+    </div>
+    <div style="position:relative;min-height:520px;padding:26px">
+      <div style="position:sticky;top:22px;display:flex;align-items:baseline;gap:12px;margin-bottom:18px">
+        <span style="font:700 46px 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:oklch(.80 .17 286);text-shadow:0 0 26px oklch(.80 .17 286 / .6)">04</span>
+        <span style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#8492a8">STICKY SECTION MARKER</span>
+      </div>
+      <p style="margin:0 0 14px;max-width:440px;font:400 11.5px/1.85 'JetBrains Mono',monospace;color:#8492a8">The number pins to the top while its section passes, then hands off to the next one. It is the only chrome the log pages get — no breadcrumb, no progress bar, no back-to-top button.</p>
+      <p style="margin:0;max-width:440px;font:300 16px/1.7 Newsreader,serif;color:#a7b3c6">Verdict on scroll: use 01 in the hero, 02 on every section heading, 04 on the log. Keep 03 for the footer only — a tilting grid anywhere else turns the page into a screensaver.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="4c">
+<div class="dv-olabel"><a class="dv-oid" href="#4c">4c</a>LIGHTBOX v2 — ambient bloom is a blurred copy of the photo itself, so it works on real images (click the rail)</div>
+<div class="dv-card" style="width:1160px">
+  <div style="position:relative;height:660px;background:#03040a;overflow:hidden">
+    <div style="position:absolute;inset:-12%;background:{{ glow.grad }};filter:blur(70px) saturate(1.5);opacity:.5;transform:scale(1.15);transition:background .5s ease"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(70% 55% at 50% 45%,transparent,rgba(3,4,10,.86) 78%)"></div>
+    <div style="position:absolute;inset:0;background-image:radial-gradient(1px 1px at 8% 14%,rgba(255,255,255,.7),transparent),radial-gradient(1.5px 1.5px at 91% 22%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 78% 84%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 15% 78%,rgba(255,255,255,.45),transparent)"></div>
+    <div style="position:absolute;left:0;right:0;top:0;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8492a8;z-index:3">
+      <span style="color:#dee5f3">ARCHIVE / 214</span>
+      <span onClick="{{ closeBig }}" style="cursor:pointer;color:#8492a8" style-hover="color:#fff">CLOSE ESC ×</span>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:50px;bottom:0;display:flex;flex-direction:column;align-items:center;padding:16px 0 22px">
+      <div style="position:relative;flex:1;min-height:0;display:flex;align-items:center;gap:22px">
+        <span onClick="{{ prevGlow }}" style="flex:none;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(220,240,255,.18);color:#c2cee0;cursor:pointer;font:400 13px 'JetBrains Mono',monospace;transition:all .16s" style-hover="border-color:#fff;color:#fff;box-shadow:0 0 22px -8px #fff">←</span>
+        <div style="position:relative;width:760px;height:100%;max-height:400px;background:{{ glow.grad }};box-shadow:0 34px 80px -30px rgba(0,0,0,.95);transition:background .4s ease">
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.06) 0 2px,transparent 2px 11px)"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:rgba(255,255,255,.85);background:rgba(3,4,10,.4);padding:7px 12px">REAL PHOTO GOES HERE — CHROME STAYS NEUTRAL</span></div>
+          <span style="position:absolute;left:-1px;top:-1px;width:20px;height:20px;border-left:1px solid rgba(235,245,255,.75);border-top:1px solid rgba(235,245,255,.75)"></span>
+          <span style="position:absolute;right:-1px;top:-1px;width:20px;height:20px;border-right:1px solid rgba(235,245,255,.75);border-top:1px solid rgba(235,245,255,.75)"></span>
+          <span style="position:absolute;left:-1px;bottom:-1px;width:20px;height:20px;border-left:1px solid rgba(235,245,255,.75);border-bottom:1px solid rgba(235,245,255,.75)"></span>
+          <span style="position:absolute;right:-1px;bottom:-1px;width:20px;height:20px;border-right:1px solid rgba(235,245,255,.75);border-bottom:1px solid rgba(235,245,255,.75)"></span>
+        </div>
+        <span onClick="{{ nextGlow }}" style="flex:none;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(220,240,255,.18);color:#c2cee0;cursor:pointer;font:400 13px 'JetBrains Mono',monospace;transition:all .16s" style-hover="border-color:#fff;color:#fff;box-shadow:0 0 22px -8px #fff">→</span>
+      </div>
+      <div style="width:760px;display:flex;align-items:flex-end;justify-content:space-between;margin-top:20px">
+        <div>
+          <div style="font:700 22px 'Space Grotesk',sans-serif;letter-spacing:-.025em;color:#f4f7fd">{{ glow.t }}</div>
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.18em;color:#8492a8;margin-top:6px">{{ glow.album }} · {{ glow.meta }}</div>
+        </div>
+        <div style="display:flex;gap:7px">
+          <sc-for list="{{ glowThumbs }}" as="h" hint-placeholder-count="5">
+            <div onClick="{{ h.go }}" style="position:relative;width:62px;height:42px;background:{{ h.grad }};cursor:pointer;opacity:.45;transition:opacity .16s" style-hover="opacity:1">
+              <span style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.06) 0 2px,transparent 2px 11px)"></span>
+              <sc-if value="{{ h.active }}" hint-placeholder-val="{{ false }}">
+                <span style="position:absolute;inset:-2px;border:1px solid rgba(255,255,255,.9);box-shadow:0 0 18px -4px #fff"></span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <p style="width:760px;margin:14px 0 0;font:400 10px/1.7 'JetBrains Mono',monospace;color:#5b6678">The wash behind the frame is the photograph itself — duplicated, scaled 1.15, blurred 70px. Whatever you shot lights the room, no colour extraction needed, and it looks identical on a green ridge or a night skyline. Chrome is pure hairline white at 75%, so it never argues with the image.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="4d">
+<div class="dv-olabel"><a class="dv-oid" href="#4d">4d</a>TRANSITION C — “Redraw” · one scan line, page draws in behind it · 380ms (click tabs)</div>
+<div class="dv-card" style="width:560px;height:430px;position:relative;overflow:hidden;background:#03040a">
+  <div style="display:flex;align-items:center;height:52px;border-bottom:1px solid rgba(142,180,255,.13);padding:0 18px;background:#070912;position:relative;z-index:8">
+    <span style="font:500 11px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#dee5f3;margin-right:auto">M.E</span>
+    <sc-for list="{{ redrawTabs }}" as="t" hint-placeholder-count="3">
+      <span onClick="{{ t.go }}" style="position:relative;padding:0 14px;height:52px;display:flex;align-items:center;font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8492a8;cursor:pointer;transition:color .16s" style-hover="color:#f2f6fd">
+        {{ t.label }}
+        <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;left:10px;right:10px;bottom:0;height:2px;background:oklch(.80 .18 200);box-shadow:0 0 14px oklch(.80 .18 200)"></span>
+        </sc-if>
+      </span>
+    </sc-for>
+  </div>
+  <div style="position:relative;height:378px;overflow:hidden;background:#05070e">
+    <div style="position:absolute;inset:0;padding:26px">
+      <sc-if value="{{ rIndex }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.80 .18 200)">/ INDEX</div>
+          <div style="font:700 34px/1.04 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 14px">Nine systems,<br>zero frameworks.</div>
+          <p style="margin:0;max-width:400px;font:400 11.5px/1.8 'JetBrains Mono',monospace;color:#8f9db3">One light event: a single line travels top to bottom, the outgoing page is erased above it, the incoming page is already sitting underneath. Nothing scales, nothing flashes twice.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ rPhotos }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.82 .17 66)">/ PHOTOS</div>
+          <div style="font:700 34px/1.04 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 16px">214 frames,<br>lit by themselves.</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:400px">
+            <div style="height:60px;background:linear-gradient(160deg,#062a41,#1a7f9e)"></div>
+            <div style="height:60px;background:linear-gradient(170deg,#08180f,#2f6b34)"></div>
+            <div style="height:60px;background:linear-gradient(180deg,#091c37,#3b6ea8)"></div>
+            <div style="height:60px;background:linear-gradient(165deg,#280e05,#8a3b12)"></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ rLog }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869">/ LOG — 2026.07.19</div>
+          <div style="font:700 26px/1.06 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd;margin:12px 0 14px">Why my LSM tree was<br>slower than a flat file</div>
+          <p style="margin:0;max-width:400px;font:300 16px/1.65 Newsreader,serif;color:#a7b3c6">Long-form drops the neon: serif at 72 characters, hairline rules, code blocks with one lit edge.</p>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ rrun }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;z-index:6;pointer-events:none">
+        <div style="position:absolute;inset:0;background:#05070e;padding:26px;animation:drawOut .38s cubic-bezier(.4,0,.5,1) forwards">
+          <sc-if value="{{ pIndex }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.80 .18 200)">/ INDEX</div>
+              <div style="font:700 34px/1.04 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 14px">Nine systems,<br>zero frameworks.</div>
+              <p style="margin:0;max-width:400px;font:400 11.5px/1.8 'JetBrains Mono',monospace;color:#8f9db3">One light event: a single line travels top to bottom, the outgoing page is erased above it, the incoming page is already sitting underneath.</p>
+            </div>
+          </sc-if>
+          <sc-if value="{{ pPhotos }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.82 .17 66)">/ PHOTOS</div>
+              <div style="font:700 34px/1.04 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 16px">214 frames,<br>lit by themselves.</div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:400px">
+                <div style="height:60px;background:linear-gradient(160deg,#062a41,#1a7f9e)"></div>
+                <div style="height:60px;background:linear-gradient(170deg,#08180f,#2f6b34)"></div>
+                <div style="height:60px;background:linear-gradient(180deg,#091c37,#3b6ea8)"></div>
+                <div style="height:60px;background:linear-gradient(165deg,#280e05,#8a3b12)"></div>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ pLog }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869">/ LOG — 2026.07.19</div>
+              <div style="font:700 26px/1.06 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd;margin:12px 0 14px">Why my LSM tree was<br>slower than a flat file</div>
+              <p style="margin:0;max-width:400px;font:300 16px/1.65 Newsreader,serif;color:#a7b3c6">Long-form drops the neon: serif at 72 characters, hairline rules, code blocks with one lit edge.</p>
+            </div>
+          </sc-if>
+        </div>
+        <div style="position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,#eaf6ff,transparent);box-shadow:0 0 16px oklch(.80 .18 200),0 0 44px oklch(.80 .18 200 / .7);animation:lineDown .38s cubic-bezier(.4,0,.5,1) forwards"></div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="4e">
+<div class="dv-olabel"><a class="dv-oid" href="#4e">4e</a>TRANSITION D — “Iris” · airlock closes and opens, one continuous aperture · 440ms (click tabs)</div>
+<div class="dv-card" style="width:560px;height:430px;position:relative;overflow:hidden;background:#03040a">
+  <div style="display:flex;align-items:center;height:52px;border-bottom:1px solid rgba(142,180,255,.13);padding:0 18px;background:#070912;position:relative;z-index:8">
+    <span style="font:500 11px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#dee5f3;margin-right:auto">M.E</span>
+    <sc-for list="{{ irisTabs }}" as="t" hint-placeholder-count="3">
+      <span onClick="{{ t.go }}" style="position:relative;padding:0 14px;height:52px;display:flex;align-items:center;font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8492a8;cursor:pointer;transition:color .16s" style-hover="color:#f2f6fd">
+        {{ t.label }}
+        <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;left:10px;right:10px;bottom:0;height:2px;background:oklch(.80 .17 286);box-shadow:0 0 14px oklch(.80 .17 286)"></span>
+        </sc-if>
+      </span>
+    </sc-for>
+  </div>
+  <div style="position:relative;height:378px;overflow:hidden;background:#05070e">
+    <div style="position:absolute;inset:0;padding:26px">
+      <sc-if value="{{ iIndex }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.80 .17 286)">/ INDEX</div>
+          <div style="font:700 34px/1.04 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 14px">Nine systems,<br>zero frameworks.</div>
+          <p style="margin:0;max-width:400px;font:400 11.5px/1.8 'JetBrains Mono',monospace;color:#8f9db3">A circular mask closes to a point at the centre and opens again — one aperture, one direction reversal, no bright flash. Cheapest possible motion and it reads as hardware.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ iPhotos }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.82 .17 66)">/ PHOTOS</div>
+          <div style="font:700 34px/1.04 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 16px">214 frames,<br>lit by themselves.</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:400px">
+            <div style="height:60px;background:linear-gradient(160deg,#062a41,#1a7f9e)"></div>
+            <div style="height:60px;background:linear-gradient(170deg,#08180f,#2f6b34)"></div>
+            <div style="height:60px;background:linear-gradient(180deg,#091c37,#3b6ea8)"></div>
+            <div style="height:60px;background:linear-gradient(165deg,#280e05,#8a3b12)"></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ iLog }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869">/ LOG — 2026.07.19</div>
+          <div style="font:700 26px/1.06 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd;margin:12px 0 14px">Why my LSM tree was<br>slower than a flat file</div>
+          <p style="margin:0;max-width:400px;font:300 16px/1.65 Newsreader,serif;color:#a7b3c6">Long-form drops the neon: serif at 72 characters, hairline rules, code blocks with one lit edge.</p>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ irun }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden;display:flex;align-items:center;justify-content:center">
+        <span style="width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 9999px #04060b,0 0 30px 6px oklch(.80 .17 286 / .55);animation:iris .44s cubic-bezier(.5,0,.5,1) forwards"></span>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: “ship <a class="dv-oid" href="#4a">4a</a> + <a class="dv-oid" href="#4c">4c</a> + <a class="dv-oid" href="#4d">4d</a> and add the blog” · “mobile version of <a class="dv-oid" href="#4a">4a</a>” · “try the plates two-across on the rail” · “show me the log index and a post page”</p>
+</section>
+
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">SIGNAGE + SPINE — one index, liquid glass, gate transitions</span></div>
+<p style="max-width:880px;margin:0 0 30px;font:400 13px/1.75 'JetBrains Mono',monospace;color:#8492a8"><span style="color:#dee5f3">On the “two project lists” problem:</span> there is only one. The spine <em>is</em> the index — the landing page is signage hero → spine → all nine systems, and a node expands in place into a glass spec panel (<a class="dv-oid" href="#3b">3b</a>, scroll it, then click a system). Each node is deep-linkable as /systems/daedalus, so a separate index page never needs to exist. The hero/spine seam is gone too: the sodium tube under the name turns the corner at x=70 and becomes the rail, so the charge visibly runs downhill into the list. <a class="dv-oid" href="#3a">3a</a> adds the light effects you asked for — liquid glass with real refraction, neon read through glass, fog depth, light shafts, rain-streaked glass.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="3a">
+<div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>LIGHT EFFECTS — six additions, all CSS, all subtle enough to sit under text</div>
+<div class="dv-card" style="width:1160px;padding:34px 36px 30px;background:#03040a">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+    <div style="position:relative;height:186px;border:1px solid rgba(142,180,255,.14);overflow:hidden;background:linear-gradient(140deg,#0a1a2e,#1a0a24 60%,#04060d)">
+      <div style="position:absolute;left:-10%;top:18%;width:60%;height:4px;background:oklch(.80 .18 200);box-shadow:0 0 12px oklch(.80 .18 200),0 0 44px oklch(.80 .18 200 / .8);border-radius:2px"></div>
+      <div style="position:absolute;right:-10%;bottom:24%;width:55%;height:4px;background:oklch(.68 .26 348);box-shadow:0 0 12px oklch(.68 .26 348),0 0 44px oklch(.68 .26 348 / .8);border-radius:2px"></div>
+      <div style="position:absolute;left:14%;top:26%;right:14%;height:96px;border-radius:16px;background:rgba(210,232,255,.055);backdrop-filter:blur(13px) saturate(1.7) brightness(1.15);-webkit-backdrop-filter:blur(13px) saturate(1.7) brightness(1.15);border:1px solid rgba(220,240,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -1px 0 rgba(255,255,255,.1),0 22px 44px -18px rgba(0,0,0,.8);overflow:hidden;display:flex;align-items:center;padding-left:16px">
+        <span style="font:500 12px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#eef4ff;text-shadow:0 1px 8px rgba(0,0,0,.6)">LIQUID GLASS</span>
+        <span style="position:absolute;top:0;bottom:0;left:0;width:34%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);animation:sweepX 6s cubic-bezier(.4,0,.6,1) infinite"></span>
+      </div>
+      <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#a7b8d0;letter-spacing:.1em">GLASS — BLUR + SATURATE + SPECULAR EDGE</span>
+    </div>
+    <div style="position:relative;height:186px;border:1px solid rgba(142,180,255,.14);overflow:hidden;background:#04060d">
+      <div style="position:absolute;left:0;right:0;top:34px;display:flex;justify-content:center;font:700 46px 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:oklch(.92 .1 200);text-shadow:0 0 12px oklch(.80 .18 200),0 0 50px oklch(.80 .18 200 / .8)">OPEN</div>
+      <div style="position:absolute;left:0;right:0;top:0;height:56%;backdrop-filter:blur(7px) brightness(1.1);-webkit-backdrop-filter:blur(7px) brightness(1.1);background:linear-gradient(180deg,rgba(190,220,255,.08),rgba(190,220,255,.02));border-bottom:1px solid rgba(220,240,255,.3)"></div>
+      <div style="position:absolute;left:0;right:0;top:56%;bottom:0;background:linear-gradient(180deg,rgba(8,12,20,.7),#04060d)"></div>
+      <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#a7b8d0;letter-spacing:.1em">NEON READ THROUGH GLASS — REFRACTED</span>
+    </div>
+    <div style="position:relative;height:186px;border:1px solid rgba(142,180,255,.14);overflow:hidden;background:#03040a">
+      <div style="position:absolute;inset:-40%;background:radial-gradient(closest-side,oklch(.62 .22 285 / .5),transparent 68%);filter:blur(26px);animation:fogSlow 26s ease-in-out infinite"></div>
+      <div style="position:absolute;inset:-40%;background:radial-gradient(closest-side at 65% 45%,oklch(.80 .18 200 / .4),transparent 66%);filter:blur(30px);animation:fogSlow 34s ease-in-out reverse infinite"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:52%;background:linear-gradient(180deg,transparent,rgba(3,4,10,.9))"></div>
+      <div style="position:absolute;left:26px;bottom:52px;font:700 22px 'Space Grotesk',sans-serif;letter-spacing:-.02em;color:#eef3fb">Depth by fog</div>
+      <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#a7b8d0;letter-spacing:.1em">FOG DEPTH — 3 LAYERS, 26–34S</span>
+    </div>
+    <div style="position:relative;height:186px;border:1px solid rgba(142,180,255,.14);overflow:hidden;background:#04060d">
+      <div style="position:absolute;left:20%;top:-30%;width:26%;height:170%;background:linear-gradient(180deg,oklch(.82 .17 66 / .30),transparent 78%);transform:rotate(14deg);filter:blur(9px)"></div>
+      <div style="position:absolute;left:44%;top:-30%;width:14%;height:170%;background:linear-gradient(180deg,oklch(.82 .17 66 / .22),transparent 74%);transform:rotate(14deg);filter:blur(7px);animation:glowPulse 9s ease-in-out infinite"></div>
+      <div style="position:absolute;left:64%;top:-30%;width:20%;height:170%;background:linear-gradient(180deg,oklch(.80 .18 200 / .22),transparent 76%);transform:rotate(14deg);filter:blur(10px)"></div>
+      <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#a7b8d0;letter-spacing:.1em">LIGHT SHAFTS — RAKED, 14°</span>
+    </div>
+    <div style="position:relative;height:186px;border:1px solid rgba(142,180,255,.14);overflow:hidden;background:linear-gradient(150deg,#0a1526,#1a0a22)">
+      <div style="position:absolute;inset:0;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)"></div>
+      <span style="position:absolute;left:16%;top:0;width:1px;height:26%;background:linear-gradient(180deg,transparent,rgba(220,240,255,.85));animation:rainDrop 3.4s linear infinite"></span>
+      <span style="position:absolute;left:38%;top:0;width:1px;height:20%;background:linear-gradient(180deg,transparent,rgba(220,240,255,.7));animation:rainDrop 4.6s linear .8s infinite"></span>
+      <span style="position:absolute;left:57%;top:0;width:1px;height:30%;background:linear-gradient(180deg,transparent,rgba(220,240,255,.8));animation:rainDrop 3.9s linear 1.9s infinite"></span>
+      <span style="position:absolute;left:78%;top:0;width:1px;height:22%;background:linear-gradient(180deg,transparent,rgba(220,240,255,.65));animation:rainDrop 5.2s linear .4s infinite"></span>
+      <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#c9d6ea;letter-spacing:.1em">RAIN ON GLASS — 4 STREAKS, RARE</span>
+    </div>
+    <div style="position:relative;height:186px;border:1px solid rgba(142,180,255,.14);overflow:hidden;background:#04060d;display:flex;align-items:center;justify-content:center">
+      <span style="font:700 40px 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;text-shadow:-2px 0 0 oklch(.68 .26 348 / .7),2px 0 0 oklch(.80 .18 200 / .7),0 0 40px rgba(190,220,255,.25)">EMERSON</span>
+      <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#a7b8d0;letter-spacing:.1em">DISPERSION — ±2PX, HEADINGS ONLY</span>
+    </div>
+  </div>
+  <p style="margin:15px 0 0;max-width:880px;font:400 11.5px/1.75 'JetBrains Mono',monospace;color:#8492a8">Rules of use: <span style="color:#dee5f3">glass only for panels that sit over light</span> (never over flat black — there's nothing to refract), fog only behind type, shafts only in heroes, dispersion only above 32px, rain only on the photo pages. Every effect is a compositor-only property, so it stays 60fps on a phone.</p>
+</div>
+</div>
+
+<div class="dv-opt" id="3b">
+<div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a>LANDING PAGE — signage hero, seam gone, spine carries all nine · SCROLL, THEN CLICK A SYSTEM</div>
+<div class="dv-card" style="width:1160px">
+  <div style="position:relative;height:720px;overflow-y:auto;background:#03040a">
+    <div style="position:sticky;top:0;height:0;z-index:4"><div style="position:absolute;top:0;left:0;right:0;height:720px;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(190,215,255,.045) 0 1px,transparent 1px 3px)"></div></div>
+    <div style="position:relative">
+      <div style="position:absolute;left:0;right:0;top:0;height:900px;overflow:hidden;pointer-events:none">
+        <div style="position:absolute;inset:-25%;background:radial-gradient(closest-side at 26% 42%,oklch(.62 .22 285 / .42),transparent 68%);filter:blur(34px);animation:fogSlow 28s ease-in-out infinite"></div>
+        <div style="position:absolute;inset:-25%;background:radial-gradient(closest-side at 74% 30%,oklch(.80 .18 200 / .3),transparent 66%);filter:blur(30px);animation:fogSlow 36s ease-in-out reverse infinite"></div>
+        <div style="position:absolute;left:22%;top:-20%;width:22%;height:120%;background:linear-gradient(180deg,oklch(.80 .18 200 / .13),transparent 76%);transform:rotate(13deg);filter:blur(12px)"></div>
+        <div style="position:absolute;left:58%;top:-20%;width:16%;height:120%;background:linear-gradient(180deg,oklch(.82 .17 66 / .12),transparent 72%);transform:rotate(13deg);filter:blur(10px);animation:glowPulse 11s ease-in-out infinite"></div>
+        <div style="position:absolute;inset:0;animation:hazeUp linear both;animation-timeline:scroll(nearest);background-image:linear-gradient(rgba(142,180,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(142,180,255,.045) 1px,transparent 1px);background-size:56px 56px"></div>
+      </div>
+      <div style="position:relative;height:660px;padding:0 70px;display:flex;flex-direction:column;justify-content:center">
+        <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.3em;color:#4d5869;margin-bottom:26px">ERRORSIGNAL.DEV — DISTRICT 09 / PERSONAL</div>
+        <div style="font:700 116px/.9 'Space Grotesk',sans-serif;letter-spacing:-.055em;color:#f4f7fd;text-shadow:-1.5px 0 0 oklch(.68 .26 348 / .35),1.5px 0 0 oklch(.80 .18 200 / .4),0 0 16px oklch(.80 .18 200 / .55),0 0 66px oklch(.80 .18 200 / .4);animation:neonFlicker 13s steps(1,end) infinite">EMERSON</div>
+        <div style="font:700 116px/.9 'Space Grotesk',sans-serif;letter-spacing:-.055em;color:#f4f7fd;text-shadow:0 0 16px oklch(.80 .18 200 / .8);transform:scaleY(-1);opacity:.17;filter:blur(2.5px);mask-image:linear-gradient(transparent 42%,#000);-webkit-mask-image:linear-gradient(transparent 42%,#000);height:88px;overflow:hidden">EMERSON</div>
+        <div style="display:flex;align-items:flex-end;gap:34px;margin-top:14px">
+          <p style="margin:0;max-width:560px;font:400 14px/1.8 'JetBrains Mono',monospace;color:#94a2b8">Matthew Emerson — Software Development Manager at Amazon, leading engineers and applied scientists on LLM and agentic systems for hiring. Nine systems below, written after hours, mostly in Rust.</p>
+          <div style="font:400 10px/1.9 'JetBrains Mono',monospace;letter-spacing:.14em;color:#4d5869;border-left:1px solid rgba(142,180,255,.16);padding-left:16px">RUST · C<br>JAVA · PYTHON<br>TYPESCRIPT</div>
+        </div>
+      </div>
+      <div style="position:absolute;left:70px;top:596px;width:3px;height:64px;background:oklch(.82 .17 66);border-radius:2px;box-shadow:0 0 9px oklch(.82 .17 66),0 0 30px oklch(.82 .17 66 / .6)"></div>
+      <div style="position:absolute;left:70px;top:596px;width:118px;height:3px;border-radius:2px;background:oklch(.82 .17 66);box-shadow:0 0 9px oklch(.82 .17 66),0 0 30px oklch(.82 .17 66 / .65);overflow:hidden"><span style="position:absolute;inset:-2px;background:linear-gradient(90deg,transparent,#fff7e6,transparent);background-size:34% 100%;background-repeat:no-repeat;filter:blur(1.5px);animation:travel 3.2s cubic-bezier(.45,0,.55,1) infinite"></span></div>
+      <div style="position:absolute;left:200px;top:590px;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#4d5869;animation:glowPulse 3.6s ease-in-out infinite">SCROLL ↓ — THE CHARGE RUNS THE INDEX</div>
+      <div style="position:relative;padding:0 70px 110px">
+        <div style="position:absolute;left:70px;top:0;bottom:110px;width:3px;background:rgba(142,180,255,.1);border-radius:2px"></div>
+        <div style="position:absolute;left:70px;top:0;bottom:110px;width:3px;border-radius:2px;transform-origin:top;background:linear-gradient(180deg,oklch(.82 .17 66),oklch(.80 .18 200) 22%);box-shadow:0 0 9px oklch(.80 .18 200 / .8),0 0 30px oklch(.80 .18 200 / .5);animation:fillY linear both;animation-timeline:scroll(nearest);animation-range:6% 88%"></div>
+        <div style="padding-left:52px">
+          <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#4d5869;padding:8px 0 4px">THE INDEX — 09 SYSTEMS</div>
+          <sc-for list="{{ spineAll }}" as="p" hint-placeholder-count="9">
+            <div style="position:relative;border-bottom:1px solid rgba(142,180,255,.1)">
+              <span style="position:absolute;left:-53px;top:32px;width:9px;height:9px;border-radius:50%;background:oklch(.80 .18 200);color:oklch(.80 .18 200);box-shadow:0 0 14px currentColor;animation:nodeOn linear both;animation-timeline:view();animation-range:entry 8% cover 30%"></span>
+              <span style="position:absolute;left:-44px;top:36px;width:44px;height:1px;background:linear-gradient(90deg,oklch(.80 .18 200 / .75),transparent)"></span>
+              <div onClick="{{ p.toggle }}" style="position:relative;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:baseline;padding:22px 12px 20px 0;cursor:pointer;overflow:hidden;transition:background .18s cubic-bezier(.2,.8,.2,1)" style-hover="background:rgba(142,180,255,.04)">
+                <span style="position:absolute;left:0;top:0;right:0;height:1px;background:linear-gradient(90deg,transparent,oklch(.80 .18 200),transparent);background-size:34% 100%;background-repeat:no-repeat;opacity:0;transition:opacity .2s" style-hover="opacity:1;animation:travel 1.6s linear infinite"></span>
+                <span style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+                  <span style="font:400 10px 'JetBrains Mono',monospace;letter-spacing:.14em;color:oklch(.82 .17 66)">{{ p.num }}</span>
+                  <span style="font:700 30px 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd">{{ p.name }}</span>
+                  <span style="font:400 12px 'JetBrains Mono',monospace;color:#8f9db3">{{ p.blurb }}</span>
+                </span>
+                <span style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.16em;color:oklch(.80 .18 200)">{{ p.mark }}</span>
+              </div>
+              <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+                <div style="position:relative;margin:0 12px 22px 0;padding:20px 22px;border-radius:14px;overflow:hidden;background:rgba(190,220,255,.05);backdrop-filter:blur(14px) saturate(1.6) brightness(1.1);-webkit-backdrop-filter:blur(14px) saturate(1.6) brightness(1.1);border:1px solid rgba(220,240,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 26px 50px -24px rgba(0,0,0,.9);animation:panelIn .3s cubic-bezier(.2,.85,.2,1)">
+                  <span style="position:absolute;top:0;bottom:0;left:0;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);animation:sweepX 1.1s cubic-bezier(.3,0,.7,1)"></span>
+                  <p style="margin:0;max-width:660px;font:400 13px/1.85 'JetBrains Mono',monospace;color:#c2cee0">{{ p.detail }}</p>
+                  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:16px">
+                    <sc-for list="{{ p.tags }}" as="t" hint-placeholder-count="3">
+                      <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:#dee9f8;background:rgba(220,240,255,.1);border:1px solid rgba(220,240,255,.14);padding:4px 8px">{{ t }}</span>
+                    </sc-for>
+                    <a href="https://github.com/emersonmde" style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:oklch(.86 .16 66);border:1px solid oklch(.82 .17 66 / .45);padding:4px 9px" style-hover="background:oklch(.82 .17 66 / .16);box-shadow:0 0 20px -6px oklch(.82 .17 66)">SOURCE ↗</a>
+                    <a href="#3b" style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:#9fb0c8;border:1px solid rgba(142,180,255,.2);padding:4px 9px" style-hover="color:#f2f6fd;border-color:rgba(220,240,255,.45)">/SYSTEMS/{{ p.name }}</a>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <div style="display:flex;align-items:center;gap:14px;padding-top:34px;font:400 10px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#4d5869"><span style="width:34px;height:1px;background:rgba(142,180,255,.3)"></span>END OF INDEX — <a href="#3d" style="color:oklch(.80 .18 200)">PHOTOGRAPHS ↗</a> · <a href="#3f" style="color:oklch(.80 .18 200)">LOG ↗</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="3c">
+<div class="dv-olabel"><a class="dv-oid" href="#3c">3c</a>NODE STATES — rest · hover · expanded, side by side (hover the middle one)</div>
+<div class="dv-card" style="width:520px;padding:26px 24px;background:#03040a">
+  <div style="position:relative;padding-left:34px">
+    <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,oklch(.82 .17 66),oklch(.80 .18 200) 30%);border-radius:2px;box-shadow:0 0 8px oklch(.80 .18 200 / .7)"></div>
+    <div style="position:relative;padding:16px 0;border-bottom:1px solid rgba(142,180,255,.1)">
+      <span style="position:absolute;left:-35px;top:24px;width:9px;height:9px;border-radius:50%;background:oklch(.80 .18 200);opacity:.2"></span>
+      <div style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#3f4a5b;margin-bottom:8px">REST — NODE DIM UNTIL IT ENTERS VIEW</div>
+      <div style="display:flex;align-items:baseline;gap:12px"><span style="font:700 22px 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#8f9db3">bloombox</span><span style="font:400 11px 'JetBrains Mono',monospace;color:#5b6678">Serializable bloom filter</span></div>
+    </div>
+    <div style="position:relative;padding:16px 0;border-bottom:1px solid rgba(142,180,255,.1);overflow:hidden;transition:background .18s" style-hover="background:rgba(142,180,255,.05)">
+      <span style="position:absolute;left:-35px;top:24px;width:9px;height:9px;border-radius:50%;background:oklch(.80 .18 200);box-shadow:0 0 14px oklch(.80 .18 200)"></span>
+      <span style="position:absolute;left:0;top:0;right:0;height:1px;background:linear-gradient(90deg,transparent,oklch(.80 .18 200),transparent);background-size:34% 100%;background-repeat:no-repeat;animation:travel 1.6s linear infinite"></span>
+      <div style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.2em;color:oklch(.80 .18 200);margin-bottom:8px">HOVER — CHARGE RUNS THE TOP EDGE</div>
+      <div style="display:flex;align-items:baseline;gap:12px"><span style="font:700 22px 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#f2f6fd">palantir</span><span style="font:400 11px 'JetBrains Mono',monospace;color:#8f9db3">DNS resolver with caching</span></div>
+    </div>
+    <div style="position:relative;padding:16px 0 0">
+      <span style="position:absolute;left:-35px;top:24px;width:9px;height:9px;border-radius:50%;background:oklch(.82 .17 66);box-shadow:0 0 16px oklch(.82 .17 66)"></span>
+      <div style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.2em;color:oklch(.82 .17 66);margin-bottom:8px">EXPANDED — GLASS PANEL WIPES DOWN, 300MS</div>
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px"><span style="font:700 22px 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#f2f6fd">daedalus</span><span style="font:400 11px 'JetBrains Mono',monospace;color:#8f9db3">Bare-metal kernel</span></div>
+      <div style="position:relative;padding:16px 18px;border-radius:13px;overflow:hidden;background:rgba(190,220,255,.055);backdrop-filter:blur(13px) saturate(1.6) brightness(1.1);-webkit-backdrop-filter:blur(13px) saturate(1.6) brightness(1.1);border:1px solid rgba(220,240,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 22px 44px -22px rgba(0,0,0,.9)">
+        <span style="position:absolute;top:0;bottom:0;left:0;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);animation:sweepX 7s cubic-bezier(.4,0,.6,1) infinite"></span>
+        <p style="margin:0;font:400 11.5px/1.8 'JetBrains Mono',monospace;color:#c2cee0">AArch64 on Raspberry Pi 4. Exception handling at EL2, PL011 UART driver, interactive shell. No OS, no std.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="3d">
+<div class="dv-olabel"><a class="dv-oid" href="#3d">3d</a>GALLERY — contact sheet → borrowed-light lightbox (click any tile; arrows to move)</div>
+<div class="dv-card" style="width:1160px">
+  <div style="position:relative;height:700px;background:#03040a;overflow:hidden">
+    <div style="position:absolute;left:0;right:0;top:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid rgba(142,180,255,.12);background:rgba(6,8,15,.55);backdrop-filter:blur(8px);z-index:3">
+      <span style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.28em;color:#dee5f3">ARCHIVE / 214 FRAMES</span>
+      <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.18em;color:#4d5869">LANDSCAPE · AVIATION · REN FAIRE · NIGHT · CARIBBEAN</span>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:54px;bottom:0;overflow-y:auto;padding:26px 32px 32px">
+      <div style="column-count:4;column-gap:11px">
+        <sc-for list="{{ wall }}" as="t" hint-placeholder-count="9">
+          <div onClick="{{ t.open }}" style="break-inside:avoid;margin-bottom:11px;position:relative;cursor:pointer;overflow:hidden;border:1px solid rgba(142,180,255,.12);transition:all .2s cubic-bezier(.2,.8,.2,1)" style-hover="border-color:rgba(220,240,255,.5);box-shadow:0 0 34px -10px rgba(190,220,255,.55);transform:translateY(-2px)">
+            <div style="height:{{ t.h }};background:{{ t.grad }}">
+              <div style="height:100%;background:repeating-linear-gradient(115deg,rgba(255,255,255,.06) 0 2px,transparent 2px 11px)"></div>
+            </div>
+            <span style="position:absolute;inset:0;background:rgba(3,4,10,.42);transition:background .2s" style-hover="background:rgba(3,4,10,.05)"></span>
+            <span style="position:absolute;left:9px;bottom:7px;font:400 8.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:#e6edf8">{{ t.label }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin:16px 0 0;max-width:620px;font:400 11px/1.8 'JetBrains Mono',monospace;color:#5b6678">Sheet is deliberately dimmed 42% so it reads as one texture; hovering clears the dim on a single frame. Click drops into the lit viewer.</p>
+    </div>
+    <sc-if value="{{ big }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeBig }}" style="position:absolute;inset:0;z-index:6;cursor:zoom-out;background:rgba(3,4,10,.86);backdrop-filter:blur(10px);animation:lbIn .24s cubic-bezier(.2,.85,.2,1)">
+        <div style="position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 45%,{{ big.accent }},transparent 70%);opacity:.22;transition:background .45s ease"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:56px 90px">
+          <div style="position:relative;width:100%;max-width:820px;height:400px;background:{{ big.grad }};box-shadow:0 0 120px -30px {{ big.accent }},0 40px 80px -40px #000;transition:background .4s ease,box-shadow .4s ease">
+            <div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 2px,transparent 2px 11px)"></div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:rgba(255,255,255,.85);background:rgba(3,4,10,.45);padding:7px 12px;backdrop-filter:blur(4px)">FULL FRAME · ANY RATIO</span></div>
+            <span style="position:absolute;left:-1px;top:-1px;width:18px;height:18px;border-left:2px solid {{ big.accent }};border-top:2px solid {{ big.accent }}"></span>
+            <span style="position:absolute;right:-1px;top:-1px;width:18px;height:18px;border-right:2px solid {{ big.accent }};border-top:2px solid {{ big.accent }}"></span>
+            <span style="position:absolute;left:-1px;bottom:-1px;width:18px;height:18px;border-left:2px solid {{ big.accent }};border-bottom:2px solid {{ big.accent }}"></span>
+            <span style="position:absolute;right:-1px;bottom:-1px;width:18px;height:18px;border-right:2px solid {{ big.accent }};border-bottom:2px solid {{ big.accent }}"></span>
+          </div>
+          <div style="position:relative;width:100%;max-width:820px;height:86px;overflow:hidden;flex:none">
+            <div style="position:absolute;left:0;right:0;top:0;height:300px;background:{{ big.grad }};transform:scaleY(-1);transform-origin:top;opacity:.26;filter:blur(4px);mask-image:linear-gradient(#000,transparent 58%);-webkit-mask-image:linear-gradient(#000,transparent 58%)"></div>
+          </div>
+          <div style="width:100%;max-width:820px;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-radius:13px;background:rgba(190,220,255,.05);backdrop-filter:blur(14px) saturate(1.5) brightness(1.1);border:1px solid rgba(220,240,255,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)">
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <span style="font:700 20px 'Space Grotesk',sans-serif;letter-spacing:-.025em;color:#f4f7fd">{{ big.t }}</span>
+              <span style="display:flex;align-items:center;gap:10px;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.16em;color:{{ big.accent }}"><span style="width:18px;height:2px;background:{{ big.accent }};box-shadow:0 0 10px {{ big.accent }}"></span>{{ big.album }} · {{ big.meta }}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:18px;font:400 11px 'JetBrains Mono',monospace;letter-spacing:.14em;color:#c2cee0">
+              <span onClick="{{ prevBig }}" style="cursor:pointer;padding:6px 10px;border:1px solid rgba(220,240,255,.2)" style-hover="border-color:#fff;color:#fff">←</span>
+              <span style="color:#8492a8">{{ big.counter }}</span>
+              <span onClick="{{ nextBig }}" style="cursor:pointer;padding:6px 10px;border:1px solid rgba(220,240,255,.2)" style-hover="border-color:#fff;color:#fff">→</span>
+              <span style="color:#5b6678;letter-spacing:.2em">ESC</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="3e">
+<div class="dv-olabel"><a class="dv-oid" href="#3e">3e</a>TRANSITION A — “Gate” · line ignites, panels close over the page, then split apart · 440ms (click tabs)</div>
+<div class="dv-card" style="width:560px;height:430px;position:relative;overflow:hidden;background:#03040a">
+  <div style="display:flex;align-items:center;height:52px;border-bottom:1px solid rgba(142,180,255,.13);padding:0 18px;background:#070912;position:relative;z-index:8">
+    <span style="font:500 11px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#dee5f3;margin-right:auto">M.E</span>
+    <sc-for list="{{ gateTabs }}" as="t" hint-placeholder-count="3">
+      <span onClick="{{ t.go }}" style="position:relative;padding:0 14px;height:52px;display:flex;align-items:center;font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8492a8;cursor:pointer;transition:color .16s" style-hover="color:#f2f6fd">
+        {{ t.label }}
+        <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;left:10px;right:10px;bottom:0;height:2px;background:oklch(.80 .18 200);box-shadow:0 0 14px oklch(.80 .18 200)"></span>
+        </sc-if>
+      </span>
+    </sc-for>
+  </div>
+  <div style="position:relative;height:378px;overflow:hidden;background:#05070e">
+    <sc-if value="{{ gIndex }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:26px">
+        <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.80 .18 200)">/ INDEX</div>
+        <div style="font:700 36px/1.02 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 14px;text-shadow:0 0 40px oklch(.80 .18 200 / .5)">Nine systems,<br>zero frameworks.</div>
+        <p style="margin:0;max-width:400px;font:400 11.5px/1.8 'JetBrains Mono',monospace;color:#8f9db3">The page never scales. A hairline ignites across the middle, two dark panels snap shut over it from the seam, the swap happens blind, then the panels split apart with lit inner edges. Reads like a bulkhead, not a card flip.</p>
+      </div>
+    </sc-if>
+    <sc-if value="{{ gPhotos }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:26px">
+        <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.82 .17 66)">/ PHOTOS</div>
+        <div style="font:700 36px/1.02 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 16px;text-shadow:0 0 40px oklch(.82 .17 66 / .45)">214 frames,<br>borrowed light.</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:400px">
+          <div style="height:62px;background:linear-gradient(160deg,#062a41,#1a7f9e)"></div>
+          <div style="height:62px;background:linear-gradient(170deg,#08180f,#2f6b34)"></div>
+          <div style="height:62px;background:linear-gradient(180deg,#091c37,#3b6ea8)"></div>
+          <div style="height:62px;background:linear-gradient(165deg,#280e05,#8a3b12)"></div>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ gLog }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:26px">
+        <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869">/ LOG — 2026.07.19</div>
+        <div style="font:700 27px/1.06 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd;margin:12px 0 14px">Why my LSM tree was<br>slower than a flat file</div>
+        <p style="margin:0;max-width:400px;font:300 16px/1.65 Newsreader,serif;color:#a7b3c6">Long-form drops the neon: serif at 72 characters, one hairline rule per section, code blocks keeping a single lit edge.</p>
+      </div>
+    </sc-if>
+    <sc-if value="{{ gate }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden">
+        <div style="position:absolute;left:0;right:0;top:0;height:50%;background:#04060b;transform-origin:bottom;border-bottom:1px solid oklch(.80 .18 200);box-shadow:0 1px 22px oklch(.80 .18 200 / .8);animation:gateT .44s cubic-bezier(.4,0,.3,1) forwards"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:50%;background:#04060b;transform-origin:top;border-top:1px solid oklch(.80 .18 200);box-shadow:0 -1px 22px oklch(.80 .18 200 / .8);animation:gateB .44s cubic-bezier(.4,0,.3,1) forwards"></div>
+        <div style="position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:#eaf6ff;box-shadow:0 0 12px #fff,0 0 40px oklch(.80 .18 200);animation:gateLine .44s cubic-bezier(.2,0,.4,1) forwards"></div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="3f">
+<div class="dv-olabel"><a class="dv-oid" href="#3f">3f</a>TRANSITION B — “Warp” · page pushes into the fog and streaks past · 450ms (click tabs)</div>
+<div class="dv-card" style="width:560px;height:430px;position:relative;overflow:hidden;background:#03040a">
+  <div style="display:flex;align-items:center;height:52px;border-bottom:1px solid rgba(142,180,255,.13);padding:0 18px;background:#070912;position:relative;z-index:8">
+    <span style="font:500 11px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#dee5f3;margin-right:auto">M.E</span>
+    <sc-for list="{{ warpTabs }}" as="t" hint-placeholder-count="3">
+      <span onClick="{{ t.go }}" style="position:relative;padding:0 14px;height:52px;display:flex;align-items:center;font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8492a8;cursor:pointer;transition:color .16s" style-hover="color:#f2f6fd">
+        {{ t.label }}
+        <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;left:10px;right:10px;bottom:0;height:2px;background:oklch(.68 .26 348);box-shadow:0 0 14px oklch(.68 .26 348)"></span>
+        </sc-if>
+      </span>
+    </sc-for>
+  </div>
+  <div style="position:relative;height:378px;overflow:hidden;background:#05070e">
+    <div ref="{{ warpRef }}" style="position:absolute;inset:0;will-change:transform,filter">
+      <sc-if value="{{ wIndex }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:26px">
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.68 .26 348)">/ INDEX</div>
+          <div style="font:700 36px/1.02 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 14px;text-shadow:0 0 40px oklch(.68 .26 348 / .45)">Nine systems,<br>zero frameworks.</div>
+          <p style="margin:0;max-width:400px;font:400 11.5px/1.8 'JetBrains Mono',monospace;color:#8f9db3">Outgoing content blurs and brightens as it accelerates away, six streaks tear across the seam, and the incoming page decelerates out of the fog. No shrink-to-card — the motion is depth, not scale.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ wPhotos }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:26px">
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.82 .17 66)">/ PHOTOS</div>
+          <div style="font:700 36px/1.02 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 16px">214 frames,<br>borrowed light.</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:400px">
+            <div style="height:62px;background:linear-gradient(160deg,#062a41,#1a7f9e)"></div>
+            <div style="height:62px;background:linear-gradient(170deg,#08180f,#2f6b34)"></div>
+            <div style="height:62px;background:linear-gradient(180deg,#091c37,#3b6ea8)"></div>
+            <div style="height:62px;background:linear-gradient(165deg,#280e05,#8a3b12)"></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ wLog }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:26px">
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869">/ LOG — 2026.07.19</div>
+          <div style="font:700 27px/1.06 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd;margin:12px 0 14px">Why my LSM tree was<br>slower than a flat file</div>
+          <p style="margin:0;max-width:400px;font:300 16px/1.65 Newsreader,serif;color:#a7b3c6">Long-form drops the neon: serif at 72 characters, hairline rules, code blocks with one lit edge.</p>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ streak }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden">
+        <span style="position:absolute;left:0;right:0;top:22%;height:1px;background:linear-gradient(90deg,transparent,#dff0ff,transparent);transform-origin:left;animation:streak .42s cubic-bezier(.2,0,.5,1) forwards"></span>
+        <span style="position:absolute;left:0;right:0;top:38%;height:2px;background:linear-gradient(90deg,transparent,oklch(.80 .18 200),transparent);transform-origin:left;animation:streak .38s cubic-bezier(.2,0,.5,1) .04s forwards"></span>
+        <span style="position:absolute;left:0;right:0;top:52%;height:1px;background:linear-gradient(90deg,transparent,#fff,transparent);transform-origin:right;animation:streak .44s cubic-bezier(.2,0,.5,1) .02s forwards"></span>
+        <span style="position:absolute;left:0;right:0;top:66%;height:2px;background:linear-gradient(90deg,transparent,oklch(.68 .26 348),transparent);transform-origin:right;animation:streak .4s cubic-bezier(.2,0,.5,1) .07s forwards"></span>
+        <span style="position:absolute;left:0;right:0;top:80%;height:1px;background:linear-gradient(90deg,transparent,#dff0ff,transparent);transform-origin:left;animation:streak .36s cubic-bezier(.2,0,.5,1) .1s forwards"></span>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: “ship <a class="dv-oid" href="#3b">3b</a> + <a class="dv-oid" href="#3d">3d</a> + <a class="dv-oid" href="#3e">3e</a> as the real site” · “show the blog reading page and a post list” · “mobile version of <a class="dv-oid" href="#3b">3b</a>” · “make the gallery lightbox go full-bleed with keyboard nav”</p>
+</section>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">NEON DISTRICT — neon, reflections, haze, borrowed light</span></div>
+<p style="max-width:860px;margin:0 0 30px;font:400 13px/1.75 'JetBrains Mono',monospace;color:#8492a8">Same discipline as <a class="dv-oid" href="#t1">1</a>, different world: instruments out, <span style="color:#dee5f3">signage in</span>. Thick neon tube with a charge travelling down it, wet-floor reflections, volumetric haze, smoked glass, sodium flicker. The layout stays sparse so the light does the shouting. Two new ideas worth your attention: <span style="color:#dee5f3">the hero is a scroll instrument</span> — a neon spine that charges as you scroll and lights each project node as it enters (<a class="dv-oid" href="#2b">2b</a>, scroll inside it) — and <span style="color:#dee5f3">borrowed light</span> for photos (<a class="dv-oid" href="#2e">2e</a>): the chrome is graphite and neutral, and every frame samples its accent from the photo itself, so a Caribbean blue or a green ridge repaints the whole UI instead of fighting the neon.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a">
+<div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>FOUNDATION v2 — neon palette + six materials, all live</div>
+<div class="dv-card" style="width:1160px;padding:36px 38px 32px;background:#03040a">
+  <div style="display:grid;grid-template-columns:1fr 1.25fr;gap:42px">
+    <div>
+      <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#4d5869;margin-bottom:14px">01 / NIGHT + NEON</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        <div style="height:64px;background:#03040a;border:1px solid rgba(142,180,255,.14)"></div>
+        <div style="height:64px;background:#070912;border:1px solid rgba(142,180,255,.14)"></div>
+        <div style="height:64px;background:#0d1018;border:1px solid rgba(142,180,255,.14)"></div>
+        <div style="height:64px;background:#161b26;border:1px solid rgba(142,180,255,.14)"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px">
+        <div style="height:64px;background:oklch(.80 .18 200);box-shadow:0 0 30px -2px oklch(.80 .18 200 / .85)"></div>
+        <div style="height:64px;background:oklch(.68 .26 348);box-shadow:0 0 30px -2px oklch(.68 .26 348 / .85)"></div>
+        <div style="height:64px;background:oklch(.82 .17 66);box-shadow:0 0 30px -2px oklch(.82 .17 66 / .85)"></div>
+        <div style="height:64px;background:oklch(.62 .22 285);box-shadow:0 0 30px -2px oklch(.62 .22 285 / .85)"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:7px;font:400 8.5px 'JetBrains Mono',monospace;color:#4d5869;letter-spacing:.06em">
+        <div>ARC CYAN</div><div>HOT MAGENTA</div><div>SODIUM</div><div>DEEP VIOLET</div>
+      </div>
+      <p style="margin:16px 0 0;font:400 11.5px/1.75 'JetBrains Mono',monospace;color:#8492a8">Four blacks, four neons. Neons are high-chroma but matched in lightness, so pairing cyan+magenta reads as one lighting rig rather than two brands. <span style="color:#dee5f3">Cyan carries structure, sodium carries warmth, magenta is punctuation, violet only ever appears in haze</span> — never as text.</p>
+      <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#4d5869;margin:28px 0 12px">02 / TYPE — unchanged, it works</div>
+      <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+        <span style="font:700 30px 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#eef3fb">Space Grotesk</span>
+        <span style="font:400 15px 'JetBrains Mono',monospace;color:#8492a8">JetBrains Mono</span>
+        <span style="font:300 20px Newsreader,serif;color:#a7b3c6">Newsreader</span>
+      </div>
+    </div>
+    <div>
+      <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#4d5869;margin-bottom:14px">03 / MATERIALS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+        <div style="position:relative;height:120px;border:1px solid rgba(142,180,255,.14);background:#070912;overflow:hidden;display:flex;align-items:center;justify-content:center">
+          <div style="position:relative;width:74%;height:5px;border-radius:3px;background:oklch(.80 .18 200);box-shadow:0 0 9px oklch(.80 .18 200),0 0 30px oklch(.80 .18 200 / .75),0 0 70px oklch(.80 .18 200 / .4)">
+            <div style="position:absolute;inset:-2px;border-radius:3px;background:linear-gradient(90deg,transparent,#f2fbff,transparent);background-size:34% 100%;background-repeat:no-repeat;filter:blur(1.5px);animation:travel 2.8s cubic-bezier(.45,0,.55,1) infinite"></div>
+          </div>
+          <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#8492a8;letter-spacing:.1em">NEON TUBE — CHARGE TRAVELS</span>
+        </div>
+        <div style="position:relative;height:120px;border:1px solid rgba(142,180,255,.14);background:linear-gradient(180deg,#070912 55%,#0b0f1a);overflow:hidden">
+          <div style="position:absolute;left:0;right:0;top:26px;display:flex;justify-content:center;font:700 30px 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#eef3fb;text-shadow:0 0 22px oklch(.80 .18 200 / .8)">EMERSON</div>
+          <div style="position:absolute;left:0;right:0;top:60px;display:flex;justify-content:center;font:700 30px 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#eef3fb;text-shadow:0 0 22px oklch(.80 .18 200 / .8);transform:scaleY(-1);mask-image:linear-gradient(transparent 42%,#000);-webkit-mask-image:linear-gradient(transparent 42%,#000);opacity:.34;filter:blur(1px)">EMERSON</div>
+          <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#8492a8;letter-spacing:.1em">WET FLOOR — MIRRORED, MASKED</span>
+        </div>
+        <div style="position:relative;height:120px;border:1px solid rgba(142,180,255,.14);background:#03040a;overflow:hidden">
+          <div style="position:absolute;inset:-30%;background:radial-gradient(closest-side,oklch(.62 .22 285 / .55),transparent 70%);filter:blur(22px);animation:hazeDrift 16s ease-in-out infinite"></div>
+          <div style="position:absolute;inset:-30%;background:radial-gradient(closest-side at 70% 60%,oklch(.80 .18 200 / .4),transparent 70%);filter:blur(26px);animation:hazeDrift 22s ease-in-out reverse infinite"></div>
+          <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#8492a8;letter-spacing:.1em">VOLUMETRIC HAZE — 16S DRIFT</span>
+        </div>
+        <div style="position:relative;height:120px;border:1px solid rgba(142,180,255,.14);background:#03040a;overflow:hidden;display:flex;align-items:center;justify-content:center">
+          <span style="font:700 26px 'Space Grotesk',sans-serif;letter-spacing:.06em;color:oklch(.94 .06 66);text-shadow:0 0 10px oklch(.82 .17 66),0 0 34px oklch(.82 .17 66 / .8);animation:neonFlicker 7s steps(1,end) infinite">VACANCY</span>
+          <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#8492a8;letter-spacing:.1em">SODIUM FLICKER — IRREGULAR, RARE</span>
+        </div>
+        <div style="position:relative;height:120px;border:1px solid rgba(142,180,255,.14);background:linear-gradient(120deg,oklch(.68 .26 348 / .35),oklch(.80 .18 200 / .3)),#03040a;overflow:hidden;display:flex;align-items:center;justify-content:center">
+          <div style="width:74%;height:56px;background:rgba(12,16,26,.55);backdrop-filter:blur(9px);border:1px solid rgba(190,215,255,.16);border-top-color:rgba(220,240,255,.42);display:flex;align-items:center;padding-left:12px;font:400 9.5px 'JetBrains Mono',monospace;color:#dee5f3;letter-spacing:.12em">SMOKED GLASS</div>
+          <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#c9d6ea;letter-spacing:.1em">GLASS — BLUR + LIT TOP EDGE</span>
+        </div>
+        <div style="position:relative;height:120px;border:1px solid rgba(142,180,255,.14);background:#03040a;overflow:hidden">
+          <span style="position:absolute;left:18%;bottom:0;width:2px;height:2px;border-radius:50%;background:oklch(.82 .17 66);animation:ash 9s linear infinite"></span>
+          <span style="position:absolute;left:34%;bottom:0;width:2px;height:2px;border-radius:50%;background:oklch(.80 .18 200);animation:ash 12s linear 1.5s infinite"></span>
+          <span style="position:absolute;left:52%;bottom:0;width:1px;height:1px;border-radius:50%;background:#dee5f3;animation:ash 10s linear 3s infinite"></span>
+          <span style="position:absolute;left:68%;bottom:0;width:2px;height:2px;border-radius:50%;background:oklch(.68 .26 348);animation:ash 14s linear .8s infinite"></span>
+          <span style="position:absolute;left:82%;bottom:0;width:1px;height:1px;border-radius:50%;background:#dee5f3;animation:ash 11s linear 4.2s infinite"></span>
+          <span style="position:absolute;left:9px;bottom:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#8492a8;letter-spacing:.1em">ASH / EMBER DRIFT — 5 PARTICLES MAX</span>
+        </div>
+      </div>
+      <p style="margin:15px 0 0;font:400 11.5px/1.75 'JetBrains Mono',monospace;color:#8492a8">Revised motion law: <span style="color:#dee5f3">energy travels, objects hold still.</span> The charge moves along a tube, the haze drifts, an ember rises — but nothing translates, scales, or bounces on its own. Scroll is the only thing allowed to move layout.</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="2b">
+<div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>HERO — “Spine” · scroll charges the neon line, each project node lights as it arrives · SCROLL INSIDE ↓</div>
+<div class="dv-card" style="width:1160px">
+  <div style="position:relative;height:640px;overflow-y:auto;background:#03040a">
+    <div style="position:sticky;top:0;height:0;z-index:2"><div style="position:absolute;top:0;left:0;right:0;height:640px;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(190,215,255,.05) 0 1px,transparent 1px 3px)"></div></div>
+    <div style="position:relative;height:740px;overflow:hidden;display:flex;align-items:center">
+      <div style="position:absolute;inset:-20%;background:radial-gradient(closest-side at 30% 70%,oklch(.62 .22 285 / .45),transparent 70%);filter:blur(30px);animation:hazeDrift 20s ease-in-out infinite"></div>
+      <div style="position:absolute;inset:0;background:radial-gradient(120% 80% at 78% 20%,oklch(.80 .18 200 / .22),transparent 62%)"></div>
+      <div style="position:absolute;inset:0;animation:hazeUp linear both;animation-timeline:scroll(nearest);background-image:linear-gradient(rgba(142,180,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(142,180,255,.05) 1px,transparent 1px);background-size:52px 52px"></div>
+      <div style="position:relative;padding:0 70px;width:100%">
+        <div style="display:flex;align-items:center;gap:14px;font:500 10px 'JetBrains Mono',monospace;letter-spacing:.3em;color:oklch(.80 .18 200);margin-bottom:22px"><span style="width:34px;height:2px;background:oklch(.80 .18 200);box-shadow:0 0 10px oklch(.80 .18 200)"></span>ERRORSIGNAL.DEV</div>
+        <h1 style="margin:0;font:700 104px/.88 'Space Grotesk',sans-serif;letter-spacing:-.055em;color:#f2f6fd;text-shadow:0 0 70px oklch(.80 .18 200 / .45)">Nine systems,<br>built from<br>the metal up.</h1>
+        <div style="display:flex;align-items:flex-start;gap:40px;margin-top:34px;max-width:820px">
+          <p style="margin:0;flex:1;font:400 14px/1.8 'JetBrains Mono',monospace;color:#94a2b8">Matthew Emerson — Software Development Manager at Amazon, leading engineers and applied scientists on LLM and agentic systems for hiring. The list below is what happens after hours.</p>
+          <div style="width:150px;flex:none;font:400 10px/1.9 'JetBrains Mono',monospace;letter-spacing:.14em;color:#4d5869;border-left:1px solid rgba(142,180,255,.16);padding-left:16px">RUST<br>JAVA · PYTHON<br>C · TYPESCRIPT</div>
+        </div>
+      </div>
+      <div style="position:absolute;left:70px;bottom:34px;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#4d5869;animation:glowPulse 3.4s ease-in-out infinite">SCROLL ↓</div>
+    </div>
+    <div style="position:relative;padding:0 70px 90px">
+      <div style="position:absolute;left:70px;top:0;bottom:90px;width:3px;background:rgba(142,180,255,.12);border-radius:2px"></div>
+      <div style="position:absolute;left:70px;top:0;bottom:90px;width:3px;border-radius:2px;transform-origin:top;background:oklch(.80 .18 200);box-shadow:0 0 9px oklch(.80 .18 200),0 0 28px oklch(.80 .18 200 / .6);animation:fillY linear both;animation-timeline:scroll(nearest);animation-range:20% 90%"></div>
+      <div style="padding-left:52px">
+        <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#4d5869;padding:38px 0 8px">SELECTED SYSTEMS</div>
+        <sc-for list="{{ spine }}" as="p" hint-placeholder-count="4">
+          <div style="position:relative;padding:30px 0;border-bottom:1px solid rgba(142,180,255,.1)">
+            <span style="position:absolute;left:-53px;top:44px;width:9px;height:9px;border-radius:50%;background:oklch(.80 .18 200);color:oklch(.80 .18 200);box-shadow:0 0 14px currentColor;animation:nodeOn linear both;animation-timeline:view();animation-range:entry 10% cover 34%"></span>
+            <span style="position:absolute;left:-44px;top:48px;width:44px;height:1px;background:linear-gradient(90deg,oklch(.80 .18 200 / .8),transparent)"></span>
+            <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+              <span style="font:700 34px 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd">{{ p.name }}</span>
+              <span style="font:400 11px 'JetBrains Mono',monospace;letter-spacing:.16em;color:oklch(.82 .17 66)">{{ p.num }}</span>
+            </div>
+            <p style="margin:10px 0 0;max-width:660px;font:400 13px/1.8 'JetBrains Mono',monospace;color:#94a2b8">{{ p.detail }}</p>
+          </div>
+        </sc-for>
+        <a href="#2d" style="display:inline-block;margin-top:30px;padding:13px 22px;border:1px solid oklch(.80 .18 200 / .5);color:oklch(.80 .18 200);font:500 11px 'JetBrains Mono',monospace;letter-spacing:.18em" style-hover="background:oklch(.80 .18 200 / .12);box-shadow:0 0 30px -6px oklch(.80 .18 200)">ALL NINE ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="2c">
+<div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>HERO alt — “Signage” · name as a neon sign over wet floor, projects as the district directory</div>
+<div class="dv-card" style="width:1160px">
+  <div style="position:relative;height:640px;background:#03040a;overflow:hidden">
+    <div style="position:absolute;inset:-15%;background:radial-gradient(closest-side at 20% 30%,oklch(.68 .26 348 / .34),transparent 70%);filter:blur(34px);animation:hazeDrift 24s ease-in-out infinite"></div>
+    <div style="position:absolute;inset:-15%;background:radial-gradient(closest-side at 80% 55%,oklch(.80 .18 200 / .3),transparent 70%);filter:blur(30px);animation:hazeDrift 19s ease-in-out reverse infinite"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:44%;background:linear-gradient(180deg,#05070e,#0a0f1c);border-top:1px solid rgba(142,180,255,.14)"></div>
+    <div style="position:absolute;left:60px;top:56px;font:500 10px 'JetBrains Mono',monospace;letter-spacing:.3em;color:#4d5869">DISTRICT 09 — PERSONAL</div>
+    <div style="position:absolute;left:60px;right:60px;top:120px">
+      <div style="font:700 104px/.9 'Space Grotesk',sans-serif;letter-spacing:-.05em;color:#f4f7fd;text-shadow:0 0 14px oklch(.80 .18 200 / .9),0 0 54px oklch(.80 .18 200 / .55);animation:neonFlicker 11s steps(1,end) infinite">EMERSON</div>
+      <div style="font:700 104px/.9 'Space Grotesk',sans-serif;letter-spacing:-.05em;color:#f4f7fd;text-shadow:0 0 14px oklch(.80 .18 200 / .9),0 0 54px oklch(.80 .18 200 / .55);transform:scaleY(-1);opacity:.2;filter:blur(2px);mask-image:linear-gradient(transparent 40%,#000);-webkit-mask-image:linear-gradient(transparent 40%,#000);height:72px;overflow:hidden">EMERSON</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:10px">
+        <span style="position:relative;width:120px;height:3px;border-radius:2px;background:oklch(.82 .17 66);box-shadow:0 0 9px oklch(.82 .17 66),0 0 28px oklch(.82 .17 66 / .7)"><span style="position:absolute;inset:-2px;background:linear-gradient(90deg,transparent,#fff6e0,transparent);background-size:34% 100%;background-repeat:no-repeat;filter:blur(1.5px);animation:travel 3.4s cubic-bezier(.45,0,.55,1) infinite"></span></span>
+        <span style="font:400 12px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#c9d6ea">SDM @ AMAZON · SYSTEMS AFTER HOURS</span>
+      </div>
+    </div>
+    <div style="position:absolute;left:60px;right:60px;bottom:52px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#4d5869"><span>DIRECTORY</span><span>09 ENTRIES</span></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(142,180,255,.14)">
+        <sc-for list="{{ plates6 }}" as="p" hint-placeholder-count="6">
+          <a href="#2d" style="background:rgba(9,12,20,.72);backdrop-filter:blur(8px);padding:15px 15px 13px;display:flex;flex-direction:column;gap:6px;border-top:1px solid rgba(220,240,255,.14);transition:all .16s cubic-bezier(.2,.8,.2,1)" style-hover="background:rgba(16,22,36,.9);border-top-color:oklch(.80 .18 200)">
+            <span style="display:flex;align-items:baseline;justify-content:space-between"><span style="font:700 16px 'Space Grotesk',sans-serif;letter-spacing:-.02em;color:#f2f6fd">{{ p.name }}</span><span style="font:400 9px 'JetBrains Mono',monospace;color:#4d5869">{{ p.num }}</span></span>
+            <span style="font:400 10.5px/1.5 'JetBrains Mono',monospace;color:#8492a8">{{ p.blurb }}</span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+    <div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(190,215,255,.045) 0 1px,transparent 1px 3px)"></div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="2d">
+<div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>PROJECT INDEX v2 — spec plates with a charge that runs the border on hover (hover them)</div>
+<div class="dv-card" style="width:700px;padding:30px 28px;background:#03040a">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px">
+    <span style="font:700 20px 'Space Grotesk',sans-serif;letter-spacing:-.02em;color:#f2f6fd">Systems</span>
+    <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#4d5869">09 — RUST UNLESS NOTED</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+    <sc-for list="{{ plates6 }}" as="p" hint-placeholder-count="6">
+      <a href="https://github.com/emersonmde" style="position:relative;display:flex;flex-direction:column;gap:9px;padding:17px 16px 15px;background:#080b13;border:1px solid rgba(142,180,255,.14);overflow:hidden;transition:all .18s cubic-bezier(.2,.8,.2,1)" style-hover="background:#0c111d;border-color:oklch(.80 .18 200 / .5);box-shadow:0 0 40px -14px oklch(.80 .18 200),inset 0 1px 0 rgba(220,240,255,.12)">
+        <span style="position:absolute;left:0;top:0;right:0;height:1px;background:linear-gradient(90deg,transparent,oklch(.80 .18 200),transparent);background-size:38% 100%;background-repeat:no-repeat;opacity:0;transition:opacity .2s" style-hover="opacity:1;animation:travel 1.5s linear infinite"></span>
+        <span style="position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,oklch(.80 .18 200),transparent);background-size:100% 38%;background-repeat:no-repeat;opacity:0;transition:opacity .2s" style-hover="opacity:1;animation:travelY 1.5s linear .35s infinite"></span>
+        <span style="position:absolute;left:0;top:0;width:8px;height:8px;border-left:1px solid oklch(.80 .18 200);border-top:1px solid oklch(.80 .18 200)"></span>
+        <span style="position:absolute;right:0;bottom:0;width:8px;height:8px;border-right:1px solid oklch(.80 .18 200);border-bottom:1px solid oklch(.80 .18 200)"></span>
+        <span style="display:flex;align-items:baseline;justify-content:space-between"><span style="font:700 17px 'Space Grotesk',sans-serif;letter-spacing:-.02em;color:#f2f6fd">{{ p.name }}</span><span style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.1em;color:oklch(.82 .17 66)">{{ p.num }}</span></span>
+        <span style="font:400 11px/1.6 'JetBrains Mono',monospace;color:#8f9db3">{{ p.blurb }}</span>
+        <span style="height:1px;background:rgba(142,180,255,.12)"></span>
+        <span style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ p.tags }}" as="t" hint-placeholder-count="3">
+            <span style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.1em;color:oklch(.80 .18 200);background:oklch(.80 .18 200 / .1);padding:3px 6px">{{ t }}</span>
+          </sc-for>
+        </span>
+      </a>
+    </sc-for>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="2e">
+<div class="dv-olabel"><a class="dv-oid" href="#2e">2e</a>GALLERY — “Borrowed light” · one frame at a time, UI samples the photo’s own colour (click the rail)</div>
+<div class="dv-card" style="width:1160px">
+  <div style="position:relative;height:660px;background:#03040a;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 40%,{{ shot.accent }},transparent 68%);opacity:.16;transition:background .5s ease,opacity .5s ease"></div>
+    <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(142,180,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(142,180,255,.045) 1px,transparent 1px);background-size:60px 60px"></div>
+    <div style="position:absolute;left:0;right:0;top:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border-bottom:1px solid rgba(142,180,255,.12);background:rgba(6,8,15,.6);backdrop-filter:blur(6px);z-index:3">
+      <span style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.28em;color:#dee5f3">ARCHIVE / PHOTOGRAPHS</span>
+      <span style="display:flex;gap:22px;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.18em;color:#4d5869"><span>ALL 214</span><span onClick="{{ prevShot }}" style="cursor:pointer;color:#dee5f3">← PREV</span><span onClick="{{ nextShot }}" style="cursor:pointer;color:#dee5f3">NEXT →</span></span>
+    </div>
+    <div style="position:absolute;left:30px;right:30px;top:52px;bottom:0;display:grid;grid-template-columns:1fr 250px;gap:26px;padding:28px 0 0">
+      <div style="display:flex;flex-direction:column">
+        <div style="position:relative;flex:1;min-height:0">
+          <div style="position:absolute;inset:0;background:{{ shot.grad }};box-shadow:0 0 90px -24px {{ shot.accent }};transition:background .45s ease,box-shadow .45s ease">
+            <div style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 2px,transparent 2px 11px)"></div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:rgba(255,255,255,.82);background:rgba(3,4,10,.5);padding:7px 12px;backdrop-filter:blur(4px)">DROP PHOTO · ANY RATIO · FILLS FRAME</span></div>
+            <span style="position:absolute;left:-1px;top:-1px;width:16px;height:16px;border-left:2px solid {{ shot.accent }};border-top:2px solid {{ shot.accent }}"></span>
+            <span style="position:absolute;right:-1px;top:-1px;width:16px;height:16px;border-right:2px solid {{ shot.accent }};border-top:2px solid {{ shot.accent }}"></span>
+            <span style="position:absolute;left:-1px;bottom:-1px;width:16px;height:16px;border-left:2px solid {{ shot.accent }};border-bottom:2px solid {{ shot.accent }}"></span>
+            <span style="position:absolute;right:-1px;bottom:-1px;width:16px;height:16px;border-right:2px solid {{ shot.accent }};border-bottom:2px solid {{ shot.accent }}"></span>
+          </div>
+        </div>
+        <div style="height:74px;position:relative;overflow:hidden;flex:none">
+          <div style="position:absolute;left:0;right:0;top:0;height:200px;background:{{ shot.grad }};transform:scaleY(-1);transform-origin:top;opacity:.3;filter:blur(3px);mask-image:linear-gradient(#000,transparent 62%);-webkit-mask-image:linear-gradient(#000,transparent 62%);transition:background .45s ease"></div>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:22px">
+          <span style="font:700 26px 'Space Grotesk',sans-serif;letter-spacing:-.03em;color:#f2f6fd">{{ shot.t }}</span>
+          <span style="font:400 10px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#8492a8">{{ shot.meta }} · {{ shot.counter }}</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:22px">
+        <div style="display:flex;align-items:center;gap:10px;font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:{{ shot.accent }};transition:color .4s ease"><span style="width:22px;height:2px;background:{{ shot.accent }};box-shadow:0 0 10px {{ shot.accent }};transition:all .4s ease"></span>{{ shot.album }}</div>
+        <sc-for list="{{ thumbs }}" as="h" hint-placeholder-count="5">
+          <div onClick="{{ h.go }}" style="position:relative;height:78px;cursor:pointer;background:{{ h.grad }};border:1px solid rgba(142,180,255,.14);transition:all .18s cubic-bezier(.2,.8,.2,1)" style-hover="border-color:rgba(220,240,255,.6)">
+            <span style="position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 2px,transparent 2px 11px)"></span>
+            <span style="position:absolute;inset:0;background:rgba(3,4,10,.55);transition:background .18s"></span>
+            <span style="position:absolute;left:9px;bottom:7px;font:400 8.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:#dee5f3">{{ h.album }}</span>
+            <sc-if value="{{ h.active }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute;left:-1px;top:-1px;bottom:-1px;width:2px;background:{{ shot.accent }};box-shadow:0 0 12px {{ shot.accent }}"></span>
+            </sc-if>
+          </div>
+        </sc-for>
+        <p style="margin:6px 0 0;font:400 10px/1.7 'JetBrains Mono',monospace;color:#5b6678">Chrome stays graphite. Brackets, rail marker, ambient wash and floor bloom all take their colour from the photo — so a green ridge or Caribbean blue lights the room instead of clashing with it.</p>
+      </div>
+    </div>
+    <div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(190,215,255,.04) 0 1px,transparent 1px 3px)"></div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="2f">
+<div class="dv-olabel"><a class="dv-oid" href="#2f">2f</a>GALLERY overview — contact sheet for all 214, feeds into <a class="dv-oid" href="#2e">2e</a></div>
+<div class="dv-card" style="width:440px;padding:24px 22px;background:#03040a">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
+    <span style="font:700 18px 'Space Grotesk',sans-serif;letter-spacing:-.02em;color:#f2f6fd">Contact sheet</span>
+    <span style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.18em;color:#4d5869">214</span>
+  </div>
+  <div style="column-count:3;column-gap:7px">
+    <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="9">
+      <div onClick="{{ t.open }}" style="break-inside:avoid;margin-bottom:7px;position:relative;background:#0b0f18;border:1px solid rgba(142,180,255,.12);cursor:pointer;overflow:hidden;transition:all .16s cubic-bezier(.2,.8,.2,1)" style-hover="border-color:oklch(.80 .18 200 / .8);box-shadow:0 0 24px -8px oklch(.80 .18 200)">
+        <div style="height:{{ t.h }};background:repeating-linear-gradient(115deg,rgba(142,180,255,.09) 0 2px,transparent 2px 11px)"></div>
+        <span style="position:absolute;left:7px;bottom:6px;font:400 8px 'JetBrains Mono',monospace;letter-spacing:.1em;color:#8492a8">{{ t.label }}</span>
+      </div>
+    </sc-for>
+  </div>
+  <p style="margin:12px 0 0;font:400 10px/1.7 'JetBrains Mono',monospace;color:#5b6678">Masonry survives as the overview only — dim by default, one tile lights on hover, click hands off to the single-frame viewer.</p>
+</div>
+</div>
+
+<div class="dv-opt" id="2g">
+<div class="dv-olabel"><a class="dv-oid" href="#2g">2g</a>TRANSITION — CRT collapse to a line, then bloom back open · ~390ms (click the tabs)</div>
+<div class="dv-card" style="width:560px;height:430px;position:relative;overflow:hidden;background:#03040a">
+  <div style="display:flex;align-items:center;height:52px;border-bottom:1px solid rgba(142,180,255,.13);padding:0 18px;background:#070912;position:relative;z-index:3">
+    <span style="font:500 11px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#dee5f3;margin-right:auto">M.E</span>
+    <sc-for list="{{ crtTabs }}" as="t" hint-placeholder-count="3">
+      <span onClick="{{ t.go }}" style="position:relative;padding:0 14px;height:52px;display:flex;align-items:center;font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8492a8;cursor:pointer;transition:color .16s" style-hover="color:#f2f6fd">
+        {{ t.label }}
+        <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;left:10px;right:10px;bottom:0;height:2px;background:oklch(.80 .18 200);box-shadow:0 0 14px oklch(.80 .18 200)"></span>
+        </sc-if>
+      </span>
+    </sc-for>
+  </div>
+  <div style="position:relative;height:378px;display:flex;align-items:center;justify-content:center">
+    <div ref="{{ crtRef }}" style="position:absolute;inset:0;background:#05070e;transform-origin:center;will-change:transform">
+      <sc-if value="{{ cIndex }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:28px">
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.80 .18 200)">/ INDEX</div>
+          <div style="font:700 38px/1 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 16px;text-shadow:0 0 40px oklch(.80 .18 200 / .5)">Nine systems,<br>zero frameworks.</div>
+          <p style="margin:0;max-width:400px;font:400 11.5px/1.8 'JetBrains Mono',monospace;color:#8f9db3">Route change: content squeezes vertically to a single bright scanline in 150ms, then blooms back open with a 5% horizontal overshoot in 240ms. Brightness ramps to 3× at the pinch, so it reads as a tube discharging.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ cPhotos }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:28px">
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.82 .17 66)">/ PHOTOS</div>
+          <div style="font:700 38px/1 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#f2f6fd;margin:12px 0 18px;text-shadow:0 0 40px oklch(.82 .17 66 / .45)">214 frames,<br>borrowed light.</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;max-width:400px">
+            <div style="height:60px;background:linear-gradient(160deg,#062a41,#1a7f9e)"></div>
+            <div style="height:60px;background:linear-gradient(170deg,#08180f,#2f6b34)"></div>
+            <div style="height:60px;background:linear-gradient(180deg,#091c37,#3b6ea8)"></div>
+            <div style="height:60px;background:linear-gradient(165deg,#280e05,#8a3b12)"></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ cLog }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:28px">
+          <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869">/ LOG — 2026.07.19</div>
+          <div style="font:700 28px/1.06 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#f2f6fd;margin:12px 0 14px">Why my LSM tree was<br>slower than a flat file</div>
+          <p style="margin:0;max-width:400px;font:300 16px/1.65 Newsreader,serif;color:#a7b3c6">Long-form drops the neon: serif at 72 characters, one hairline rule per section, code blocks keeping a single lit edge. A lab notebook found in a very dark room.</p>
+        </div>
+      </sc-if>
+      <div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(190,215,255,.05) 0 1px,transparent 1px 3px)"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: “build <a class="dv-oid" href="#2b">2b</a> out as the real landing page, with <a class="dv-oid" href="#2d">2d</a>’s plates” · “push <a class="dv-oid" href="#2c">2c</a> further — more depth, more dystopia” · “take <a class="dv-oid" href="#2e">2e</a> full-bleed and add keyboard nav” · “show the blog reading page in this language”</p>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Design language: SIGNAL — instrumentation, not terminals</span></div>
+<p style="max-width:820px;margin:0 0 30px;font:400 13px/1.75 'JetBrains Mono',monospace;color:#8492a8">The premise: every dev-cyberpunk site reaches for neon signage and a fake shell. This one reaches for <span style="color:#dee5f3">scientific instruments</span> — oscilloscopes, spectrum analysers, Esper-style optical readouts. Deep ink field, hairline geometry, real measured values, one accent lit at a time. Restrained 95% of the time so the 5% that moves actually lands. Pick per-dimension below and I'll consolidate into one spec.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>FOUNDATION — palette · type · materials · motion rules</div>
+<div class="dv-card" style="width:1160px;padding:38px 40px 34px;background:linear-gradient(180deg,#080b12,#05070d)">
+  <div style="display:grid;grid-template-columns:1.05fr 1fr;gap:44px">
+    <div style="display:flex;flex-direction:column;gap:30px">
+      <div>
+        <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#4d5869;margin-bottom:14px">01 / FIELD + ACCENTS</div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
+          <div style="height:72px;border:1px solid rgba(142,180,255,.13);background:#05070d"></div>
+          <div style="height:72px;border:1px solid rgba(142,180,255,.13);background:#0a0e18"></div>
+          <div style="height:72px;border:1px solid rgba(142,180,255,.13);background:#0d1220"></div>
+          <div style="height:72px;background:oklch(.80 .15 205);box-shadow:0 0 26px -4px oklch(.80 .15 205 / .7)"></div>
+          <div style="height:72px;background:oklch(.72 .18 342);box-shadow:0 0 26px -4px oklch(.72 .18 342 / .7)"></div>
+          <div style="height:72px;background:oklch(.85 .14 82);box-shadow:0 0 26px -4px oklch(.85 .14 82 / .7)"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:7px;font:400 8.5px 'JetBrains Mono',monospace;color:#4d5869;letter-spacing:.06em">
+          <div>INK 05070D</div><div>PANEL 0A0E18</div><div>RAIL 0D1220</div><div>SIG CYAN</div><div>ERR MAGENTA</div><div>WARN AMBER</div>
+        </div>
+        <p style="margin:14px 0 0;font:400 11.5px/1.7 'JetBrains Mono',monospace;color:#8492a8">Accents share lightness + chroma in oklch, vary only in hue — so nothing screams louder than its neighbour. <span style="color:#dee5f3">One accent per screen</span>: cyan for the CV, amber for photos, magenta reserved for live/error states. Glow is always a shadow of the element's own colour, never a white halo.</p>
+      </div>
+      <div>
+        <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#4d5869;margin-bottom:14px">02 / TYPE</div>
+        <div style="font:700 40px/1 'Space Grotesk',sans-serif;letter-spacing:-.03em">Space Grotesk</div>
+        <div style="font:400 11px 'JetBrains Mono',monospace;color:#4d5869;margin-top:6px;letter-spacing:.06em">DISPLAY / UI — 700, tracking −3%, sizes 13 · 20 · 32 · 64 · 128</div>
+        <div style="font:400 20px 'JetBrains Mono',monospace;margin-top:20px;color:#dee5f3">JetBrains Mono</div>
+        <div style="font:400 11px 'JetBrains Mono',monospace;color:#4d5869;margin-top:6px;letter-spacing:.06em">ANNOTATION / DATA / LABELS — uppercase, tracking +6–22%</div>
+        <div style="font:300 22px/1.4 Newsreader,serif;margin-top:20px;color:#dee5f3">Newsreader — long-form prose for the blog, because reading 1,200 words of monospace is a punishment.</div>
+        <div style="font:400 11px 'JetBrains Mono',monospace;color:#4d5869;margin-top:6px;letter-spacing:.06em">BLOG BODY — 300, 19px, 72ch measure</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:30px">
+      <div>
+        <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#4d5869;margin-bottom:14px">03 / MATERIALS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="height:104px;border:1px solid rgba(142,180,255,.13);background:#05070d;background-image:linear-gradient(rgba(142,180,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(142,180,255,.09) 1px,transparent 1px);background-size:22px 22px;display:flex;align-items:flex-end;padding:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#8492a8">MEASURE GRID 22PX</div>
+          <div style="height:104px;border:1px solid rgba(142,180,255,.13);background:#05070d;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#8492a8"><div style="position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(190,215,255,.08) 0 1px,transparent 1px 3px)"></div>SCANLINE 1:3</div>
+          <div style="height:104px;border:1px solid rgba(142,180,255,.13);background:radial-gradient(120% 90% at 50% 120%,oklch(.80 .15 205 / .30),transparent 60%),#05070d;display:flex;align-items:flex-end;padding:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#8492a8">BLOOM FROM BELOW</div>
+          <div style="height:104px;border:1px solid rgba(142,180,255,.13);background:#05070d;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:8px;font:400 8.5px 'JetBrains Mono',monospace;color:#8492a8"><div style="position:absolute;left:0;right:0;top:0;height:34%;background:linear-gradient(180deg,transparent,oklch(.80 .15 205 / .16));animation:sweepY 5.5s linear infinite"></div>SWEEP PASS 5.5S</div>
+        </div>
+        <p style="margin:14px 0 0;font:400 11.5px/1.7 'JetBrains Mono',monospace;color:#8492a8">Corners are cut, not rounded (2px radius max). Borders are 1px hairlines at 13% opacity. Depth comes from <span style="color:#dee5f3">light, not shadow</span>.</p>
+      </div>
+      <div>
+        <div style="font:500 10px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#4d5869;margin-bottom:14px">04 / MOTION LAWS</div>
+        <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid rgba(142,180,255,.13)">
+          <div style="display:grid;grid-template-columns:22px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(142,180,255,.13);font:400 11.5px/1.5 'JetBrains Mono',monospace;color:#8492a8"><span style="color:oklch(.80 .15 205)">i</span><span><span style="color:#dee5f3">Instruments idle, they don't dance.</span> Ambient motion is slow (4–8s), low-contrast, and loops without a beat you can tap to.</span></div>
+          <div style="display:grid;grid-template-columns:22px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(142,180,255,.13);font:400 11.5px/1.5 'JetBrains Mono',monospace;color:#8492a8"><span style="color:oklch(.80 .15 205)">ii</span><span><span style="color:#dee5f3">Interaction is fast and mechanical.</span> 120–220ms, cubic-bezier(.2,.8,.2,1). Hover lights an edge; it does not bounce.</span></div>
+          <div style="display:grid;grid-template-columns:22px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(142,180,255,.13);font:400 11.5px/1.5 'JetBrains Mono',monospace;color:#8492a8"><span style="color:oklch(.80 .15 205)">iii</span><span><span style="color:#dee5f3">Reveals are apertures and sweeps</span> — clip-path and scan passes, never fades-up-with-blur.</span></div>
+          <div style="display:grid;grid-template-columns:22px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(142,180,255,.13);font:400 11.5px/1.5 'JetBrains Mono',monospace;color:#8492a8"><span style="color:oklch(.80 .15 205)">iv</span><span><span style="color:#dee5f3">Nothing flashes, nothing loops under 400ms,</span> nothing autoplays sound. prefers-reduced-motion kills all ambient layers.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>HERO A — “Phase” · live signal field, cursor-reactive · type as the object</div>
+<div class="dv-card" style="width:1160px">
+  <div onMouseMove="{{ onFieldMove }}" style="position:relative;height:600px;background:#05070d;overflow:hidden;--mx:50%;--my:50%">
+    <div style="position:absolute;inset:-44px;background-image:linear-gradient(rgba(142,180,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(142,180,255,.07) 1px,transparent 1px);background-size:44px 44px;animation:drift 14s linear infinite"></div>
+    <div style="position:absolute;inset:0;background:radial-gradient(340px 340px at var(--mx) var(--my),oklch(.80 .15 205 / .18),transparent 70%);transition:background .12s linear"></div>
+    <svg viewBox="0 0 1200 600" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;opacity:.9">
+      <path d="M0,300 C25,210 75,210 100,300 S175,390 200,300 S275,210 300,300 S375,390 400,300 S475,210 500,300 S575,390 600,300 S675,210 700,300 S775,390 800,300 S875,210 900,300 S975,390 1000,300 S1075,210 1100,300 S1175,390 1200,300" fill="none" stroke="oklch(.80 .15 205)" stroke-width="1.25" stroke-dasharray="1200 1200" style="animation:trace 9s linear infinite;filter:drop-shadow(0 0 7px oklch(.80 .15 205 / .85))"></path>
+      <path d="M0,300 C25,210 75,210 100,300 S175,390 200,300 S275,210 300,300 S375,390 400,300 S475,210 500,300 S575,390 600,300 S675,210 700,300 S775,390 800,300 S875,210 900,300 S975,390 1000,300 S1075,210 1100,300 S1175,390 1200,300" fill="none" stroke="oklch(.72 .18 342)" stroke-width="1" stroke-dasharray="600 1800" transform="translate(0 34) scale(1 .55) translate(0 245)" style="animation:trace 13s linear infinite;filter:drop-shadow(0 0 8px oklch(.72 .18 342 / .8));opacity:.75"></path>
+      <ellipse cx="600" cy="300" rx="250" ry="250" fill="none" stroke="rgba(142,180,255,.16)" stroke-width="1"></ellipse>
+      <ellipse cx="600" cy="300" rx="250" ry="86" fill="none" stroke="oklch(.85 .14 82 / .30)" stroke-width="1" style="transform-origin:600px 300px;animation:spin 26s linear infinite"></ellipse>
+    </svg>
+    <div style="position:absolute;left:0;top:0;bottom:0;width:56px;border-right:1px solid rgba(142,180,255,.13);background:repeating-linear-gradient(180deg,rgba(142,180,255,.22) 0 1px,transparent 1px 24px);background-position:0 12px"></div>
+    <div style="position:absolute;left:14px;top:50%;transform:rotate(-90deg) translateX(-50%);transform-origin:left center;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.34em;color:#4d5869;white-space:nowrap">ERRORSIGNAL.DEV / PHASE 02</div>
+    <div style="position:absolute;left:104px;right:56px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;gap:24px">
+      <div style="display:flex;align-items:center;gap:12px;font:500 10px 'JetBrains Mono',monospace;letter-spacing:.28em;color:oklch(.80 .15 205)"><span style="width:6px;height:6px;background:oklch(.80 .15 205);border-radius:50%;box-shadow:0 0 10px oklch(.80 .15 205);animation:flick 6s linear infinite"></span>SOFTWARE DEVELOPMENT MANAGER — AMAZON</div>
+      <h1 style="margin:0;font:700 132px/.86 'Space Grotesk',sans-serif;letter-spacing:-.055em;color:#eef3fb;text-shadow:0 0 62px oklch(.80 .15 205 / .35)">Matthew<br>Emerson</h1>
+      <p style="margin:0;max-width:600px;font:400 15px/1.75 'JetBrains Mono',monospace;color:#8492a8">I lead engineers and scientists building LLM and agentic systems for hiring at Amazon. After hours I write databases, consensus protocols and a kernel that boots on exactly one Raspberry Pi.</p>
+      <div style="display:flex;gap:10px;margin-top:6px">
+        <a href="#1e" style="padding:12px 20px;border:1px solid oklch(.80 .15 205 / .55);color:oklch(.80 .15 205);font:500 11px 'JetBrains Mono',monospace;letter-spacing:.16em;transition:all .16s cubic-bezier(.2,.8,.2,1)" style-hover="background:oklch(.80 .15 205 / .12);box-shadow:0 0 24px -6px oklch(.80 .15 205 / .8)">INDEX ↗</a>
+        <a href="#1g" style="padding:12px 20px;border:1px solid rgba(142,180,255,.18);color:#8492a8;font:500 11px 'JetBrains Mono',monospace;letter-spacing:.16em;transition:all .16s cubic-bezier(.2,.8,.2,1)" style-hover="color:#dee5f3;border-color:rgba(142,180,255,.4)">PHOTOS</a>
+        <a href="#1i" style="padding:12px 20px;border:1px solid rgba(142,180,255,.18);color:#8492a8;font:500 11px 'JetBrains Mono',monospace;letter-spacing:.16em;transition:all .16s cubic-bezier(.2,.8,.2,1)" style-hover="color:#dee5f3;border-color:rgba(142,180,255,.4)">LOG</a>
+      </div>
+    </div>
+    <div style="position:absolute;left:56px;right:0;bottom:0;height:38px;border-top:1px solid rgba(142,180,255,.13);display:flex;align-items:center;justify-content:space-between;padding:0 18px;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#4d5869;background:rgba(10,14,24,.6)">
+      <span>RUST · JAVA · PYTHON · C · TYPESCRIPT</span><span>47.61°N 122.33°W — <span style="color:oklch(.85 .14 82)">SIGNAL NOMINAL</span></span>
+    </div>
+    <div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(190,215,255,.055) 0 1px,transparent 1px 3px)"></div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>HERO B — “Esper” · letterboxed cinematic, portrait as the subject of an optical readout</div>
+<div class="dv-card" style="width:1160px">
+  <div style="position:relative;height:600px;background:#04060b;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 130%,oklch(.72 .18 342 / .22),transparent 62%),radial-gradient(90% 70% at 12% -10%,oklch(.80 .15 205 / .16),transparent 60%)"></div>
+    <div style="position:absolute;left:0;right:0;top:0;height:64px;background:#04060b;border-bottom:1px solid rgba(142,180,255,.10);display:flex;align-items:center;justify-content:space-between;padding:0 34px;z-index:3">
+      <span style="font:500 11px 'JetBrains Mono',monospace;letter-spacing:.3em;color:#dee5f3">M.EMERSON</span>
+      <span style="font:400 10px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#4d5869">FRAME 001 / 009 — ENHANCE</span>
+    </div>
+    <div style="position:absolute;left:0;right:0;top:64px;bottom:64px;display:grid;grid-template-columns:1fr 420px;gap:0">
+      <div style="padding:56px 44px;display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <div style="font:400 10px 'JetBrains Mono',monospace;letter-spacing:.26em;color:oklch(.72 .18 342);margin-bottom:22px">SUBJECT — SDM, AI/ML FOR TALENT ACQUISITION</div>
+          <h1 style="margin:0 0 20px;font:700 66px/.96 'Space Grotesk',sans-serif;letter-spacing:-.05em;color:#f2f5fb">Builds <span style="color:#8492a8">systems</span><br>from the <span style="color:#8492a8">metal up.</span></h1>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,auto);gap:0 34px;justify-content:start">
+          <div><div style="font:700 26px 'Space Grotesk',sans-serif;color:#dee5f3">09</div><div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#4d5869;margin-top:3px">SYSTEMS SHIPPED</div></div>
+          <div><div style="font:700 26px 'Space Grotesk',sans-serif;color:#dee5f3">RUST</div><div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#4d5869;margin-top:3px">PRIMARY TOOL</div></div>
+          <div><div style="font:700 26px 'Space Grotesk',sans-serif;color:#dee5f3">EL2</div><div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#4d5869;margin-top:3px">DEEPEST STACK LAYER</div></div>
+        </div>
+      </div>
+      <div style="position:relative;border-left:1px solid rgba(142,180,255,.10);background:#070a11;overflow:hidden">
+        <div style="position:absolute;inset:26px;background:repeating-linear-gradient(135deg,rgba(142,180,255,.09) 0 2px,transparent 2px 9px);border:1px solid rgba(142,180,255,.16);display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px">
+          <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.18em;color:#8492a8;background:#070a11;padding:5px 9px">DROP PORTRAIT · 3:4 · B&amp;W PREFERRED</span>
+        </div>
+        <div style="position:absolute;left:26px;right:26px;top:26px;height:30%;background:linear-gradient(180deg,transparent,oklch(.80 .15 205 / .20));animation:sweepY 6.5s linear infinite"></div>
+        <div style="position:absolute;left:26px;top:26px;width:26px;height:26px;border-left:1px solid oklch(.85 .14 82);border-top:1px solid oklch(.85 .14 82)"></div>
+        <div style="position:absolute;right:26px;bottom:26px;width:26px;height:26px;border-right:1px solid oklch(.85 .14 82);border-bottom:1px solid oklch(.85 .14 82)"></div>
+      </div>
+    </div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:64px;background:#04060b;border-top:1px solid rgba(142,180,255,.10);display:flex;align-items:center;gap:26px;padding:0 34px;z-index:3">
+      <span style="font:400 10px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8492a8">github/emersonmde</span>
+      <span style="font:400 10px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8492a8">linkedin/in/emersonmde</span>
+      <span style="margin-left:auto;display:flex;align-items:flex-end;gap:3px;height:22px">
+        <span style="width:3px;height:100%;background:oklch(.80 .15 205);animation:bar 1.9s ease-in-out infinite;transform-origin:bottom"></span>
+        <span style="width:3px;height:100%;background:oklch(.80 .15 205);animation:bar 1.9s ease-in-out .2s infinite;transform-origin:bottom"></span>
+        <span style="width:3px;height:100%;background:oklch(.80 .15 205);animation:bar 1.9s ease-in-out .4s infinite;transform-origin:bottom"></span>
+        <span style="width:3px;height:100%;background:oklch(.85 .14 82);animation:bar 1.9s ease-in-out .6s infinite;transform-origin:bottom"></span>
+      </span>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>HERO C — “Manifest” · zero-scroll CV, everything above the fold, recruiter-optimised</div>
+<div class="dv-card" style="width:1160px">
+  <div style="position:relative;height:600px;background:#05070d;display:grid;grid-template-columns:330px 1fr;overflow:hidden">
+    <div style="position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(142,180,255,.055) 1px,transparent 1px);background-size:66px 66px"></div>
+    <div style="position:relative;padding:44px 30px;border-right:1px solid rgba(142,180,255,.13);background:linear-gradient(180deg,#080b13,#05070d)">
+      <div style="font:700 34px/1.05 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#eef3fb">Matthew<br>Emerson</div>
+      <div style="font:400 10.5px/1.7 'JetBrains Mono',monospace;letter-spacing:.14em;color:oklch(.80 .15 205);margin-top:12px">SDM · AMAZON<br>AI/ML FOR TALENT ACQUISITION</div>
+      <div style="height:1px;background:rgba(142,180,255,.13);margin:26px 0"></div>
+      <p style="margin:0;font:400 12px/1.8 'JetBrains Mono',monospace;color:#8492a8">Cross-functional team of engineers and applied scientists. Rapid experimentation with LLMs and agentic systems, at hiring-pipeline scale.</p>
+      <div style="height:1px;background:rgba(142,180,255,.13);margin:26px 0"></div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <div style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.22em;color:#4d5869">CONTACT</div>
+        <a href="https://github.com/emersonmde" style="font:400 12px 'JetBrains Mono',monospace;color:#dee5f3;border-bottom:1px solid rgba(142,180,255,.2);padding-bottom:4px" style-hover="color:oklch(.85 .14 82);border-color:oklch(.85 .14 82)">github/emersonmde ↗</a>
+        <a href="https://linkedin.com/in/emersonmde" style="font:400 12px 'JetBrains Mono',monospace;color:#dee5f3;border-bottom:1px solid rgba(142,180,255,.2);padding-bottom:4px" style-hover="color:oklch(.85 .14 82);border-color:oklch(.85 .14 82)">linkedin/in/emersonmde ↗</a>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,oklch(.80 .15 205),transparent)"></div>
+    </div>
+    <div style="position:relative;padding:44px 40px;display:flex;flex-direction:column;gap:26px">
+      <div>
+        <div style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869;margin-bottom:14px">SELECTED SYSTEMS</div>
+        <div style="display:flex;flex-direction:column;border-top:1px solid rgba(142,180,255,.13)">
+          <sc-for list="{{ topProjects }}" as="p" hint-placeholder-count="5">
+            <a href="#1e" style="display:grid;grid-template-columns:150px 1fr 92px;gap:18px;align-items:baseline;padding:13px 8px;border-bottom:1px solid rgba(142,180,255,.13);transition:background .16s cubic-bezier(.2,.8,.2,1)" style-hover="background:rgba(142,180,255,.05)">
+              <span style="font:700 15px 'Space Grotesk',sans-serif;letter-spacing:-.01em;color:#eef3fb">{{ p.name }}</span>
+              <span style="font:400 11.5px 'JetBrains Mono',monospace;color:#8492a8">{{ p.blurb }}</span>
+              <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.14em;color:oklch(.80 .15 205);text-align:right">{{ p.lang }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:auto">
+        <div>
+          <div style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869;margin-bottom:11px">DEPTH</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:grid;grid-template-columns:112px 1fr;gap:10px;align-items:center;font:400 10.5px 'JetBrains Mono',monospace;color:#8492a8"><span>DISTRIBUTED</span><span style="height:3px;background:rgba(142,180,255,.12)"><span style="display:block;height:3px;width:88%;background:oklch(.80 .15 205);box-shadow:0 0 10px oklch(.80 .15 205 / .8)"></span></span></div>
+            <div style="display:grid;grid-template-columns:112px 1fr;gap:10px;align-items:center;font:400 10.5px 'JetBrains Mono',monospace;color:#8492a8"><span>STORAGE</span><span style="height:3px;background:rgba(142,180,255,.12)"><span style="display:block;height:3px;width:76%;background:oklch(.80 .15 205);box-shadow:0 0 10px oklch(.80 .15 205 / .8)"></span></span></div>
+            <div style="display:grid;grid-template-columns:112px 1fr;gap:10px;align-items:center;font:400 10.5px 'JetBrains Mono',monospace;color:#8492a8"><span>BARE METAL</span><span style="height:3px;background:rgba(142,180,255,.12)"><span style="display:block;height:3px;width:62%;background:oklch(.80 .15 205);box-shadow:0 0 10px oklch(.80 .15 205 / .8)"></span></span></div>
+          </div>
+        </div>
+        <div>
+          <div style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869;margin-bottom:11px">CURRENTLY</div>
+          <p style="margin:0;font:400 12px/1.8 'JetBrains Mono',monospace;color:#8492a8">Reading register-level docs for fun. Writing about it at <a href="#1i" style="color:oklch(.85 .14 82)">/log</a>.</p>
+        </div>
+      </div>
+      <div style="position:absolute;right:40px;top:38px;width:78px;height:78px;border:1px solid rgba(142,180,255,.13);border-radius:50%;display:flex;align-items:center;justify-content:center"><span style="width:54px;height:54px;border:1px solid oklch(.85 .14 82 / .5);border-radius:50%;border-top-color:oklch(.85 .14 82);animation:spin 9s linear infinite"></span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1e">
+<div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>PROJECT INDEX A — hairline ledger, expands in place (click a row)</div>
+<div class="dv-card" style="width:700px;padding:32px 30px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px">
+    <span style="font:700 20px 'Space Grotesk',sans-serif;letter-spacing:-.02em;color:#eef3fb">Index</span>
+    <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#4d5869">09 SYSTEMS — SORTED BY DEPTH</span>
+  </div>
+  <div style="border-top:1px solid rgba(142,180,255,.13)">
+    <sc-for list="{{ projects }}" as="p" hint-placeholder-count="9">
+      <div style="border-bottom:1px solid rgba(142,180,255,.13)">
+        <div onClick="{{ p.toggle }}" style="display:grid;grid-template-columns:26px 1fr auto;gap:14px;align-items:baseline;padding:14px 6px;cursor:pointer;transition:background .16s cubic-bezier(.2,.8,.2,1)" style-hover="background:rgba(142,180,255,.05)">
+          <span style="font:400 11px 'JetBrains Mono',monospace;color:#4d5869">{{ p.num }}</span>
+          <span style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font:700 16px 'Space Grotesk',sans-serif;letter-spacing:-.015em;color:#eef3fb">{{ p.name }}</span><span style="font:400 11.5px 'JetBrains Mono',monospace;color:#8492a8">{{ p.blurb }}</span></span>
+          <span style="font:400 13px 'JetBrains Mono',monospace;color:oklch(.80 .15 205)">{{ p.caret }}</span>
+        </div>
+        <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:2px 6px 20px 46px;border-left:1px solid oklch(.80 .15 205 / .4);margin-left:11px">
+            <p style="margin:0 0 14px;max-width:520px;font:400 12.5px/1.8 'JetBrains Mono',monospace;color:#a7b3c6">{{ p.detail }}</p>
+            <div style="display:flex;gap:7px;flex-wrap:wrap">
+              <sc-for list="{{ p.tags }}" as="t" hint-placeholder-count="3">
+                <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:#8492a8;border:1px solid rgba(142,180,255,.18);padding:4px 8px">{{ t }}</span>
+              </sc-for>
+              <a href="https://github.com/emersonmde" style="font:500 9.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:oklch(.85 .14 82);border:1px solid oklch(.85 .14 82 / .4);padding:4px 8px" style-hover="background:oklch(.85 .14 82 / .12)">SOURCE ↗</a>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1f">
+<div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>PROJECT INDEX B — spec plates, bracketed corners, hover lights the edge</div>
+<div class="dv-card" style="width:700px;padding:32px 30px;background:linear-gradient(180deg,#080b12,#05070d)">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px">
+    <span style="font:700 20px 'Space Grotesk',sans-serif;letter-spacing:-.02em;color:#eef3fb">Systems</span>
+    <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#4d5869">SPEC PLATES</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <sc-for list="{{ plates }}" as="p" hint-placeholder-count="4">
+      <a href="https://github.com/emersonmde" style="position:relative;display:flex;flex-direction:column;gap:10px;padding:18px 16px 16px;background:#0a0e18;border:1px solid rgba(142,180,255,.13);transition:all .18s cubic-bezier(.2,.8,.2,1)" style-hover="border-color:oklch(.80 .15 205 / .55);background:#0c1220;box-shadow:0 0 34px -12px oklch(.80 .15 205 / .9);transform:translateY(-2px)">
+        <span style="position:absolute;left:0;top:0;width:9px;height:9px;border-left:1px solid oklch(.80 .15 205);border-top:1px solid oklch(.80 .15 205)"></span>
+        <span style="position:absolute;right:0;bottom:0;width:9px;height:9px;border-right:1px solid oklch(.80 .15 205);border-bottom:1px solid oklch(.80 .15 205)"></span>
+        <span style="display:flex;align-items:baseline;justify-content:space-between"><span style="font:700 17px 'Space Grotesk',sans-serif;letter-spacing:-.015em;color:#eef3fb">{{ p.name }}</span><span style="font:400 9.5px 'JetBrains Mono',monospace;color:#4d5869">{{ p.num }}</span></span>
+        <span style="font:400 11px/1.6 'JetBrains Mono',monospace;color:#8492a8">{{ p.blurb }}</span>
+        <span style="height:1px;background:rgba(142,180,255,.13)"></span>
+        <span style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ p.tags }}" as="t" hint-placeholder-count="3">
+            <span style="font:400 9px 'JetBrains Mono',monospace;letter-spacing:.1em;color:oklch(.80 .15 205);background:oklch(.80 .15 205 / .1);padding:3px 6px">{{ t }}</span>
+          </sc-for>
+        </span>
+      </a>
+    </sc-for>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1g">
+<div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>GALLERY A — cinematic reel · horizontal snap, one frame commands the screen (scroll it →)</div>
+<div class="dv-card" style="width:1160px;background:#04060b">
+  <div style="padding:26px 30px 14px;display:flex;align-items:baseline;justify-content:space-between">
+    <span style="font:700 20px 'Space Grotesk',sans-serif;letter-spacing:-.02em;color:#eef3fb">Photographs</span>
+    <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#4d5869">REEL 01 — DRAG OR SCROLL →</span>
+  </div>
+  <div style="display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 30px 22px">
+    <sc-for list="{{ reel }}" as="f" hint-placeholder-count="4">
+      <div style="flex:none;width:520px;scroll-snap-align:center;position:relative">
+        <div style="position:relative;height:330px;background:repeating-linear-gradient(115deg,rgba(142,180,255,.10) 0 2px,transparent 2px 10px);border:1px solid rgba(142,180,255,.16);overflow:hidden;transition:all .2s cubic-bezier(.2,.8,.2,1)" style-hover="border-color:oklch(.85 .14 82 / .6);box-shadow:0 0 46px -14px oklch(.85 .14 82 / .9)">
+          <span style="position:absolute;left:12px;top:12px;font:400 9px 'JetBrains Mono',monospace;letter-spacing:.16em;color:oklch(.85 .14 82)">{{ f.num }}</span>
+          <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.18em;color:#8492a8;background:#04060b;padding:6px 10px">{{ f.slot }}</span>
+          <span style="position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(180deg,transparent,rgba(4,6,11,.92))"></span>
+          <span style="position:absolute;left:14px;bottom:14px;font:400 11px 'JetBrains Mono',monospace;color:#dee5f3">{{ f.title }}</span>
+          <span style="position:absolute;right:14px;bottom:14px;font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.14em;color:#4d5869">{{ f.meta }}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="padding:0 30px 26px">
+    <div style="height:2px;background:rgba(142,180,255,.12);position:relative"><span style="position:absolute;left:0;top:0;height:2px;width:26%;background:oklch(.85 .14 82);box-shadow:0 0 12px oklch(.85 .14 82)"></span></div>
+    <div style="display:flex;justify-content:space-between;margin-top:9px;font:400 9px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#4d5869"><span>01</span><span>ALBUMS: ICELAND · CASCADES · 35MM ROLLS</span><span>09</span></div>
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1h">
+<div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>GALLERY B — masonry wall + phosphor lightbox (click any tile)</div>
+<div class="dv-card" style="width:700px;padding:28px 26px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px">
+    <span style="font:700 20px 'Space Grotesk',sans-serif;letter-spacing:-.02em;color:#eef3fb">Wall</span>
+    <span style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#4d5869">MASONRY — 3 COL</span>
+  </div>
+  <div style="column-count:3;column-gap:9px">
+    <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="9">
+      <div onClick="{{ t.open }}" style="break-inside:avoid;margin-bottom:9px;position:relative;background:repeating-linear-gradient(115deg,rgba(142,180,255,.10) 0 2px,transparent 2px 10px);border:1px solid rgba(142,180,255,.14);cursor:pointer;transition:all .16s cubic-bezier(.2,.8,.2,1)" style-hover="border-color:oklch(.85 .14 82 / .7);box-shadow:0 0 26px -10px oklch(.85 .14 82)">
+        <div style="height:{{ t.h }}"></div>
+        <span style="position:absolute;left:8px;bottom:7px;font:400 8.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:#8492a8">{{ t.label }}</span>
+      </div>
+    </sc-for>
+  </div>
+  <sc-if value="{{ lb }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeLb }}" style="position:absolute;inset:0;background:rgba(3,5,9,.92);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:5;cursor:zoom-out;animation:rise .2s cubic-bezier(.2,.8,.2,1)">
+      <div style="position:relative;width:470px;height:310px;background:repeating-linear-gradient(115deg,rgba(142,180,255,.12) 0 2px,transparent 2px 10px);border:1px solid oklch(.85 .14 82 / .55);box-shadow:0 0 70px -18px oklch(.85 .14 82 / .8)">
+        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.18em;color:#8492a8">{{ lb.slot }}</span>
+        <span style="position:absolute;left:-1px;top:-1px;width:14px;height:14px;border-left:1px solid oklch(.85 .14 82);border-top:1px solid oklch(.85 .14 82)"></span>
+        <span style="position:absolute;right:-1px;bottom:-1px;width:14px;height:14px;border-right:1px solid oklch(.85 .14 82);border-bottom:1px solid oklch(.85 .14 82)"></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:18px;font:400 10px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#8492a8">
+        <span onClick="{{ prevLb }}" style="cursor:pointer;color:#dee5f3">←</span>
+        <span>{{ lb.label }}</span>
+        <span style="color:#4d5869">{{ lb.counter }}</span>
+        <span onClick="{{ nextLb }}" style="cursor:pointer;color:#dee5f3">→</span>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</div>
+
+<div class="dv-opt" id="1i">
+<div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>NAV + PAGE TRANSITION — aperture wipe between sections (click the tabs)</div>
+<div class="dv-card" style="width:700px;height:470px;position:relative;overflow:hidden">
+  <div style="display:flex;align-items:center;gap:0;height:56px;border-bottom:1px solid rgba(142,180,255,.13);padding:0 20px;background:#080b13">
+    <span style="font:500 11px 'JetBrains Mono',monospace;letter-spacing:.26em;color:#dee5f3;margin-right:auto">M.E</span>
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+      <span onClick="{{ t.go }}" style="position:relative;padding:0 16px;height:56px;display:flex;align-items:center;font:500 10.5px 'JetBrains Mono',monospace;letter-spacing:.2em;color:#8492a8;cursor:pointer;transition:color .16s" style-hover="color:#dee5f3">
+        {{ t.label }}
+        <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;left:12px;right:12px;bottom:0;height:2px;background:oklch(.80 .15 205);box-shadow:0 0 14px oklch(.80 .15 205)"></span>
+        </sc-if>
+      </span>
+    </sc-for>
+  </div>
+  <div style="position:relative;height:414px;background:#05070d">
+    <sc-if value="{{ isIndex }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:30px;animation:rise .28s cubic-bezier(.2,.8,.2,1)">
+        <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869">/ INDEX</div>
+        <div style="font:700 42px/1 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#eef3fb;margin:12px 0 18px">Nine systems,<br>zero frameworks.</div>
+        <p style="margin:0;max-width:420px;font:400 12px/1.8 'JetBrains Mono',monospace;color:#8492a8">Route changes fire a single aperture wipe: content clips to a horizontal slit, the incoming page rises 14px into place. 620ms end to end, one accent line trailing the seam.</p>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isPhotos }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:30px;animation:rise .28s cubic-bezier(.2,.8,.2,1)">
+        <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:oklch(.85 .14 82)">/ PHOTOS</div>
+        <div style="font:700 42px/1 'Space Grotesk',sans-serif;letter-spacing:-.04em;color:#eef3fb;margin:12px 0 18px">Accent shifts<br>to amber here.</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:440px">
+          <div style="height:70px;background:repeating-linear-gradient(115deg,rgba(142,180,255,.1) 0 2px,transparent 2px 10px);border:1px solid rgba(142,180,255,.14)"></div>
+          <div style="height:70px;background:repeating-linear-gradient(115deg,rgba(142,180,255,.1) 0 2px,transparent 2px 10px);border:1px solid rgba(142,180,255,.14)"></div>
+          <div style="height:70px;background:repeating-linear-gradient(115deg,rgba(142,180,255,.1) 0 2px,transparent 2px 10px);border:1px solid rgba(142,180,255,.14)"></div>
+          <div style="height:70px;background:repeating-linear-gradient(115deg,rgba(142,180,255,.1) 0 2px,transparent 2px 10px);border:1px solid rgba(142,180,255,.14)"></div>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isLog }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:30px;animation:rise .28s cubic-bezier(.2,.8,.2,1)">
+        <div style="font:400 9.5px 'JetBrains Mono',monospace;letter-spacing:.24em;color:#4d5869">/ LOG — 2026.07.19</div>
+        <div style="font:700 34px/1.05 'Space Grotesk',sans-serif;letter-spacing:-.035em;color:#eef3fb;margin:12px 0 16px">Why my LSM tree<br>was slower than a file</div>
+        <p style="margin:0;max-width:430px;font:300 17px/1.65 Newsreader,serif;color:#a7b3c6">Long-form drops the monospace entirely — serif at 72 characters, hairline rules between sections, and code blocks that keep the instrument border. The reading experience should feel like a lab notebook, not a dashboard.</p>
+      </div>
+    </sc-if>
+    <sc-if value="{{ wiping }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;background:#04060b;animation:aperture .6s cubic-bezier(.7,0,.3,1) forwards;z-index:4;display:flex;align-items:center;justify-content:center">
+        <span style="width:100%;height:1px;background:oklch(.80 .15 205);box-shadow:0 0 20px oklch(.80 .15 205)"></span>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</div>
+
+</div>
+<p class="dv-next">Try next: “take <a class="dv-oid" href="#1b">1b</a>’s hero with <a class="dv-oid" href="#1e">1e</a>’s index and build the full landing page” · “make the reel in <a class="dv-oid" href="#1g">1g</a> full-bleed and cursor-driven” · “show me the blog reading page” · “new directions for the hero”</p>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent1&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;oklch(.80 .15 205)&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;oklch(.80 .15 205)&quot;,&quot;oklch(.78 .16 155)&quot;,&quot;oklch(.72 .18 342)&quot;,&quot;oklch(.80 .16 262)&quot;],&quot;section&quot;:&quot;Light&quot;},&quot;accent2&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;oklch(.85 .14 82)&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;oklch(.85 .14 82)&quot;,&quot;oklch(.80 .15 205)&quot;,&quot;oklch(.72 .18 342)&quot;,&quot;oklch(.85 .13 130)&quot;],&quot;section&quot;:&quot;Light&quot;},&quot;scanlines&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Light&quot;}}">
+const P = [
+  ["coppermind","Client-side semantic search","Hybrid search combining vector similarity (HNSW) with BM25 keyword matching, fused via Reciprocal Rank Fusion. Compiles to WASM and runs JinaBERT embeddings client-side using Candle. Zero server dependencies.",["wasm","ml","search"],"RUST"],
+  ["anchor-chain","LLM orchestration framework","Type-safe LLM workflow orchestration with compile-time chain validation. Async-first design enables parallel node execution. OpenAI and Anthropic behind one trait-based interface.",["llm","async","crate"],"RUST"],
+  ["daedalus","Bare-metal kernel for RPi4","AArch64 kernel on Raspberry Pi 4 (BCM2711/Cortex-A72). Exception handling at EL2, PL011 UART driver, interactive shell. No OS, no std — just registers and memory.",["kernel","arm64","no_std"],"RUST"],
+  ["railyard","Raft consensus implementation","Raft built on Tonic gRPC: leader election, log replication, membership changes. Designed as a reusable building block for systems that need strong consistency.",["distributed","consensus","grpc"],"RUST"],
+  ["nenya","Adaptive PID rate limiter","Rate limiter using a PID controller for dynamic limit adjustment based on traffic. Sliding-window TPS with configurable Kp/Ki/Kd, plus Sentinel, a gRPC sidecar.",["pid","grpc","crate"],"RUST"],
+  ["reprisedb","LSM tree key-value store","Disk-persistent store using Log-Structured Merge Trees. B-Tree MemTable buffers writes before flushing to SSTables. Compaction with last-write-wins. Protobuf on-disk encoding.",["storage","lsm-tree","database"],"RUST"],
+  ["bloombox","Serializable bloom filter","Space-efficient probabilistic set membership using XXHash. Configurable false-positive rates with automatic optimal sizing. Serialization for persistence and transfer.",["probabilistic","crate"],"RUST"],
+  ["palantir","DNS resolver with caching","RFC 1035 compliant resolver: query parsing, response construction, answer caching. Low-level sockets with custom packet serialization.",["networking","dns","rfc"],"RUST"],
+  ["chip8-emulator","CHIP-8 virtual machine","Emulator for the CHIP-8 interpreted language. SDL2 rendering, opcode decoding, memory-mapped I/O. The classic first step into emulation.",["emulator","sdl2","graphics"],"RUST"]
+];
+const TILES = [
+  ["ICELAND / 01","210px"],["CASCADES / 02","132px"],["35MM / 03","168px"],
+  ["ICELAND / 04","140px"],["NIGHT / 05","196px"],["CASCADES / 06","124px"],
+  ["35MM / 07","156px"],["COAST / 08","118px"],["NIGHT / 09","184px"]
+];
+const SHOTS = [
+  { t: "Playa Norte, 14:20", album: "CARIBBEAN", meta: "35MM · f/8", accent: "oklch(.80 .15 200)", grad: "linear-gradient(160deg,#062a41,#1a7f9e 55%,#93dbd4)" },
+  { t: "Cascade ridge, first light", album: "LANDSCAPE", meta: "DIGITAL · f/5.6", accent: "oklch(.80 .15 148)", grad: "linear-gradient(170deg,#08180f,#2f6b34 60%,#9ac96c)" },
+  { t: "Wing over the Sound", album: "AVIATION", meta: "DIGITAL · f/4", accent: "oklch(.80 .13 252)", grad: "linear-gradient(180deg,#091c37,#3b6ea8 62%,#d3dfec)" },
+  { t: "The blacksmith, third pass", album: "REN FAIRE", meta: "35MM · f/2", accent: "oklch(.82 .16 62)", grad: "linear-gradient(165deg,#280e05,#8a3b12 58%,#e6ad63)" },
+  { t: "Downtown, 30 seconds", album: "NIGHT", meta: "DIGITAL · 30S", accent: "oklch(.72 .22 332)", grad: "linear-gradient(175deg,#090513,#43125c 55%,#c93fa6)" }
+];
+class Component extends DCLogic {
+  state = { open: { railyard: true }, node: { daedalus: true }, lb: null, big: null, tab: "index", wiping: false, shot: 0, ctab: "index", gtab: "index", gate: false, wtab: "index", streak: false, plate: { daedalus: true }, glow: 1, rtab: "index", rprev: "photos", rrun: false, itab: "index", irun: false };
+  crt = React.createRef();
+  warpEl = React.createRef();
+  gateGo = t => {
+    if (t === this.state.gtab || this.state.gate) return;
+    this.setState({ gate: true });
+    setTimeout(() => this.setState({ gtab: t }), 190);
+    setTimeout(() => this.setState({ gate: false }), 440);
+  };
+  warpGo = t => {
+    if (t === this.state.wtab) return;
+    const el = this.warpEl.current;
+    this.setState({ streak: true });
+    setTimeout(() => this.setState({ streak: false }), 460);
+    if (!el) { this.setState({ wtab: t }); return; }
+    el.style.animation = "none"; void el.offsetWidth;
+    el.style.animation = "warpOut .17s cubic-bezier(.5,0,.9,.3) forwards";
+    setTimeout(() => {
+      this.setState({ wtab: t });
+      el.style.animation = "warpIn .28s cubic-bezier(.15,.85,.25,1) forwards";
+    }, 175);
+  };
+  moveBig = d => this.setState(s => ({ big: (s.big + d + 9) % 9 }));
+  moveGlow = d => this.setState(s => ({ glow: (s.glow + d + SHOTS.length) % SHOTS.length }));
+  redrawGo = t => {
+    if (t === this.state.rtab || this.state.rrun) return;
+    this.setState({ rprev: this.state.rtab, rtab: t, rrun: true });
+    setTimeout(() => this.setState({ rrun: false }), 380);
+  };
+  irisGo = t => {
+    if (t === this.state.itab || this.state.irun) return;
+    this.setState({ irun: true });
+    setTimeout(() => this.setState({ itab: t }), 195);
+    setTimeout(() => this.setState({ irun: false }), 440);
+  };
+  ramp = k => {
+    const t = k / 8, h = t < .5 ? 72 + (200 - 72) * (t * 2) : 200 + (286 - 200) * ((t - .5) * 2);
+    return "oklch(.80 .17 " + h.toFixed(0) + ")";
+  };
+  moveShot = d => this.setState(s => ({ shot: (s.shot + d + SHOTS.length) % SHOTS.length }));
+  crtGo = t => {
+    if (t === this.state.ctab) return;
+    const el = this.crt.current;
+    if (!el) { this.setState({ ctab: t }); return; }
+    el.style.animation = "none"; void el.offsetWidth;
+    el.style.animation = "crtOut .15s cubic-bezier(.6,0,.9,.2) forwards";
+    setTimeout(() => {
+      this.setState({ ctab: t });
+      el.style.animation = "crtIn .24s cubic-bezier(.1,.9,.2,1) forwards";
+    }, 155);
+  };
+  componentDidMount() { this.applyVars(); }
+  componentDidUpdate() { this.applyVars(); }
+  applyVars() {
+    const s = document.documentElement.style, p = this.props;
+    if (p.accent1) s.setProperty("--a1", p.accent1);
+    if (p.accent2) s.setProperty("--a3", p.accent2);
+    if (p.scanlines === false) s.setProperty("--scan", "0");
+  }
+  onFieldMove = e => {
+    const el = e.currentTarget, r = el.getBoundingClientRect();
+    el.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100) + "%");
+    el.style.setProperty("--my", ((e.clientY - r.top) / r.height * 100) + "%");
+  };
+  toggle = id => this.setState(s => ({ open: { ...s.open, [id]: !s.open[id] } }));
+  setTab = t => {
+    if (t === this.state.tab) return;
+    this.setState({ wiping: true });
+    setTimeout(() => this.setState({ tab: t }), 250);
+    setTimeout(() => this.setState({ wiping: false }), 620);
+  };
+  moveLb = d => this.setState(s => ({ lb: (s.lb + d + TILES.length) % TILES.length }));
+  renderVals() {
+    const num = i => String(i + 1).padStart(2, "0");
+    const projects = P.map((p, i) => ({
+      id: p[0], num: num(i), name: p[0], blurb: p[1], detail: p[2], tags: p[3], lang: p[4],
+      open: !!this.state.open[p[0]], caret: this.state.open[p[0]] ? "–" : "+",
+      toggle: () => this.toggle(p[0])
+    }));
+    const i = this.state.lb, s = SHOTS[this.state.shot];
+    return {
+      projects,
+      spine: projects.slice(0, 4),
+      spineAll: P.map((p, k) => ({
+        id: p[0], num: num(k), name: p[0], blurb: p[1], detail: p[2], tags: p[3],
+        open: !!this.state.node[p[0]], mark: this.state.node[p[0]] ? "CLOSE ×" : "EXPAND +",
+        toggle: () => this.setState(s => ({ node: { ...s.node, [p[0]]: !s.node[p[0]] } }))
+      })),
+      railPlates: P.map((p, k) => ({
+        id: p[0], num: num(k), name: p[0], blurb: p[1], detail: p[2], tags: p[3], hue: this.ramp(k),
+        open: !!this.state.plate[p[0]], mark: this.state.plate[p[0]] ? "COLLAPSE ×" : "OPEN +",
+        toggle: () => this.setState(s => ({ plate: { ...s.plate, [p[0]]: !s.plate[p[0]] } }))
+      })),
+      glow: SHOTS[this.state.glow],
+      glowThumbs: SHOTS.map((h, k) => ({ grad: h.grad, album: h.album, active: k === this.state.glow, go: () => this.setState({ glow: k }) })),
+      nextGlow: () => this.moveGlow(1),
+      prevGlow: () => this.moveGlow(-1),
+      redrawTabs: [["index", "INDEX"], ["photos", "PHOTOS"], ["log", "LOG"]].map(t => ({
+        label: t[1], active: this.state.rtab === t[0], go: () => this.redrawGo(t[0])
+      })),
+      rIndex: this.state.rtab === "index", rPhotos: this.state.rtab === "photos", rLog: this.state.rtab === "log",
+      pIndex: this.state.rprev === "index", pPhotos: this.state.rprev === "photos", pLog: this.state.rprev === "log",
+      rrun: this.state.rrun,
+      irisTabs: [["index", "INDEX"], ["photos", "PHOTOS"], ["log", "LOG"]].map(t => ({
+        label: t[1], active: this.state.itab === t[0], go: () => this.irisGo(t[0])
+      })),
+      iIndex: this.state.itab === "index", iPhotos: this.state.itab === "photos", iLog: this.state.itab === "log",
+      irun: this.state.irun,
+      wall: TILES.map((t, k) => {
+        const h = SHOTS[k % SHOTS.length];
+        return { label: t[0], h: t[1], grad: h.grad, accent: h.accent, open: () => this.setState({ big: k }) };
+      }),
+      big: this.state.big == null ? null : (() => {
+        const k = this.state.big, h = SHOTS[k % SHOTS.length];
+        return { grad: h.grad, accent: h.accent, t: h.t, album: h.album, meta: h.meta, counter: num(k) + " / 09" };
+      })(),
+      closeBig: () => this.setState({ big: null }),
+      nextBig: e => { e.stopPropagation(); this.moveBig(1); },
+      prevBig: e => { e.stopPropagation(); this.moveBig(-1); },
+      gateTabs: [["index", "INDEX"], ["photos", "PHOTOS"], ["log", "LOG"]].map(t => ({
+        label: t[1], active: this.state.gtab === t[0], go: () => this.gateGo(t[0])
+      })),
+      gIndex: this.state.gtab === "index",
+      gPhotos: this.state.gtab === "photos",
+      gLog: this.state.gtab === "log",
+      gate: this.state.gate,
+      warpTabs: [["index", "INDEX"], ["photos", "PHOTOS"], ["log", "LOG"]].map(t => ({
+        label: t[1], active: this.state.wtab === t[0], go: () => this.warpGo(t[0])
+      })),
+      wIndex: this.state.wtab === "index",
+      wPhotos: this.state.wtab === "photos",
+      wLog: this.state.wtab === "log",
+      streak: this.state.streak,
+      warpRef: this.warpEl,
+      plates6: projects.slice(0, 6),
+      shot: { ...s, counter: num(this.state.shot) + " / 0" + SHOTS.length },
+      thumbs: SHOTS.map((h, k) => ({ grad: h.grad, album: h.album, active: k === this.state.shot, go: () => this.setState({ shot: k }) })),
+      nextShot: () => this.moveShot(1),
+      prevShot: () => this.moveShot(-1),
+      crtRef: this.crt,
+      crtTabs: [["index", "INDEX"], ["photos", "PHOTOS"], ["log", "LOG"]].map(t => ({
+        label: t[1], active: this.state.ctab === t[0], go: () => this.crtGo(t[0])
+      })),
+      cIndex: this.state.ctab === "index",
+      cPhotos: this.state.ctab === "photos",
+      cLog: this.state.ctab === "log",
+      topProjects: projects.slice(0, 5),
+      plates: projects.slice(0, 4),
+      reel: [
+        { num: "01", slot: "LANDSCAPE 3:2", title: "Reynisfjara, before the rain", meta: "35MM · f/8" },
+        { num: "02", slot: "LANDSCAPE 3:2", title: "Ridge line at 04:40", meta: "DIGITAL · f/2.8" },
+        { num: "03", slot: "PORTRAIT 2:3", title: "Untitled, city block", meta: "35MM · f/1.8" },
+        { num: "04", slot: "LANDSCAPE 3:2", title: "Long exposure, north pier", meta: "DIGITAL · 30S" }
+      ],
+      tiles: TILES.map((t, k) => ({ label: t[0], h: t[1], open: () => this.setState({ lb: k }) })),
+      lb: i == null ? null : { label: TILES[i][0], slot: "FULL FRAME", counter: num(i) + " / 09" },
+      closeLb: () => this.setState({ lb: null }),
+      nextLb: e => { e.stopPropagation(); this.moveLb(1); },
+      prevLb: e => { e.stopPropagation(); this.moveLb(-1); },
+      tabs: [["index","INDEX"],["photos","PHOTOS"],["log","LOG"]].map(t => ({
+        label: t[1], active: this.state.tab === t[0], go: () => this.setTab(t[0])
+      })),
+      isIndex: this.state.tab === "index",
+      isPhotos: this.state.tab === "photos",
+      isLog: this.state.tab === "log",
+      wiping: this.state.wiping,
+      onFieldMove: this.onFieldMove
+    };
+  }
+}
+</script>
+</body>
+</html>

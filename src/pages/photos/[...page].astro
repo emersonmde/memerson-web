@@ -274,10 +274,29 @@ const remaining = Math.max(0, total - shown);
     display: none;
   }
 
+  /*
+   * Ambient bloom — a blurred, saturated copy of the photograph sitting behind
+   * itself. Mockup 6b, and Signal 4c states the reasoning: "ambient bloom is a
+   * blurred copy of the photo itself, so it works on real images". No colour is
+   * ever extracted or stored; the glow is the photo.
+   */
+  .lb-bloom {
+    position: absolute;
+    inset: -12%;
+    background-position: center;
+    background-size: cover;
+    filter: blur(80px) saturate(1.4);
+    opacity: 0.5;
+    transform: scale(1.16);
+    transition: background-image 0.45s ease;
+    pointer-events: none;
+  }
+
+  /* Sits over the bloom, so it must not be opaque or the bloom is invisible. */
   .lb-wash {
     position: absolute;
     inset: 0;
-    background: rgba(3, 4, 10, 0.92);
+    background: rgba(3, 4, 10, 0.72);
   }
 
   .lb-vignette {

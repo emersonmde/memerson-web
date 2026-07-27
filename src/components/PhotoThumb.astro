@@ -32,6 +32,15 @@ const srcSet = (format: string) =>
 const widest = Math.max(...variants);
 const full = `${PHOTOS_BASE_URL}/photos/${id}/${widest}.webp`;
 
+/*
+ * The lightbox's ambient bloom is a blurred copy of the photograph itself, so
+ * the smallest derivative is the right source: it gets blurred to 80px anyway,
+ * and it is already in cache from the tile. Loading the 2560px version to throw
+ * away every detail would be pure waste.
+ */
+const smallest = Math.min(...variants);
+const bloom = `${PHOTOS_BASE_URL}/photos/${id}/${smallest}.webp`;
+
 const alt = photo.data.title ?? photo.data.caption ?? '';
 ---
 
@@ -52,6 +61,7 @@ const alt = photo.data.title ?? photo.data.caption ?? '';
   data-alt={alt}
   data-label={label}
   data-meta={meta}
+  data-bloom={bloom}
   data-ar={aspectRatio}
   style={`--ar:${aspectRatio};${height ? `--h:${height};` : ''}`}
 >

@@ -119,7 +119,8 @@ Cloudflare repo access is undesirable.
    a proxied CNAME, not the A/AAAA that `dig` reported. See above.
 4. **Workers Builds**: push the repo to GitHub, then authorize Cloudflare's GitHub app in
    the dashboard. Local `npm run deploy` works without this. **Still outstanding.**
-5. Bulk Redirects for `errorsignal.dev` (§8). `memerson.dev` needs a Route 53 change first.
+5. Cutover redirects — added to the **old site's repo**, not this zone (§8).
+   `memerson.dev` is separate and needs a Route 53 change first.
 6. Decide `www.memerson.com` handling (redirect rule or second custom domain).
 7. Mail hardening on the zone: SPF, DKIM, DMARC for Google Workspace, plus DNSSEC. The
    `MX` (`smtp.google.com`) and the Google site-verification `TXT` are already in place and
@@ -501,37 +502,54 @@ moment to do this — changing keys later means rewriting every URL that was eve
 
 ### Redirects
 
-**`errorsignal.dev` is a shared host, so the redirect is path-scoped, not domain-wide.**
-Decided 2026-07-27, and it is the non-obvious part of the cutover.
+**The redirect lives in the old Astro repo, not on the domain.** Decided 2026-07-27, and
+it is the non-obvious part of the cutover.
 
-Several independent repos publish to `errorsignal.dev` through GitHub Pages — the
-`coppermind` WASM demo, Rust documentation, other static assets. Only the Astro site's own
-paths move to `memerson.com`; everything else keeps serving from that domain.
+`errorsignal.dev` is a **shared host**. Several independent repos publish to it through
+GitHub Pages — the `coppermind` WASM demo, Rust documentation, other static assets — and
+they all use it as their base domain. Only the Astro site moves.
 
-Redirect exactly these, and nothing else:
+So the redirect is implemented **in `emersonmde.github.io`**, the old site's own repo. Its
+pages redirect themselves to `memerson.com`; every other repo publishing to that domain is
+untouched **by construction**.
 
-| From               | To                     |
-| ------------------ | ---------------------- |
-| `/`                | `memerson.com/`        |
-| `/about`           | `memerson.com/about`   |
-| `/blog`, `/blog/*` | same path              |
-| `/photos`          | `memerson.com/photos`  |
-| `/rss.xml`         | `memerson.com/rss.xml` |
+This is better than the zone-level alternative (Cloudflare Bulk Redirects scoped to an
+allowlist of paths). Both work, but the repo-level version _cannot_ over-reach: there is no
+rule sitting in front of the whole domain that a future project could accidentally match.
+The allowlist would have had to stay correct forever; this needs nothing to stay correct.
 
-**Allowlist rather than denylist**, deliberately. Redirecting `/*` and carving out known
-project paths looks equivalent and is not: it breaks every _future_ GitHub Pages project
-the moment it is published, silently, because nothing prompts anyone to add a new
-exclusion. Enumerating what moves fails safe — an unlisted path keeps working.
+Scope — the Astro site's own routes, which are the only ones that repo serves:
 
-Blog slugs are preserved exactly, so `/blog/<slug>` is 1:1 and existing links and search
-ranking survive. The one shape change is that the old single `/photos` page is now
-paginated (`/photos`, `/photos/2`…), so `/photos` maps to the new first page.
+| Old (`errorsignal.dev`) | New (`memerson.com`) |
+| ----------------------- | -------------------- |
+| `/`                     | `/`                  |
+| `/about`                | `/about`             |
+| `/blog`, `/blog/<slug>` | same path            |
+| `/photos`               | `/photos`            |
+| `/rss.xml`              | `/rss.xml`           |
+
+Blog slugs are preserved exactly, so `/blog/<slug>` is 1:1. The one shape change is that
+the old single `/photos` page is now paginated, so it maps to the new first page.
+
+**The honest caveat: these will be meta-refresh redirects, not 301s.** GitHub Pages serves
+static files and cannot emit a status-code redirect, so the mechanism is an HTML page
+carrying `<meta http-equiv="refresh">` plus `<link rel="canonical">`. Consequences:
+
+- Users get sent to the right place, reliably. That part is fine.
+- Search engines treat canonical-plus-refresh as a strong hint rather than the instruction
+  a 301 gives. Ranking transfer is slower and less certain.
+- The old URL keeps returning `200`, so naive link checkers will not see a redirect.
+
+If ranking transfer turns out to matter, the fallback is a Cloudflare Redirect Rule scoped
+to exactly the table above — real 301s, at the cost of a domain-level rule that has to be
+kept from over-matching. Not worth it up front.
 
 `memerson.dev/*` → `memerson.com/*` is a separate job and requires moving the zone off
 Route 53 or changing Route 53 records — that one is not free of AWS.
 
-**Post-deploy check:** `errorsignal.dev/coppermind/` must still return 200. That is the
-assertion that catches an over-broad rule.
+**Post-cutover check:** `errorsignal.dev/coppermind/` must still return 200 and still be
+the demo. With the repo-level approach that should hold automatically, which is the point
+— but verify it anyway, because "should hold automatically" is how outages start.
 
 ---
 
@@ -553,16 +571,16 @@ derivatives make it unnecessary.
 
 ## 10. Open decisions
 
-| #     | Question                                       | Notes                                                                                                                                                                                             |
-| ----- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1     | Analytics?                                     | **Reframed 2026-07-26:** the live site runs _no_ analytics script. Nothing to migrate — this is a decision to start or not. Cloudflare Web Analytics is free and needs no proxy.                  |
-| 2     | `memerson.dev` — redirect or drop?             | Currently linked from the live site. Needs a Route 53 change either way.                                                                                                                          |
-| 3     | `www.memerson.com`                             | Redirect rule vs. second custom domain.                                                                                                                                                           |
-| 4     | RSS scope                                      | Blog only, or blog + photos?                                                                                                                                                                      |
-| 5     | Archive originals in R2, or keep offline only? | **Settled:** done, private archive bucket, 118 originals. Cost is negligible as predicted.                                                                                                        |
-| ~~6~~ | ~~Minecraft stack~~                            | **Closed:** never deployed as a stack. What exists is an instance stopped since 2023-02 plus an orphaned EBS volume and Elastic IP (~$6/mo) — a deletion task, not a decision.                    |
-| 7     | `memerson.net`                                 | **New:** a second Route 53 zone found during the 2026-07-26 AWS inventory. ACM validation records only, no site. Drop it?                                                                         |
-| ~~8~~ | ~~The `coppermind` WASM demo~~                 | **Settled 2026-07-27:** the demo stays on `errorsignal.dev`, along with the other GitHub Pages projects sharing that domain. The redirect is path-scoped to the Astro site's own routes — see §8. |
+| #     | Question                                       | Notes                                                                                                                                                                                                                                           |
+| ----- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Analytics?                                     | **Reframed 2026-07-26:** the live site runs _no_ analytics script. Nothing to migrate — this is a decision to start or not. Cloudflare Web Analytics is free and needs no proxy.                                                                |
+| 2     | `memerson.dev` — redirect or drop?             | Currently linked from the live site. Needs a Route 53 change either way.                                                                                                                                                                        |
+| 3     | `www.memerson.com`                             | Redirect rule vs. second custom domain.                                                                                                                                                                                                         |
+| 4     | RSS scope                                      | Blog only, or blog + photos?                                                                                                                                                                                                                    |
+| 5     | Archive originals in R2, or keep offline only? | **Settled:** done, private archive bucket, 118 originals. Cost is negligible as predicted.                                                                                                                                                      |
+| ~~6~~ | ~~Minecraft stack~~                            | **Closed:** never deployed as a stack. What exists is an instance stopped since 2023-02 plus an orphaned EBS volume and Elastic IP (~$6/mo) — a deletion task, not a decision.                                                                  |
+| 7     | `memerson.net`                                 | **New:** a second Route 53 zone found during the 2026-07-26 AWS inventory. ACM validation records only, no site. Drop it?                                                                                                                       |
+| ~~8~~ | ~~The `coppermind` WASM demo~~                 | **Settled 2026-07-27:** the demo stays on `errorsignal.dev`, along with the other GitHub Pages projects sharing that domain. The redirect lives in the old Astro repo rather than on the zone, so nothing domain-wide can reach these — see §8. |
 
 Items 1 and 2 block the AWS teardown (tracked outside the milestones — see
 CONTEXT.md). The rest do not block anything.
