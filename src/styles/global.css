@@ -123,6 +123,16 @@ img {
   display: block;
 }
 
+/*
+ * The UA stylesheet's `[hidden] { display: none }` loses to any author rule that
+ * sets `display`, so hiding a flex container by setting the attribute silently
+ * does nothing. This is what kept the gallery paginator visible after the
+ * infinite scroll took over.
+ */
+[hidden] {
+  display: none !important;
+}
+
 :focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 3px;
@@ -221,27 +231,30 @@ img {
 .shot {
   position: absolute;
   display: block;
+  opacity: 0;
   border-radius: 2px;
   background: linear-gradient(90deg, transparent, rgba(210, 238, 255, 0.2) 40%, #ffffff);
   box-shadow: 0 0 10px rgba(190, 225, 255, 0.9);
 }
 
 .shot-a {
-  left: 62%;
-  top: 14%;
+  left: 58%;
+  top: 12%;
   width: 150px;
   height: 1.5px;
-  rotate: 19deg;
-  animation: shootA 24s linear infinite;
+  --angle: 19deg;
+  --dist: 820px;
+  animation: shoot 24s linear infinite;
 }
 
 .shot-b {
-  left: 26%;
-  top: 52%;
+  left: 22%;
+  top: 46%;
   width: 110px;
   height: 1px;
-  rotate: 14deg;
-  animation: shootB 37s linear 9s infinite;
+  --angle: 14deg;
+  --dist: 640px;
+  animation: shoot 37s linear 9s infinite;
 }
 
 .scanlines {
@@ -713,49 +726,45 @@ a.sec-aside:hover {
  * also change together at every stop, so the star can never be visible while
  * stationary.
  */
-@keyframes shootA {
+/*
+ * A shooting star is mostly *not* happening: ~96% of the cycle is idle.
+ *
+ * Two things this gets right that the earlier version did not.
+ *
+ * The rotation is folded into the animated `transform` rather than living in a
+ * separate `rotate` property. Individual transform properties are applied
+ * before `transform`, so translating a rotated element moved it along an axis
+ * that was not its own — the tail pointed one way and the star travelled
+ * another. Rotating first and then translating along local X means the star
+ * necessarily moves along its own length, so the tail can never disagree with
+ * the path.
+ *
+ * Timing is linear, with the shaping in the keyframe offsets. Easing is defined
+ * across the whole duration, so a curve applied to a mostly-idle cycle hands the
+ * visible fraction of a second whatever slope it happens to have there — which
+ * is why a star could appear to hang, crawl, or stall.
+ */
+@keyframes shoot {
   0%,
   95.9% {
     opacity: 0;
-    transform: translate3d(0, 0, 0);
-  }
-  96% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
+    transform: rotate(var(--angle)) translate3d(0, 0, 0);
   }
   96.4% {
     opacity: 1;
+    transform: rotate(var(--angle)) translate3d(calc(var(--dist) * 0.12), 0, 0);
   }
   99.4% {
-    opacity: 1;
+    opacity: 0.85;
+    transform: rotate(var(--angle)) translate3d(calc(var(--dist) * 0.88), 0, 0);
   }
   100% {
     opacity: 0;
-    transform: translate3d(760px, 250px, 0);
+    transform: rotate(var(--angle)) translate3d(var(--dist), 0, 0);
   }
 }
 
-@keyframes shootB {
-  0%,
-  97.4% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
-  }
-  97.5% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0);
-  }
-  97.9% {
-    opacity: 1;
-  }
-  99.5% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(560px, 150px, 0);
-  }
-}
+
 
 
 /*
