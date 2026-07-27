@@ -292,11 +292,15 @@ const remaining = Math.max(0, total - shown);
     pointer-events: none;
   }
 
-  /* Sits over the bloom, so it must not be opaque or the bloom is invisible. */
+  /*
+   * The base backdrop. The bloom stacks *above* this, not below — putting the
+   * wash on top drowns the bloom entirely, which is what happened on the first
+   * attempt. Order in the DOM is wash → bloom → vignette, as in the mockup.
+   */
   .lb-wash {
     position: absolute;
     inset: 0;
-    background: rgba(3, 4, 10, 0.72);
+    background: rgba(3, 4, 10, 0.9);
   }
 
   .lb-vignette {
@@ -442,9 +446,43 @@ const remaining = Math.max(0, total - shown);
     padding: 0 30px;
   }
 
-  .lb-foot > div {
+  .lb-foot-inner {
     width: 820px;
     max-width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .lb-thumbs {
+    display: flex;
+    gap: 7px;
+  }
+
+  /* Dim until hovered — the same "one thing lights at a time" rule as the sheet. */
+  .lb-thumb {
+    width: 64px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background-color: var(--ink);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.16s;
+  }
+
+  .lb-thumb:hover {
+    opacity: 1;
+  }
+
+  .lb-thumb[aria-current='true'] {
+    opacity: 1;
+    outline: 1px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 1px;
+    box-shadow: 0 0 18px -4px #fff;
   }
 
   .lb-title {

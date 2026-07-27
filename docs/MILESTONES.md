@@ -129,6 +129,30 @@ in [`design/`](./design/) and the system is documented in [UI-DESIGN.md](./UI-DE
       `--faint` metadata colour are the two things most likely to fail contrast.
 - [ ] Light mode — not designed. The system is committed to a dark surface stack; a light
       variant would be a second design, not a token flip.
+- [ ] **Mockup 6g — the "Redraw" page transition.** The one designed thing not built: a
+      scan line sweeps down, the outgoing page erases above it, the incoming page is
+      already underneath. 380ms. It needs Astro's `<ClientRouter />`, which adds a
+      client-side router to a site that is otherwise plain static navigation — a real
+      architectural change, so it is a decision rather than an oversight. Deferred also
+      because animations are being revised, and building the current version first would
+      likely waste the work.
+
+### Review pass, 2026-07-27
+
+A full re-read of code, docs and mockups against the implementation found four things,
+all now fixed:
+
+- **The lightbox ambient bloom was missing**, then **stacked wrong**. The mockup drives it
+  from a placeholder gradient, so with no real photo behind it the layer read as decoration
+  and was dropped. Restored — and the first restoration put the bloom _under_ the dark
+  wash, which drowned it completely. Order is wash → bloom → vignette.
+- **The lightbox thumbnail strip was missing** (mockup 6b). Added, as a five-wide window
+  around the current photo rather than all 30.
+- **Home preview tiles linked to the raw `.webp`**, stranding visitors on a bare image file
+  with no navigation. The mockup links them to the gallery; they now go to `/photos`.
+- **122 of 133 images shipped with empty `alt`.** The date-fallback existed in
+  `Photo.astro` but `PhotoThumb.astro` had its own copy that fell through to `''`, marking
+  every photograph decorative. Both now share `src/lib/photoAlt.ts`.
 
 **Exit criteria:** the site looks intentional and finished. — **Met on desktop.** The
 remaining three items are scope the mockup never covered, not unfinished work against it.
@@ -161,21 +185,19 @@ locked in during M1.
 
 Two independent pipelines, both writing into the manifest. Neither exists yet.
 
-**1. Derived colour metadata** (mechanical, no model involved).
+**1. Derived colour metadata — probably not needed. Recommend dropping.**
 
-First, a correction to an earlier assumption in this file: **the lightbox's ambient glow
-does not need this.** Signal 4c settles it — _"ambient bloom is a blurred copy of the photo
-itself, so it works on real images."_ The glow is the photograph, blurred and saturated
-behind itself. Nothing samples a palette, so it needs no metadata at all. That is
-implemented as of 2026-07-27.
+Two things resolved this, and both point the same way.
 
-What colour metadata is actually for is the **per-photo accent** — the tile hover glow, the
-lightbox brackets, the counter. And the rule there is a constraint, not a free choice:
+The lightbox's ambient glow **is the photograph**, blurred and saturated behind itself
+(Signal 4c; implemented 2026-07-27). Matthew confirmed he prefers it to any palette-derived
+alternative. So the headline use case for colour metadata no longer exists.
 
-> **The extracted colour must snap to the nearest of the design's existing neons.** Never
-> apply a raw sampled colour.
+That leaves only the per-photo **accent** — the tile hover glow, the lightbox brackets, the
+counter. If that is ever wanted, the rule is a hard constraint, not a free choice:
 
-Both design documents define the same five photo accents:
+> **Any extracted colour must snap to the nearest of the design's five photo accents.**
+> Never apply a raw sampled colour.
 
 | Accent               | Album in the mockups |
 | -------------------- | -------------------- |
@@ -185,29 +207,16 @@ Both design documents define the same five photo accents:
 | `oklch(.80 .13 252)` | AVIATION — blue      |
 | `oklch(.72 .22 332)` | NIGHT — magenta      |
 
-So the job is **classification, not extraction**: compute a dominant hue, then pick the
-closest of these five and store _which one_, not an arbitrary hex.
+The reasoning is §2's: a raw dominant colour off a photograph is usually desaturated, and a
+grey-brown sky sampled literally produces a grey-brown glow that reads as a rendering bug.
+Snapping to a fixed five keeps every accent on-palette by construction. Compare in **oklch
+hue space**, and store the chosen accent rather than a hex — storing a hex invites someone
+to use it directly, which is the failure this rule exists to prevent.
 
-This matters for the same reason §2's ramp locks lightness and chroma. A raw dominant
-colour from a photograph is usually desaturated and muddy — a grey-brown sky sampled
-literally produces a grey-brown glow, which reads as a rendering bug rather than a design.
-Snapping to a fixed five keeps every accent on-palette by construction, no matter what the
-photograph looks like.
-
-Implementation notes:
-
-- Dominant hue via `sharp`'s `.stats()` or a resize-to-tiny-and-quantise pass.
-- Compare in **oklch hue space**, not RGB distance — the palette is defined in oklch and
-  perceptual hue distance is the thing being asked about.
-- Store the chosen accent (or its index). Storing a raw hex invites someone to use it
-  directly later, which is exactly the failure mode this rule exists to prevent.
-- Schema addition to `src/data/photos.json` + `content.config.ts`.
-- **Backfillable without local originals** — this is exactly what the private archive
-  bucket is for. `photos:rebuild` already re-derives from archived originals, so extending
-  it, or adding a `photos:remeta` sibling, backfills all 118 with no downloads from
-  anywhere but R2. It can equally run off the existing 640px derivative.
-- Note this is the same five-way classification an album field would give, so it may
-  overlap with, or be superseded by, the tagging work below.
+But weigh that against what it buys: the accent appears on 1px brackets and a small counter.
+It carries almost no colour information at that size, and the bloom already delivers the
+"this matches the photograph" feeling at full strength. **Recommendation: skip it** unless
+the accent becomes visually prominent in a future design revision.
 
 **2. AI-assisted titles, captions and tags** (Matthew's proposal). Replaces what would
 otherwise be 118 rows of manual data entry:
@@ -230,6 +239,38 @@ Two things to get right:
 - **Tags will be more useful than titles.** A model can reliably say _what is in_ a
   photograph; it cannot know that this was the third pass at the forge or which trip it
   was from. Expect to keep titles sparse and let tags carry the search index.
+
+### Albums: don't add the field
+
+The mockups show five albums. They were invented. Matthew has at most two real ones — a
+Dover trip and the PA Ren Faire — and considers the rest miscellaneous. That is not a
+taxonomy, and a five-album filter row over 118 photos would mostly say "MISC".
+
+**The library is already structured, just not by album — by shoot.** Clustering `takenAt`
+on gaps over 24 hours yields 16 shoots, with no new metadata and no model:
+
+| Photos | Date       | Camera                 |
+| ------ | ---------- | ---------------------- |
+| 32     | 2022-10-29 | Canon EOS R6           |
+| 16     | 2021-08-16 | iPhone 12 Pro + EOS R6 |
+| 14     | 2022-09-04 | Canon EOS R6           |
+| 10     | 2021-11-27 | EOS R6 + iPhone 13 Pro |
+| 10     | 2022-04-15 | Canon EOS R6           |
+| 9      | 2022-05-22 | Canon EOS R6           |
+| 8      | 2017-07-04 | Canon EOS 6D           |
+| 7      | 2022-02-21 | iPhone 13 Pro          |
+
+Eight further shoots are 1–3 photos each. The top eight account for 106 of 118, and the
+32-photo shoot on 2022-10-29 is visibly the Ren Faire.
+
+So: **no `album` field.** Group by shoot, derived at build time from `takenAt`, and let the
+two groupings that deserve names get them from `tags`. This is strictly better than an album
+taxonomy — no schema change, no backfill, no decision about what counts as an album, and it
+stays correct as photos are added. If a grouping needs a name, that is two strings of manual
+input rather than a field every photo has to carry.
+
+This also removes the last reason to want per-photo accent colours: the five accents were
+_per album_, and there are no albums.
 
 **Exit criteria:** gallery stays fast and browsable at 1,000+ photos.
 

@@ -45,8 +45,8 @@ function initLightbox(tiles: HTMLAnchorElement[]) {
   root.setAttribute('aria-label', 'Photo viewer');
 
   root.innerHTML = `
-    <div class="lb-bloom"></div>
     <div class="lb-wash" data-close></div>
+    <div class="lb-bloom"></div>
     <div class="lb-vignette"></div>
     <div class="lb-bar">
       <span class="lb-counter"></span>
@@ -68,9 +68,12 @@ function initLightbox(tiles: HTMLAnchorElement[]) {
       <button type="button" class="lb-nav lb-next" aria-label="Next photo">→</button>
     </div>
     <div class="lb-foot">
-      <div>
-        <div class="lb-title"></div>
-        <div class="lb-meta"><span class="lb-dash"></span><span class="lb-meta-text"></span></div>
+      <div class="lb-foot-inner">
+        <div>
+          <div class="lb-title"></div>
+          <div class="lb-meta"><span class="lb-dash"></span><span class="lb-meta-text"></span></div>
+        </div>
+        <div class="lb-thumbs"></div>
       </div>
     </div>
   `;
@@ -87,10 +90,42 @@ function initLightbox(tiles: HTMLAnchorElement[]) {
     img: q<HTMLImageElement>('.lb-img'),
     title: q<HTMLElement>('.lb-title'),
     meta: q<HTMLElement>('.lb-meta-text'),
+    thumbs: q<HTMLElement>('.lb-thumbs'),
     close: q<HTMLButtonElement>('.lb-close'),
     prev: q<HTMLButtonElement>('.lb-prev'),
     next: q<HTMLButtonElement>('.lb-next'),
   };
+
+  /*
+   * A window of neighbours around the current photo, not the whole page. With
+   * 30 tiles per page a full strip would be unreadable at 64px each; the mockup
+   * shows five. Clamped at both ends so the strip stays a constant width rather
+   * than shrinking near the start or finish of the set.
+   */
+  const THUMB_WINDOW = 5;
+
+  function thumbWindow(centre: number): number[] {
+    const half = Math.floor(THUMB_WINDOW / 2);
+    const total = Math.min(THUMB_WINDOW, slides.length);
+    let start = centre - half;
+    start = Math.max(0, Math.min(start, slides.length - total));
+    return Array.from({ length: total }, (_, k) => start + k);
+  }
+
+  function renderThumbs() {
+    els.thumbs.replaceChildren(
+      ...thumbWindow(index).map((i) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'lb-thumb';
+        button.setAttribute('aria-label', `Photo ${i + 1}`);
+        if (i === index) button.setAttribute('aria-current', 'true');
+        if (slides[i].bloom) button.style.backgroundImage = `url("${slides[i].bloom}")`;
+        button.addEventListener('click', () => show(i));
+        return button;
+      }),
+    );
+  }
 
   function show(i: number) {
     index = (i + slides.length) % slides.length;
@@ -110,6 +145,7 @@ function initLightbox(tiles: HTMLAnchorElement[]) {
     els.counter.textContent = `${String(index + 1).padStart(3, '0')} / ${slides.length}`;
     els.title.textContent = slide.label;
     els.meta.textContent = slide.meta;
+    renderThumbs();
   }
 
   function open(i: number) {

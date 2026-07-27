@@ -1,6 +1,7 @@
 ---
 import { getEntry } from 'astro:content';
 import { PHOTOS_BASE_URL } from '../consts';
+import { photoAlt } from '../lib/photoAlt';
 
 interface Props {
   /** Photo slug from the manifest, e.g. "2022-03-14-a3f9c1b2". */
@@ -28,22 +29,7 @@ if (!photo) {
 const { width, height, variants, formats, lqip } = photo.data;
 const text = caption ?? photo.data.caption;
 
-// No titles or captions exist yet — they get backfilled over time (see
-// docs/ARCHITECTURE.md §6). Until then `alt=""` would mark every gallery image
-// decorative, which is wrong: they are the content. Fall back to the date the
-// manifest already knows rather than shipping 118 unlabelled images.
-const takenAt = photo.data.takenAt;
-const alt =
-  photo.data.title ??
-  text ??
-  (takenAt
-    ? `Photograph taken ${takenAt.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        timeZone: 'UTC',
-      })}`
-    : 'Photograph');
+const alt = photoAlt(photo, caption);
 
 const srcSet = (format: string) =>
   variants.map((w) => `${PHOTOS_BASE_URL}/photos/${id}/${w}.${format} ${w}w`).join(', ');
