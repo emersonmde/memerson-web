@@ -36,21 +36,28 @@ const esc = (s) =>
   );
 
 /**
+ * The stylesheets and inline styles belonging to **one specific page**.
+ *
+ * Per-page, not global, and that is not a detail: Astro emits a separate bundle
+ * per route plus scoped styles in the head, so reusing one page's CSS for
+ * another renders it as unstyled HTML. The first version of this file read the
+ * photos page once and reused it everywhere, which produced a home page card
+ * with no layout at all — caught by screenshotting the output, which is the
+ * only reason to bother screenshotting the output.
+ *
  * Fonts stay as absolute URLs rather than base64. They are public on
  * memerson.com, and inlining 325 KB into every file to save one request is a
  * bad trade when these are read in a browser.
  */
-async function siteCss() {
-  const page = await readFile(path.join(DIST, 'photos/index.html'), 'utf8');
-  const hrefs = [...page.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(
-    (m) => m[1],
-  );
+async function pageCss(relPath) {
+  const page = await readFile(path.join(DIST, relPath), 'utf8');
+  const head = page.match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? page;
 
   let css = '';
-  for (const href of hrefs) css += await readFile(path.join(DIST, href), 'utf8');
-
-  const inline = [...page.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1]);
-  css += inline.join('\n');
+  for (const [, href] of head.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)) {
+    css += await readFile(path.join(DIST, href), 'utf8');
+  }
+  for (const [, block] of page.matchAll(/<style>([\s\S]*?)<\/style>/g)) css += block;
 
   return css.replace(/url\(\/fonts\//g, `url(${SITE}/fonts/`);
 }
@@ -76,6 +83,20 @@ function shell({ title, card, group, subtitle, body, css, note }) {
     font: 400 11px/1.7 var(--mono); color: var(--dim);
   }
   .dc-note b { color: var(--cyan); font-weight: 500; }
+
+  /*
+   * Cards carry no JavaScript, so anything the scroll effects reveal would sit
+   * at its hidden resting state — page titles are opacity .15 under a 13px
+   * blur, which reads as "the heading is missing" rather than "the heading
+   * animates in". These three declarations are the site's own reduced-motion
+   * state, copied verbatim from global.css rather than invented here.
+   */
+  [data-fx='resolve'] {
+    opacity: 1 !important;
+    filter: none !important;
+    letter-spacing: -0.045em !important;
+  }
+  .shot, .redraw { display: none; }
 </style>
 </head>
 <body>
@@ -92,7 +113,7 @@ const stripScripts = (html) =>
     .replace(/<script[\s\S]*?<\/script>/g, '')
     .replace(/<link rel="modulepreload"[^>]*>/g, '');
 
-async function buildSheet(css) {
+async function buildSheet() {
   const page = await readFile(path.join(DIST, 'photos/index.html'), 'utf8');
   const bodyMatch = page.match(/<body[^>]*>([\s\S]*)<\/body>/);
   const body = stripScripts(bodyMatch[1])
@@ -104,7 +125,7 @@ async function buildSheet(css) {
     card: 'Contact sheet',
     group: 'Photos — current',
     subtitle: 'The live /photos page. Real photographs, real captions.',
-    css,
+    css: await pageCss('photos/index.html'),
     note:
       '<b>This is the live page, not a mockup.</b> Real photographs from R2 and real ' +
       'generated captions. Infinite scroll and the lightbox are JavaScript and are not ' +
@@ -116,8 +137,24 @@ async function buildSheet(css) {
 
 /**
  * The lightbox is built at runtime by `gallery.ts`, so saving the page never
- * captures it. This reproduces that subtree open, from the same markup, with a
- * real photograph in it.
+ * captures it. This reproduces that subtree open, from the same markup, with
+ * real photographs — and working prev/next, because a still frame cannot show
+ * whether the bloom transition reads correctly.
+ *
+ * Three corrections were needed to make a card of something designed to own the
+ * whole viewport, and all three were artefacts of this file rather than bugs in
+ * the site:
+ *
+ *  1. `.lb` is `position: fixed; inset: 0`. Dropped into a sized card it
+ *     escaped to the viewport and pushed the page into scrolling. Pinned to
+ *     `absolute` inside a clipping wrapper instead.
+ *  2. `<picture>` is an inline element, so its baseline gap made `.lb-frame`
+ *     taller than the photograph and the bottom brackets sat off the image.
+ *     On the real page the flex stage constrains the frame and it never shows.
+ *  3. The nav buttons were inert. Now wired to a real slide list.
+ *
+ * The overrides live in one clearly-labelled block so nobody mistakes them for
+ * part of the design.
  */
 async function buildLightbox(css, manifest) {
   const photo = manifest.find((entry) => entry.id === LIGHTBOX_SLUG) ?? manifest[0];
@@ -136,29 +173,35 @@ async function buildLightbox(css, manifest) {
     .join(' · ')
     .toUpperCase();
 
-  const window5 = manifest.slice(Math.max(0, index - 2), Math.max(0, index - 2) + 5);
-  const thumbs = window5
-    .map(
-      (entry) =>
-        `<button type="button" class="lb-thumb"${
-          entry.id === photo.id ? ' aria-current="true"' : ''
-        } style="background-image:url('${url(entry.id, 640)}')" aria-label="Photo"></button>`,
-    )
-    .join('');
+  // A run centred on the sample, so prev/next cross a shoot boundary and the
+  // bloom visibly changes colour — which is the thing worth judging.
+  const start = Math.max(0, index - 4);
+  const slides = manifest.slice(start, start + 9).map((entry) => ({
+    src: url(entry.id, 1536),
+    bloom: url(entry.id, 640),
+    alt: entry.caption ?? '',
+    label: entry.takenAt ? entry.takenAt.slice(0, 10).replace(/-/g, '.') : 'UNDATED',
+    meta: [entry.camera, entry.aperture, entry.shutter, entry.iso && `ISO ${entry.iso}`]
+      .filter(Boolean)
+      .join(' · ')
+      .toUpperCase(),
+    n: manifest.indexOf(entry) + 1,
+  }));
 
   const body = `
+<div class="dc-lb-stage">
 <div class="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
   <div class="lb-wash"></div>
-  <div class="lb-bloom" style="background-image:url('${url(photo.id, 640)}')"></div>
+  <div class="lb-bloom"></div>
   <div class="lb-vignette"></div>
   <div class="lb-bar">
-    <span class="lb-counter">${String(index + 1).padStart(3, '0')} / ${manifest.length}</span>
+    <span class="lb-counter"></span>
     <button type="button" class="lb-close">CLOSE ESC ×</button>
   </div>
   <div class="lb-stage">
     <button type="button" class="lb-nav lb-prev" aria-label="Previous photo">←</button>
     <figure class="lb-frame">
-      <picture><img class="lb-img" src="${url(photo.id, 1536)}" alt="${esc(photo.caption ?? '')}"></picture>
+      <picture><img class="lb-img" alt=""></picture>
       <span class="lb-bracket lb-tl"></span><span class="lb-bracket lb-tr"></span>
       <span class="lb-bracket lb-bl"></span><span class="lb-bracket lb-br"></span>
     </figure>
@@ -167,26 +210,101 @@ async function buildLightbox(css, manifest) {
   <div class="lb-foot">
     <div class="lb-foot-inner">
       <div>
-        <div class="lb-title">${label}</div>
-        <div class="lb-meta"><span class="lb-dash"></span><span class="lb-meta-text">${esc(meta)}</span></div>
+        <div class="lb-title"></div>
+        <div class="lb-meta"><span class="lb-dash"></span><span class="lb-meta-text"></span></div>
       </div>
-      <div class="lb-thumbs">${thumbs}</div>
+      <div class="lb-thumbs"></div>
     </div>
   </div>
-</div>`;
+</div>
+</div>
+
+<!-- ==========================================================
+     CARD-ONLY OVERRIDES. Not part of the design.
+     The lightbox owns the whole viewport on the real site; these
+     three rules make it sit inside a card without lying about it.
+     ========================================================== -->
+<style>
+  .dc-lb-stage { position: relative; height: 780px; overflow: hidden; }
+  /* (1) fixed would escape the card and scroll the page */
+  .dc-lb-stage .lb { position: absolute; }
+  /* (2) <picture> is inline; its baseline gap pushed the bottom brackets off */
+  .dc-lb-stage .lb-frame picture { display: block; font-size: 0; }
+  .dc-lb-stage .lb-img { max-height: 560px; }
+</style>
+
+<script>
+  (() => {
+    const slides = ${JSON.stringify(slides)};
+    const total = ${manifest.length};
+    const root = document.querySelector('.lb');
+    const q = (s) => root.querySelector(s);
+    let i = ${index - start};
+
+    function show(next) {
+      i = (next + slides.length) % slides.length;
+      const s = slides[i];
+      q('.lb-img').src = s.src;
+      q('.lb-img').alt = s.alt;
+      q('.lb-bloom').style.backgroundImage = 'url("' + s.bloom + '")';
+      q('.lb-counter').textContent = String(s.n).padStart(3, '0') + ' / ' + total;
+      q('.lb-title').textContent = s.label;
+      q('.lb-meta-text').textContent = s.meta;
+
+      // Five-wide window around the current frame, as on the real site.
+      const from = Math.max(0, Math.min(i - 2, slides.length - 5));
+      q('.lb-thumbs').replaceChildren(...slides.slice(from, from + 5).map((t, k) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'lb-thumb';
+        b.style.backgroundImage = 'url("' + t.bloom + '")';
+        if (from + k === i) b.setAttribute('aria-current', 'true');
+        b.addEventListener('click', () => show(from + k));
+        return b;
+      }));
+    }
+
+    q('.lb-prev').addEventListener('click', () => show(i - 1));
+    q('.lb-next').addEventListener('click', () => show(i + 1));
+    addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(i - 1);
+      if (e.key === 'ArrowRight') show(i + 1);
+    });
+    show(i);
+  })();
+</script>`;
 
   return shell({
     title: 'Lightbox — current implementation',
     card: 'Lightbox',
     group: 'Photos — current',
-    subtitle: 'Rendered open. Ambient bloom is the photograph itself, blurred.',
+    subtitle: 'Live. Arrow keys or the buttons; the bloom is the photograph itself.',
     css,
     note:
       `<b>The design problem, in one card.</b> This photograph has the title ` +
       `"${esc(photo.title ?? '—')}", a caption, ${(photo.tags ?? []).length} tags and ` +
       `belongs to a named shoot — and the lightbox shows none of it. It shows the date ` +
-      `and the camera settings. Everything new needs somewhere to live.`,
-    body: `<div style="position:relative;height:820px">${body}</div>`,
+      `and the camera settings. Everything new needs somewhere to live. ` +
+      `Prev/next work here (${slides.length} frames) so the bloom transition can be judged.`,
+    body,
+  });
+}
+
+/** Any built page, inlined with its own stylesheets and de-scripted. */
+async function buildPage(relPath, { card, group, subtitle, note }) {
+  const page = await readFile(path.join(DIST, relPath), 'utf8');
+  const body = stripScripts(page.match(/<body[^>]*>([\s\S]*)<\/body>/)[1])
+    .replace(/<link rel="stylesheet"[^>]*>/g, '')
+    .replace(/<style>[\s\S]*?<\/style>/g, '');
+
+  return shell({
+    title: card,
+    card,
+    group,
+    subtitle,
+    css: await pageCss(relPath),
+    note,
+    body,
   });
 }
 
@@ -300,7 +418,7 @@ async function buildMetadata(css, manifest, shoots) {
 }
 
 async function main() {
-  const css = await siteCss();
+  const css = await pageCss('photos/index.html');
   const manifest = JSON.parse(
     await readFile(path.join(REPO_ROOT, 'src/data/photos.json'), 'utf8'),
   );
@@ -309,15 +427,47 @@ async function main() {
   );
 
   await rm(OUT, { recursive: true, force: true });
-  await mkdir(path.join(OUT, 'foundations'), { recursive: true });
-  await mkdir(path.join(OUT, 'photos-current'), { recursive: true });
+  for (const dir of ['foundations', 'photos-current', 'pages-current']) {
+    await mkdir(path.join(OUT, dir), { recursive: true });
+  }
+
+  /*
+   * Every page, not just the photo ones. This is the design system for the
+   * whole site, and a redesign of the gallery still has to sit inside the same
+   * nav, footer, type scale and sky. Components Claude Design cannot see are
+   * components it cannot keep you consistent with.
+   */
+  const pages = [
+    ['index.html', 'Home', 'The rail, the plates, the star field.'],
+    ['about/index.html', 'About', 'Long-form layout and the CV treatment.'],
+    ['blog/index.html', 'Log index', 'The post list.'],
+    [
+      'blog/a-brave-neo-world/index.html',
+      'Log post',
+      'Prose: the serif, code blocks, headings.',
+    ],
+    ['404.html', 'Not found', ''],
+  ];
 
   const files = {
     'foundations/tokens.html': await buildTokens(css),
-    'photos-current/contact-sheet.html': await buildSheet(css),
+    'photos-current/contact-sheet.html': await buildSheet(),
     'photos-current/lightbox.html': await buildLightbox(css, manifest),
     'photos-current/metadata.html': await buildMetadata(css, manifest, shoots),
   };
+
+  for (const [rel, card, subtitle] of pages) {
+    files[`pages-current/${card.toLowerCase().replace(/\s+/g, '-')}.html`] =
+      await buildPage(rel, {
+        card,
+        group: 'Pages — current',
+        subtitle,
+        note:
+          '<b>The live page as built.</b> Scroll-driven effects and page transitions ' +
+          'are JavaScript and are inert here, so anything that animates in is shown ' +
+          'in its resting state.',
+      });
+  }
 
   for (const [name, html] of Object.entries(files)) {
     await writeFile(path.join(OUT, name), html, 'utf8');
