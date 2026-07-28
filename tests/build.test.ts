@@ -207,20 +207,40 @@ describe('gallery', () => {
     assert.match(html, /<source type="image\/webp" srcset="[^"]*640\.webp 640w/);
   });
 
-  test('home previews link to the gallery, gallery tiles link to the image', () => {
+  test('home previews deep-link to their own frame in the gallery', () => {
     /*
      * Regression: home previews linked to the raw .webp, stranding visitors on
-     * a bare image file. The gallery keeps the image href on purpose — the
-     * viewer intercepts it, and no-JS still gets the photograph.
+     * a bare image file. They then linked to `/photos`, which answered "show me
+     * this photograph" with the top of a 118-frame page. The fragment is a real
+     * element id on the gallery tile, so it works with or without the script.
+     *
+     * The gallery tile keeps the image href on purpose — the viewer intercepts
+     * it, and no-JS still gets the photograph.
      */
     const home = pages.find((p) => rel(p.file) === 'index.html')!;
+    const anchors: string[] = [];
     for (const tag of home.html.match(/<a class="tile"[^>]*>/g) ?? []) {
+      const href = /href="([^"]*)"/.exec(tag)?.[1] ?? '';
       assert.match(
-        tag,
-        /href="\/photos"/,
-        `home tile points at a bare file: ${tag.slice(0, 80)}`,
+        href,
+        /^\/photos#f-/,
+        `home tile does not deep-link: ${tag.slice(0, 80)}`,
       );
+      anchors.push(href.slice('/photos#'.length));
     }
+    assert.ok(anchors.length > 0, 'no home previews');
+
+    const ids = new Set(
+      // `\sid=` and not `id=`: the tile also carries `data-id`, and a greedy
+      // match happily lands on that one instead.
+      [...gallery().html.matchAll(/<a class="px-tile"[^>]*\sid="([^"]+)"/g)].map(
+        (m) => m[1],
+      ),
+    );
+    for (const anchor of anchors) {
+      assert.ok(ids.has(anchor), `home links to a frame the gallery lacks: ${anchor}`);
+    }
+
     const first = /<a class="px-tile"[^>]*>/.exec(gallery().html)![0];
     assert.match(first, /href="https:\/\/photos\.memerson\.com/);
   });

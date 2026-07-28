@@ -152,17 +152,33 @@ already-masked child, so the glow follows the charge and stops where it stops.
 kindle because the charge arrived. The two only agree while the charge runs at exactly
 scroll speed, which it no longer does.
 
+**`.rail-live` must never be given a `bottom`.** It is `inset: 0` inside `.rail-glow`, so it
+already inherits whatever height the glow has. Naming it alongside `.rail-track` and
+`.rail-glow` in a rule that sets `bottom` re-applies that offset _relative to the glow_ and
+silently shortens the lit rail by exactly that much. The base rule gets away with listing it
+only because `inset: 0` comes later in source order; a media query does not, which is how
+the mobile pass left the charge ending 70px above its terminal on a phone — at every scroll
+position, which is why it looked like a scroll bug and was not one.
+
 **Measure and paint are separate passes, and scrolling only paints.** This is the whole
 performance story on a phone. `measure()` reads the DOM — rail box, node offsets, node hues
 — and runs on load, resize, plate toggle, font load, and once after a scroll settles.
-`paint()` runs every frame while scrolling and reads _nothing_: positions come from cached
-document-relative offsets minus `scrollY`.
+`paint()` runs every frame while scrolling and is strictly read-then-write: it takes a
+handful of rects up front and does not read again once it has started writing.
+
+**Cache offsets, never positions.** An intermediate version cached each element's
+document-relative top and derived its viewport top as `docTop - scrollY`. That is only sound
+while the two agree, and on iOS they do not — a collapsing toolbar moves the layout viewport,
+so a `measure()` landing mid-transition stores an offset wrong by the height of the toolbar,
+and every frame after it inherits the error. Positions are read live; only offsets _within
+the rail_ are cached. The win survives, because the win was never the number of reads — it
+was that they no longer interleave with writes.
 
 The first version interleaved the two, calling `getBoundingClientRect()` on each of the
 eleven nodes inside the same loop that wrote their styles — so every node forced a
 synchronous layout against the writes from the node before it. Node offsets along the rail
 do not change when you scroll, only when the page reflows, so caching them made the scroll
-path write-only. Measured over a 90-frame flick down the home page at 6× CPU throttle,
+path cheap. Measured over a 90-frame flick down the home page at 6× CPU throttle,
 main-thread script time fell from **46.8ms to ~9.5ms** and style recalcs from 447 to ~296.
 Two smaller things came out of the same pass: the head moves by `transform` rather than
 `top`, and a node or a heading whose value has not visibly changed is not written at all —
@@ -363,12 +379,19 @@ The scroll effects are JavaScript, and a phone is where that shows. Everything a
 `measure()` / `paint()` in §5.3 is a mobile fix first. Two things are still true and worth
 knowing before reaching for more:
 
-- **Scroll-driven CSS animations would not help here.** They composite `transform` and
-  `opacity` off the main thread, and the rail's reveal is a `mask-image` gradient stop —
-  recomputed on the main thread whichever way it is driven. The nodes also need the
-  measured geometry that produces their hues. Safari 26 supports `animation-timeline`
-  (threaded in 26.4), so this is worth revisiting if the reveal is ever reformulated as a
-  transform, but it is not a drop-in replacement.
+- **Double-tap-to-zoom has to be opted out of.** iOS reserves a second tap within ~300ms on
+  any element for zoom, and stepping through photographs is exactly the gesture that produces
+  fast repeat taps — so the viewer's next button zoomed the page instead of advancing.
+  `touch-action: manipulation` on buttons, links, summaries and labels opts those elements out
+  while leaving pinch zoom and page-level zoom alone.
+
+**Scroll-driven CSS animations would not help here.** They composite `transform` and
+`opacity` off the main thread, and the rail's reveal is a `mask-image` gradient stop —
+recomputed on the main thread whichever way it is driven. The nodes also need the
+measured geometry that produces their hues. Safari 26 supports `animation-timeline`
+(threaded in 26.4), so this is worth revisiting if the reveal is ever reformulated as a
+transform, but it is not a drop-in replacement.
+
 - **Some lag during momentum scrolling is inherent**, because Safari composites the scroll
   on another thread while the effect is computed on this one. The work above removes the
   jank we were causing; it cannot remove that.
@@ -458,17 +481,39 @@ view whose argument is that the photograph should own the width. The run header 
 sticky slot, because it is the one piece of chrome answering a question you have
 continuously while scrolling. Pinned chrome drops to ~102px.
 
-**The photograph arrives in one piece.** The viewer used to land in three events: an
-unsized image laying out wherever it fell, a jump as its intrinsic size arrived, then the
-bloom fading in behind it. Two of those were avoidable. The frame is sized from the
-manifest's aspect ratio before anything is requested, and both the frame and the bloom paint
-from the tile's **LQIP** — a ~200-byte data URI already in the document. The full image then
-resolves over it on `decode()`, which is the same blur-to-sharp the headings and the tiles
-already use, so the one remaining transition is a design element rather than a symptom.
+**The photograph arrives in one piece — from the copy already on screen.** The viewer used
+to land in three events: an unsized image laying out wherever it fell, a jump as its
+intrinsic size arrived, then the bloom appearing behind it.
 
-The bloom now _never_ fetches anything: it is blurred to 70px, and a 16px source blurred to
-70px is indistinguishable from a 640px one blurred to 70px. It had been downloading a real
-derivative in order to throw all of it away.
+The fix is that there is already a decoded copy of the photograph on the page: the tile you
+tapped. `tileImg.currentSrc` is the exact URL the browser chose for it, so it is in cache,
+needs no decode, and is _sharp_. The frame takes it, the bloom takes the same URL, and the
+frame's size comes from the manifest aspect ratio before either — so the whole viewer is
+formed within one frame of the tap.
+
+Two earlier attempts were worse and are recorded so they are not retried. The raw 2560
+derivative meant a visible wait. The **LQIP** removed the wait and replaced it with a
+blur-to-sharp reveal, which turned a loading artefact into a _slower_ one even though it
+matched the site's resolve motion. A larger derivative is requested only afterwards, by
+handing the `<img>` a `srcset`: an image already displaying something swaps silently when
+the new candidate is ready. The LQIP survives as a floor behind the frame, for the one case
+the cache cannot cover — a tile whose own image has not loaded.
+
+The viewer's `<picture>` was removed for this. A `<source>` would override the cached URL,
+which is the whole point of the sequence.
+
+**The FLIP is a pointer gesture.** The frame growing out of the tile you clicked is the one
+flashy moment in the design, and on a phone it backfires: in a single-column scroll the tile
+can be anywhere, so the frame flies up from the bottom of the screen and reads as the layout
+settling late rather than as a connection between the two — it was in fact mistaken for
+exactly that. Disabled below 720px and on `hover: none`; kept on a pointer device, where the
+tile is small, near the cursor, and the move still says where to look when you close again.
+
+**The home page deep-links into the viewer.** A preview tile there links to
+`/photos#f-<slug>`, which is a real element id on the gallery tile: with the script running
+it opens the viewer on that frame, and without it the browser still scrolls to the right
+photograph. Answering "show me this one" with the top of a 118-frame page was the wrong
+answer.
 
 **The rail folds into a sheet.** Its job — _where am I, what else is here_ — moves into a
 SHOOTS button that opens a full-screen list at 56px a row. The sticky run header still

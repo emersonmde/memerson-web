@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PhotoTile from '../../components/PhotoTile.astro';
 import { groupIntoRuns, type ShootRecord } from '../../lib/runs';
+import { hueForIndex } from '../../lib/ramp';
 import shootsData from '../../data/shoots.json';
 
 /**
@@ -177,7 +178,7 @@ const EAGER = 8;
           <p class="px-empty" data-empty hidden />
 
           <div data-sheet data-layout="runs">
-            {runs.map((run) => (
+            {runs.map((run, runIndex) => (
               <section class="px-run" id={run.key} data-run data-shoot={run.key}>
                 <div class:list={['px-run-head', run.stray && 'is-stray']}>
                   <span class="px-run-date">
@@ -229,6 +230,7 @@ const EAGER = 8;
                       photo={photo}
                       shootName={shootNameOf(photo.data.shoot)}
                       series={shoots[photo.data.shoot ?? '']?.series ?? null}
+                      accent={run.stray ? null : hueForIndex(runIndex, runs.length)}
                       loading={rendered++ < EAGER ? 'eager' : 'lazy'}
                     />
                   ))}
@@ -319,19 +321,11 @@ const EAGER = 8;
         >←</button
       >
       <figure class="lb-frame">
-        <picture>
-          <source
-            class="lb-avif"
-            type="image/avif"
-            sizes="(max-width: 720px) 96vw, 900px"
-          />
-          <source
-            class="lb-webp"
-            type="image/webp"
-            sizes="(max-width: 720px) 96vw, 900px"
-          />
-          <img class="lb-img" alt="" />
-        </picture>
+        {
+          /* No <picture>: a <source> would override the cached URL the script
+            paints first, which is the whole point of the sequence. */
+        }
+        <img class="lb-img" alt="" />
         <span class="lb-bracket lb-tl"></span>
         <span class="lb-bracket lb-tr"></span>
         <span class="lb-bracket lb-bl"></span>
@@ -1265,12 +1259,6 @@ const EAGER = 8;
     width: auto;
     height: auto;
     object-fit: contain;
-    opacity: 0;
-    transition: opacity 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-
-  .lb-img.is-in {
-    opacity: 1;
   }
 
   /*
@@ -1286,18 +1274,23 @@ const EAGER = 8;
    * Sampling a colour from the photo is not an option either — "the wash behind
    * a photo *is* the photo, nothing samples a palette" is a rule of the design.
    *
-   * So: neutral light, which is the one value that cannot clash, and which the
-   * viewer already uses for its active states (the current thumbnail's outline
-   * and the close button's hover are both white). The shadow keeps them legible
-   * on a bright frame.
+   * The answer is the ramp, sampled per *outing* rather than fixed. Lightness
+   * and chroma are locked across it and only hue moves, so no sample can be
+   * louder than another — and the mark then carries the same meaning the
+   * mockup's album accents were reaching for: this frame is part of something,
+   * and the colour says which. A stray frame belongs to no outing and keeps the
+   * default cyan. The drop shadow keeps any of them legible on a bright corner.
    */
+  .lb-frame {
+    --bk: var(--cyan);
+  }
+
   .lb-bracket {
     position: absolute;
     width: 18px;
     height: 18px;
     pointer-events: none;
-    --bk: rgba(244, 247, 253, 0.92);
-    filter: drop-shadow(0 0 3px rgba(3, 4, 10, 0.55));
+    filter: drop-shadow(0 0 3px rgba(3, 4, 10, 0.7));
   }
 
   .lb-tl {

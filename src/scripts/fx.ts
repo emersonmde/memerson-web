@@ -7,18 +7,29 @@
  *
  * Split into two passes, which is the whole performance story on a phone.
  *
- *   measure()  reads the DOM. Runs on load, resize, plate toggle, font load,
- *              and once after scrolling settles. Never during a scroll.
- *   paint()    writes the DOM. Runs every animation frame while scrolling and
- *              reads *nothing*.
+ *   measure()  caches what only changes on reflow: which elements exist, each
+ *              node's offset *along the rail*, and the hue sampled there.
+ *   paint()    runs every animation frame while scrolling, and is strictly
+ *              read-then-write: it takes a handful of rects up front and does
+ *              not read again once it has started writing.
  *
  * The first version interleaved the two: it called `getBoundingClientRect()` on
  * each of the eleven rail nodes inside the same loop that wrote their styles, so
  * every node forced a synchronous layout against the writes from the node
  * before it — eleven full layouts per frame, on the main thread, while iOS was
- * already busy compositing a momentum scroll. Node offsets along the rail do not
- * change when you scroll, only when the page reflows, so they are cached and the
- * scroll path became write-only.
+ * already busy compositing a momentum scroll.
+ *
+ * The second version went too far and cached *positions* too, deriving each
+ * element's viewport top from a stored document offset minus `scrollY`. That is
+ * only sound while the two agree, and on iOS they do not: a collapsing toolbar
+ * moves the layout viewport, so a `measure()` that lands mid-transition stores
+ * an offset that is wrong by the height of the toolbar — and every frame after
+ * it inherits that error. The visible symptom was the rail charge freezing a
+ * fixed distance short of its terminal and staying there.
+ *
+ * So positions are read live and only *offsets within the rail* are cached. The
+ * win survives, because the win was never the number of reads — it was that
+ * they no longer interleave with writes.
  */
 
 import { chargeDistance, chargeOf, clamp01, nodeLit } from '../lib/rail';
@@ -51,17 +62,18 @@ interface RailScene {
   rail: HTMLElement;
   head: HTMLElement | null;
   terminal: HTMLElement | null;
-  /** Document-relative top, so the viewport-relative top is a subtraction. */
-  docTop: number;
-  height: number;
   nodes: RailNode[];
+  /** Filled by paint()'s read phase, consumed by its write phase. */
+  top: number;
+  height: number;
   cg: number;
 }
 
 interface FxNode {
   el: HTMLElement;
   kind: string;
-  docTop: number;
+  /** Filled by paint()'s read phase; unused by the scroll-only kinds. */
+  top: number;
   /** Last written progress. `resolve` and `tilt` stop writing once settled. */
   last: number;
 }
@@ -72,8 +84,6 @@ let fx: FxNode[] = [];
 /* ------------------------------------------------------------------ measure */
 
 function measure() {
-  const scrollY = window.scrollY;
-
   rails = [];
   for (const scope of document.querySelectorAll<HTMLElement>('[data-rail-scope]')) {
     const rail = scope.querySelector<HTMLElement>('[data-fx="rail"]');
@@ -110,9 +120,9 @@ function measure() {
       rail,
       head: scope.querySelector<HTMLElement>('[data-fx="head"]'),
       terminal: scope.querySelector<HTMLElement>('[data-fx="terminal"]'),
-      docTop: railBox.top + scrollY,
-      height: railBox.height,
       nodes,
+      top: railBox.top,
+      height: railBox.height,
       cg: -1,
     });
   }
@@ -122,21 +132,7 @@ function measure() {
     const kind = el.dataset.fx!;
     if (kind === 'rail' || kind === 'head' || kind === 'terminal') continue;
 
-    // These are driven by scrollY alone and never read their own box.
-    if (kind === 'haze' || kind === 'shaft' || kind === 'progress') {
-      fx.push({ el, kind, docTop: 0, last: NaN });
-      continue;
-    }
-
-    /*
-     * The footer floor carries the transform this pass writes, and a rect is
-     * reported *after* transforms — so measuring it while tilted would feed the
-     * effect back into its own input. Clear, measure, and let paint() set it
-     * again in the same frame; nothing is painted in between.
-     */
-    if (kind === 'tilt') el.style.transform = '';
-
-    fx.push({ el, kind, docTop: el.getBoundingClientRect().top + scrollY, last: NaN });
+    fx.push({ el, kind, top: 0, last: NaN });
   }
 }
 
@@ -146,8 +142,26 @@ function paint() {
   const vh = window.innerHeight;
   const scrollY = window.scrollY;
 
+  /*
+   * Read phase. Every rect this frame needs, taken before a single style is
+   * written — so the layout they force (if any) happens once, not once per
+   * element. This is the whole trick; the count of reads barely matters.
+   */
   for (const scene of rails) {
-    const cg = chargeOf(scene.docTop - scrollY, scene.height, vh);
+    const box = scene.rail.getBoundingClientRect();
+    scene.top = box.top;
+    scene.height = box.height;
+  }
+  for (const node of fx) {
+    // The parallax layers and the progress bar are functions of scrollY alone.
+    if (node.kind === 'resolve' || node.kind === 'tilt') {
+      node.top = node.el.getBoundingClientRect().top;
+    }
+  }
+
+  /* Write phase. Nothing below reads layout. */
+  for (const scene of rails) {
+    const cg = chargeOf(scene.top, scene.height, vh);
 
     if (Math.abs(cg - scene.cg) > 0.0004) {
       scene.cg = cg;
@@ -198,7 +212,7 @@ function paint() {
       }
     }
 
-    const p = clamp01((vh - (node.docTop - scrollY) - vh * 0.12) / (vh * 0.55));
+    const p = clamp01((vh - node.top - vh * 0.12) / (vh * 0.55));
     // A resolved heading is the common case on a long scroll. Writing
     // letter-spacing costs a layout, so a settled node writes nothing at all.
     if (Math.abs(p - node.last) < 0.002) continue;

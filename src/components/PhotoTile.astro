@@ -25,10 +25,22 @@ interface Props {
   shootName?: string | null;
   /** The thread joining recurring outings. Filterable, so it lives on the tile. */
   series?: string | null;
+  /**
+   * The outing's point on the accent ramp. The viewer's crop marks take it, so
+   * the frame is marked in the colour of the thing it belongs to. Null for a
+   * stray frame, which belongs to nothing and keeps the default cyan.
+   */
+  accent?: string | null;
   loading?: 'lazy' | 'eager';
 }
 
-const { photo, shootName = null, series = null, loading = 'lazy' } = Astro.props;
+const {
+  photo,
+  shootName = null,
+  series = null,
+  accent = null,
+  loading = 'lazy',
+} = Astro.props;
 const { id, variants, formats, lqip, aspectRatio, takenAt } = photo.data;
 
 const srcSet = (format: string) =>
@@ -73,6 +85,14 @@ const capMeta = [shootName?.toUpperCase(), date].filter(Boolean).join(' · ');
 
 const alt = photoAlt(photo);
 
+/*
+ * The home page's preview strip links to `/photos#f-<slug>`. With the script
+ * running that opens the viewer on this frame; without it, the fragment still
+ * scrolls the gallery to the right photograph, which is the whole reason it is
+ * an id rather than a query parameter.
+ */
+const anchor = `f-${id}`;
+
 /** Capture data, behind `i` in the lightbox. Never shown by default. */
 const capture = [
   ['BODY', photo.data.camera],
@@ -87,7 +107,10 @@ const capture = [
 <a
   class="px-tile"
   href={full}
+  id={anchor}
   data-tile
+  data-id={id}
+  data-accent={accent ?? undefined}
   data-alt={alt}
   data-title={title}
   data-shoot-name={shootName ?? undefined}

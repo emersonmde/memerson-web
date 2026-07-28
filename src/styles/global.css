@@ -157,6 +157,21 @@ img {
   outline-offset: 3px;
 }
 
+/*
+ * iOS reserves a double tap on any element for zoom, which means a second tap
+ * on the viewer's next button within ~300ms zooms the page instead of advancing
+ * — and stepping through photographs is exactly the gesture that produces fast
+ * repeat taps. `manipulation` opts these elements out of double-tap-to-zoom
+ * while leaving pinch zoom, and page-level zoom everywhere else, untouched.
+ */
+button,
+a,
+summary,
+label,
+[role='button'] {
+  touch-action: manipulation;
+}
+
 /* Skip link — the nav is sticky and the star field is inert, so keyboard users
    need a way past both. */
 .skip {

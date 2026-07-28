@@ -189,7 +189,7 @@ const isoDate = (d: Date | null) =>
             sizes="170px"
             label={isoDate(photo.data.takenAt)}
             meta={photoMeta(photo)}
-            href="/photos"
+            href={`/photos#f-${photo.id}`}
           />
         ))
       }
@@ -1014,9 +1014,18 @@ const isoDate = (d: Date | null) =>
       width: 22px;
     }
 
+    /*
+     * `.rail-live` is deliberately absent from this list.
+     *
+     * It is `inset: 0` inside `.rail-glow`, so it already inherits whatever
+     * height the glow has. Naming it here re-applies `bottom` *relative to the
+     * glow* and shortens the lit rail by exactly this much — which is what made
+     * the charge appear to stop 70px above its terminal on a phone no matter
+     * how far you scrolled. The base rule gets away with listing it only
+     * because `inset: 0` comes after it in source order; a media query does not.
+     */
     .rail-track,
-    .rail-glow,
-    .rail-live {
+    .rail-glow {
       bottom: 70px;
     }
 

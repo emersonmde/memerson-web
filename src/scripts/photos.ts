@@ -432,9 +432,10 @@ function init() {
   }
 
   const lbImg = q<HTMLImageElement>('.lb-img');
-  const lbAvif = q<HTMLSourceElement>('.lb-avif');
-  const lbWebp = q<HTMLSourceElement>('.lb-webp');
   const lbExif = q<HTMLElement>('[data-lb-exif]');
+
+  /** What the frame can occupy, for the upgrade pass's source selection. */
+  const VIEWER_SIZES = '(max-width: 720px) 96vw, 900px';
 
   let cursor = -1;
   let exifOpen = false;
@@ -465,59 +466,63 @@ function init() {
     const tile = list[cursor];
     const token = ++epoch;
 
-    const sources = tile.querySelectorAll<HTMLSourceElement>('source');
-    const pick = (type: string) =>
-      Array.from(sources).find((s) => s.type === type)?.srcset;
-
-    for (const [el, type] of [
-      [lbAvif, 'image/avif'],
-      [lbWebp, 'image/webp'],
-    ] as const) {
-      const set = pick(type);
-      if (!el) continue;
-      if (set) el.srcset = set;
-      else el.removeAttribute('srcset');
-    }
-
     /*
-     * Everything that can appear immediately, does — in this order, all in one
-     * frame, before a single byte is requested.
+     * The whole viewer paints in the frame the tile was tapped in.
      *
-     * The viewer used to arrive in three stages: an unsized image laid out
-     * wherever it fell, then a jump as its intrinsic size landed, then the
-     * bloom fading in behind it. Two of those were avoidable. The frame's size
-     * comes from the manifest aspect ratio, and both the frame and the bloom
-     * are painted from the tile's LQIP — a ~200-byte data URI already in the
-     * document, so it costs no request at all.
+     * The trick is that there is already a decoded copy of this photograph on
+     * screen — the tile itself. `currentSrc` is the exact URL the browser chose
+     * for it, so it is in cache and needs no decode; assigning it is the one
+     * thing that is genuinely instant *and* sharp. Two earlier attempts were
+     * worse: the raw 2560 derivative meant a visible wait, and the LQIP meant a
+     * blur-to-sharp reveal, which turned a loading artefact into a slower
+     * loading artefact.
      *
-     * The bloom in particular never needs anything better: it is blurred to
-     * 70px, and a 16px source blurred to 70px is indistinguishable from a 640px
-     * one blurred to 70px. It was fetching a real derivative to throw all of it
-     * away.
+     * The bloom takes the same URL rather than a second file, so the background
+     * can never arrive after the photograph.
+     *
+     * The frame's size comes from the manifest aspect ratio, set before any of
+     * this, so nothing moves once it is on screen.
      */
-    const lqip = tile.dataset.lqip;
+    const tileImg = tile.querySelector('img');
+    const cached = tileImg?.currentSrc || tileImg?.src || tile.href;
     const frame = q<HTMLElement>('.lb-frame');
 
-    lbImg.classList.remove('is-in');
     lbImg.alt = tile.dataset.alt || '';
     lbImg.style.aspectRatio = tile.style.getPropertyValue('--ar');
-    if (frame) frame.style.backgroundImage = lqip ? `url("${lqip}")` : '';
+    lbImg.removeAttribute('srcset');
+    lbImg.src = cached;
     sizeFrame();
 
+    if (frame) {
+      // A floor under the image for the one case the cache cannot cover: a tile
+      // whose own image has not loaded yet.
+      frame.style.backgroundImage = tile.dataset.lqip
+        ? `url("${tile.dataset.lqip}")`
+        : '';
+      frame.style.setProperty('--bk', tile.dataset.accent || 'var(--cyan)');
+    }
+
     const bloom = q<HTMLElement>('.lb-bloom');
-    if (bloom) bloom.style.backgroundImage = lqip ? `url("${lqip}")` : '';
+    if (bloom) bloom.style.backgroundImage = `url("${cached}")`;
 
     /*
-     * Then the photograph resolves over the placeholder once it can be painted
-     * without jank. `decode()` is what makes it one event rather than a
-     * progressive top-to-bottom reveal; the catch covers a decode failure, where
-     * showing whatever loaded beats showing nothing forever.
+     * Only then, and only if the frame can show more than the tile did, ask for
+     * a larger derivative. Handing `srcset` to an <img> that is already
+     * displaying something swaps it silently when the new one is ready — there
+     * is no blank frame and nothing moves, because the aspect ratio is fixed.
      */
-    lbImg.src = tile.href;
-    const settle = () => {
-      if (token === epoch) lbImg.classList.add('is-in');
-    };
-    lbImg.decode().then(settle, settle);
+    const chosen = cached.endsWith('.avif') ? 'image/avif' : 'image/webp';
+    const set = Array.from(tile.querySelectorAll<HTMLSourceElement>('source')).find(
+      (el) => el.type === chosen,
+    )?.srcset;
+
+    if (set) {
+      requestAnimationFrame(() => {
+        if (token !== epoch) return;
+        lbImg.sizes = VIEWER_SIZES;
+        lbImg.srcset = set;
+      });
+    }
 
     setText('.lb-counter', `${pad(cursor + 1)} / ${list.length}`);
     setText('.lb-title', tile.dataset.title || '');
@@ -639,6 +644,15 @@ function init() {
    */
   function flip(from: HTMLAnchorElement) {
     if (REDUCED.matches) return;
+    /*
+     * Desktop only. On a phone the tile you tapped can be anywhere on a
+     * single-column scroll, so the frame flies in from the bottom of the screen
+     * and reads as the layout settling late rather than as a connection between
+     * the two — which is exactly the "it loads at the bottom then shifts up"
+     * this was mistaken for. The pointer case keeps it: there the tile is small,
+     * near the cursor, and the move says where to look when you close again.
+     */
+    if (matchMedia('(hover: none), (max-width: 720px)').matches) return;
     const frame = q<HTMLElement>('.lb-frame');
     if (!frame?.animate) return;
     requestAnimationFrame(() => {
@@ -679,6 +693,10 @@ function init() {
     lb.hidden = true;
     toggleExif(false);
     document.body.style.overflow = '';
+    // Drop the deep-link fragment, or Back into this page reopens the viewer.
+    if (location.hash.startsWith('#f-')) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
     if (lastFocused?.isConnected) lastFocused.focus({ preventScroll: true });
   }
 
@@ -798,6 +816,26 @@ function init() {
   syncBar();
   applyFilter();
   applyLayout();
+
+  /*
+   * `/photos#f-<slug>` opens the viewer on that frame. This is what the home
+   * page's preview strip links to: tapping a photograph there should land you
+   * on that photograph, not on the top of a 118-frame page with no idea which
+   * one you asked for. The fragment is a real element id, so with no script the
+   * browser still scrolls to it.
+   */
+  function openFromHash() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id.startsWith('f-')) return;
+    const target = tiles.find((t) => t.id === id);
+    if (!target || target.hidden) return;
+    // After the browser's own scroll-to-fragment, so the close animation and
+    // the restored focus both land on a tile that is actually in view.
+    requestAnimationFrame(() => open(visible().indexOf(target), target));
+  }
+
+  openFromHash();
+  on(window, 'hashchange', openFromHash);
 
   document.addEventListener(
     'astro:before-swap',
