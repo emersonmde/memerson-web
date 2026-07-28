@@ -184,6 +184,14 @@ Two smaller things came out of the same pass: the head moves by `transform` rath
 `top`, and a node or a heading whose value has not visibly changed is not written at all —
 which matters most for `letter-spacing`, since writing it costs a layout.
 
+**The charge is the only clock.** `nodeLit()` already kindles a node gradually, over a 40px
+ramp of charge travel — so a CSS `transition` on the same properties is a _second_,
+independent smoothing with its own timing. At reading speed the two are indistinguishable.
+On a fast flick, and especially on reversing direction, the mask has no transition and snaps
+to the new charge while the nodes ease toward it over 180ms, so the offshoots visibly trail
+the line that is supposed to be lighting them. `.node` and `.offshoot` therefore carry no
+transition on anything `fx.ts` drives.
+
 **There is a guaranteed final frame.** iOS can drop the last `rAF` of a momentum scroll, and
 since `paint()` is the only thing that advances the charge, the rail simply stayed wherever
 the last frame it did run left it — the visible symptom was the charge stopping short of the
@@ -394,7 +402,15 @@ transform, but it is not a drop-in replacement.
 
 - **Some lag during momentum scrolling is inherent**, because Safari composites the scroll
   on another thread while the effect is computed on this one. The work above removes the
-  jank we were causing; it cannot remove that.
+  jank we were causing; it cannot remove that. Two things were checked before concluding
+  this, and both are worth re-checking before anyone assumes a regression: the head and the
+  charge front agree to the pixel at every scroll position (they are computed from one `cg`
+  in one block), and the settled state after a fast scroll down-then-up is identical to the
+  same position reached slowly.
+- **The hue shift along the rail is the ramp, not a seam.** Sodium at the top through cyan to
+  violet at the end means any two adjacent plates differ slightly in hue, and a band of
+  yellow-green above a band of cyan can read as a discontinuity when it is just the gradient
+  passing through 120°.
 
 ### The decisions worth knowing
 

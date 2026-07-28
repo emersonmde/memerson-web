@@ -582,9 +582,17 @@ const isoDate = (d: Date | null) =>
     opacity: 0.12;
     background: var(--h);
     z-index: 1;
-    transition:
-      opacity 0.18s ease,
-      box-shadow 0.18s ease;
+    /*
+     * No transition on the driven properties.
+     *
+     * `nodeLit()` already kindles a node gradually — over a 40px ramp of charge
+     * travel — so a CSS transition on top of it is a *second*, independent
+     * smoothing with its own clock. At reading speed the two are
+     * indistinguishable. On a fast flick, and especially when reversing
+     * direction, the mask has no transition and snaps to the new charge while
+     * the nodes ease toward it over 180ms, so the offshoots visibly trail the
+     * line they are supposed to be lit by. The charge is the only clock.
+     */
   }
 
   .offshoot {
@@ -595,7 +603,7 @@ const isoDate = (d: Date | null) =>
     height: 1px;
     opacity: 0.15;
     background: linear-gradient(90deg, var(--h), transparent);
-    transition: opacity 0.18s ease;
+    /* Same reason as `.node` above: the ramp is the smoothing. */
   }
 
   /* Plates are <details> so they open with no JS at all. */
