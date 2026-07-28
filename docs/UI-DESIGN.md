@@ -143,10 +143,21 @@ rail) falls out of the geometry and self-adjusts as projects are added, instead 
 constant that silently decays. Covered by `tests/rail.test.ts` across rail lengths from
 400px to 9000px.
 
-**The glow lives on a wrapper, not on the masked rail.** A mask paints only within the
-element's box and a `box-shadow` is drawn outside it, so the shadow was clipped to a 3px
-column and vanished past the charge front. A filter on the parent applies to the
-already-masked child, so the glow follows the charge and stops where it stops.
+**The mask lives on the wrapper, and the glow is painted, not filtered.** A mask paints only
+within the element's box and a `box-shadow` is drawn outside it, so a shadow on the rail
+itself was clipped to a 3px column and vanished past the charge front. The first fix was two
+`drop-shadow()` filters on the wrapper — correct in principle, and wrong in practice: the
+wrapper is the full height of the section, several thousand px on a phone, and `--cg`
+changes on it every animation frame, so Safari re-rasterized a page-tall filter region per
+frame. That was the stutter. It was also the ghosting, because iOS invalidates a filtered
+layer in tiles and the tiles the charge had already left kept their old shadow — scrolling
+back up left glow behind while the masked core underneath it correctly retreated.
+
+So the mask moved up to `.rail-glow` and the filter is gone. `.rail-bloom` is a wider
+sibling of the core carrying two pre-blurred gradient bands, standing in for the 5px and
+16px shadows; both children sit under the wrapper's mask, so the glow still stops exactly
+where the charge does. `.rail-head` keeps its `blur()` — it is 11×116px, not page-tall — but
+carries `will-change: transform`, without which its own move smears for the same reason.
 
 **Nodes light from the charge, not from their own scroll position.** An offshoot should
 kindle because the charge arrived. The two only agree while the charge runs at exactly
@@ -226,7 +237,13 @@ only chrome the log gets — no breadcrumb, no back-to-top.
 - **Wet-floor echo** — display type mirrored below itself, blurred, masked to fade out.
 - **Haze + shaft** — large blurred radial gradients and one angled light shaft, hero only.
   Strong here because it is the one place it can be without fighting text.
-- **Scanlines** — a 1px repeating gradient at 4.5% opacity over everything.
+- **Scanlines** — a 1px repeating gradient at 4.5% opacity, fixed at `z-index: 1` — above the
+  sky, below `.page`. This read "over everything" until 2026-07-28. Over the site's own
+  surfaces it still does: every plate, card and control is translucent, so the texture comes
+  through them exactly as it did from on top. The one surface it must not cross is a
+  photograph, and from above it ruled the gallery's images with visible horizontal lines.
+  Nothing on the site is opaque except the photographs, so putting the layer underneath is
+  the whole fix.
 
 ---
 
@@ -466,6 +483,22 @@ The footer grows by the bottom inset (`--foot-h + env(...)`) so its grid floor r
 bottom of the screen rather than stopping short of the home indicator, and the viewer insets
 its own bar, stage, footer and capture sheet from `--lb-t` / `--lb-b`.
 
+**Write the inset into the `padding` shorthand, never as a `padding-top` above it.** The
+shorthand resets all four sides, so a `padding-top: env(safe-area-inset-top)` written before
+`padding: 0 30px` is silently discarded. Both the nav and the viewer's top bar had exactly
+this pair, which is what put CLOSE under the Dynamic Island with its `×` clipped by the
+status bar.
+
+**The viewer's backdrop overruns its own box by `--lb-over` (220px).** `position: fixed` is
+laid out against the _small_ viewport on iOS — the band between the status bar and the
+floating tab bar — so a wash at `inset: 0` stops dead at both, and the strips behind Safari's
+translucent chrome show the page underneath instead of the viewer. Nothing here sets
+`overflow`, so running the layers past the box is all it takes. The vignette's gradient is
+sized _back_ to the visible band with `background-size` and its terminal colour is repeated
+as the element's `background-color`: stretching the radial with the box would push the
+falloff off-screen and all but erase the vignette, and the two meet at the same colour, so
+there is no seam.
+
 ### What deliberately did not change
 
 The star field, the scanlines, the neon flicker, the rail charge and terminal, the sticky
@@ -530,6 +563,15 @@ tile is small, near the cursor, and the move still says where to look when you c
 it opens the viewer on that frame, and without it the browser still scrolls to the right
 photograph. Answering "show me this one" with the top of a 118-frame page was the wrong
 answer.
+
+**And the open viewer writes that URL back.** The fragment was readable and never written,
+so the one frame worth linking to — the one filling the screen — was the one thing the
+address bar did not name. Opening `pushState`s it, which also makes the system back gesture
+close the viewer instead of leaving the page; stepping between frames `replaceState`s,
+because 118 frames of history is not a trail anybody wants to walk back out of. Closing
+unwinds whichever it was: `history.back()` if opening pushed, so the close button and the
+back gesture land on the same state, and a plain `replaceState` when the viewer was opened
+_by_ a deep link and pushed nothing.
 
 **The rail folds into a sheet.** Its job — _where am I, what else is here_ — moves into a
 SHOOTS button that opens a full-screen list at 56px a row. The sticky run header still

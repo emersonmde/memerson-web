@@ -458,6 +458,30 @@ function init() {
       innerWidth <= 720 ? '' : `min(900px, calc((100vh - 250px) * ${ar}))`;
   }
 
+  /*
+   * The open viewer is a URL.
+   *
+   * `/photos#f-<slug>` already *opened* the viewer, but nothing ever wrote it,
+   * so the one frame worth linking to — the one filling the screen — was the
+   * one thing the address bar did not name. Opening pushes an entry, so the
+   * back gesture closes the viewer rather than leaving the page; stepping
+   * between frames replaces it, because 118 frames of history is not a trail
+   * anybody wants to walk back out of.
+   */
+  let pushedHash = false;
+  let opening = false;
+
+  function syncHash(tile: HTMLAnchorElement) {
+    if (!tile.id || location.hash === `#${tile.id}`) return;
+    const url = `${location.pathname}${location.search}#${tile.id}`;
+    if (opening) {
+      history.pushState({ lb: tile.id }, '', url);
+      pushedHash = true;
+    } else {
+      history.replaceState({ lb: tile.id }, '', url);
+    }
+  }
+
   function show(i: number, from?: HTMLAnchorElement) {
     const list = visible();
     if (!list.length || !lb || !lbImg) return;
@@ -465,6 +489,8 @@ function init() {
     cursor = (i + list.length) % list.length;
     const tile = list[cursor];
     const token = ++epoch;
+
+    if (!lb.hidden) syncHash(tile);
 
     /*
      * The whole viewer paints in the frame the tile was tapped in.
@@ -682,9 +708,12 @@ function init() {
   function open(i: number, from: HTMLAnchorElement) {
     if (!lb) return;
     lastFocused = document.activeElement as HTMLElement;
+    pushedHash = false;
     lb.hidden = false;
     document.body.style.overflow = 'hidden';
+    opening = true;
     show(i, from);
+    opening = false;
     q<HTMLButtonElement>('.lb-close')?.focus({ preventScroll: true });
   }
 
@@ -693,8 +722,18 @@ function init() {
     lb.hidden = true;
     toggleExif(false);
     document.body.style.overflow = '';
-    // Drop the deep-link fragment, or Back into this page reopens the viewer.
-    if (location.hash.startsWith('#f-')) {
+    /*
+     * Unwind the address bar. If opening the viewer pushed an entry, Back is
+     * what removes it — which also means the two ways out of the viewer, the
+     * close button and the system back gesture, land on the same history state
+     * instead of one of them leaving a dead entry behind. Arriving *on* a
+     * deep link pushes nothing, so there the fragment is simply dropped: it
+     * has to go, or Back into this page reopens the viewer.
+     */
+    if (pushedHash) {
+      pushedHash = false;
+      history.back();
+    } else if (location.hash.startsWith('#f-')) {
       history.replaceState(null, '', location.pathname + location.search);
     }
     if (lastFocused?.isConnected) lastFocused.focus({ preventScroll: true });
@@ -827,6 +866,7 @@ function init() {
   function openFromHash() {
     const id = decodeURIComponent(location.hash.slice(1));
     if (!id.startsWith('f-')) return;
+    if (lb && !lb.hidden) return;
     const target = tiles.find((t) => t.id === id);
     if (!target || target.hidden) return;
     // After the browser's own scroll-to-fragment, so the close animation and
@@ -836,6 +876,21 @@ function init() {
 
   openFromHash();
   on(window, 'hashchange', openFromHash);
+
+  /*
+   * `pushState` fires no `hashchange`, so the back gesture out of the viewer
+   * arrives here instead. The entry being popped is the one `open` pushed, so
+   * it is already gone — `close` must not try to pop it a second time.
+   */
+  on(window, 'popstate', () => {
+    if (!lb) return;
+    if (!lb.hidden && !location.hash.startsWith('#f-')) {
+      pushedHash = false;
+      close();
+    } else if (lb.hidden) {
+      openFromHash();
+    }
+  });
 
   document.addEventListener(
     'astro:before-swap',

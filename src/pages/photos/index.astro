@@ -1111,6 +1111,19 @@ const EAGER = 8;
     z-index: 40;
     --lb-t: env(safe-area-inset-top, 0px);
     --lb-b: env(safe-area-inset-bottom, 0px);
+    /*
+     * How far the backdrop layers run past the fixed box.
+     *
+     * A `position: fixed` element is laid out against the *small* viewport on
+     * iOS — the area between the status bar and the floating tab bar — so a
+     * wash at `inset: 0` stops dead at both, and the strips behind Safari's
+     * translucent chrome show the page underneath instead of the viewer. The
+     * layers themselves are not clipped (nothing here sets `overflow`), so
+     * running them past the box is all it takes: the pixels land in the strips
+     * and the backdrop reads as one continuous surface under the notch and the
+     * home indicator. 220px clears the tallest of either.
+     */
+    --lb-over: 220px;
     animation: lbIn 0.24s cubic-bezier(0.2, 0.85, 0.2, 1);
   }
 
@@ -1140,19 +1153,30 @@ const EAGER = 8;
    */
   .lb-wash {
     position: absolute;
-    inset: 0;
+    inset: calc(-1 * var(--lb-over)) 0;
     background: rgba(3, 4, 10, 0.82);
   }
 
+  /*
+   * The box overruns the viewport but the gradient must not be stretched with
+   * it, or the falloff lands off-screen and the vignette all but disappears.
+   * So the radial is sized back to the visible band and centred in it, and the
+   * background *colour* — the gradient's own terminal value — fills the
+   * overrun. The two meet at exactly the same colour, so there is no seam.
+   */
   .lb-vignette {
     position: absolute;
-    inset: 0;
+    inset: calc(-1 * var(--lb-over)) 0;
     pointer-events: none;
-    background: radial-gradient(
+    background-color: rgba(3, 4, 10, 0.88);
+    background-image: radial-gradient(
       72% 58% at 50% 46%,
       transparent,
       rgba(3, 4, 10, 0.88) 78%
     );
+    background-size: 100% calc(100% - 2 * var(--lb-over));
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
   }
 
   .lb-bar {
@@ -1161,11 +1185,15 @@ const EAGER = 8;
     right: 0;
     top: 0;
     height: calc(52px + var(--lb-t));
-    padding-top: var(--lb-t);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 30px;
+    /*
+     * One shorthand. `padding-top: var(--lb-t)` followed by `padding: 0 30px`
+     * resets the top inset back to zero, which is what put CLOSE under the
+     * Dynamic Island with its focus ring and its `×` clipped by the status bar.
+     */
+    padding: var(--lb-t) 30px 0;
     font: 400 9.5px var(--mono);
     letter-spacing: 0.2em;
     color: var(--dim);

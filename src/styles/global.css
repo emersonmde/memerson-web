@@ -291,10 +291,24 @@ label,
   animation: shoot 37s linear 9s infinite;
 }
 
+/*
+ * Scanlines sit *under* the content, not over it.
+ *
+ * UI-DESIGN §5.1 called for "over everything", and over the site's surfaces
+ * that is still what you get: every plate, card and control is translucent
+ * (`rgba(8, 11, 19, 0.6)` and friends), so the texture reads straight through
+ * them exactly as it did from on top. The one thing it does not read through is
+ * a photograph — which is the point. From above, a 1px repeating gradient rules
+ * the gallery's images with visible horizontal lines, and a photograph is the
+ * one surface on the site that has to be seen as itself.
+ *
+ * So it goes to z-index 1: above `.sky` (0), below `.page` (2). Anything opaque
+ * masks it, and nothing on the site is opaque except the photographs.
+ */
 .scanlines {
   position: fixed;
   inset: 0;
-  z-index: 8;
+  z-index: 1;
   pointer-events: none;
   opacity: var(--scan);
   background: repeating-linear-gradient(
@@ -304,7 +318,7 @@ label,
   );
 }
 
-/* Content sits above the sky, below the scanlines and the nav. */
+/* Content sits above the sky and the scanlines, below the nav. */
 .page {
   position: relative;
   z-index: 2;
@@ -319,11 +333,15 @@ label,
   top: 0;
   z-index: 9;
   height: var(--nav-h);
-  padding-top: env(safe-area-inset-top, 0px);
   display: flex;
   align-items: center;
   gap: 26px;
-  padding: 0 var(--gutter);
+  /*
+   * One shorthand, not `padding-top` plus `padding` — the shorthand resets
+   * every side, so a separate `padding-top` written above it is silently
+   * discarded and the bar's contents centre in the notch instead of below it.
+   */
+  padding: env(safe-area-inset-top, 0px) var(--gutter) 0;
   background: var(--chrome);
   border-bottom: 1px solid var(--hairline-soft);
 }

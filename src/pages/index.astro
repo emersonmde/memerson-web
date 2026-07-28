@@ -110,8 +110,9 @@ const isoDate = (d: Date | null) =>
     </div>
 
     <div class="rail-track" aria-hidden="true"></div>
-    <div class="rail-glow" aria-hidden="true">
-      <div class="rail-live" data-fx="rail"></div>
+    <div class="rail-glow" data-fx="rail" aria-hidden="true">
+      <span class="rail-bloom"></span>
+      <div class="rail-live"></div>
     </div>
     <div class="rail-head" data-fx="head" aria-hidden="true"></div>
     <div class="rail-terminal" data-fx="terminal" aria-hidden="true"></div>
@@ -490,25 +491,28 @@ const isoDate = (d: Date | null) =>
   }
 
   /*
-   * The glow lives on a wrapper, not on the masked element.
+   * The mask lives on the wrapper, and the glow is *painted*, not filtered.
    *
-   * `box-shadow` on the masked rail was clipped away by its own mask — a mask
-   * only paints within the element's box, and a shadow is drawn outside it. The
-   * result was a rail with almost no glow, and none at all past the charge
-   * front. A filter on the parent is applied to the already-masked child, so the
-   * glow follows the charge exactly and stops where it stops.
+   * The glow was two `drop-shadow()` filters on this element. It looked right
+   * and it was wrong: the filtered element is the full height of the section —
+   * several thousand px on a phone — and `--cg` changes on it every animation
+   * frame, so Safari re-rasterized a page-tall filter region per frame. That is
+   * the whole of the reported stutter, and the ghosting too: iOS invalidates a
+   * filtered layer in tiles, and the tiles the charge had already left kept
+   * their old shadow. Scrolling back up therefore left glow behind while the
+   * masked core underneath it correctly retreated.
+   *
+   * So there is no filter here at all. `.rail-bloom` is a wider sibling of the
+   * core carrying two pre-blurred gradient bands — a tight bright one and a
+   * broad dim one, standing in for the 5px and 16px shadows. Both children sit
+   * under the wrapper's mask, so the glow still stops exactly where the charge
+   * does, which was the reason the filter was on the parent in the first place.
+   *
+   * (The original note is still worth keeping: a `box-shadow` on the masked
+   * element itself does not work, because a mask only paints within the
+   * element's box and a shadow is drawn outside it.)
    */
   .rail-glow {
-    filter: drop-shadow(0 0 5px oklch(0.8 0.17 200 / 0.7))
-      drop-shadow(0 0 16px oklch(0.8 0.17 200 / 0.35));
-  }
-
-  /*
-   * One gradient, one mask. Per-segment gradients kinked at every seam; a
-   * single mask sliding down a single gradient physically cannot.
-   */
-  .rail-live {
-    background: linear-gradient(180deg, var(--sodium), var(--cyan) 50%, var(--violet));
     mask-image: linear-gradient(
       180deg,
       #000 0,
@@ -523,6 +527,32 @@ const isoDate = (d: Date | null) =>
     );
   }
 
+  /*
+   * Overflows the 3px rail on both sides. The mask above is a 180deg gradient,
+   * so tiling it across this wider child yields identical values — the bloom is
+   * cut off at the charge front just as the core is.
+   */
+  .rail-bloom {
+    position: absolute;
+    left: -19px;
+    right: -19px;
+    top: 0;
+    bottom: 0;
+    background:
+      linear-gradient(90deg, transparent, oklch(0.8 0.17 200 / 0.7), transparent) 50% /
+        13px 100% no-repeat,
+      linear-gradient(90deg, transparent, oklch(0.8 0.17 200 / 0.32), transparent) 50% /
+        38px 100% no-repeat;
+  }
+
+  /*
+   * One gradient, one mask. Per-segment gradients kinked at every seam; a
+   * single mask sliding down a single gradient physically cannot.
+   */
+  .rail-live {
+    background: linear-gradient(180deg, var(--sodium), var(--cyan) 50%, var(--violet));
+  }
+
   .rail-head {
     position: absolute;
     left: calc(var(--gutter) - 4px);
@@ -534,6 +564,12 @@ const isoDate = (d: Date | null) =>
     opacity: 0;
     pointer-events: none;
     filter: blur(3px);
+    /*
+     * A blurred element moved by transform every frame. Without the promotion
+     * hint Safari re-rasterizes the blur against the page behind it on each
+     * move, which is where the head's own smear trail came from.
+     */
+    will-change: transform;
     background: linear-gradient(
       180deg,
       transparent,
