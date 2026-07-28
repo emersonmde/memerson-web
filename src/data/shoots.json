@@ -5,8 +5,8 @@
     "to": "2022-10-29",
     "cameras": ["Canon EOS R6"],
     "name": "Renaissance Faire",
-    "album": null,
-    "summary": "Performers, blacksmiths, jousters, and stage actors in period costume at a renaissance faire."
+    "summary": "Performers, blacksmiths, jousters, and stage actors in period costume at a renaissance faire.",
+    "series": null
   },
   "2022-09-04": {
     "count": 14,
@@ -14,8 +14,8 @@
     "to": "2022-09-05",
     "cameras": ["Canon EOS R6"],
     "name": "Zoo Aquarium Visit",
-    "album": null,
-    "summary": "A day at a zoo/aquarium photographing fish, a turtle, a green tree python, and a dolphin."
+    "summary": "A day at a zoo/aquarium photographing fish, a turtle, a green tree python, and a dolphin.",
+    "series": null
   },
   "2022-05-22": {
     "count": 9,
@@ -23,8 +23,8 @@
     "to": "2022-05-22",
     "cameras": ["Canon EOS R6"],
     "name": "Air Show",
-    "album": null,
-    "summary": "An airshow featuring the Blue Angels and Thunderbirds jet teams, a WWII B-25 bomber, and a Lamborghini display."
+    "summary": "An airshow featuring the Blue Angels and Thunderbirds jet teams, a WWII B-25 bomber, and a Lamborghini display.",
+    "series": "air-shows"
   },
   "2022-04-15": {
     "count": 10,
@@ -32,8 +32,8 @@
     "to": "2022-04-15",
     "cameras": ["Canon EOS R6"],
     "name": "Zoo Trip",
-    "album": null,
-    "summary": "A day at the zoo photographing lemurs, tortoises, giraffes, a maned wolf, and a jaguar."
+    "summary": "A day at the zoo photographing lemurs, tortoises, giraffes, a maned wolf, and a jaguar.",
+    "series": null
   },
   "2022-02-21": {
     "count": 7,
@@ -41,8 +41,8 @@
     "to": "2022-02-21",
     "cameras": ["Apple iPhone 13 Pro"],
     "name": "Nashville",
-    "album": null,
-    "summary": "A day exploring downtown Nashville's churches, streets, and public art, ending at the Tennessee State Capitol at night."
+    "summary": "A day exploring downtown Nashville's churches, streets, and public art, ending at the Tennessee State Capitol at night.",
+    "series": null
   },
   "2021-11-27": {
     "count": 10,
@@ -50,17 +50,17 @@
     "to": "2021-11-27",
     "cameras": ["Canon EOS R6", "Apple iPhone 13 Pro"],
     "name": "Washington DC",
-    "album": null,
-    "summary": "A day-to-night visit to Washington DC landmarks and the Air and Space Museum in autumn 2021."
+    "summary": "A day-to-night visit to Washington DC landmarks and the Air and Space Museum in autumn 2021.",
+    "series": null
   },
   "2021-08-16": {
     "count": 16,
     "from": "2021-08-16",
     "to": "2021-08-18",
     "cameras": ["Apple iPhone 12 Pro", "Canon EOS R6"],
-    "name": "Caribbean Vacation",
-    "album": null,
-    "summary": "Beach, coastline, and garden scenes from a tropical island trip, likely St. Croix."
+    "name": "St Croix",
+    "summary": "Beach, coastline and garden scenes from a week in St Croix.",
+    "series": null
   },
   "2021-07-02": {
     "count": 1,
@@ -68,8 +68,8 @@
     "to": "2021-07-02",
     "cameras": ["Canon EOS R6"],
     "name": "Stuffed Lion Toy",
-    "album": null,
-    "summary": "A plush lion toy tied with a red ribbon sitting on a porch railing."
+    "summary": "A plush lion toy tied with a red ribbon sitting on a porch railing.",
+    "series": null
   },
   "2020-02-07": {
     "count": 1,
@@ -77,8 +77,8 @@
     "to": "2020-02-07",
     "cameras": ["Apple iPhone 11 Pro Max"],
     "name": null,
-    "album": null,
-    "summary": "A wall clock lying face-up in a rock garden bed."
+    "summary": "A wall clock lying face-up in a rock garden bed.",
+    "series": null
   },
   "2019-09-24": {
     "count": 2,
@@ -86,8 +86,8 @@
     "to": "2019-09-27",
     "cameras": ["Apple iPhone XS Max"],
     "name": "Seattle - Amazon Spheres",
-    "album": null,
-    "summary": "A flight sunset view paired with a visit to the Amazon Spheres living wall in Seattle."
+    "summary": "A flight sunset view paired with a visit to the Amazon Spheres living wall in Seattle.",
+    "series": null
   },
   "2018-10-09": {
     "count": 1,
@@ -95,8 +95,8 @@
     "to": "2018-10-09",
     "cameras": ["Apple iPhone XS Max"],
     "name": null,
-    "album": null,
-    "summary": "Macro photo of a butterfly resting on concrete pavement."
+    "summary": "Macro photo of a butterfly resting on concrete pavement.",
+    "series": null
   },
   "2017-08-27": {
     "count": 3,
@@ -104,8 +104,8 @@
     "to": "2017-08-27",
     "cameras": ["Canon EOS 6D"],
     "name": "Air Show",
-    "album": null,
-    "summary": "Thunderbirds F-16 formation flying and lined up on the tarmac at an air show."
+    "summary": "Thunderbirds F-16 formation flying and lined up on the tarmac at an air show.",
+    "series": "air-shows"
   },
   "2017-07-04": {
     "count": 8,
@@ -113,8 +113,8 @@
     "to": "2017-07-04",
     "cameras": ["Canon EOS 6D"],
     "name": "Fourth of July Fireworks",
-    "album": null,
-    "summary": "Long-exposure shots of a fireworks show on the 4th of July."
+    "summary": "Long-exposure shots of a fireworks show on the 4th of July.",
+    "series": null
   },
   "2017-06-18": {
     "count": 4,
@@ -122,7 +122,7 @@
     "to": "2017-06-19",
     "cameras": ["Canon EOS 6D"],
     "name": "Campus",
-    "album": null,
-    "summary": "A historic brick campus with a clock tower, tree-lined lawn, and a nearby field sunset."
+    "summary": "A historic brick campus with a clock tower, tree-lined lawn, and a nearby field sunset.",
+    "series": null
   }
 }

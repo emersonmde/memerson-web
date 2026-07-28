@@ -142,8 +142,11 @@ silently deleting it. Adding one means declaring it in `src/content.config.ts`, 
 collection layer strips it.
 
 **`src/data/shoots.json` is generated the same way, and is also hand-edited.** Derived
-fields (`count`, `from`, `to`, `cameras`) are rewritten every run; `name`, `album` and
-anything else you add survive untouched. This is the file where albums get named — see
+fields (`count`, `from`, `to`, `cameras`) are rewritten every run; `name`, `series` and
+anything else you add survive untouched. A **shoot** is one outing and is what you browse;
+a **series** is the optional thread joining recurring ones (two "Air Show" shoots, one
+`series: "air-shows"`). One occurrence per shoot — never one shoot for a recurring event.
+This is the file where both get named — see
 MILESTONES M4.
 
 **Metadata generation runs once per photo, at import, and never sweeps the library.** This

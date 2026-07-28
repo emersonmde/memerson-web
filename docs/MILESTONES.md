@@ -428,17 +428,41 @@ Because the threshold only ever applies to unassigned new photos, it can differ 
 without disturbing anything already named — which is what makes the narrowing plateau a
 non-problem.
 
-#### An album is a name applied to one or more shoots
+#### Three layers, which is what working photographers already use
 
-This is the whole model, and it needs no new machinery:
+Settled 2026-07-27 against the prevailing convention rather than invented here, after the
+question came up as "is an air show one album, or one per trip?"
 
-- **`shoot`** — automatic, on every photo, stable, never recomputed.
-- **Naming a shoot is what creates or joins an album.** Unnamed shoots are misc. There is no
-  MISC bucket to maintain and no taxonomy to invent — misc is simply the absence of a name,
-  which requires no action and scales to any number of photos.
-- **Several shoots may share one album name.** This is required, not incidental: aquarium
-  visits span years, and an air show recurs annually. An album is therefore _not_ the same
-  as a shoot, even though a single-trip album like Disney will usually be one.
+| Layer       | Ours     | Equivalent                         |
+| ----------- | -------- | ---------------------------------- |
+| Instance    | `shoot`  | Lightroom folder; **IPTC `Event`** |
+| Theme       | `series` | Lightroom Collection               |
+| Descriptors | `tags`   | IPTC Keywords                      |
+
+- **`shoot`** — automatic, one per photo, stable, never recomputed. Naming one is what makes
+  it browsable. Unnamed shoots are misc: there is no MISC bucket to maintain and no taxonomy
+  to invent, because misc is simply the absence of a name.
+- **`series`** — optional, spans shoots, most are null.
+
+**A recurring event gets one shoot per occurrence, not one shoot forever.** Two air shows
+five years apart are two shoots both called "Air Show", joined by `series: "air-shows"`.
+[The IPTC standard asks for exactly this](https://www.iptc.org/std/photometadata/documentation/userguide/)
+— name the specific occurrence, never the category ("Maui Classical Music Festival", not
+"festival"). [Lightroom practice matches](https://www.lightroomqueen.com/organize-photos-folders/):
+a photo lives in one dated folder and in any number of Collections.
+
+The reasons are practical, not ceremonial:
+
+1. **An album must be bounded to be browsable.** A merged "Air Show" grows without end.
+2. **Chronology inside it stops meaning anything** once occurrences are interleaved.
+3. **You still get "every air show"** from the series, so merging buys nothing it does not
+   also cost.
+4. **It degrades gracefully.** The 2026 Disney trip and the 2028 air show each become their
+   own shoot on import, with no taxonomy to maintain and nothing to decide in advance.
+
+**The field is `series`, not `album`**, because colloquially the album _is_ the thing you
+browse — which here is the shoot. Not `collection` either: that name is taken by Astro's
+content collections and the clash would be actively confusing in code.
 
 Economics: 118 photos → 14 shoots, so the human decision count is ~14 optional names rather
 than 118 labels. Even a 50% error rate costs minutes to fix. Inaccuracy is cheap here;

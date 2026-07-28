@@ -173,15 +173,15 @@ describe('mergeShoots', () => {
   test('unknown authored fields are preserved, so the schema can grow', () => {
     const merged = mergeShoots(
       { S: { count: 1 } },
-      { S: { album: 'caribbean', note: 'the good one' } },
+      { S: { series: 'caribbean', note: 'the good one' } },
     );
-    assert.equal(merged.S.album, 'caribbean');
+    assert.equal(merged.S.series, 'caribbean');
     assert.equal(merged.S.note, 'the good one');
   });
 
-  test('a new shoot gets null name and album rather than missing keys', () => {
+  test('a new shoot gets null name and series rather than missing keys', () => {
     const merged = mergeShoots({ S: { count: 1 } });
     assert.equal(merged.S.name, null);
-    assert.equal(merged.S.album, null);
+    assert.equal(merged.S.series, null);
   });
 });

@@ -15,6 +15,32 @@ import { REPO_ROOT } from './r2.mjs';
 export const SHOOTS_PATH = path.join(REPO_ROOT, 'src/data/shoots.json');
 
 /**
+ * The three-layer model, which is the one working photographers already use:
+ *
+ *   shoot   one per photo, automatic     ≡ Lightroom folder, ≡ IPTC "Event"
+ *   series  optional, spans shoots        ≡ Lightroom Collection
+ *   tags    many per photo                ≡ IPTC Keywords
+ *
+ * **A shoot is the browsing unit, and a recurring event gets one shoot per
+ * occurrence — not one shoot forever.** Two visits to an air show five years
+ * apart are two shoots called "Air Show", joined by `series: "air-shows"`. This
+ * is what the IPTC standard asks for in as many words: name the specific
+ * occurrence, not the category ("Maui Classical Music Festival", never
+ * "festival").
+ *
+ * The reasons are practical. An album has to be bounded to be browsable, and a
+ * merged "Air Show" grows without end; chronology inside it stops meaning
+ * anything; and you still get "every air show" from the series, so merging buys
+ * nothing it does not also cost. It also degrades well — the 2028 air show
+ * becomes its own shoot with no taxonomy to maintain.
+ *
+ * The field is `series` and not `album` because colloquially the *album* is the
+ * thing you browse, which here is the shoot. It is not `collection` either:
+ * that name is already spoken for by Astro's content collections
+ * (`getCollection('photos')`) and the clash would be genuinely confusing.
+ */
+
+/**
  * Seven days, not the twenty-four hours this started as.
  *
  * Cluster count against threshold over the first 118 photos was 17/16/15 at
@@ -167,7 +193,7 @@ export function assignShoots(entries, gapDays = SHOOT_GAP_DAYS) {
  *   to?: string | null,
  *   cameras?: string[],
  *   name?: string | null,
- *   album?: string | null,
+ *   series?: string | null,
  *   summary?: string | null,
  *   orphaned?: boolean,
  *   [key: string]: unknown,
@@ -176,7 +202,7 @@ export function assignShoots(entries, gapDays = SHOOT_GAP_DAYS) {
 
 /**
  * Summarise each shoot for the file a human actually reads while naming things.
- * Derived every run — `name` and `album` are the only fields anyone edits.
+ * Derived every run — `name` and `series` are the only fields anyone edits.
  *
  * @returns {Record<string, ShootRecord>}
  */
@@ -233,7 +259,7 @@ export function mergeShoots(summary, existing = {}) {
   for (const [id, derived] of Object.entries(summary)) {
     merged[id] = { ...existing[id], ...derived };
     if (!('name' in merged[id])) merged[id].name = null;
-    if (!('album' in merged[id])) merged[id].album = null;
+    if (!('series' in merged[id])) merged[id].series = null;
   }
 
   // A shoot that vanished from the manifest keeps its record rather than being
