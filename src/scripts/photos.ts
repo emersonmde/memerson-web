@@ -459,27 +459,40 @@ function init() {
   }
 
   /*
-   * The open viewer is a URL.
+   * The open viewer is a URL — by replacement only, never by pushing.
    *
    * `/photos#f-<slug>` already *opened* the viewer, but nothing ever wrote it,
    * so the one frame worth linking to — the one filling the screen — was the
-   * one thing the address bar did not name. Opening pushes an entry, so the
-   * back gesture closes the viewer rather than leaving the page; stepping
-   * between frames replaces it, because 118 frames of history is not a trail
-   * anybody wants to walk back out of.
+   * one thing the address bar did not name.
+   *
+   * The obvious version of this pushes an entry, so that the back gesture
+   * closes the viewer. That version is wrong, and the reason is worth keeping.
+   * `ClientRouter` compares pathname and search to decide whether a popstate is
+   * an intra-page move (`samePage()` in astro/dist/transitions/router.js) and
+   * takes its `from` from an `originalLocation` that only its own navigations
+   * update. Pushing a fragment behind its back therefore produces a pop it
+   * reads as `/photos` → `/photos`, same page, neither side carrying a hash it
+   * knows about — which falls past the intra-page early-return into a full
+   * fetch and swap of the page you are already on. Visibly: the redraw wipe,
+   * and every entry animation on the page running a second time.
+   *
+   * So there is no `pushState` and no `history.back()` anywhere in here. The
+   * viewer owns the fragment on the current entry and nothing else, which
+   * costs the back-to-close gesture — back leaves `/photos`, as it did before
+   * any of this — and buys a viewer that cannot desynchronise the router.
+   *
+   * `history.state` is passed through rather than replaced. It carries the
+   * router's own `{ index, scrollX, scrollY }`, and an entry whose state is
+   * null is one `onPopState` returns early on: overwrite it and a later Back
+   * into this page changes the URL without ever swapping the document in.
    */
-  let pushedHash = false;
-  let opening = false;
-
   function syncHash(tile: HTMLAnchorElement) {
     if (!tile.id || location.hash === `#${tile.id}`) return;
-    const url = `${location.pathname}${location.search}#${tile.id}`;
-    if (opening) {
-      history.pushState({ lb: tile.id }, '', url);
-      pushedHash = true;
-    } else {
-      history.replaceState({ lb: tile.id }, '', url);
-    }
+    history.replaceState(
+      history.state,
+      '',
+      `${location.pathname}${location.search}#${tile.id}`,
+    );
   }
 
   function show(i: number, from?: HTMLAnchorElement) {
@@ -708,12 +721,9 @@ function init() {
   function open(i: number, from: HTMLAnchorElement) {
     if (!lb) return;
     lastFocused = document.activeElement as HTMLElement;
-    pushedHash = false;
     lb.hidden = false;
     document.body.style.overflow = 'hidden';
-    opening = true;
     show(i, from);
-    opening = false;
     q<HTMLButtonElement>('.lb-close')?.focus({ preventScroll: true });
   }
 
@@ -722,19 +732,10 @@ function init() {
     lb.hidden = true;
     toggleExif(false);
     document.body.style.overflow = '';
-    /*
-     * Unwind the address bar. If opening the viewer pushed an entry, Back is
-     * what removes it — which also means the two ways out of the viewer, the
-     * close button and the system back gesture, land on the same history state
-     * instead of one of them leaving a dead entry behind. Arriving *on* a
-     * deep link pushes nothing, so there the fragment is simply dropped: it
-     * has to go, or Back into this page reopens the viewer.
-     */
-    if (pushedHash) {
-      pushedHash = false;
-      history.back();
-    } else if (location.hash.startsWith('#f-')) {
-      history.replaceState(null, '', location.pathname + location.search);
+    // Drop the fragment, or Back into this page reopens the viewer. Same
+    // replacement, same reasons, as `syncHash` — including the state.
+    if (location.hash.startsWith('#f-')) {
+      history.replaceState(history.state, '', location.pathname + location.search);
     }
     if (lastFocused?.isConnected) lastFocused.focus({ preventScroll: true });
   }
@@ -876,21 +877,6 @@ function init() {
 
   openFromHash();
   on(window, 'hashchange', openFromHash);
-
-  /*
-   * `pushState` fires no `hashchange`, so the back gesture out of the viewer
-   * arrives here instead. The entry being popped is the one `open` pushed, so
-   * it is already gone — `close` must not try to pop it a second time.
-   */
-  on(window, 'popstate', () => {
-    if (!lb) return;
-    if (!lb.hidden && !location.hash.startsWith('#f-')) {
-      pushedHash = false;
-      close();
-    } else if (lb.hidden) {
-      openFromHash();
-    }
-  });
 
   document.addEventListener(
     'astro:before-swap',

@@ -564,14 +564,26 @@ it opens the viewer on that frame, and without it the browser still scrolls to t
 photograph. Answering "show me this one" with the top of a 118-frame page was the wrong
 answer.
 
-**And the open viewer writes that URL back.** The fragment was readable and never written,
-so the one frame worth linking to — the one filling the screen — was the one thing the
-address bar did not name. Opening `pushState`s it, which also makes the system back gesture
-close the viewer instead of leaving the page; stepping between frames `replaceState`s,
-because 118 frames of history is not a trail anybody wants to walk back out of. Closing
-unwinds whichever it was: `history.back()` if opening pushed, so the close button and the
-back gesture land on the same state, and a plain `replaceState` when the viewer was opened
-_by_ a deep link and pushed nothing.
+**And the open viewer writes that URL back — by replacement only.** The fragment was
+readable and never written, so the one frame worth linking to — the one filling the screen
+— was the one thing the address bar did not name. Opening, stepping and closing all
+`replaceState` the current entry. There is no `pushState` and no `history.back()`, which
+costs the back-gesture-closes-the-viewer behaviour and is deliberate.
+
+**Never push a history entry behind `ClientRouter`'s back.** The first version of the above
+pushed on open so that Back would close the viewer, and the symptom was a double flash on
+close: the redraw wipe, then every entry animation on the page running again. `ClientRouter`
+decides whether a popstate is an intra-page move with `samePage()`, which compares **pathname
+and search and ignores the hash**, and it takes the `from` side of that comparison from an
+`originalLocation` that only its own navigations update. A fragment pushed by anyone else
+therefore pops as `/photos` → `/photos` with no hash on either side, misses the intra-page
+early return, and falls through to a full fetch and swap of the page you are already on.
+Measured over CDP: one `astro:before-swap` per viewer close before the fix, zero after.
+
+**Pass `history.state` through, never overwrite it.** It carries the router's own
+`{ index, scrollX, scrollY }`, and `onPopState` returns early on any entry whose state is
+null — so replacing it with an object of your own means a later Back into this page changes
+the URL without ever swapping the document in.
 
 **The rail folds into a sheet.** Its job — _where am I, what else is here_ — moves into a
 SHOOTS button that opens a full-screen list at 56px a row. The sticky run header still
