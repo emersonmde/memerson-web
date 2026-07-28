@@ -115,9 +115,9 @@ node and one offshoot, since a missing pair silently breaks the lighting.
 
 ### 3. Not automated — real-browser behaviour
 
-Deliberately out of scope for now. Infinite scroll, the lightbox, the Redraw
-transition and the actual motion need a real engine, which would mean Playwright
-and a large dependency for a site with none.
+Deliberately out of scope for now. View switching, filtering, the viewer, the
+Redraw transition, the actual motion and every mobile breakpoint need a real
+engine, which would mean Playwright and a large dependency for a site with none.
 
 These were verified manually over the Chrome DevTools Protocol, which is worth
 recording because it is the technique to reach for again:
@@ -136,12 +136,29 @@ under `--virtual-time-budget`. CDP is what actually works for interaction.
 What was verified this way, and would be the first candidates if this is ever
 automated:
 
-- Infinite scroll reaches exactly 118 tiles, with the paginator hidden.
-- The lightbox pulls the next page in at a boundary: opening the last tile of
-  page one and pressing Next goes `030 → 031` while the sheet grows `30 → 60`.
 - The rail recomputes on card expansion — head position matches its computed
   target across a 1332px → 2831px rail.
 - A shooting star's travel direction and tail agree to 0.00°.
+
+Redone 2026-07-28 for the gallery redesign and the mobile pass, at 1440, 834,
+620 and 390px, with `Emulation.setDeviceMetricsOverride` and touch emulation:
+
+- All three views render and switch by moving tiles, not rebuilding them.
+- The shoot rail tracks the scroll and clears the last column — it is fixed to
+  the right edge, so `.px-page` reserves `--rail-w` above 1240px. Without that
+  it printed illegibly over the photographs.
+- The viewer opens above the nav. It is authored inside `<main>`, and `.page`
+  sets `z-index: 2`, which is a stacking context — so it has to be reparented
+  to `<body>` or the nav paints over its close button and counter.
+- Capture data is opaque on the bottom-sheet layout. At the desktop panel's 95%
+  the title and tags underneath read straight through it.
+- Filtering scopes the count, the query header and the viewer together.
+
+Two things only a real photo library shows, both fixed as a result: the stats
+block ran its three lines together once `<br>` was hidden and the lines were
+bare text nodes, and falling a missing title back to the shoot name printed
+"Renaissance Faire" under all 32 frames of that run once the caption became
+permanent type on a phone.
 
 ---
 

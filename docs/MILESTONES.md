@@ -43,7 +43,8 @@ styles on top of this markup and needed almost no structural change to it.
 - [x] All 118 photos migrated S3 → R2, manifest committed
 - [x] Gallery verified with real photos: `srcset`/`sizes`, LQIP, no CLS — 118 figures over
       4 pages, real `w` descriptors, intrinsic dimensions on every `<img>`, LQIP inlined
-      (22 KB across the whole manifest). The `paginate([])` guard is now dormant but kept.
+      (22 KB across the whole manifest). Pagination — and with it the `paginate([])` guard —
+      was removed on 2026-07-28; see M4.
 
 **One item left:** **Workers Builds**. The GitHub remote it was waiting on now exists;
 only the dashboard authorization remains. `npm run deploy` covers deployment until then, so
@@ -103,8 +104,9 @@ Pages cannot emit a 301, so these are meta-refresh redirects. Full reasoning and
       matching `rel="canonical"`, and no `noindex`; every target returns 200 on
       `memerson.com`. Bare paths (`/about`) still 301 to the trailing-slash form first,
       which is Pages' own behaviour and lands on the redirect page either way. The one shape
-      change is `/photos` → now paginated `/photos/2..4`, and the old single `/photos` maps
-      to the new first page.
+      change was `/photos` → paginated `/photos/2..4`, with the old single `/photos` mapping
+      to the first page. Pagination was removed again on 2026-07-28, so `/photos` is once
+      more a single URL and the old redirect target is exact.
 - [x] Verify the **fall-through** still works after the redirect lands. **Confirmed
       2026-07-27**, and wider than the single check this line asked for: three project sites
       publish to the domain and all three still serve their own content —
@@ -179,8 +181,10 @@ in [`design/`](./design/) and the system is documented in [UI-DESIGN.md](./UI-DE
 - [x] `docs/UI-DESIGN.md` written
 - [x] Implement across all pages — home, contact sheet, log index, post, about, 404
 - [x] Gallery visual treatment — dim-by-default tiles, masonry sheet, lightbox
-- [ ] **Mobile pass.** Desktop only by decision; the mockup specifies desktop layouts.
-      What it will have to deal with is recorded in [UI-DESIGN §9](./UI-DESIGN.md).
+- [x] **Mobile pass — done 2026-07-28.** From the **Mobile Site** and **Photos on Mobile**
+      boards in Claude Design. Breakpoints at 1240 / 1100 / 900 / 720 / 560 plus
+      `hover:none`; desktop above 900px is unchanged. Recorded in
+      [UI-DESIGN §9 and §10](./UI-DESIGN.md).
 - [ ] Accessibility pass — the basics are in (skip link, focus rings, `aria-current`,
       reduced-motion, alt text, keyboard lightbox), but nothing has been run through a
       real screen reader or a contrast audit. The dim-by-default photo tiles and the
@@ -228,14 +232,23 @@ locked in during M1.
       **Partly done in M3**: the sheet is `column-count: 4` over real manifest aspect
       ratios, which is the documented no-JS fallback. Bin-packing would fix the
       down-the-column reading order; grid-lanes is still not interoperable.
-- [x] Infinite scroll (IntersectionObserver appending paginated blocks) — **done
-      2026-07-27**, together with a lightbox that runs across page boundaries.
+- [x] ~~Infinite scroll (IntersectionObserver appending paginated blocks)~~ — done
+      2026-07-27, **then removed 2026-07-28** along with pagination itself. The Photos
+      Redesign needs the whole library at once to be truthful about coverage, so `/photos`
+      is one static page. Reasoning in [ARCHITECTURE §6](./ARCHITECTURE.md) and
+      [UI-DESIGN §8](./UI-DESIGN.md).
+- [x] **The gallery redesign — done 2026-07-28.** Imported from the **Photos Redesign**
+      board. Three views over the same frames (SHEET / RUNS / EDITORIAL), sticky run
+      headers, the margin shoot rail, the stray-frame rule, tag filtering, and a viewer
+      with a capture-data drawer. This is what the M4 metadata was captured _for_.
 - [ ] Trimmed search/random index
-- [ ] **Filtered routes** — `/photos/album/<slug>`, and year as the cheapest first filter
-      (`takenAt` is populated for all 118). These render the **existing** sheet component
-      filtered, not a new view; see "Shoots and albums" below for why that is close to free.
-      Note the mockup's `.chip` filter row is styled in `global.css` but is **not** the
-      right affordance here — it implies a partition, and this library is mostly misc.
+- [x] ~~**Filtered routes** — `/photos/album/<slug>`~~ — **superseded 2026-07-28.** The
+      redesign answered this differently and better: filtering is a query over the one
+      page, driven by the search field or by clicking a tag in the viewer, with a header
+      saying what is being shown. Shoot _detail pages_ are not needed once runs exist —
+      they would split the library in half for no gain, and a route per album still implies
+      a partition this library does not have. The `.chip` styles in `global.css` remain
+      unused for the same reason.
 - [ ] `Save-Data` handling
 
 ### Metadata extraction — **done 2026-07-27**
@@ -494,12 +507,10 @@ the header copy differ. This is **less** code than treating albums separately, n
 The existing contact sheet already generalises, and the code makes it nearly free —
 verified by reading it, not assumed:
 
-- **The lightbox derives its collection from the DOM.** `gallery.ts` re-reads
-  `grid.querySelectorAll('a[data-tile]')` on every `show()` rather than snapshotting at
-  open. Render a filtered set of tiles and the lightbox scopes itself correctly, with no
-  parameterisation.
-- **Infinite scroll is driven by `data-next` on the container**, so a paginated album route
-  behaves identically to `/photos`.
+- **The viewer derives its collection from the DOM.** `photos.ts` re-reads the visible
+  tiles on every `show()` rather than snapshotting at open, so filtering scopes the viewer
+  correctly with no parameterisation. This is what made the tag filter close to free, and
+  it is the one prediction on this page that the redesign kept rather than replaced.
 - A second view would mean a second masonry and a second lightbox kept in sync — precisely
   the class of bug that already left the gallery inert on `/photos/2` once.
 
@@ -566,11 +577,13 @@ What is still required to add a field later, none of it destructive:
 - ~~M2 and M4 are independent of each other. M2 is the higher priority of the two: until
   the redirect lands, `errorsignal.dev` is still the site people reach.~~ **Settled
   2026-07-27** — the redirect landed, so `memerson.com` is the site people reach and **M4
-  is the next milestone.** What remains outside it is scope M3 never covered (mobile,
-  accessibility, light mode) plus the Workers Builds dashboard step.
-- M4 has an internal order that is easy to get wrong. **Backfilling captions and tags comes
-  first** — search, filtering, and the album chips are all cheap once there is something to
-  search, and all impossible before.
+  is the next milestone.** What remains outside it is accessibility and light mode, plus the
+  Workers Builds dashboard step. ~~Mobile~~ landed 2026-07-28.
+- ~~M4 has an internal order that is easy to get wrong. **Backfilling captions and tags
+  comes first** — search, filtering, and the album chips are all cheap once there is
+  something to search, and all impossible before.~~ **Borne out.** The captions, tags,
+  shoot names and summaries backfilled on 2026-07-27 are exactly what the 2026-07-28
+  redesign is built out of; none of it would have been designable a day earlier.
 - M1's "unstyled" constraint carries a real risk: designing last can force markup changes.
   Mitigated by keeping M1 markup semantic and free of presentational structure — not
   eliminated. Accepted deliberately so the new design isn't anchored to scaffolding

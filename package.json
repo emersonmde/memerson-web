@@ -11,7 +11,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "npm run build && node --test tests/*.test.ts",
-    "test:unit": "node --test tests/rail.test.ts tests/content.test.ts tests/manifest.test.ts tests/shoots.test.ts",
+    "test:unit": "node --test tests/rail.test.ts tests/runs.test.ts tests/content.test.ts tests/manifest.test.ts tests/shoots.test.ts",
     "format": "prettier --write \"**/*.{astro,ts,js,mjs,json,md}\"",
     "deploy": "npm run build && wrangler deploy",
     "design:bundle": "node scripts/design-bundle.mjs",

@@ -514,14 +514,40 @@ breakpoint.
 CSS `column-count` is the no-JS fallback. Caveat: it orders items down each column, so
 chronological ordering reads wrong — acceptable as degradation, not as the target.
 
-### Progressive loading: paginated static pages
+### One page, not pagination (changed 2026-07-28)
 
-Astro `paginate()` emits `/photos/1`, `/photos/2`, … at ~30 photos each. An
-IntersectionObserver on a sentinel fetches and appends the next block.
+`/photos` used to be `paginate()`d at ~30 photos a page with an IntersectionObserver
+appending the next block. The Photos Redesign removed that, and the reason is not
+aesthetic. Run headers, the margin shoot rail, the stray-frame rule and the tag filter all
+answer _questions about the whole library_ — "where am I", "what else is here", "how much
+is left". A rail that lists only the shoots fetched so far does not answer those questions
+partially; it answers them **wrongly**, and then silently changes its answer as you
+scroll. There is no version of the redesign that is correct on a partial set.
 
-The point is that **initial HTML never carries metadata for photos not being shown.** This
-is what does not scale in the current design, and it is the reason the manifest must not be
-shipped wholesale to the client. Works identically at 118 photos and at 2,000.
+So every frame is rendered into one static page, with `loading="lazy"` on all but the
+first screenful. Measured on the current 118-frame library:
+
+|                           | `/photos`, all 118 frames |
+| ------------------------- | ------------------------- |
+| HTML, raw                 | 330 KB                    |
+| HTML, gzipped             | 40 KB                     |
+| Images fetched on arrival | 8, as before              |
+
+One change kept that from being much worse: the `srcset` pairs are no longer duplicated
+into `data-avif` / `data-webp` attributes. The viewer reads the tile's own `<source>`
+elements instead, which was by far the largest single item in the document at this tile
+count. Gzip then crushes 118 near-identical tiles hard — the raw:wire ratio is ~8:1.
+
+**Where this stops being free.** It is linear in the frame count from here: ~340 bytes
+gzipped per frame. At ~500 frames the page is ~170 KB gzipped and should be revisited; at
+~1,000 it is not defensible. The fix at that point is _not_ to bring pagination back — it
+is to keep one page and render tiles for the runs above the fold, with the remaining runs
+as headers only, hydrated as they approach. The rail stays complete and truthful either
+way, because it is built from `shoots.json`, which is small.
+
+The old constraint still holds and is the important one: **no runtime data fetching.** The
+page is static, the manifest is never shipped as a JSON payload, and nothing calls an API.
+That is what the AWS teardown depends on.
 
 ### Search and random
 

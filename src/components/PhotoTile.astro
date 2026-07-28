@@ -1,0 +1,127 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { PHOTOS_BASE_URL } from '../consts';
+import { photoAlt } from '../lib/photoAlt';
+
+/**
+ * A frame in the gallery.
+ *
+ * Distinct from `PhotoThumb` on purpose. That component is the home page's
+ * preview strip: a thumbnail with hover chrome and nothing behind it. This one
+ * is the gallery's unit of work — it carries the metadata the lightbox reads,
+ * and its caption is real type on small screens rather than a hover overlay.
+ *
+ * It is an `<a>` to the widest derivative, not the `<button>` the mockup used.
+ * The mockup had no no-JS story; here the tile has to remain a working link to
+ * the photograph when the script never runs. The lightbox intercepts the click.
+ *
+ * The lightbox reads the `<source>` elements below rather than a duplicated
+ * pair of `data-avif` / `data-webp` srcsets — at 118 tiles on one page that
+ * duplication was the single largest thing in the document.
+ */
+interface Props {
+  photo: CollectionEntry<'photos'>;
+  /** Shoot name, shown under the frame and in the lightbox. */
+  shootName?: string | null;
+  loading?: 'lazy' | 'eager';
+}
+
+const { photo, shootName = null, loading = 'lazy' } = Astro.props;
+const { id, variants, formats, lqip, aspectRatio, takenAt } = photo.data;
+
+const srcSet = (format: string) =>
+  variants.map((w) => `${PHOTOS_BASE_URL}/photos/${id}/${w}.${format} ${w}w`).join(', ');
+
+const widest = Math.max(...variants);
+const smallest = Math.min(...variants);
+const full = `${PHOTOS_BASE_URL}/photos/${id}/${widest}.webp`;
+/* The bloom is blurred to 70px, so the smallest derivative is the right
+   source — and it is already in cache from the tile itself. */
+const bloom = `${PHOTOS_BASE_URL}/photos/${id}/${smallest}.webp`;
+
+/*
+ * The gallery is four columns at desk width, three at 1100, two at 720, and one
+ * for RUNS below 560. `sizes` cannot know which view is active, so it describes
+ * the widest a tile can be at each width — over-fetching one step is cheaper
+ * than a blurry frame.
+ */
+const SIZES =
+  '(max-width: 560px) 94vw, (max-width: 720px) 46vw, (max-width: 1100px) 31vw, 24vw';
+
+const date = takenAt
+  ? takenAt.toLocaleDateString('en-CA', { timeZone: 'UTC' }).replace(/-/g, '.')
+  : '';
+
+/*
+ * Two different fallbacks, on purpose.
+ *
+ * The viewer needs *something* in its title slot, so there the shoot name
+ * stands in — a 24px empty line under a photograph is worse than a repeated
+ * one, and the viewer shows one frame at a time so it never repeats visibly.
+ *
+ * The caption under the tile gets no such fallback. Only 24 of 118 frames
+ * carry an authored title, and on a phone the caption is permanent type rather
+ * than a hover overlay: falling back would print "Renaissance Faire" in 13px
+ * display type under all 32 frames of that run, directly below a header
+ * already saying it. An untitled frame gets the dateline alone.
+ */
+const title = photo.data.title ?? shootName ?? date ?? 'Frame';
+const capTitle = photo.data.title;
+const capMeta = [shootName?.toUpperCase(), date].filter(Boolean).join(' · ');
+
+const alt = photoAlt(photo);
+
+/** Capture data, behind `i` in the lightbox. Never shown by default. */
+const capture = [
+  ['BODY', photo.data.camera],
+  ['LENS', photo.data.lens],
+  ['FOCAL', photo.data.focalLength],
+  ['APERTURE', photo.data.aperture],
+  ['SHUTTER', photo.data.shutter],
+  ['ISO', photo.data.iso ? String(photo.data.iso) : null],
+] as const;
+---
+
+<a
+  class="px-tile"
+  href={full}
+  data-tile
+  data-alt={alt}
+  data-title={title}
+  data-shoot-name={shootName ?? undefined}
+  data-date={date || undefined}
+  data-tags={photo.data.tags.join('|') || undefined}
+  data-bloom={bloom}
+  data-camera={photo.data.camera ?? undefined}
+  data-capture={JSON.stringify(capture.filter(([, v]) => v))}
+  style={`--ar:${aspectRatio}`}
+  aria-label={`Open ${title}`}
+>
+  <picture>
+    {
+      formats.includes('avif') && (
+        <source type="image/avif" srcset={srcSet('avif')} sizes={SIZES} />
+      )
+    }
+    {
+      formats.includes('webp') && (
+        <source type="image/webp" srcset={srcSet('webp')} sizes={SIZES} />
+      )
+    }
+    <img
+      src={full}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      style={`background-image:url(${lqip});background-size:cover;background-position:center`}
+    />
+  </picture>
+  <span class="px-wash" aria-hidden="true"></span>
+  <span class="px-idx" aria-hidden="true"></span>
+  <span class="px-cap" aria-hidden="true">
+    {capTitle && <span class="px-cap-t">{capTitle}</span>}
+    {capMeta && <span class="px-cap-m">{capMeta}</span>}
+  </span>
+  <i class="px-bracket px-b-tl" aria-hidden="true"></i>
+  <i class="px-bracket px-b-br" aria-hidden="true"></i>
+</a>

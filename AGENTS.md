@@ -77,8 +77,9 @@ Tests assert **invariants, not pixel values**, because content changes constantl
 project lengthens the rail, every photo lengthens the gallery. A test that would break
 when a plate gets taller is testing the wrong thing. See `docs/TESTING.md`.
 
-Real-browser behaviour (infinite scroll, lightbox, transitions) is _not_ covered — it was
-verified over the Chrome DevTools Protocol, and `docs/TESTING.md` records how.
+Real-browser behaviour (view switching, filtering, the viewer, transitions, and every
+mobile breakpoint) is _not_ covered by the suite — it is verified over the Chrome DevTools
+Protocol, and `docs/TESTING.md` records how.
 
 ## Architecture
 
@@ -141,9 +142,15 @@ introduce new colours, fonts, or spacing values ad hoc: everything is a token in
 `src/styles/global.css`, and the accent ramp in particular locks lightness and chroma and
 moves only hue, which is what stops sampled colours fighting each other.
 
-**Desktop only, deliberately.** The mockups specify desktop layouts and the mobile pass is
-separate future work. Do not add breakpoints piecemeal — `docs/UI-DESIGN.md` §9 lists what
-a real mobile pass has to deal with.
+**Responsive as of 2026-07-28**, from the Mobile Site and Photos on Mobile boards.
+Breakpoints are 1240 / 1100 / 900 / 720 / 560 plus `hover:none`, and desktop above 900px
+is unchanged. `docs/UI-DESIGN.md` §9 and §10 record every decision and why.
+
+**Responsive rules go in the component that owns the desktop rule, not in `global.css`.**
+Astro scopes a component's styles with an attribute selector, which outranks a bare class
+in the global sheet — a `@media` rule for `.tease` written in `global.css` silently never
+applies. `global.css` carries only what it already owns: the tokens, the nav, the footer
+and the section headers.
 
 **Do not carry anything over from the old site's visual design.** No Sonokai palette, no
 tmux status bar, no terminal/TUI framing. Only _content_ migrated. Older notes suggesting
@@ -183,9 +190,22 @@ derivatives make it unnecessary.
 
 ## Gotchas
 
-- **`paginate([])` emits zero routes.** With an empty manifest, `/photos` would not exist
-  at all. `src/pages/photos/[...page].astro` returns an explicit empty first page to
-  prevent this. Preserve that guard until real photos are in the manifest.
+- **`/photos` is deliberately not paginated.** The redesign's run headers, shoot rail,
+  stray-frame rule and tag filter all need the whole library at once to be truthful about
+  coverage, so every frame is rendered into one static page. This replaced `paginate()`
+  plus infinite scroll on 2026-07-28 — do not reintroduce them without reading
+  `docs/ARCHITECTURE.md` §6, which also records the frame count at which the current
+  approach stops being defensible and what to do instead.
+- **Switching gallery views moves tiles; it never rebuilds them.** `src/scripts/photos.ts`
+  reparents the server-rendered `<a class="px-tile">` elements between the flat sheet, the
+  run grids and the editorial lead. That is why changing view never re-downloads an image
+  and why the page carries no second copy of the manifest. Anything that re-renders a tile
+  from data is a regression.
+- **The viewer and the shoots sheet are reparented to `<body>` at init.** They are authored
+  inside `<main>` so they exist without JavaScript, but `.page` sets `z-index: 2` and so is
+  a stacking context — a descendant cannot escape one however high its own z-index goes,
+  and the nav painted straight over the viewer's close button. Do not "simplify" that move
+  away.
 - **`Photo.astro` throws at build time on an unknown slug**, by design — a typo'd slug
   becomes a build failure rather than a broken image in production. Don't soften it to a
   silent fallback.

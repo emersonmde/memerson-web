@@ -179,4 +179,66 @@ const monthDay = (d: Date) =>
     font: 300 15px/1.6 var(--serif);
     color: #8c98ab;
   }
+
+  /* --------------------------------------------------------- small screens */
+
+  @media (max-width: 720px) {
+    .log-h1 {
+      font-size: clamp(38px, 10vw, 58px);
+    }
+
+    .log-intro {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      padding-bottom: 20px;
+    }
+
+    .log-intro p {
+      max-width: none;
+    }
+
+    /*
+     * The sticky 78px year column eats a fifth of the line for four digits, so
+     * the year becomes a marker above its group instead of a rail beside it.
+     * Same hierarchy, none of the horizontal cost — and it still pins.
+     */
+    .year {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .year-num {
+      position: static;
+      margin-bottom: 2px;
+      font-size: 22px;
+      color: rgba(142, 180, 255, 0.35);
+    }
+
+    .entry {
+      padding: 16px 0;
+    }
+
+    .entry-top {
+      flex-wrap: wrap;
+      gap: 4px 14px;
+    }
+
+    .entry-title {
+      font-size: 19px;
+      max-width: none;
+    }
+
+    .entry-dek {
+      margin-top: 6px;
+      font-size: 14px;
+      max-width: none;
+    }
+  }
+
+  @media (hover: none) {
+    .entry {
+      min-height: 56px;
+    }
+  }
 </style>

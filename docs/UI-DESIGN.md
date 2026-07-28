@@ -7,8 +7,10 @@ This is M3. Before it, the site was deliberately unstyled — see
 [MILESTONES.md](./MILESTONES.md). Nothing here derives from the old
 `errorsignal.dev` design; the reversal note in [CONTEXT.md](./CONTEXT.md) still stands.
 
-**Desktop only, deliberately.** The mockup specifies desktop layouts and the mobile
-pass is a separate future piece of work. §9 records what that will have to deal with.
+**Responsive as of 2026-07-28.** The mockups now cover both: "Neon District Mockups" is
+the desktop design, and the **Mobile Site** / **Photos on Mobile** boards are the small-screen
+one. Desktop above 900px is unchanged by the mobile pass — §9 and §10 record what changes
+below it, and why each change is a re-decision rather than a squeeze.
 
 ---
 
@@ -183,14 +185,14 @@ only chrome the log gets — no breadcrumb, no back-to-top.
 
 ## 7. Pages
 
-| Route            | Mockup | Notes                                                        |
-| ---------------- | ------ | ------------------------------------------------------------ |
-| `/`              | 6a     | Sign, rail, 11 project plates, photo + log previews, contact |
-| `/photos/[page]` | 6b     | Contact sheet, lightbox, infinite scroll                     |
-| `/blog`          | 6c     | Year-grouped, serif, sticky year                             |
-| `/blog/[slug]`   | 6d     | 68ch serif, lit code edge, reading progress                  |
-| `/about`         | —      | Not in the mockup; extended from the language. See §8.       |
-| `/404`           | —      | Not in the mockup; extended from the language.               |
+| Route          | Mockup | Notes                                                        |
+| -------------- | ------ | ------------------------------------------------------------ |
+| `/`            | 6a     | Sign, rail, 11 project plates, photo + log previews, contact |
+| `/photos`      | 6b, PR | Three views, run headers, shoot rail, viewer. See §10.       |
+| `/blog`        | 6c     | Year-grouped, serif, sticky year                             |
+| `/blog/[slug]` | 6d     | 68ch serif, lit code edge, reading progress                  |
+| `/about`       | —      | Not in the mockup; extended from the language. See §8.       |
+| `/404`         | —      | Not in the mockup; extended from the language.               |
 
 **Nav labels differ from routes on purpose.** The design calls them SYSTEMS / PHOTOS /
 LOG; the URLs stay `/`, `/photos`, `/blog` because blog slugs must survive the
@@ -203,19 +205,19 @@ LOG; the URLs stay `/`, `/photos`, `/blog` because blog slugs must survive the
 The mockup was built against invented content. Everything below is a place where the real
 data is used instead, or where a designed element could not be honoured.
 
-| Mockup                               | Reality                                    | Resolution                                              |
-| ------------------------------------ | ------------------------------------------ | ------------------------------------------------------- |
-| 214 photos, 5 albums                 | 118 photos, no album metadata at all       | Real count. **Album filter chips omitted** — see below. |
-| Photo titles ("Playa Norte, 14:20")  | All `title`/`caption` are `null`           | Falls back to the date, as `Photo.astro` already did.   |
-| Photo meta ("35MM · f/8")            | Real EXIF exists                           | Built from real camera/aperture/shutter.                |
-| Coloured gradient placeholders       | Real derivatives in R2                     | Real images; the manifest LQIP is the dim wash.         |
-| 24 posts                             | 5 posts                                    | Real count everywhere.                                  |
-| 9 systems                            | 11 projects in the collection              | All 11, ordered by the YAML `order` field.              |
-| Reading time per post                | Not in frontmatter                         | Computed from word count at build.                      |
-| `/systems/<name>` deep pages         | Do not exist                               | Plate links go to the real GitHub/docs/crate URLs.      |
-| `matthew@memerson.com` in the footer | **Unverified** — not in the repo anywhere  | **Omitted.** See below.                                 |
-| `SEATTLE · 47.6°N 122.3°W`           | **Unverified** — location asserted nowhere | Replaced with an Easter egg. See below.                 |
-| `EMERSON` on the hero sign           | The wordmark is `M.EMERSON`                | Sign is now `M.EMERSON`, sized to the word.             |
+| Mockup                               | Reality                                     | Resolution                                              |
+| ------------------------------------ | ------------------------------------------- | ------------------------------------------------------- |
+| 214 photos, 5 albums                 | 118 photos, no album metadata at all        | Real count. **Album filter chips omitted** — see below. |
+| Photo titles ("Playa Norte, 14:20")  | 24 of 118 have a `title`; all have captions | Two fallbacks, split on purpose. See §10.               |
+| Photo meta ("35MM · f/8")            | Real EXIF exists                            | Built from real camera/aperture/shutter.                |
+| Coloured gradient placeholders       | Real derivatives in R2                      | Real images; the manifest LQIP is the dim wash.         |
+| 24 posts                             | 5 posts                                     | Real count everywhere.                                  |
+| 9 systems                            | 11 projects in the collection               | All 11, ordered by the YAML `order` field.              |
+| Reading time per post                | Not in frontmatter                          | Computed from word count at build.                      |
+| `/systems/<name>` deep pages         | Do not exist                                | Plate links go to the real GitHub/docs/crate URLs.      |
+| `matthew@memerson.com` in the footer | **Unverified** — not in the repo anywhere   | **Omitted.** See below.                                 |
+| `SEATTLE · 47.6°N 122.3°W`           | **Unverified** — location asserted nowhere  | Replaced with an Easter egg. See below.                 |
+| `EMERSON` on the hero sign           | The wordmark is `M.EMERSON`                 | Sign is now `M.EMERSON`, sized to the word.             |
 
 ### Mockup annotation is not site copy
 
@@ -238,19 +240,21 @@ never seen the design document? "Nothing samples a palette" is an answer to a qu
 a reviewer asked. `MEMERSON.COM — DISTRICT 09 / PERSONAL` passes — it is the design's
 fiction, not an instruction, and the 404's `SIGNAL LOST — DISTRICT 09` is the same voice.
 
-### Pagination is invisible to the reader
+### Pagination was removed, and why
 
-`/photos/2`, `/photos/3` … are real pages — they work without JS, they are crawlable, and
-they keep the initial HTML small. With JS they disappear: the sheet grows as you scroll and
-the lightbox runs through the whole library, pulling the next page in when you step off the
-end rather than stopping or wrapping. The paginated nav is the no-JS path and is hidden once
-`src/scripts/gallery.ts` is running.
+`/photos/2`, `/photos/3` … used to be real pages, with infinite scroll layered over them.
+The Photos Redesign made that untenable rather than merely awkward: run headers, the shoot
+rail, the stray-frame rule and the tag filter all need the whole library to be _truthful_,
+and a rail that only lists the shoots loaded so far is worse than no rail — it answers
+"what else is here" with a lie that changes as you scroll.
 
-Two things to know before touching it. Astro fires `astro:page-load` on the **first** load
-as well as on router swaps, so the module must guard against initialising twice — otherwise
-you get two observers pulling pages and two stacked lightboxes. And a router swap does not
-re-execute a script the previous page already loaded, which is why navigating between
-paginated pages once left the sheet completely inert.
+So `/photos` is one static page carrying every frame. See ARCHITECTURE §6 for the weight
+this actually costs and the point at which it stops being free.
+
+Two things to know before touching the script. Astro fires `astro:page-load` on the
+**first** load as well as on router swaps, so it must guard against initialising twice.
+And a router swap does not re-execute a script the previous page already loaded, which is
+why arriving at `/photos` from another page once left the gallery completely inert.
 
 ### Contact sheet: tiles are not dimmed by default
 
@@ -306,96 +310,112 @@ script, no third-party requests, nothing to attest to. See
 
 ## 9. Mobile
 
-Not done. Desktop-only was a deliberate choice, not an oversight — the mockups specify
-desktop layouts and the mobile design is its own piece of work.
+Done, 2026-07-28, from the **Mobile Site** and **Photos on Mobile** boards in Claude
+Design. Desktop above 900px is untouched; everything below it is a re-decision for the
+screen rather than a squeeze of the desktop layout. Nothing was removed to make the phone
+easier — only the things that depend on a cursor or on horizontal room were re-housed.
 
-### The governing constraint: elements morph, they don't just shrink
+### Where the rules live
 
-**This is stronger than "responsive".** The requirement is not that the desktop layout
-scales down and reflows — it is that the design's _elements themselves_ transform
-continuously as the window narrows, arriving at the mobile design by a smooth path rather
-than a jump.
+`global.css` carries only what it already owns: the token steps, the nav, the footer and
+the section headers. Everything else sits in its own component's `<style>` block, next to
+the desktop rule it answers. This is not tidiness — **Astro scopes a component's styles
+with an attribute selector**, which outranks a bare class in `global.css`, so a responsive
+rule for `.tease` written in the global sheet would silently never apply.
 
-The worked example, from Matthew:
+### Breakpoints
 
-> The electric bar next to projects could smoothly shrink until it's just a left border of
-> the projects container, removing the whitespace.
+| Width        | What changes                                                                                                                                                |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ≤ 1240       | The shoot rail loses its margin and folds into the SHOOTS sheet                                                                                             |
+| ≤ 1100       | Gutter 70 → 44; gallery masonry 4 → 3 columns                                                                                                               |
+| ≤ 900        | Gutter 32, rail offset 44; sign scales on `vw`; tube goes flexible; tease 3 across with the card spanning two tracks; prose 18px; gallery head stacks       |
+| ≤ 720        | Bio stacks; plate blurb drops to its own line; log rows go date/read over title; year column collapses; control bar wraps; viewer goes swipe + bottom sheet |
+| ≤ 560        | Gutter 18, rail offset 26; nav tightens; prose 17.5px; code full-bleed; RUNS and EDITORIAL go single column; the control bar stops being sticky             |
+| `hover:none` | Hover lift, glow, brackets and index numbers drop; press state replaces them; 44–56px minimum on every control                                              |
 
-Read that carefully, because it sets the standard. The rail does not get thinner and keep
-its 56px of empty offset. It **becomes a different thing** — a glowing left edge on the
-plate itself — and the whitespace it used to need goes away with it. Same element, same
-meaning ("this run of projects is one connected thing"), continuously re-expressed at a
-width where a detached spine no longer earns its space.
+### The decisions worth knowing
 
-This is the same idea as the motion law in §4, applied across width instead of time:
-**energy travels, objects hold still.** A rail collapsing into a border is the object
-holding still while the light re-forms around it. A rail that abruptly disappears at
-`768px` and is replaced by a border is a cut, and cuts are what this design does not do.
+**The sign gets the width.** `M.EMERSON` is the whole first impression — flicker,
+chromatic fringe, reflected echo. Shrinking it politely to fit would waste the one moment
+the site is loudest, so it scales on **viewport width** rather than stepping at a
+breakpoint, landing at 46–72px and still filling the column edge to edge. `.sign-echo`'s
+height moved from a hard-coded `74px` to `0.64em` so the reflection follows it. The tube
+below became `flex: 1 1 auto` instead of a fixed 518px so it still runs to `SCROLL ↓`.
 
-Implications for how it gets built:
+**The rail survives, tightened.** Deleting the systems rail and stacking the plates flush
+left buys 56px — 16% of a 390px screen. But the rail _is_ the section: it is what charges
+as you scroll and what the nodes hang off. It stays at **26px instead of 56**, under 12%
+of the width, with the charge, the travelling head and the terminal all behaving as they
+do on desktop. `--gutter`, `--rail-offset`, the node's `left` and the offshoot's width are
+one system and all four move together.
 
-- `clamp()` and calculated values over discrete breakpoints, so intermediate widths are
-  _designed states_, not accidents between two designed states.
-- **Container queries** where a component's shape depends on its own width rather than the
-  page's — the plates are the obvious case.
-- Where a genuine reflow is unavoidable, it should still be reached by interpolation
-  (a gap going to zero, an offset going to zero, an opacity crossing) rather than a
-  `display` swap.
-- Breakpoints are a last resort, and each one is a place where the smoothness promise is
-  being broken — so each needs a reason.
+**Plates break, they don't shrink.** The blurb drops to its own line under the name rather
+than the name shrinking to make room: 21px display type is the floor for something meant
+to read as a title.
 
-The tokens support this: every dimension that matters is a custom property in `:root`, so
-much of the work is giving those properties fluid values. But the rail example shows that
-**token interpolation alone is not sufficient** — `--rail-offset → 0` has to be
-accompanied by the rail's own geometry changing from a detached 3px bar to a border on the
-plate. That is per-element design work, not a global find-and-replace.
+**Four frames and a card, without a ragged row.** Five across on a phone is 60px
+thumbnails, which is a texture and not a photograph; three across leaves a hole, because
+five items do not divide by three. The `+N` card takes the two remaining tracks on row two
+and drops its 4:5 ratio.
 
-### Two phases, deliberately separate
+**Prose at reading size, code at full bleed.** The post is the one page where a phone is
+genuinely the better device. Serif drops to **17.5px at 1.62** — about a 38-character
+measure. Code blocks break the gutter and run edge to edge with their cyan rule pinned to
+the screen edge; long lines are the one thing a narrow column cannot serve, so they get
+every pixel.
 
-**Phase 1 — responsive-ready groundwork.** Mechanical, low-risk, and it survives whatever
-mobile mockup arrives, because it invents no visual design:
+**Tables of two columns become stacks.** About's 130px label column eats a third of the
+line for four characters of mono, so label sits above value with the arrow pinned right
+across both rows. The log index loses its sticky 78px year column the same way — the year
+becomes a marker above its group instead of a rail beside it.
 
-- Fluid `--gutter` and `--rail-offset` (they must scale _together_, see below).
-- Fluid hero sign size; the reflection's hard-coded `74px` height has to follow it.
-- Guarantee no horizontal overflow and no overlapping text at any width.
-- Sensible `column-count` reduction on the contact sheet.
+### What deliberately did not change
 
-**Phase 2 — the transformations**, from a mockup. Each is a decision about what an element
-_becomes_, and none can be guessed:
-
-- The rail → a glowing left border on the plates (the one example we have).
-- The nav → ?
-- The lightbox on touch → ?
-- The footer's tilted floor → ?
-- The hero sign and its reflection → ?
-
-Doing phase 2 before there is a mockup means inventing transformations that get thrown
-away — and unlike ordinary responsive work, a wrong guess here is not "slightly off
-spacing", it is the wrong element becoming the wrong thing. Phase 1 is free; phase 2 waits.
-
-### The specific things that will fight back
-
-- **The hero sign** is `116px` on a `fit-content` wrap, and `.sign-echo` has a hard-coded
-  `74px` height chosen to match that size. Change one without the other and the wet-floor
-  reflection detaches from the type.
-- **The gutter and the rail offset are coupled.** `--gutter: 70px` positions the rail;
-  `--rail-offset: 56px` positions the plates relative to it; the node sits at `left: -59px`
-  and the offshoot spans `-50px` to `+1px`. These four numbers are one system. Collapse the
-  gutter without collapsing the offset and the offshoots visibly detach from their nodes.
-- **The contact sheet** is `column-count: 4`. It reduces cleanly, but `fx.ts` re-samples
-  rail hues from measured positions on resize, so verify the resize path still fires.
-- **The lightbox assumes a pointer and a keyboard** — no swipe, and the prev/next controls
-  are 40px, below the ~44px touch target guideline.
-- **The nav** is a single non-wrapping row of five items.
-- **The footer floor** is a `perspective(900px) rotateX()` plane sized in viewport
-  percentages and distorts badly below ~700px.
-
-Nothing in the markup blocks any of this — the layout is flex/grid throughout and the
-tokens are all custom properties — but none of it has been exercised below 1160px.
+The star field, the scanlines, the neon flicker, the rail charge and terminal, the sticky
+section headers, the redraw wipe between pages, the accent ramp and the plate brackets are
+all identical.
 
 ---
 
-## 10. Iterating on the design
+## 10. The gallery on small screens
+
+Split out from §9 because the three views do different jobs and therefore narrow
+differently. One rule — _fewer columns as the screen narrows_ — would be wrong here.
+
+**The grid splits by intent, not by width.** RUNS goes to a **single column** below 560px:
+on a phone the photograph should be the whole width, and RUNS is the view you land on, so
+the default phone experience is a considered one-at-a-time read rather than a wall of
+thumbnails. SHEET **stays two-up**, because that view exists for scanning an archive and
+thumbnails are the point. EDITORIAL keeps its lead frame, but the title block moves above
+the photograph instead of beside it.
+
+**Hover metadata has to land somewhere else.** On desktop the caption is a hover overlay.
+A phone has no hover and a tap is reserved for opening the viewer, so in the single-column
+views the caption **steps out from under the photograph and becomes type**. In two-up
+SHEET it disappears entirely rather than being crushed.
+
+**Only one thing stays pinned.** Below 560px the control bar **scrolls away**: it is a
+mode switch you touch once, and pinning it would cost 220px of an 844px screen on the very
+view whose argument is that the photograph should own the width. The run header keeps its
+sticky slot, because it is the one piece of chrome answering a question you have
+continuously while scrolling. Pinned chrome drops to ~102px.
+
+**The rail folds into a sheet.** Its job — _where am I, what else is here_ — moves into a
+SHOOTS button that opens a full-screen list at 56px a row. The sticky run header still
+answers "where am I"; the sheet answers "what else is here" on demand.
+
+**The viewer loses its furniture.** Arrows and the thumbnail strip are mouse furniture and
+both go. Swipe left/right moves, swipe down closes, and the page says so once. Tags become
+a horizontally scrollable row so eight of them do not wrap into four lines. CAPTURE DATA
+becomes a **bottom sheet** rather than a side drawer: a 250px panel on a 390px screen would
+cover the photograph. Unlike the desktop drawer it is fully opaque — it rises straight over
+the metadata stack rather than pushing it aside, and at 95% the title underneath read
+through it.
+
+---
+
+## 11. Iterating on the design
 
 The design lives in Claude Design and will keep changing. `docs/design/` is not an archive
 — **it is the diff base**, and that is the whole reason it exists.

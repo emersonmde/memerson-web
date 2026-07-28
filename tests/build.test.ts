@@ -54,6 +54,9 @@ describe('accessibility', () => {
      */
     for (const { file, html } of pages) {
       for (const tag of markup(html).match(/<img[^>]*>/g) ?? []) {
+        // The viewer's own <img> is an empty slot until a tile is opened; its
+        // alt is copied from that tile's, which this loop already checks.
+        if (tag.includes('lb-img')) continue;
         const alt = /alt="([^"]*)"/.exec(tag);
         assert.ok(
           alt && alt[1].trim().length > 0,
@@ -156,41 +159,51 @@ describe('design system integrity', () => {
 });
 
 describe('gallery', () => {
-  const sheetPage = () => pages.find((p) => rel(p.file) === 'photos/index.html')!;
+  const gallery = () => pages.find((p) => rel(p.file) === 'photos/index.html')!;
 
-  test('the sheet exposes what the infinite scroll needs', () => {
-    const html = sheetPage().html;
-    for (const attr of ['data-sheet', 'data-total=', 'data-next=', 'data-sentinel']) {
-      assert.ok(html.includes(attr), `contact sheet is missing ${attr}`);
-    }
-  });
+  test('the whole library is on one page', async () => {
+    /*
+     * The redesign's run headers, margin rail and stray-frame rule all need the
+     * complete library to be truthful about coverage, so /photos is a single
+     * static page and the old /photos/N routes are gone. ARCHITECTURE §6.
+     */
+    const manifest = JSON.parse(
+      await readFile(new URL('../src/data/photos.json', import.meta.url), 'utf8'),
+    ) as unknown[];
 
-  test('paginated pages still exist as a no-JS path', () => {
-    // Pagination is invisible to the reader but must remain real: crawlable,
-    // and functional without JavaScript. ARCHITECTURE §6.
+    const tiles = gallery().html.match(/<a class="px-tile"[^>]*>/g) ?? [];
+    assert.equal(tiles.length, manifest.length, 'not every frame was rendered');
+
     const paginated = pages.filter((p) => /photos\/\d+\/index\.html$/.test(rel(p.file)));
-    assert.ok(paginated.length > 0, 'no paginated photo pages were built');
-    for (const { file, html } of paginated) {
-      assert.ok(html.includes('data-sheet'), `${rel(file)} is not a usable sheet`);
+    assert.equal(paginated.length, 0, 'a paginated photo page survived');
+  });
+
+  test('every tile carries the data the viewer reads', () => {
+    const tiles = gallery().html.match(/<a class="px-tile"[^>]*>/g) ?? [];
+    assert.ok(tiles.length > 0, 'no tiles in the gallery');
+    for (const tile of tiles) {
+      for (const attr of ['data-tile', 'data-bloom', 'data-alt', 'data-title', '--ar:']) {
+        assert.ok(tile.includes(attr), `tile missing ${attr}`);
+      }
     }
   });
 
-  test('the last page does not advertise a next page', () => {
-    const paginated = pages
-      .filter((p) => /photos\/\d+\/index\.html$/.test(rel(p.file)))
-      .sort((a, b) => a.file.localeCompare(b.file));
-    const last = paginated[paginated.length - 1];
-    assert.ok(
-      !/data-next="[^"]+"/.test(last.html),
-      `${rel(last.file)} claims a next page`,
-    );
+  test('the viewer reads srcsets off the tile rather than a second copy', () => {
+    /*
+     * At 118 tiles on one page, duplicating each srcset into data-avif /
+     * data-webp was the single largest thing in the document. The viewer reads
+     * the tile's own <source> elements instead.
+     */
+    const html = gallery().html;
+    assert.ok(!html.includes('data-webp='), 'srcsets are duplicated onto the tile');
+    assert.match(html, /<source type="image\/webp" srcset="[^"]*640\.webp 640w/);
   });
 
-  test('home previews link to the gallery, sheet tiles link to the image', () => {
+  test('home previews link to the gallery, gallery tiles link to the image', () => {
     /*
      * Regression: home previews linked to the raw .webp, stranding visitors on
-     * a bare image file. The sheet keeps the image href on purpose — the
-     * lightbox intercepts it, and no-JS still gets the photograph.
+     * a bare image file. The gallery keeps the image href on purpose — the
+     * viewer intercepts it, and no-JS still gets the photograph.
      */
     const home = pages.find((p) => rel(p.file) === 'index.html')!;
     for (const tag of home.html.match(/<a class="tile"[^>]*>/g) ?? []) {
@@ -200,17 +213,50 @@ describe('gallery', () => {
         `home tile points at a bare file: ${tag.slice(0, 80)}`,
       );
     }
-    const first = /<a class="tile"[^>]*>/.exec(sheetPage().html)![0];
+    const first = /<a class="px-tile"[^>]*>/.exec(gallery().html)![0];
     assert.match(first, /href="https:\/\/photos\.memerson\.com/);
   });
 
-  test('every tile carries the data the lightbox reads', () => {
-    const tiles = sheetPage().html.match(/<a class="tile"[^>]*>/g) ?? [];
-    assert.ok(tiles.length > 0, 'no tiles on the contact sheet');
-    for (const tile of tiles) {
-      for (const attr of ['data-tile', 'data-webp', 'data-bloom', 'data-alt']) {
-        assert.ok(tile.includes(attr), `tile missing ${attr}`);
-      }
+  test('every run is headed, and the stray stretch is marked as not an outing', () => {
+    const html = gallery().html;
+    const runs = html.match(/class="px-run"/g) ?? [];
+    const heads = html.match(/class="px-run-head[^"]*"/g) ?? [];
+    assert.ok(runs.length > 1, 'the gallery has no runs');
+    assert.equal(heads.length, runs.length, 'a run is missing its header');
+
+    const stray = heads.filter((h) => h.includes('is-stray'));
+    assert.equal(stray.length, 1, 'expected exactly one merged stray stretch');
+    assert.match(html, /STRAY FRAMES/);
+  });
+
+  test('the rail and the shoots sheet are real anchors into the scroll', () => {
+    /*
+     * Navigation between shoots must survive with no JavaScript, so the rail
+     * and the sheet are fragment links to the run they name rather than click
+     * handlers. Every target has to exist.
+     */
+    const html = gallery().html;
+    const ids = new Set(
+      [...html.matchAll(/<section class="px-run" id="([^"]+)"/g)].map((m) => m[1]),
+    );
+    assert.ok(ids.size > 1, 'runs carry no ids to anchor to');
+
+    const targets = [...html.matchAll(/class="px-rail-item[^"]*" href="#([^"]+)"/g)];
+    assert.equal(targets.length, ids.size, 'the rail does not cover every run');
+    for (const [, key] of targets) {
+      assert.ok(ids.has(key), `rail points at a missing run: ${key}`);
+    }
+    for (const [, key] of html.matchAll(/class="px-jumprow[^"]*" href="#([^"]+)"/g)) {
+      assert.ok(ids.has(key), `shoots sheet points at a missing run: ${key}`);
+    }
+  });
+
+  test('no design-notes copy shipped', () => {
+    // The mockup carried its own rationale as on-page copy. It is documentation,
+    // not website text. Same guard as the mockup-annotation test above.
+    const html = gallery().html;
+    for (const phrase of ['DESIGN NOTES', 'What changed, and why', 'px-notes']) {
+      assert.ok(!html.includes(phrase), `design instruction leaked: ${phrase}`);
     }
   });
 });

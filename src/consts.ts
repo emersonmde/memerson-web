@@ -18,6 +18,3 @@ export const SOCIAL = {
  * Originals live in a separate private bucket and are never served from here.
  */
 export const PHOTOS_BASE_URL = 'https://photos.memerson.com';
-
-/** Photos per paginated gallery page. See docs/ARCHITECTURE.md §6. */
-export const PHOTOS_PAGE_SIZE = 30;

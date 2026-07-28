@@ -835,6 +835,156 @@ a.sec-aside:hover {
   animation: redrawLine 380ms cubic-bezier(0.4, 0, 0.5, 1) forwards;
 }
 
+/* ---------------------------------------------------------------------------
+ * Small screens — the shell. See docs/UI-DESIGN.md §9.
+ *
+ * Desktop above 900px is untouched. Everything below is a re-decision for the
+ * screen rather than a squeeze of the desktop layout: nothing was removed to
+ * make the phone easier, only things that depend on a cursor or on horizontal
+ * room were re-housed.
+ *
+ * Page-level rules do *not* live here. Astro scopes a component's styles with
+ * an attribute selector, which outranks a bare class in this file — so the
+ * responsive rules for the hero, the plates, the log and About sit in those
+ * components' own <style> blocks, next to the desktop rules they answer.
+ * ------------------------------------------------------------------------ */
+
+/* Long headings on a narrow column break far better balanced than ragged. */
+.sign,
+.log-h1,
+.about-h1,
+.post-h1 {
+  text-wrap: balance;
+}
+
+/* ---------- 1100: the wide-desk gutter goes ---------- */
+@media (max-width: 1100px) {
+  :root {
+    --gutter: 44px;
+  }
+}
+
+/* ---------- 900: tablet / half-screen window ---------- */
+@media (max-width: 900px) {
+  :root {
+    --gutter: 32px;
+    --rail-offset: 44px;
+  }
+
+  .sec-title {
+    font-size: clamp(38px, 6.6vw, 54px);
+  }
+
+  .foot {
+    height: 250px;
+  }
+}
+
+/* ---------- 720: one column of everything ---------- */
+@media (max-width: 720px) {
+  .sec-lede {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sec-lede p {
+    max-width: none;
+  }
+
+  .foot {
+    height: 220px;
+  }
+
+  .foot-body {
+    padding-top: 38px;
+  }
+
+  .foot-title {
+    font-size: 22px;
+  }
+
+  .foot-links {
+    flex-wrap: wrap;
+    gap: 12px 18px;
+  }
+}
+
+/* ---------- 560: the phone ---------- */
+@media (max-width: 560px) {
+  :root {
+    --gutter: 18px;
+    /*
+     * The obvious phone move is to delete the systems rail and stack the plates
+     * flush left — it costs 56px, 16% of a 390px screen. But the rail *is* the
+     * section: it is what charges as you scroll and what the nodes hang off.
+     * So it survives at 26px, under 12% of the width, with everything it does
+     * on desktop intact.
+     */
+    --rail-offset: 26px;
+  }
+
+  .nav {
+    gap: 13px;
+    padding: 0 var(--gutter);
+  }
+
+  .nav a,
+  .nav-link {
+    font-size: 9px;
+    letter-spacing: 0.13em;
+  }
+
+  .nav-mark {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+  }
+
+  .sec {
+    padding-bottom: 56px;
+  }
+
+  .sec-head {
+    gap: 10px;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+  }
+
+  .sec-aside {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+  }
+
+  .sec-title {
+    padding: 26px 0 8px;
+    font-size: clamp(32px, 9.2vw, 44px);
+  }
+}
+
+/* ---------- touch: nothing may hide behind a cursor ---------- */
+@media (hover: none) {
+  /*
+   * A plate that lights on `:hover` on a touch screen stays lit after the tap
+   * that opened it and after the one that closed it, so it reads as
+   * half-activated. Open is the only state worth showing here.
+   */
+  .plate:hover {
+    background: rgba(8, 11, 19, 0.86);
+    border-color: var(--hairline);
+    box-shadow: none;
+  }
+
+  .plate[open] {
+    background: rgba(11, 17, 32, 0.94);
+    border-color: var(--h, var(--cyan));
+    box-shadow: 0 0 44px -16px var(--h, var(--cyan));
+  }
+
+  .nav a {
+    padding: 6px 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
