@@ -1,0 +1,332 @@
+#!/usr/bin/env node
+/**
+ * npm run design:bundle
+ *
+ * Builds a self-contained snapshot of the photo gallery **as it is actually
+ * implemented today**, for pushing to a Claude Design design-system project.
+ *
+ * The point is to remove a translation step. The design source of record in
+ * `docs/design/` is what was *designed*; the implementation has moved since
+ * (see UI-DESIGN §8), and describing that drift in prose is both laborious and
+ * lossy. These files are the drift, rendered.
+ *
+ * Why not just point Claude Design at the live site: a built Astro page carries
+ * hashed bundle names and `data-astro-cid-*` scoped selectors, so the tokens —
+ * the actual system — are unreadable in it. Here the stylesheet is inlined
+ * whole and the token block is rendered as swatches.
+ *
+ * Reads ./dist, so run a build first.
+ */
+import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
+import path from 'node:path';
+
+import { REPO_ROOT } from './photos/lib/r2.mjs';
+
+const DIST = path.join(REPO_ROOT, 'dist');
+const OUT = path.join(REPO_ROOT, '.design-bundle');
+const SITE = 'https://memerson.com';
+
+/** The lightbox sample. Titled, recognisable, and busy enough to judge the bloom. */
+const LIGHTBOX_SLUG = '2021-11-27-2e180961';
+
+const esc = (s) =>
+  String(s).replace(
+    /[&<>"]/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c],
+  );
+
+/**
+ * Fonts stay as absolute URLs rather than base64. They are public on
+ * memerson.com, and inlining 325 KB into every file to save one request is a
+ * bad trade when these are read in a browser.
+ */
+async function siteCss() {
+  const page = await readFile(path.join(DIST, 'photos/index.html'), 'utf8');
+  const hrefs = [...page.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(
+    (m) => m[1],
+  );
+
+  let css = '';
+  for (const href of hrefs) css += await readFile(path.join(DIST, href), 'utf8');
+
+  const inline = [...page.matchAll(/<style>([\s\S]*?)<\/style>/g)].map((m) => m[1]);
+  css += inline.join('\n');
+
+  return css.replace(/url\(\/fonts\//g, `url(${SITE}/fonts/`);
+}
+
+function shell({ title, card, group, subtitle, body, css, note }) {
+  return `<!-- @dsCard group="${group}" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
+<meta name="dc-card" content="${esc(card)}">
+<meta name="dc-subtitle" content="${esc(subtitle)}">
+<style>${css}</style>
+<style>
+  body { margin: 0; background: var(--void); color: var(--tx); }
+  .dc-note {
+    position: relative; z-index: 5;
+    margin: 0; padding: 14px 70px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--chrome);
+    font: 400 11px/1.7 var(--mono); color: var(--dim);
+  }
+  .dc-note b { color: var(--cyan); font-weight: 500; }
+</style>
+</head>
+<body>
+${note ? `<p class="dc-note">${note}</p>` : ''}
+${body}
+</body>
+</html>
+`;
+}
+
+/** Strip the module scripts — they reference hashed bundles that aren't here. */
+const stripScripts = (html) =>
+  html
+    .replace(/<script[\s\S]*?<\/script>/g, '')
+    .replace(/<link rel="modulepreload"[^>]*>/g, '');
+
+async function buildSheet(css) {
+  const page = await readFile(path.join(DIST, 'photos/index.html'), 'utf8');
+  const bodyMatch = page.match(/<body[^>]*>([\s\S]*)<\/body>/);
+  const body = stripScripts(bodyMatch[1])
+    .replace(/<link rel="stylesheet"[^>]*>/g, '')
+    .replace(/<style>[\s\S]*?<\/style>/g, '');
+
+  return shell({
+    title: 'Contact sheet — current implementation',
+    card: 'Contact sheet',
+    group: 'Photos — current',
+    subtitle: 'The live /photos page. Real photographs, real captions.',
+    css,
+    note:
+      '<b>This is the live page, not a mockup.</b> Real photographs from R2 and real ' +
+      'generated captions. Infinite scroll and the lightbox are JavaScript and are not ' +
+      'active here — the lightbox is a separate card. Tiles fall back to their inlined ' +
+      'LQIP if the remote images are blocked.',
+    body,
+  });
+}
+
+/**
+ * The lightbox is built at runtime by `gallery.ts`, so saving the page never
+ * captures it. This reproduces that subtree open, from the same markup, with a
+ * real photograph in it.
+ */
+async function buildLightbox(css, manifest) {
+  const photo = manifest.find((entry) => entry.id === LIGHTBOX_SLUG) ?? manifest[0];
+  const index = manifest.indexOf(photo);
+  const url = (slug, w, f = 'webp') =>
+    `https://photos.memerson.com/photos/${slug}/${w}.${f}`;
+
+  const label = photo.takenAt ? photo.takenAt.slice(0, 10).replace(/-/g, '.') : 'UNDATED';
+  const meta = [
+    photo.camera,
+    photo.aperture,
+    photo.shutter,
+    photo.iso && `ISO ${photo.iso}`,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+    .toUpperCase();
+
+  const window5 = manifest.slice(Math.max(0, index - 2), Math.max(0, index - 2) + 5);
+  const thumbs = window5
+    .map(
+      (entry) =>
+        `<button type="button" class="lb-thumb"${
+          entry.id === photo.id ? ' aria-current="true"' : ''
+        } style="background-image:url('${url(entry.id, 640)}')" aria-label="Photo"></button>`,
+    )
+    .join('');
+
+  const body = `
+<div class="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div class="lb-wash"></div>
+  <div class="lb-bloom" style="background-image:url('${url(photo.id, 640)}')"></div>
+  <div class="lb-vignette"></div>
+  <div class="lb-bar">
+    <span class="lb-counter">${String(index + 1).padStart(3, '0')} / ${manifest.length}</span>
+    <button type="button" class="lb-close">CLOSE ESC ×</button>
+  </div>
+  <div class="lb-stage">
+    <button type="button" class="lb-nav lb-prev" aria-label="Previous photo">←</button>
+    <figure class="lb-frame">
+      <picture><img class="lb-img" src="${url(photo.id, 1536)}" alt="${esc(photo.caption ?? '')}"></picture>
+      <span class="lb-bracket lb-tl"></span><span class="lb-bracket lb-tr"></span>
+      <span class="lb-bracket lb-bl"></span><span class="lb-bracket lb-br"></span>
+    </figure>
+    <button type="button" class="lb-nav lb-next" aria-label="Next photo">→</button>
+  </div>
+  <div class="lb-foot">
+    <div class="lb-foot-inner">
+      <div>
+        <div class="lb-title">${label}</div>
+        <div class="lb-meta"><span class="lb-dash"></span><span class="lb-meta-text">${esc(meta)}</span></div>
+      </div>
+      <div class="lb-thumbs">${thumbs}</div>
+    </div>
+  </div>
+</div>`;
+
+  return shell({
+    title: 'Lightbox — current implementation',
+    card: 'Lightbox',
+    group: 'Photos — current',
+    subtitle: 'Rendered open. Ambient bloom is the photograph itself, blurred.',
+    css,
+    note:
+      `<b>The design problem, in one card.</b> This photograph has the title ` +
+      `"${esc(photo.title ?? '—')}", a caption, ${(photo.tags ?? []).length} tags and ` +
+      `belongs to a named shoot — and the lightbox shows none of it. It shows the date ` +
+      `and the camera settings. Everything new needs somewhere to live.`,
+    body: `<div style="position:relative;height:820px">${body}</div>`,
+  });
+}
+
+async function buildTokens(css) {
+  const source = await readFile(path.join(REPO_ROOT, 'src/styles/global.css'), 'utf8');
+  const root = source.match(/:root\s*\{([\s\S]*?)\n\}/)[1];
+
+  const rows = [...root.matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm)].map(
+    ([, name, value]) => {
+      const isColour = /^(#|rgba?\(|oklch\()/.test(value.trim());
+      const swatch = isColour
+        ? `<span style="display:inline-block;width:52px;height:26px;border:1px solid var(--hairline);background:${value.trim()};vertical-align:middle"></span>`
+        : '';
+      return `<tr><td><code>${name}</code></td><td>${swatch}</td><td><code>${esc(value.trim())}</code></td></tr>`;
+    },
+  );
+
+  const body = `
+<div style="padding:48px 70px;max-width:900px">
+  <h1 style="font:700 48px/1 var(--display);letter-spacing:-.04em;color:var(--tx-hi);margin:0 0 8px">Tokens</h1>
+  <p style="font:400 12px/1.8 var(--mono);color:var(--dim);margin:0 0 32px">
+    Verbatim from <code>src/styles/global.css</code>. Nothing outside this set is used
+    anywhere on the site, and nothing new should be introduced ad hoc.
+  </p>
+  <p style="font:400 12px/1.8 var(--mono);color:var(--tx-body);margin:0 0 24px;padding:14px 18px;border-left:2px solid var(--cyan);background:var(--plate)">
+    <b style="color:var(--cyan)">The accent ramp is a function, not a palette.</b>
+    <code>hueAt(t)</code> in <code>src/lib/ramp.ts</code> moves hue 66 → 200 → 286 with
+    lightness and chroma <em>locked</em> at .80 / .17. That lock is what stops sampled
+    colours fighting each other. Any new accent must be a point on this ramp.
+  </p>
+  <div style="height:26px;margin:0 0 28px;background:linear-gradient(90deg,oklch(.82 .17 66),oklch(.8 .17 200),oklch(.8 .17 286))"></div>
+  <table style="border-collapse:collapse;width:100%;font:400 12px/1.9 var(--mono);color:var(--tx-body)">
+    ${rows.join('\n')}
+  </table>
+</div>
+<style>
+  td { padding: 3px 14px 3px 0; border-bottom: 1px solid var(--hairline-soft); }
+  code { color: var(--tx); }
+</style>`;
+
+  return shell({
+    title: 'Tokens',
+    card: 'Tokens',
+    group: 'Foundations',
+    subtitle: 'Surfaces, text, the accent ramp, geometry.',
+    css,
+    body,
+  });
+}
+
+async function buildMetadata(css, manifest, shoots) {
+  const sample = manifest.find((e) => e.id === LIGHTBOX_SLUG) ?? manifest[0];
+  const redacted = {
+    ...sample,
+    lqip: 'data:image/webp;base64,…',
+    variants: sample.variants,
+  };
+
+  const shootRows = Object.entries(shoots)
+    .map(
+      ([id, s]) =>
+        `<tr><td><code>${id}</code></td><td style="text-align:right">${s.count}</td><td>${esc(s.name ?? '—')}</td><td><code>${esc(s.series ?? '')}</code></td></tr>`,
+    )
+    .join('\n');
+
+  const allTags = [...new Set(manifest.flatMap((e) => e.tags ?? []))];
+
+  const body = `
+<div style="padding:48px 70px;max-width:1000px">
+  <h1 style="font:700 48px/1 var(--display);letter-spacing:-.04em;color:var(--tx-hi);margin:0 0 8px">The metadata</h1>
+  <p style="font:400 12px/1.8 var(--mono);color:var(--dim);margin:0 0 32px">
+    All of this exists and is populated. None of it is displayed anywhere yet — that is
+    the thing to design.
+  </p>
+
+  <h2 style="font:700 22px var(--display);color:var(--tx-hi);margin:32px 0 10px">Three layers</h2>
+  <table style="border-collapse:collapse;font:400 12px/1.9 var(--mono);color:var(--tx-body)">
+    <tr><td><code>shoot</code></td><td>one per photo, automatic</td><td>the browsing unit — a single outing</td></tr>
+    <tr><td><code>series</code></td><td>optional, spans shoots</td><td>joins recurring ones (two "Air Show" shoots)</td></tr>
+    <tr><td><code>tags</code></td><td>3–8 per photo</td><td>${allTags.length} distinct across the library</td></tr>
+  </table>
+  <p style="font:400 12px/1.8 var(--mono);color:var(--tx-body);margin:20px 0;padding:14px 18px;border-left:2px solid var(--sodium);background:var(--plate)">
+    <b style="color:var(--sodium)">Subsets are sparse.</b> Most photographs belong to no
+    series and never will, and the miscellaneous fraction <em>grows</em> as more casual
+    frames are imported. Any affordance implying these partition the library — a chip row
+    across the top, tabs — is the wrong shape.
+  </p>
+
+  <h2 style="font:700 22px var(--display);color:var(--tx-hi);margin:36px 0 10px">Shoots, real</h2>
+  <table style="border-collapse:collapse;width:100%;font:400 12px/1.9 var(--mono);color:var(--tx-body)">
+    <tr style="color:var(--faint)"><td>id</td><td style="text-align:right">n</td><td>name</td><td>series</td></tr>
+    ${shootRows}
+  </table>
+
+  <h2 style="font:700 22px var(--display);color:var(--tx-hi);margin:36px 0 10px">One photo, verbatim</h2>
+  <pre style="font:400 11px/1.7 var(--mono);color:var(--tx-body);background:var(--plate);padding:18px;overflow-x:auto;border:1px solid var(--hairline)">${esc(JSON.stringify(redacted, null, 2))}</pre>
+</div>
+<style>
+  td { padding: 3px 18px 3px 0; border-bottom: 1px solid var(--hairline-soft); vertical-align: top; }
+  code { color: var(--tx); }
+</style>`;
+
+  return shell({
+    title: 'Photo metadata',
+    card: 'Metadata',
+    group: 'Photos — current',
+    subtitle: 'Shoots, series, tags, captions — populated, and displayed nowhere.',
+    css,
+    body,
+  });
+}
+
+async function main() {
+  const css = await siteCss();
+  const manifest = JSON.parse(
+    await readFile(path.join(REPO_ROOT, 'src/data/photos.json'), 'utf8'),
+  );
+  const shoots = JSON.parse(
+    await readFile(path.join(REPO_ROOT, 'src/data/shoots.json'), 'utf8'),
+  );
+
+  await rm(OUT, { recursive: true, force: true });
+  await mkdir(path.join(OUT, 'foundations'), { recursive: true });
+  await mkdir(path.join(OUT, 'photos-current'), { recursive: true });
+
+  const files = {
+    'foundations/tokens.html': await buildTokens(css),
+    'photos-current/contact-sheet.html': await buildSheet(css),
+    'photos-current/lightbox.html': await buildLightbox(css, manifest),
+    'photos-current/metadata.html': await buildMetadata(css, manifest, shoots),
+  };
+
+  for (const [name, html] of Object.entries(files)) {
+    await writeFile(path.join(OUT, name), html, 'utf8');
+    console.log(`  ${name}  ${(html.length / 1024).toFixed(0)} KB`);
+  }
+  console.log(`\nWrote ${Object.keys(files).length} file(s) to .design-bundle/`);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

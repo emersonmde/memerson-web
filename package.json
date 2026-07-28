@@ -14,6 +14,7 @@
     "test:unit": "node --test tests/rail.test.ts tests/content.test.ts tests/manifest.test.ts",
     "format": "prettier --write \"**/*.{astro,ts,js,mjs,json,md}\"",
     "deploy": "npm run build && wrangler deploy",
+    "design:bundle": "node scripts/design-bundle.mjs",
     "photos:import": "node scripts/photos/import.mjs",
     "photos:shoots": "node scripts/photos/shoots.mjs",
     "photos:describe": "node scripts/photos/describe.mjs",
