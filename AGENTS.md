@@ -48,6 +48,24 @@ npm run deploy           # build, then wrangler deploy (needs `wrangler login` f
 npx wrangler deploy --dry-run   # validate wrangler.jsonc without deploying
 ```
 
+Photos — all need `--` before their arguments, and all are idempotent by skipping:
+
+```bash
+npm run photos:import -- <path>…   # → R2 + manifest, then groups and describes what it added
+npm run photos:shoots              # group by capture time (no model); --gap-days N, --dry-run
+npm run photos:describe            # tags/caption/title for photos with none; --limit N, --force
+npm run photos:name-shoots         # propose a name per shoot from several frames; --force
+npm run photos:verify              # every manifest object really is in R2
+npm run photos:rebuild             # re-derive from the archive bucket
+```
+
+`import` already runs the metadata pass over what it just imported, so `shoots`, `describe`
+and `name-shoots` are **backfills** — in steady state they find nothing to do.
+
+```bash
+npm run design:bundle    # snapshot the built site for Claude Design → .design-bundle/
+```
+
 Start the dev server in background mode so it doesn't block: `npx astro dev --background`,
 then `astro dev stop` / `status` / `logs [--follow]`.
 

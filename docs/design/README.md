@@ -4,9 +4,39 @@ The mockups the site's visual identity was built from, pulled 2026-07-26 from th
 Design project **"Personal website design system"**
 (`claude.ai/design/p/2358d801-f30f-4f0f-84a7-59d8baee971e`).
 
-Kept here as the **source of record**. When the implementation and these files disagree,
-these files are what was designed and [../UI-DESIGN.md](../UI-DESIGN.md) §8 explains why
-the implementation differs.
+Kept here as the **source of record for what was designed**. When these files and the
+implementation disagree, [../UI-DESIGN.md](../UI-DESIGN.md) §8 explains why.
+
+## Two Claude Design projects, and which to use
+
+| Project                                                                                                         | Type          | What it holds                                     |
+| --------------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------- |
+| [`2358d801…`](https://claude.ai/design/p/2358d801-f30f-4f0f-84a7-59d8baee971e) "Personal website design system" | regular       | The original mockups below. History.              |
+| [`27f0bafb…`](https://claude.ai/design/p/27f0bafb-f442-4a7e-b0ae-015e78874b07) "Neon District — memerson.com"   | design system | **The implementation as it stands.** Design here. |
+
+Despite its name the first is `PROJECT_TYPE_PROJECT`, and that type is **immutable at
+creation** — it can never gain the design-system behaviour where new work inherits the
+components and is checked against them. Hence the second, created 2026-07-27.
+
+**Design against the second one.** It carries tokens, the contact sheet and lightbox as
+built with real photographs, the photo metadata with real shoots, and every page — home,
+about, log index, log post, 404. Regenerate and re-push it with `npm run design:bundle`
+(see [../ARCHITECTURE.md](../ARCHITECTURE.md) §5.9) whenever the site moves, so it never
+drifts the way these mockups did.
+
+The first project stays worth keeping: it holds the Signal direction, whose reasoning is
+still load-bearing — see below.
+
+## The round trip
+
+1. `npm run design:bundle`, then push with the `DesignSync` tool → the design-system
+   project reflects what is actually built.
+2. Design in Claude Design, in a normal project that inherits that system.
+3. **Export → hand off to Claude Code.** Drop the exported HTML in this folder alongside
+   the files below, and it becomes the spec for implementation.
+
+Anything exported here is what was designed, not what exists. Keep that distinction — it is
+the whole reason this folder and the design-system project are separate things.
 
 | File                               | What it is                                                                    |
 | ---------------------------------- | ----------------------------------------------------------------------------- |

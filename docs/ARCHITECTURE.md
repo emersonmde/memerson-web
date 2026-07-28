@@ -395,6 +395,74 @@ Companion commands:
 - `npm run photos:rebuild <slug>` — re-derive from the archived original (for changing the
   width ladder or adding a format later, without needing local files).
 
+### 5.8 The metadata pipeline
+
+Added 2026-07-27. Turns a pile of frames into something searchable without hundreds of rows
+of manual entry. Three commands, each idempotent by skipping, each writing only fields the
+schema marks as authored.
+
+```bash
+npm run photos:shoots        # group by capture time. No model, no network.
+npm run photos:describe      # tags, caption, title per photo
+npm run photos:name-shoots   # propose a name per shoot, from several frames at once
+```
+
+**`photos:import` runs all three over only what it just imported**, so every photo is
+described exactly once, on arrival. The standalone commands are backfills. `--no-metadata`
+opts out.
+
+**Shoots** cluster `takenAt` on gaps over **7 days** — a value taken from the data, not a
+default. Cluster count is flat from 3 to 14 days and unstable below it; within a shoot the
+median gap between frames is 10 minutes, between shoots it is 15+ days. Full derivation in
+[MILESTONES M4](./MILESTONES.md).
+
+**The rule that matters is that clustering never recomputes.** It may fill in a photo with
+no shoot and may _extend_ an existing shoot, but it will never _merge_ two — a photo landing
+between two already-named shoots is assigned to the nearest and the bridge is reported for a
+human. Re-deriving the whole library on each import would silently reattach hand-written
+names to the wrong photographs, which is the one failure here that compounds over years.
+
+**Shoot names live in `src/data/shoots.json`**, keyed by shoot id, alongside an optional
+`series` that joins recurring events. See "three layers" in MILESTONES M4 — `shoot` is the
+instance (≡ IPTC `Event`, ≡ a Lightroom folder), `series` is the theme (≡ a Collection),
+`tags` are keywords. Derived fields in that file are rewritten every run; `name`, `series`
+and anything else authored survive, same contract as the manifest writer.
+
+**The model side** runs `claude -p` headless against the **640px derivative already in R2** —
+public, so no credentials, and nothing is regenerated. Sonnet-class at `--effort low`, which
+measured byte-identical to `medium` at 5.2s against 8.4s; there is no reasoning to do, the
+answer is in the pixels. 640px is the floor: at 256px a black-and-white ruffed lemur came
+back as a "monkey/tamarin", and the failure mode below the floor is a confident wrong noun
+rather than a vague one.
+
+**The safety mechanism is git.** Generated text lands as a reviewable diff, never a silent
+mutation. Keep it that way.
+
+### 5.9 Design handoff — `npm run design:bundle`
+
+Snapshots the built site into `.design-bundle/` as self-contained cards for a Claude Design
+**design-system project**: tokens as swatches, the contact sheet and lightbox as built with
+real photographs, the metadata with real shoots, and every page.
+
+Two things it must keep doing, both learned by getting them wrong:
+
+- **CSS is read per page.** Astro emits a bundle per route plus scoped styles, so there is
+  no single "site CSS" — reusing one page's stylesheet renders every other page as unstyled
+  HTML.
+- **The reduced-motion state is forced on.** Cards carry no JavaScript, so
+  `[data-fx='resolve']` would sit at its resting `opacity: .15` under a 13px blur and every
+  page title would be invisible.
+
+Neither is catchable by a diff or a type check — only by rasterising the output and looking
+at it. Render the cards before uploading:
+
+```bash
+npm run design:bundle
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
+  --window-size=1440,1000 --virtual-time-budget=9000 \
+  --screenshot=shot.png "file://$PWD/.design-bundle/pages-current/home.html"
+```
+
 ---
 
 ## 6. Gallery rendering

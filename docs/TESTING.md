@@ -63,6 +63,30 @@ derivative above the 2560px public cap, nothing upscaled past its original,
 LQIPs small enough to inline, slugs unique and matching their own hash, and
 **no location data anywhere in the file**.
 
+`tests/shoots.test.ts` covers the shoot clustering, and it is the clearest case in
+the suite of testing invariants over values. It never asserts "14 shoots" — that
+number changes with every import. It asserts the properties that must hold at any
+library size:
+
+- A split happens exactly where the gap exceeds the threshold, and nowhere else.
+- Raising the threshold can only **merge** clusters, never produce more.
+- Every photo lands in exactly one cluster, whatever order they arrive in.
+- Undated photos are reported, never guessed into a group.
+- A shoot id is the earliest date in its group, so it never renumbers.
+
+Three of them guard the rule that protects hand-written names, and they are the
+reason to have this file at all: an existing `shoot` is never reassigned, a new
+photo **extends** a shoot rather than starting a rival one, and a photo landing
+between two already-named shoots **must not merge them**. That last one is the
+failure that would silently reattach a name to the wrong photographs, and it is
+untestable by inspection — it only shows up on an import months later.
+
+`mergeShoots` is tested directly rather than through `writeShoots`, which is why
+the merge logic is a separate pure function. An earlier version mocked
+`node:fs/promises`; ESM namespace objects cannot be redefined, so the test failed
+with `Cannot redefine property` — a good prompt to move the logic rather than
+fight the mock.
+
 ### 2. Built output — `tests/build.test.ts`
 
 Assertions against `dist/`, which is why `npm test` builds first.
