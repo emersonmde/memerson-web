@@ -152,6 +152,29 @@ already-masked child, so the glow follows the charge and stops where it stops.
 kindle because the charge arrived. The two only agree while the charge runs at exactly
 scroll speed, which it no longer does.
 
+**Measure and paint are separate passes, and scrolling only paints.** This is the whole
+performance story on a phone. `measure()` reads the DOM — rail box, node offsets, node hues
+— and runs on load, resize, plate toggle, font load, and once after a scroll settles.
+`paint()` runs every frame while scrolling and reads _nothing_: positions come from cached
+document-relative offsets minus `scrollY`.
+
+The first version interleaved the two, calling `getBoundingClientRect()` on each of the
+eleven nodes inside the same loop that wrote their styles — so every node forced a
+synchronous layout against the writes from the node before it. Node offsets along the rail
+do not change when you scroll, only when the page reflows, so caching them made the scroll
+path write-only. Measured over a 90-frame flick down the home page at 6× CPU throttle,
+main-thread script time fell from **46.8ms to ~9.5ms** and style recalcs from 447 to ~296.
+Two smaller things came out of the same pass: the head moves by `transform` rather than
+`top`, and a node or a heading whose value has not visibly changed is not written at all —
+which matters most for `letter-spacing`, since writing it costs a layout.
+
+**There is a guaranteed final frame.** iOS can drop the last `rAF` of a momentum scroll, and
+since `paint()` is the only thing that advances the charge, the rail simply stayed wherever
+the last frame it did run left it — the visible symptom was the charge stopping short of the
+terminal at the bottom of the page. A `scrollend` listener covers engines that report it and
+a 140ms timer covers those that do not; the timer also re-measures, because a collapsing iOS
+toolbar changes `innerHeight` without a useful `resize`.
+
 **Layout changes recompute.** Expanding a plate reflows every row and changes the rail's
 height but fires no scroll event, so a `ResizeObserver` on the rail scope plus a captured
 `toggle` listener drive the recalculation. Without them the hues jumped to their new rows
@@ -334,6 +357,22 @@ rule for `.tease` written in the global sheet would silently never apply.
 | ≤ 560        | Gutter 18, rail offset 26; nav tightens; prose 17.5px; code full-bleed; RUNS and EDITORIAL go single column; the control bar stops being sticky             |
 | `hover:none` | Hover lift, glow, brackets and index numbers drop; press state replaces them; 44–56px minimum on every control                                              |
 
+### The rail on a phone
+
+The scroll effects are JavaScript, and a phone is where that shows. Everything above about
+`measure()` / `paint()` in §5.3 is a mobile fix first. Two things are still true and worth
+knowing before reaching for more:
+
+- **Scroll-driven CSS animations would not help here.** They composite `transform` and
+  `opacity` off the main thread, and the rail's reveal is a `mask-image` gradient stop —
+  recomputed on the main thread whichever way it is driven. The nodes also need the
+  measured geometry that produces their hues. Safari 26 supports `animation-timeline`
+  (threaded in 26.4), so this is worth revisiting if the reveal is ever reformulated as a
+  transform, but it is not a drop-in replacement.
+- **Some lag during momentum scrolling is inherent**, because Safari composites the scroll
+  on another thread while the effect is computed on this one. The work above removes the
+  jank we were causing; it cannot remove that.
+
 ### The decisions worth knowing
 
 **The sign gets the width.** `M.EMERSON` is the whole first impression — flicker,
@@ -370,6 +409,24 @@ line for four characters of mono, so label sits above value with the arrow pinne
 across both rows. The log index loses its sticky 78px year column the same way — the year
 becomes a marker above its group instead of a rail beside it.
 
+### Safe areas — `viewport-fit=cover`
+
+The page opts into the full screen, so the star field, the footer horizon and the viewer's
+bloom reach the rounded corners instead of stopping at a black band under the Dynamic
+Island and above the Safari toolbar. Content is held out of those regions by
+`env(safe-area-inset-*)`, folded into two tokens rather than sprinkled at call sites:
+
+- `--nav-h` is `calc(--nav-bar-h + env(safe-area-inset-top))`. It is both the nav's height
+  _and_ the offset every sticky header in the site hangs from, so the section markers, the
+  gallery control bar and the run headers all follow the notch without knowing it exists.
+- `--gutter` is `max(--gutter-base, env(safe-area-inset-left), env(safe-area-inset-right))`,
+  which is what keeps the nav off the notch in landscape. **Breakpoints set `--gutter-base`,
+  never `--gutter`** — setting the latter throws the inset away.
+
+The footer grows by the bottom inset (`--foot-h + env(...)`) so its grid floor runs off the
+bottom of the screen rather than stopping short of the home indicator, and the viewer insets
+its own bar, stage, footer and capture sheet from `--lb-t` / `--lb-b`.
+
 ### What deliberately did not change
 
 The star field, the scanlines, the neon flicker, the rail charge and terminal, the sticky
@@ -401,17 +458,37 @@ view whose argument is that the photograph should own the width. The run header 
 sticky slot, because it is the one piece of chrome answering a question you have
 continuously while scrolling. Pinned chrome drops to ~102px.
 
+**The photograph arrives in one piece.** The viewer used to land in three events: an
+unsized image laying out wherever it fell, a jump as its intrinsic size arrived, then the
+bloom fading in behind it. Two of those were avoidable. The frame is sized from the
+manifest's aspect ratio before anything is requested, and both the frame and the bloom paint
+from the tile's **LQIP** — a ~200-byte data URI already in the document. The full image then
+resolves over it on `decode()`, which is the same blur-to-sharp the headings and the tiles
+already use, so the one remaining transition is a design element rather than a symptom.
+
+The bloom now _never_ fetches anything: it is blurred to 70px, and a 16px source blurred to
+70px is indistinguishable from a 640px one blurred to 70px. It had been downloading a real
+derivative in order to throw all of it away.
+
 **The rail folds into a sheet.** Its job — _where am I, what else is here_ — moves into a
 SHOOTS button that opens a full-screen list at 56px a row. The sticky run header still
 answers "where am I"; the sheet answers "what else is here" on demand.
 
-**The viewer loses its furniture.** Arrows and the thumbnail strip are mouse furniture and
-both go. Swipe left/right moves, swipe down closes, and the page says so once. Tags become
-a horizontally scrollable row so eight of them do not wrap into four lines. CAPTURE DATA
-becomes a **bottom sheet** rather than a side drawer: a 250px panel on a 390px screen would
-cover the photograph. Unlike the desktop drawer it is fully opaque — it rises straight over
-the metadata stack rather than pushing it aside, and at 95% the title underneath read
-through it.
+**The viewer trades its furniture, it does not lose it.** The mockup dropped the arrows and
+the thumbnail strip on touch as mouse furniture, and that went too far: swipe is a faster
+gesture, but a gesture with no visible affordance is a secret, and nothing on the screen
+said there were 117 other photographs. So the side arrows go — over a phone-width
+photograph they are in the way — and a **compact ← → pair plus `i`** takes the footer row
+that was otherwise empty, with the **thumbnail strip** filling the rest of it. The keyboard
+hint (`I CAPTURE DATA · ← → MOVE`) is removed there, because it describes keys that do not
+exist on the device. Swipe still works and the page still says so once.
+
+Tags become a horizontally scrollable row so eight of them do not wrap into four lines.
+CAPTURE DATA becomes a **bottom sheet** rather than a side drawer: a 250px panel on a 390px
+screen would cover the photograph. It is fully opaque, unlike the desktop drawer — it rises
+straight over the metadata stack rather than pushing it aside, and at 95% the title
+underneath read through it. **It carries its own close button**, because as a bottom sheet
+it covers the `i` that opened it, which otherwise left no way out at all.
 
 ---
 

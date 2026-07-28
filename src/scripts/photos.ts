@@ -107,6 +107,7 @@ function init() {
       tile.dataset.q = [
         tile.dataset.title,
         tile.dataset.shootName,
+        tile.dataset.series,
         tile.dataset.camera,
         tile.dataset.date,
         (tile.dataset.tags || '').replace(/\|/g, ' '),
@@ -263,6 +264,19 @@ function init() {
       query = find.value;
       applyFilter();
       applyLayout();
+    });
+  }
+
+  /*
+   * The series marker filters to the series. It is the only way two Air Show
+   * shoots three years apart become reachable from each other — which is the
+   * entire reason `series` exists in shoots.json rather than a second page.
+   */
+  for (const marker of document.querySelectorAll<HTMLElement>('[data-series]')) {
+    if (!marker.dataset.series) continue;
+    on(marker, 'click', () => {
+      setQuery(marker.dataset.series!);
+      scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
@@ -425,6 +439,8 @@ function init() {
   let cursor = -1;
   let exifOpen = false;
   let lastFocused: HTMLElement | null = null;
+  /* Bumped per show(), so a slow decode cannot reveal a frame you swiped past. */
+  let epoch = 0;
 
   const visible = () => tiles.filter((t) => !t.hidden);
 
@@ -447,6 +463,7 @@ function init() {
 
     cursor = (i + list.length) % list.length;
     const tile = list[cursor];
+    const token = ++epoch;
 
     const sources = tile.querySelectorAll<HTMLSourceElement>('source');
     const pick = (type: string) =>
@@ -462,17 +479,45 @@ function init() {
       else el.removeAttribute('srcset');
     }
 
-    lbImg.src = tile.href;
+    /*
+     * Everything that can appear immediately, does — in this order, all in one
+     * frame, before a single byte is requested.
+     *
+     * The viewer used to arrive in three stages: an unsized image laid out
+     * wherever it fell, then a jump as its intrinsic size landed, then the
+     * bloom fading in behind it. Two of those were avoidable. The frame's size
+     * comes from the manifest aspect ratio, and both the frame and the bloom
+     * are painted from the tile's LQIP — a ~200-byte data URI already in the
+     * document, so it costs no request at all.
+     *
+     * The bloom in particular never needs anything better: it is blurred to
+     * 70px, and a 16px source blurred to 70px is indistinguishable from a 640px
+     * one blurred to 70px. It was fetching a real derivative to throw all of it
+     * away.
+     */
+    const lqip = tile.dataset.lqip;
+    const frame = q<HTMLElement>('.lb-frame');
+
+    lbImg.classList.remove('is-in');
     lbImg.alt = tile.dataset.alt || '';
     lbImg.style.aspectRatio = tile.style.getPropertyValue('--ar');
+    if (frame) frame.style.backgroundImage = lqip ? `url("${lqip}")` : '';
     sizeFrame();
 
     const bloom = q<HTMLElement>('.lb-bloom');
-    if (bloom) {
-      bloom.style.backgroundImage = tile.dataset.bloom
-        ? `url("${tile.dataset.bloom}")`
-        : '';
-    }
+    if (bloom) bloom.style.backgroundImage = lqip ? `url("${lqip}")` : '';
+
+    /*
+     * Then the photograph resolves over the placeholder once it can be painted
+     * without jank. `decode()` is what makes it one event rather than a
+     * progressive top-to-bottom reveal; the catch covers a decode failure, where
+     * showing whatever loaded beats showing nothing forever.
+     */
+    lbImg.src = tile.href;
+    const settle = () => {
+      if (token === epoch) lbImg.classList.add('is-in');
+    };
+    lbImg.decode().then(settle, settle);
 
     setText('.lb-counter', `${pad(cursor + 1)} / ${list.length}`);
     setText('.lb-title', tile.dataset.title || '');
@@ -649,9 +694,20 @@ function init() {
 
   if (lb) {
     for (const el of lb.querySelectorAll('[data-lb-close]')) on(el, 'click', close);
-    on(q<HTMLElement>('.lb-prev')!, 'click', () => show(cursor - 1));
-    on(q<HTMLElement>('.lb-next')!, 'click', () => show(cursor + 1));
+
+    /*
+     * Two sets of step controls — the arrows flanking the frame on a pointer
+     * device, and a pair in the footer cluster on touch, where arrows over the
+     * photograph would be in the way. Only one set is ever visible, and binding
+     * on the attribute means neither needs to know the other exists.
+     */
+    for (const el of lb.querySelectorAll<HTMLElement>('[data-lb-step]')) {
+      on(el, 'click', () => show(cursor + Number(el.dataset.lbStep)));
+    }
+
     on(q<HTMLElement>('.lb-info')!, 'click', () => toggleExif());
+    const exifClose = q<HTMLElement>('[data-lb-exif-close]');
+    if (exifClose) on(exifClose, 'click', () => toggleExif(false));
 
     const shootButton = q<HTMLButtonElement>('.lb-shoot');
     if (shootButton) {

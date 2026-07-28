@@ -38,7 +38,20 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {
+      /*
+      `viewport-fit=cover` lets the page paint into the rounded corners, the
+      Dynamic Island notch and the home-indicator strip, which is the only way
+      the star field, the footer horizon and the viewer's bloom reach the edges
+      of the screen instead of stopping at a black band. Content is kept out of
+      those regions by the `env(safe-area-inset-*)` padding in global.css —
+      `--nav-h` folds the top inset in, so every sticky offset follows.
+    */
+    }
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />

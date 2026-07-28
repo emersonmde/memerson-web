@@ -79,10 +79,29 @@
   --mono: 'JetBrains Mono', ui-monospace, monospace;
   --serif: Newsreader, Georgia, serif;
 
-  /* Geometry. The rail offset is measured from the gutter — see UI-DESIGN §9. */
-  --gutter: 70px;
+  /*
+   * Geometry. The rail offset is measured from the gutter — see UI-DESIGN §9.
+   *
+   * The page renders with `viewport-fit=cover`, so these fold in the device's
+   * safe-area insets: the background reaches the edge of the screen while the
+   * content stays clear of the notch, the rounded corners and the home
+   * indicator. Breakpoints set `--gutter-base`, never `--gutter`.
+   *
+   * `--nav-h` is both the bar's height and the offset every sticky header in
+   * the site hangs off, so folding the top inset in here is what keeps the
+   * section markers, the gallery control bar and the run headers aligned with
+   * it on a notched phone without any of them knowing about safe areas.
+   */
+  --gutter-base: 70px;
+  --gutter: max(
+    var(--gutter-base),
+    env(safe-area-inset-left, 0px),
+    env(safe-area-inset-right, 0px)
+  );
   --rail-offset: 56px;
-  --nav-h: 52px;
+  --nav-bar-h: 52px;
+  --nav-h: calc(var(--nav-bar-h) + env(safe-area-inset-top, 0px));
+  --foot-h: 290px;
 
   /* Ambient intensity. Both are dialled down under reduced-motion. */
   --scan: 0.045;
@@ -285,6 +304,7 @@ img {
   top: 0;
   z-index: 9;
   height: var(--nav-h);
+  padding-top: env(safe-area-inset-top, 0px);
   display: flex;
   align-items: center;
   gap: 26px;
@@ -330,7 +350,9 @@ img {
 
 .foot {
   position: relative;
-  height: 290px;
+  /* Grows by the home-indicator inset so the grid floor runs off the bottom of
+     the screen rather than stopping short of it. */
+  height: calc(var(--foot-h) + env(safe-area-inset-bottom, 0px));
   overflow: hidden;
   border-top: 1px solid rgba(142, 180, 255, 0.08);
 }
@@ -366,6 +388,7 @@ img {
 .foot-body {
   position: absolute;
   left: var(--gutter);
+  right: var(--gutter);
   top: 0;
   padding-top: 52px;
   display: flex;
@@ -860,14 +883,14 @@ a.sec-aside:hover {
 /* ---------- 1100: the wide-desk gutter goes ---------- */
 @media (max-width: 1100px) {
   :root {
-    --gutter: 44px;
+    --gutter-base: 44px;
   }
 }
 
 /* ---------- 900: tablet / half-screen window ---------- */
 @media (max-width: 900px) {
   :root {
-    --gutter: 32px;
+    --gutter-base: 32px;
     --rail-offset: 44px;
   }
 
@@ -875,8 +898,8 @@ a.sec-aside:hover {
     font-size: clamp(38px, 6.6vw, 54px);
   }
 
-  .foot {
-    height: 250px;
+  :root {
+    --foot-h: 250px;
   }
 }
 
@@ -892,8 +915,8 @@ a.sec-aside:hover {
     max-width: none;
   }
 
-  .foot {
-    height: 220px;
+  :root {
+    --foot-h: 220px;
   }
 
   .foot-body {
@@ -913,7 +936,7 @@ a.sec-aside:hover {
 /* ---------- 560: the phone ---------- */
 @media (max-width: 560px) {
   :root {
-    --gutter: 18px;
+    --gutter-base: 18px;
     /*
      * The obvious phone move is to delete the systems rail and stack the plates
      * flush left — it costs 56px, 16% of a 390px screen. But the rail *is* the

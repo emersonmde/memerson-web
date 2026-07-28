@@ -182,7 +182,15 @@ describe('gallery', () => {
     const tiles = gallery().html.match(/<a class="px-tile"[^>]*>/g) ?? [];
     assert.ok(tiles.length > 0, 'no tiles in the gallery');
     for (const tile of tiles) {
-      for (const attr of ['data-tile', 'data-bloom', 'data-alt', 'data-title', '--ar:']) {
+      for (const attr of [
+        'data-tile',
+        'data-alt',
+        'data-title',
+        // The frame and the bloom both paint from this before a byte is
+        // requested, which is what makes the viewer arrive in one piece.
+        'data-lqip',
+        '--ar:',
+      ]) {
         assert.ok(tile.includes(attr), `tile missing ${attr}`);
       }
     }
@@ -248,6 +256,34 @@ describe('gallery', () => {
     }
     for (const [, key] of html.matchAll(/class="px-jumprow[^"]*" href="#([^"]+)"/g)) {
       assert.ok(ids.has(key), `shoots sheet points at a missing run: ${key}`);
+    }
+  });
+
+  test('the series marker is a control, not a label', () => {
+    /*
+     * `series` is the only thing joining two Air Show shoots three years apart.
+     * Rendering it as inert text is the same mistake as an albums page that
+     * cannot be opened — the thread exists in the data and nowhere in the UI.
+     */
+    const html = gallery().html;
+    const markers = html.match(/<button[^>]*class="px-run-series"[^>]*>/g) ?? [];
+    assert.ok(markers.length > 0, 'no series marker rendered');
+    for (const marker of markers) {
+      assert.match(marker, /data-series="[^"]+"/, 'series marker carries no query');
+    }
+    // …and the frames it would filter to have to be findable by that query.
+    assert.match(html, /data-series="air-shows"[\s\S]*data-tile/);
+  });
+
+  test('the viewport opts into the safe areas', () => {
+    // Without viewport-fit=cover the page stops at the notch and the viewer's
+    // bloom ends in a black band. UI-DESIGN §9.
+    for (const { file, html } of pages) {
+      assert.match(
+        html,
+        /name="viewport"[^>]*viewport-fit=cover/,
+        `${rel(file)} does not cover the safe areas`,
+      );
     }
   });
 

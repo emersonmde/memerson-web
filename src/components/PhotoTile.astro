@@ -23,10 +23,12 @@ interface Props {
   photo: CollectionEntry<'photos'>;
   /** Shoot name, shown under the frame and in the lightbox. */
   shootName?: string | null;
+  /** The thread joining recurring outings. Filterable, so it lives on the tile. */
+  series?: string | null;
   loading?: 'lazy' | 'eager';
 }
 
-const { photo, shootName = null, loading = 'lazy' } = Astro.props;
+const { photo, shootName = null, series = null, loading = 'lazy' } = Astro.props;
 const { id, variants, formats, lqip, aspectRatio, takenAt } = photo.data;
 
 const srcSet = (format: string) =>
@@ -89,7 +91,9 @@ const capture = [
   data-alt={alt}
   data-title={title}
   data-shoot-name={shootName ?? undefined}
+  data-series={series ?? undefined}
   data-date={date || undefined}
+  data-lqip={lqip}
   data-tags={photo.data.tags.join('|') || undefined}
   data-bloom={bloom}
   data-camera={photo.data.camera ?? undefined}
