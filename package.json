@@ -15,6 +15,9 @@
     "format": "prettier --write \"**/*.{astro,ts,js,mjs,json,md}\"",
     "deploy": "npm run build && wrangler deploy",
     "photos:import": "node scripts/photos/import.mjs",
+    "photos:shoots": "node scripts/photos/shoots.mjs",
+    "photos:describe": "node scripts/photos/describe.mjs",
+    "photos:name-shoots": "node scripts/photos/name-shoots.mjs",
     "photos:verify": "node scripts/photos/verify.mjs",
     "photos:rebuild": "node scripts/photos/rebuild.mjs",
     "astro": "astro"

@@ -9,18 +9,26 @@ import type { CollectionEntry } from 'astro:content';
  * with an empty alt — 122 of the site's 133 images, all marked decorative.
  * One function, so the two cannot drift apart again.
  *
- * No titles or captions exist yet (they get backfilled — see MILESTONES M4), so
- * in practice this returns the date for every photo today. `alt=""` would be a
- * claim that the image carries no information, which is false: on this site the
- * photographs *are* the content.
+ * `alt=""` would be a claim that the image carries no information, which is
+ * false: on this site the photographs *are* the content.
+ *
+ * **Caption beats title**, which is the opposite of what reads naturally and is
+ * the whole reason the order is spelled out here. Alt text has to describe the
+ * picture, not name it: "A bronze statue of three soldiers stands among autumn
+ * foliage" tells a screen-reader user what is there, while "The Three Soldiers"
+ * assumes they already know. The title is still a better fallback than a bare
+ * date, so it sits between the two.
+ *
+ * Captions were backfilled for the whole library in M4 (`photos:describe`),
+ * which is what moved this from theory to something that actually fires.
  */
 export function photoAlt(
   photo: CollectionEntry<'photos'>,
   override?: string | null,
 ): string {
   const text = override ?? photo.data.caption;
-  if (photo.data.title) return photo.data.title;
   if (text) return text;
+  if (photo.data.title) return photo.data.title;
 
   const takenAt = photo.data.takenAt;
   if (!takenAt) return 'Photograph';

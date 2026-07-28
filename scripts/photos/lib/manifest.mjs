@@ -43,6 +43,7 @@ const FIELD_ORDER = [
   'aperture',
   'shutter',
   'iso',
+  'shoot',
   'title',
   'caption',
   'tags',

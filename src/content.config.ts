@@ -73,7 +73,15 @@ const photos = defineCollection({
     shutter: z.string().nullable(),
     iso: z.number().int().nullable(),
 
-    // Hand-authored, optional, backfilled over time.
+    /**
+     * The shoot this photo belongs to — the calendar date of the group's
+     * earliest frame, e.g. "2022-10-29". Derived from capture time by
+     * `photos:shoots`, assigned once and never recomputed. Names for shoots
+     * live in `src/data/shoots.json`, keyed by this value.
+     */
+    shoot: z.string().nullable().default(null),
+
+    // Authored: written by `photos:describe` or by hand, reviewed in the diff.
     title: z.string().nullable().default(null),
     caption: z.string().nullable().default(null),
     tags: z.array(z.string()).default([]),

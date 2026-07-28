@@ -10,9 +10,14 @@
  * second one matters to a visitor.
  */
 import { readManifest } from './lib/manifest.mjs';
-import { ARCHIVE_BUCKET, PUBLIC_BUCKET, listObjects, pool } from './lib/r2.mjs';
+import {
+  ARCHIVE_BUCKET,
+  PHOTOS_BASE_URL,
+  PUBLIC_BUCKET,
+  listObjects,
+  pool,
+} from './lib/r2.mjs';
 
-const PHOTOS_BASE_URL = 'https://photos.memerson.com';
 const SPOT_CHECK_COUNT = 5;
 
 function expectedDerivativeKeys(entry) {

@@ -238,11 +238,58 @@ locked in during M1.
       right affordance here — it implies a partition, and this library is mostly misc.
 - [ ] `Save-Data` handling
 
-### Metadata extraction — the thing everything else waits on
+### Metadata extraction — **done 2026-07-27**
 
-Two independent pipelines, both writing into the manifest. Neither exists yet.
+Built first, deliberately, and ahead of any UI: capture the metadata now, decide what to do
+with it once the viewer is designed. Everything below writes only into authored fields, and
+the manifest is in git, so **the diff is the review**.
 
-**1. Derived colour metadata** (mechanical, no model involved).
+Three commands, all idempotent by skipping:
+
+| Command              | Does                                               | Model |
+| -------------------- | -------------------------------------------------- | ----- |
+| `photos:shoots`      | groups photos by capture time, seeds `shoots.json` | no    |
+| `photos:describe`    | `tags`, `caption`, `title` per photo               | yes   |
+| `photos:name-shoots` | proposes a name per shoot, from several frames     | yes   |
+
+`photos:import` runs all three over **only what it just imported**, so each photo is
+described exactly once, when it arrives. `--no-metadata` opts out. The standalone commands
+are backfills.
+
+**Results on the first 118:** 14 shoots, 118/118 described in 2m57s with zero failures,
+14/14 shoots named in 32s. The naming step independently identified the tropical shoot as
+"Caribbean Vacation … likely St. Croix", which is precisely the album that motivated the
+design, and produced two separate "Air Show" shoots — the multi-shoot album case, arriving
+on its own without being asked for.
+
+#### What was measured rather than assumed
+
+- **`--effort low`.** Byte-identical tags and caption to `medium` on the same frame, 5.2s
+  against 8.4s. There is no reasoning to do here — the answer is in the pixels — so
+  thinking budget buys latency and nothing else.
+- **640px, the smallest derivative that already exists, sent as-is.** Descriptions at
+  decreasing widths: 256px called a black-and-white ruffed lemur a "monkey/tamarin";
+  384px recovered the species; 512px matched 640 in substance. **The failure mode below the
+  floor is a confident wrong noun, not a vague one**, which is the reason to record the
+  number rather than tune it later. No local downscaling — the variant is already small.
+- **Capture settings help, exact dates hurt.** EXIF is passed as context because 600mm at
+  1/2000s is a different photograph from 24mm at f/11. The date is passed as a **year
+  only**: a precise day invites the model to guess an occasion it cannot see.
+- **Tags beat titles, as predicted.** Titles are returned only for unmistakable subjects
+  and are null far more often than not, which is the intended behaviour — a confidently
+  wrong title is worse than none.
+
+#### The unplanned win: alt text
+
+122 of 133 images previously fell back to `Photograph taken 18 June 2017`. Every image now
+carries a real description, because a caption written to describe a frame is exactly what
+alt text is for. `photoAlt.ts` was reordered to prefer `caption` over `title` — alt text
+must describe a picture, not name it. This closes most of M3's open accessibility item.
+
+### The original plan, for reference
+
+**1. Derived colour metadata** (mechanical, no model involved). **Still not built, and now
+less likely to be needed** — see the note on the accent ramp under "Shoots and albums".
 
 One thing is settled: the lightbox's ambient glow **is the photograph**, blurred and
 saturated behind itself (Signal 4c; implemented 2026-07-27). It needs no metadata, and it
@@ -284,8 +331,8 @@ Implementation notes for whenever it happens:
   no album. That is fine, and arguably the point: an accent that only appears on album
   frames carries meaning, where one on every frame is decoration.
 
-**2. AI-assisted titles, captions and tags** (Matthew's proposal). Replaces what would
-otherwise be 118 rows of manual data entry:
+**2. AI-assisted titles, captions and tags** — **built, see above.** The notes below were
+the plan and all of them held:
 
 - Run `claude -p` headless over **downsampled** images — the existing 640px derivative is
   already in R2 and is more than enough, so nothing needs regenerating.
@@ -436,6 +483,13 @@ verified by reading it, not assumed:
 albums get one and misc photos keep the default cyan. That is better than the mockup
 intended — the accent then _means_ "this frame is part of something" instead of being
 decoration.
+
+**And it probably removes the need for colour extraction entirely.** The accent ramp in
+`src/lib/ramp.ts` is a continuous hue function (66 → 200 → 286, lightness and chroma
+locked), not a table of five colours. A shoot or album can simply be sampled along it by
+index, which is deterministic, on-palette by construction, needs no `sharp` pass, and
+stores nothing. The "snap a sampled colour to one of five accents" rule below is still
+correct if extraction ever happens — it is just unlikely to be needed.
 
 #### The actual gap is navigation, and it is undesigned
 

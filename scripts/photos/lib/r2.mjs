@@ -26,6 +26,14 @@ const WRANGLER = path.join(REPO_ROOT, 'node_modules/.bin/wrangler');
 export const PUBLIC_BUCKET = 'memerson-photos';
 export const ARCHIVE_BUCKET = 'memerson-photos-archive';
 
+/**
+ * The public custom domain on the bucket above. Derivatives are served from
+ * here directly, never proxied through the Worker — which is also why anything
+ * needing to read one back (verify, describe) can just fetch it with no
+ * credentials at all. Mirrors PHOTOS_BASE_URL in src/consts.ts.
+ */
+export const PHOTOS_BASE_URL = 'https://photos.memerson.com';
+
 /** Concurrent wrangler processes. Measured sweet spot; see docs/ARCHITECTURE.md §3. */
 const UPLOAD_CONCURRENCY = 8;
 const MAX_ATTEMPTS = 3;

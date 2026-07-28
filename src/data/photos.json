@@ -24,9 +24,18 @@
     "aperture": "f/5.6",
     "shutter": "1/160s",
     "iso": 640,
+    "shoot": "2017-06-18",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A brick-paved street runs alongside an old whitewashed brick building with a wrought-iron lamp bracket, shuttered windows, and a low brick and white lattice fence, shaded by large trees.",
+    "tags": [
+      "brick building",
+      "sidewalk",
+      "fence",
+      "trees",
+      "windows",
+      "street",
+      "ivy"
+    ]
   },
   {
     "id": "2017-06-18-4449f43c",
@@ -53,9 +62,18 @@
     "aperture": "f/9",
     "shutter": "1/160s",
     "iso": 200,
+    "shoot": "2017-06-18",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A brick building with a white clock tower and steeple is flanked by large trees under a clear sky.",
+    "tags": [
+      "building",
+      "clock tower",
+      "brick",
+      "steeple",
+      "trees",
+      "campus",
+      "architecture"
+    ]
   },
   {
     "id": "2017-06-18-a61d1053",
@@ -82,9 +100,19 @@
     "aperture": "f/9",
     "shutter": "1/160s",
     "iso": 3200,
+    "shoot": "2017-06-18",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Rows of mature trees line a grassy campus lawn with benches and a street on one side and brick buildings in the background.",
+    "tags": [
+      "trees",
+      "lawn",
+      "campus",
+      "brick building",
+      "benches",
+      "street",
+      "grass",
+      "shade"
+    ]
   },
   {
     "id": "2017-06-19-081be004",
@@ -111,9 +139,18 @@
     "aperture": "f/5",
     "shutter": "1/2500s",
     "iso": 3200,
+    "shoot": "2017-06-18",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A vivid orange and pink sunset sky over a dry grass field lined with silhouetted trees.",
+    "tags": [
+      "sunset",
+      "field",
+      "sky",
+      "trees",
+      "clouds",
+      "silhouette",
+      "grass"
+    ]
   },
   {
     "id": "2017-07-04-da97a34c",
@@ -140,9 +177,16 @@
     "aperture": "f/11",
     "shutter": "3.3s",
     "iso": 100,
+    "shoot": "2017-07-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A long-exposure photograph of a firework burst with a bright orange core and white trailing sparks against a black night sky.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "sparks",
+      "night"
+    ]
   },
   {
     "id": "2017-07-04-432595a3",
@@ -168,9 +212,16 @@
     "aperture": "f/14",
     "shutter": "1.5s",
     "iso": 100,
+    "shoot": "2017-07-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A single purple firework bursts with trailing light streaks above a rising trail of sparks against a black night sky.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "purple",
+      "fireworks show"
+    ]
   },
   {
     "id": "2017-07-04-f6a846ab",
@@ -197,9 +248,16 @@
     "aperture": "f/10",
     "shutter": "3s",
     "iso": 100,
+    "shoot": "2017-07-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Two firework bursts with white and red trailing sparks explode in a dark night sky above a dim silhouetted hillside.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "sparks",
+      "silhouette"
+    ]
   },
   {
     "id": "2017-07-04-fac793c2",
@@ -226,9 +284,15 @@
     "aperture": "f/10",
     "shutter": "1.2s",
     "iso": 100,
+    "shoot": "2017-07-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A single firework burst radiates thin green and gold streaks against a dark night sky, its trailing spark trail visible below the burst.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "celebration"
+    ]
   },
   {
     "id": "2017-07-04-eb412869",
@@ -255,9 +319,15 @@
     "aperture": "f/10",
     "shutter": "2.2s",
     "iso": 100,
+    "shoot": "2017-07-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A firework burst radiates red and blue trailing sparks against a black night sky.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "night photography"
+    ]
   },
   {
     "id": "2017-07-04-03d84765",
@@ -284,9 +354,16 @@
     "aperture": "f/14",
     "shutter": "2.3s",
     "iso": 100,
+    "shoot": "2017-07-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A colorful firework burst radiates streaks of red, gold, and white against a dark night sky, with smoke drifting below it.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "smoke",
+      "long exposure",
+      "celebration"
+    ]
   },
   {
     "id": "2017-07-04-50220e0f",
@@ -312,9 +389,16 @@
     "aperture": "f/14",
     "shutter": "4.7s",
     "iso": 100,
+    "shoot": "2017-07-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A purple firework burst with radiating trails glows against a black night sky.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "purple",
+      "long exposure",
+      "sparks"
+    ]
   },
   {
     "id": "2017-07-04-248a111f",
@@ -341,9 +425,16 @@
     "aperture": "f/14",
     "shutter": "2.1s",
     "iso": 100,
+    "shoot": "2017-07-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A gold firework burst radiates trails of sparks against a black night sky.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "sparks",
+      "celebration"
+    ]
   },
   {
     "id": "2017-08-27-4102ebb8",
@@ -370,9 +461,19 @@
     "aperture": "f/10",
     "shutter": "1/200s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2017-08-27",
+    "title": "USAF Thunderbirds",
+    "caption": "Four F-16 fighter jets in a diamond formation trail smoke against a cloudy sky.",
+    "tags": [
+      "thunderbirds",
+      "f-16",
+      "fighter jet",
+      "air show",
+      "formation flying",
+      "military aircraft",
+      "sky",
+      "contrail"
+    ]
   },
   {
     "id": "2017-08-27-92629cc2",
@@ -399,9 +500,19 @@
     "aperture": "f/10",
     "shutter": "1/200s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2017-08-27",
+    "title": "USAF Thunderbirds",
+    "caption": "Four F-16 fighter jets in tight diagonal formation trailing smoke against a cloudy sky.",
+    "tags": [
+      "fighter jets",
+      "f-16",
+      "thunderbirds",
+      "air show",
+      "formation flying",
+      "sky",
+      "clouds",
+      "smoke trail"
+    ]
   },
   {
     "id": "2017-08-27-c8d7fcb2",
@@ -428,9 +539,18 @@
     "aperture": "f/7.1",
     "shutter": "1/400s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2017-08-27",
+    "title": "USAF Thunderbirds",
+    "caption": "A row of United States Air Force Thunderbirds F-16 fighter jets parked in formation on a tarmac with pilots standing beside them.",
+    "tags": [
+      "thunderbirds",
+      "f-16",
+      "fighter jet",
+      "air force",
+      "airshow",
+      "tarmac",
+      "jets"
+    ]
   },
   {
     "id": "2018-10-09-c0a26876",
@@ -455,9 +575,17 @@
     "aperture": "f/1.8",
     "shutter": "1/384s",
     "iso": 25,
+    "shoot": "2018-10-09",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A dark butterfly with iridescent blue and orange-tipped wings rests on cracked blue-painted pavement.",
+    "tags": [
+      "butterfly",
+      "insect",
+      "wings",
+      "concrete",
+      "pavement",
+      "macro"
+    ]
   },
   {
     "id": "2019-09-24-d970ea27",
@@ -484,9 +612,17 @@
     "aperture": "f/1.8",
     "shutter": "1/20s",
     "iso": 640,
+    "shoot": "2019-09-24",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A sunset with glowing orange clouds seen through an airplane window above the wing.",
+    "tags": [
+      "airplane wing",
+      "sunset",
+      "clouds",
+      "sky",
+      "flight",
+      "window view"
+    ]
   },
   {
     "id": "2019-09-27-c44145aa",
@@ -513,9 +649,19 @@
     "aperture": "f/1.8",
     "shutter": "1/121s",
     "iso": 25,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2019-09-24",
+    "title": "The Spheres",
+    "caption": "A living green wall of ferns and plants with misting vents and a sign reading \"the spheres\" with the Amazon smile logo.",
+    "tags": [
+      "living wall",
+      "plants",
+      "ferns",
+      "greenery",
+      "amazon spheres",
+      "mist",
+      "vents",
+      "sign"
+    ]
   },
   {
     "id": "2020-02-07-4c8453dc",
@@ -542,9 +688,17 @@
     "aperture": "f/2",
     "shutter": "1/169s",
     "iso": 20,
+    "shoot": "2020-02-07",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A white analog wall clock lies face-up among river rocks next to a bare reddish shrub.",
+    "tags": [
+      "clock",
+      "wall clock",
+      "rocks",
+      "gravel",
+      "shrub",
+      "garden"
+    ]
   },
   {
     "id": "2021-07-02-fb0bc3d1",
@@ -571,9 +725,16 @@
     "aperture": "f/4.5",
     "shutter": "1/160s",
     "iso": 5000,
+    "shoot": "2021-07-02",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A plush lion toy with a shaggy orange mane and a red ribbon sits on a wooden porch beside a white railing.",
+    "tags": [
+      "stuffed animal",
+      "lion",
+      "plush toy",
+      "red ribbon",
+      "porch railing"
+    ]
   },
   {
     "id": "2021-08-16-70662752",
@@ -600,9 +761,16 @@
     "aperture": "f/2",
     "shutter": "1/1142s",
     "iso": 25,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A small airplane flies across a blue sky framed by palm tree fronds.",
+    "tags": [
+      "palm tree",
+      "palm leaves",
+      "sky",
+      "airplane",
+      "clouds"
+    ]
   },
   {
     "id": "2021-08-16-678c906c",
@@ -629,9 +797,17 @@
     "aperture": "f/2",
     "shutter": "1/97s",
     "iso": 200,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A green anole lizard clings to a pink textured wall beside green foliage.",
+    "tags": [
+      "lizard",
+      "anole",
+      "green anole",
+      "wall",
+      "plant",
+      "reptile"
+    ]
   },
   {
     "id": "2021-08-17-1b046ba4",
@@ -658,9 +834,17 @@
     "aperture": "f/2.4",
     "shutter": "1/122s",
     "iso": 50,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Interior of a roofless stone tower ruin with an open sky above and an arched window revealing greenery below.",
+    "tags": [
+      "ruins",
+      "stone tower",
+      "roofless building",
+      "arched window",
+      "stone wall",
+      "sky"
+    ]
   },
   {
     "id": "2021-08-17-2f075b4f",
@@ -687,9 +871,19 @@
     "aperture": "f/1.6",
     "shutter": "1/5556s",
     "iso": 32,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A palm tree stands between two beach umbrellas and rows of lounge chairs on a sandy beach beside turquoise water.",
+    "tags": [
+      "beach",
+      "palm tree",
+      "ocean",
+      "umbrella",
+      "lounge chairs",
+      "sand",
+      "sky",
+      "coast"
+    ]
   },
   {
     "id": "2021-08-17-9b53a9ad",
@@ -716,9 +910,19 @@
     "aperture": "f/2.4",
     "shutter": "1/406s",
     "iso": 25,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A tree-covered island with a white sand beach seen from the water under a partly cloudy blue sky.",
+    "tags": [
+      "beach",
+      "island",
+      "ocean",
+      "sand",
+      "trees",
+      "sky",
+      "clouds",
+      "water"
+    ]
   },
   {
     "id": "2021-08-17-71528fd1",
@@ -745,9 +949,18 @@
     "aperture": "f/8",
     "shutter": "1/250s",
     "iso": 100,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A view looking straight up through a circular opening in the top of a roofless stone tower ruin, framing a patch of blue sky.",
+    "tags": [
+      "stone tower",
+      "ruins",
+      "castle",
+      "sky",
+      "opening",
+      "stone wall",
+      "masonry"
+    ]
   },
   {
     "id": "2021-08-17-109e18e9",
@@ -774,9 +987,18 @@
     "aperture": "f/7.1",
     "shutter": "1/400s",
     "iso": 100,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A rocky coastline overlooks a turquoise coral reef and deep blue ocean, with a green island visible on the horizon under a partly cloudy sky.",
+    "tags": [
+      "ocean",
+      "island",
+      "coastline",
+      "coral reef",
+      "waves",
+      "clouds",
+      "sailboat"
+    ]
   },
   {
     "id": "2021-08-17-cd1aaf7c",
@@ -803,9 +1025,17 @@
     "aperture": "f/4.5",
     "shutter": "1/125s",
     "iso": 100,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A red powder-puff flower blooms on a leafy branch surrounded by green foliage.",
+    "tags": [
+      "flower",
+      "red flower",
+      "puff flower",
+      "leaves",
+      "branch",
+      "garden"
+    ]
   },
   {
     "id": "2021-08-18-7e4ad3d3",
@@ -832,9 +1062,17 @@
     "aperture": "f/16",
     "shutter": "1/125s",
     "iso": 2000,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Narrow croton leaves with red, orange, and green mottled patterns fill the frame against a blurred green background.",
+    "tags": [
+      "croton",
+      "leaves",
+      "plant",
+      "garden",
+      "foliage",
+      "tropical"
+    ]
   },
   {
     "id": "2021-08-18-a0dcf987",
@@ -861,9 +1099,17 @@
     "aperture": "f/4",
     "shutter": "1/100s",
     "iso": 2000,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A collection of rusty antique metal tools, including calipers and hammers, rests on a worn wooden workbench.",
+    "tags": [
+      "antique tools",
+      "rusty metal",
+      "workbench",
+      "hand tools",
+      "wooden table",
+      "hardware"
+    ]
   },
   {
     "id": "2021-08-18-ccedb933",
@@ -890,9 +1136,19 @@
     "aperture": "f/4",
     "shutter": "1/400s",
     "iso": 100,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A large flowering flame tree with red-orange blossoms stands over a lawn beside a stone-walled path.",
+    "tags": [
+      "tree",
+      "flame tree",
+      "red flowers",
+      "path",
+      "garden",
+      "lawn",
+      "stone wall",
+      "tropical"
+    ]
   },
   {
     "id": "2021-08-18-97acffda",
@@ -919,9 +1175,17 @@
     "aperture": "f/4",
     "shutter": "1/400s",
     "iso": 100,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A close-up of pale, ruffled lichen growing on a branch surrounded by green leaves.",
+    "tags": [
+      "lichen",
+      "macro",
+      "plant",
+      "leaves",
+      "nature",
+      "texture"
+    ]
   },
   {
     "id": "2021-08-18-41f2ef67",
@@ -948,9 +1212,17 @@
     "aperture": "f/4.5",
     "shutter": "1/160s",
     "iso": 100,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A red arched footbridge crosses a stream in a garden, framed by dense green foliage.",
+    "tags": [
+      "red bridge",
+      "garden",
+      "footbridge",
+      "foliage",
+      "trees",
+      "leaves"
+    ]
   },
   {
     "id": "2021-08-18-b7f17151",
@@ -977,9 +1249,17 @@
     "aperture": "f/2",
     "shutter": "1/2398s",
     "iso": 25,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Tall triangular stone monoliths of varying heights stand against a bright blue sky with scattered clouds.",
+    "tags": [
+      "monument",
+      "sculpture",
+      "stone",
+      "sky",
+      "landmark",
+      "pillars"
+    ]
   },
   {
     "id": "2021-08-18-d9726b3e",
@@ -1006,9 +1286,18 @@
     "aperture": "f/2",
     "shutter": "1/133s",
     "iso": 25,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A pink beachfront resort building sits on a hill above a palm-lined tropical beach with a wooden dock extending into calm turquoise water.",
+    "tags": [
+      "beach",
+      "resort",
+      "palm trees",
+      "dock",
+      "ocean",
+      "hotel",
+      "tropical"
+    ]
   },
   {
     "id": "2021-08-18-f6c29e3c",
@@ -1035,9 +1324,19 @@
     "aperture": "f/2",
     "shutter": "1/545s",
     "iso": 25,
+    "shoot": "2021-08-16",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "The sun sets behind distant hills on the horizon, glowing orange beneath a sky of layered clouds above calm ocean water with a small boat silhouette.",
+    "tags": [
+      "sunset",
+      "ocean",
+      "sky",
+      "clouds",
+      "hills",
+      "silhouette",
+      "coast",
+      "boat"
+    ]
   },
   {
     "id": "2021-11-27-2e180961",
@@ -1064,9 +1363,19 @@
     "aperture": "f/10",
     "shutter": "1/80s",
     "iso": 1250,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "The Three Soldiers",
+    "caption": "A bronze statue of three soldiers stands together in a park surrounded by autumn trees.",
+    "tags": [
+      "statue",
+      "bronze sculpture",
+      "soldiers",
+      "memorial",
+      "park",
+      "autumn trees",
+      "path",
+      "bench"
+    ]
   },
   {
     "id": "2021-11-27-fa70d3a1",
@@ -1093,9 +1402,19 @@
     "aperture": "f/4",
     "shutter": "1/100s",
     "iso": 4000,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "John Paul Jones Memorial",
+    "caption": "A bronze statue of a man in an 18th-century military uniform and tricorn hat stands before a marble facade inscribed with the name John Paul Jones.",
+    "tags": [
+      "statue",
+      "bronze statue",
+      "john paul jones",
+      "monument",
+      "tricorn hat",
+      "military uniform",
+      "marble",
+      "memorial"
+    ]
   },
   {
     "id": "2021-11-27-776a4e8d",
@@ -1122,9 +1441,19 @@
     "aperture": "f/4",
     "shutter": "1/60s",
     "iso": 3200,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "The White House",
+    "caption": "The White House north facade illuminated at night with holiday wreaths on the windows and columns.",
+    "tags": [
+      "white house",
+      "washington dc",
+      "christmas wreath",
+      "night photography",
+      "columns",
+      "flag",
+      "lawn",
+      "holiday decorations"
+    ]
   },
   {
     "id": "2021-11-27-51656f26",
@@ -1151,9 +1480,18 @@
     "aperture": "f/1.5",
     "shutter": "1/73s",
     "iso": 125,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "Space Shuttle Discovery",
+    "caption": "The nose section of the Space Shuttle Discovery on display inside a museum hangar, with satellite models suspended from the ceiling.",
+    "tags": [
+      "space shuttle",
+      "discovery",
+      "museum",
+      "nasa",
+      "aircraft hangar",
+      "satellite model",
+      "spacecraft"
+    ]
   },
   {
     "id": "2021-11-27-38db5ddb",
@@ -1180,9 +1518,19 @@
     "aperture": "f/2.8",
     "shutter": "1/60s",
     "iso": 400,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "Space Shuttle Discovery",
+    "caption": "A space shuttle is displayed nose-on in a large museum hangar beneath an American flag, surrounded by satellites and visitors.",
+    "tags": [
+      "space shuttle",
+      "museum",
+      "aircraft hangar",
+      "american flag",
+      "satellite",
+      "exhibit",
+      "visitors",
+      "spacecraft"
+    ]
   },
   {
     "id": "2021-11-27-6db4e5e5",
@@ -1209,9 +1557,18 @@
     "aperture": "f/1.5",
     "shutter": "1/60s",
     "iso": 400,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "SR-71 Blackbird",
+    "caption": "The front view of an SR-71 Blackbird reconnaissance jet on display in a large museum hangar, with visitors walking beneath it.",
+    "tags": [
+      "sr-71",
+      "blackbird",
+      "aircraft",
+      "museum",
+      "hangar",
+      "jet engines",
+      "exhibit"
+    ]
   },
   {
     "id": "2021-11-27-f0b76a2d",
@@ -1238,9 +1595,19 @@
     "aperture": "f/1.8",
     "shutter": "1/2481s",
     "iso": 32,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "Lincoln Memorial",
+    "caption": "People walk across the plaza in front of the Lincoln Memorial as the sun sets under a sky full of scattered clouds.",
+    "tags": [
+      "lincoln memorial",
+      "washington dc",
+      "monument",
+      "plaza",
+      "sunset",
+      "people",
+      "clouds",
+      "columns"
+    ]
   },
   {
     "id": "2021-11-27-aef477b4",
@@ -1267,9 +1634,17 @@
     "aperture": "f/1.5",
     "shutter": "1/121s",
     "iso": 125,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "Lincoln Memorial",
+    "caption": "A marble statue of Abraham Lincoln seated in a chair beneath an inscribed wall inside the Lincoln Memorial.",
+    "tags": [
+      "lincoln memorial",
+      "statue",
+      "abraham lincoln",
+      "marble",
+      "monument",
+      "washington dc"
+    ]
   },
   {
     "id": "2021-11-27-80ece223",
@@ -1296,9 +1671,18 @@
     "aperture": "f/1.8",
     "shutter": "1/30s",
     "iso": 1000,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "Jefferson Memorial",
+    "caption": "A bronze statue stands beneath a coffered dome ringed by columns, with dark blue sky visible between the columns.",
+    "tags": [
+      "statue",
+      "memorial",
+      "dome",
+      "columns",
+      "rotunda",
+      "washington dc",
+      "night"
+    ]
   },
   {
     "id": "2021-11-27-3da4ed61",
@@ -1325,9 +1709,18 @@
     "aperture": "f/1.5",
     "shutter": "1/11s",
     "iso": 640,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2021-11-27",
+    "title": "Washington Monument",
+    "caption": "The Washington Monument obelisk lit up by ground spotlights against a cloudy night sky, with a ring of flags at its base.",
+    "tags": [
+      "washington monument",
+      "obelisk",
+      "night",
+      "spotlight",
+      "flags",
+      "clouds",
+      "washington dc"
+    ]
   },
   {
     "id": "2022-02-21-7c74a57f",
@@ -1354,9 +1747,19 @@
     "aperture": "f/1.5",
     "shutter": "1/8000s",
     "iso": 50,
+    "shoot": "2022-02-21",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A gray stone Gothic Revival church with a tall central clock tower stands on a downtown street corner beside modern high-rise buildings.",
+    "tags": [
+      "gothic architecture",
+      "church",
+      "clock tower",
+      "city street",
+      "stone building",
+      "downtown",
+      "embassy suites",
+      "scooter"
+    ]
   },
   {
     "id": "2022-02-21-c683d1a8",
@@ -1382,9 +1785,19 @@
     "aperture": "f/1.5",
     "shutter": "1/2915s",
     "iso": 50,
+    "shoot": "2022-02-21",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A stone Gothic-style church with a peaked roof and stained-glass windows stands on a downtown street corner beneath office buildings and a partly cloudy sky.",
+    "tags": [
+      "church",
+      "stone church",
+      "gothic architecture",
+      "stained glass",
+      "traffic light",
+      "street sign",
+      "office building",
+      "downtown"
+    ]
   },
   {
     "id": "2022-02-21-aa59dce7",
@@ -1411,9 +1824,18 @@
     "aperture": "f/1.5",
     "shutter": "1/466s",
     "iso": 50,
+    "shoot": "2022-02-21",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Two headless sculptures in gray suits, with rolled tube-like forms in place of heads, stand bent forward on an outdoor plaza in front of a building entrance with parked cars behind them.",
+    "tags": [
+      "sculpture",
+      "statue",
+      "art installation",
+      "suit",
+      "building entrance",
+      "suv",
+      "street"
+    ]
   },
   {
     "id": "2022-02-21-b03f650a",
@@ -1439,9 +1861,19 @@
     "aperture": "f/1.5",
     "shutter": "1/6579s",
     "iso": 50,
+    "shoot": "2022-02-21",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Tall striped poles of a public art sculpture rise in front of a city skyline and convention center building under a blue sky.",
+    "tags": [
+      "sculpture",
+      "public art",
+      "city skyline",
+      "convention center",
+      "downtown",
+      "street sign",
+      "buildings",
+      "sky"
+    ]
   },
   {
     "id": "2022-02-21-59b3dae0",
@@ -1468,9 +1900,19 @@
     "aperture": "f/1.5",
     "shutter": "1/5882s",
     "iso": 50,
+    "shoot": "2022-02-21",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A stone Gothic-style church with a rose window and a tall bell tower stands on a city street corner, with modern buildings in the background.",
+    "tags": [
+      "church",
+      "cathedral",
+      "gothic architecture",
+      "stone building",
+      "rose window",
+      "bell tower",
+      "city street",
+      "urban"
+    ]
   },
   {
     "id": "2022-02-21-e4a838df",
@@ -1497,9 +1939,18 @@
     "aperture": "f/2.8",
     "shutter": "1/121s",
     "iso": 160,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-02-21",
+    "title": "Tennessee State Capitol",
+    "caption": "An elevated view of a neoclassical capitol building with a columned portico and central tower overlooking a city skyline under an overcast sky.",
+    "tags": [
+      "capitol building",
+      "columns",
+      "tower",
+      "cityscape",
+      "skyline",
+      "government building",
+      "flag"
+    ]
   },
   {
     "id": "2022-02-21-79518347",
@@ -1526,9 +1977,19 @@
     "aperture": "f/2.8",
     "shutter": "1/8s",
     "iso": 800,
+    "shoot": "2022-02-21",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A neoclassical capitol building with a green-lit tower rises above a city skyline at night.",
+    "tags": [
+      "capitol",
+      "building",
+      "night",
+      "cityscape",
+      "architecture",
+      "columns",
+      "tower",
+      "city lights"
+    ]
   },
   {
     "id": "2022-04-15-163d54e7",
@@ -1555,9 +2016,18 @@
     "aperture": "f/5",
     "shutter": "1/250s",
     "iso": 100,
+    "shoot": "2022-04-15",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A black and white ruffed lemur climbs a wooden branch behind a chain-link fence in a zoo enclosure.",
+    "tags": [
+      "lemur",
+      "black and white ruffed lemur",
+      "zoo",
+      "enclosure",
+      "chain-link fence",
+      "wildlife",
+      "primate"
+    ]
   },
   {
     "id": "2022-04-15-60974f9e",
@@ -1584,9 +2054,17 @@
     "aperture": "f/3.2",
     "shutter": "1/125s",
     "iso": 1600,
+    "shoot": "2022-04-15",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A brown skink emerges from a crevice in weathered tree bark.",
+    "tags": [
+      "lizard",
+      "skink",
+      "reptile",
+      "bark",
+      "tree",
+      "wildlife"
+    ]
   },
   {
     "id": "2022-04-15-a491d607",
@@ -1613,9 +2091,17 @@
     "aperture": "f/11",
     "shutter": "1/250s",
     "iso": 500,
+    "shoot": "2022-04-15",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A giant tortoise walks across a grassy enclosure in front of a stone wall and a white building.",
+    "tags": [
+      "giant tortoise",
+      "grass",
+      "stone wall",
+      "zoo",
+      "reptile",
+      "shell"
+    ]
   },
   {
     "id": "2022-04-15-8c53018e",
@@ -1642,9 +2128,18 @@
     "aperture": "f/5",
     "shutter": "1/640s",
     "iso": 100,
+    "shoot": "2022-04-15",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A monkey with a black face and gray fur stands on a wooden platform amid ropes and climbing structures in a zoo enclosure.",
+    "tags": [
+      "monkey",
+      "primate",
+      "zoo",
+      "enclosure",
+      "wooden platform",
+      "rope",
+      "climbing structure"
+    ]
   },
   {
     "id": "2022-04-15-60534eb5",
@@ -1671,9 +2166,17 @@
     "aperture": "f/4",
     "shutter": "1/400s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-04-15",
+    "title": "Reticulated Giraffe",
+    "caption": "A giraffe stands in profile against a large rock formation, its long neck and patterned coat clearly visible.",
+    "tags": [
+      "giraffe",
+      "zoo",
+      "rock formation",
+      "wildlife",
+      "neck",
+      "ossicones"
+    ]
   },
   {
     "id": "2022-04-15-461e6184",
@@ -1700,9 +2203,17 @@
     "aperture": "f/2.8",
     "shutter": "1/1600s",
     "iso": 100,
+    "shoot": "2022-04-15",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A giraffe's head and neck facing the camera in front of large rock formations at a zoo enclosure.",
+    "tags": [
+      "giraffe",
+      "zoo",
+      "wildlife",
+      "rocks",
+      "enclosure",
+      "trees"
+    ]
   },
   {
     "id": "2022-04-15-dd4919a7",
@@ -1729,9 +2240,17 @@
     "aperture": "f/2.8",
     "shutter": "1/320s",
     "iso": 100,
+    "shoot": "2022-04-15",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "An otter swims at the water's surface in a rocky zoo enclosure with visitors visible in the background.",
+    "tags": [
+      "otter",
+      "water",
+      "swimming",
+      "zoo",
+      "rocks",
+      "exhibit"
+    ]
   },
   {
     "id": "2022-04-15-a79dc494",
@@ -1758,9 +2277,17 @@
     "aperture": "f/3.2",
     "shutter": "1/250s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-04-15",
+    "title": "Maned Wolf",
+    "caption": "A maned wolf stands beside a rock wall and wooden fence in a grassy zoo enclosure.",
+    "tags": [
+      "maned wolf",
+      "zoo",
+      "enclosure",
+      "grass",
+      "rock wall",
+      "wildlife"
+    ]
   },
   {
     "id": "2022-04-15-c5adb51c",
@@ -1787,9 +2314,17 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 125,
+    "shoot": "2022-04-15",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A tiger walks over a rock formation in a zoo enclosure, partially framed by bare tree branches.",
+    "tags": [
+      "tiger",
+      "zoo",
+      "enclosure",
+      "rocks",
+      "tree branches",
+      "big cat"
+    ]
   },
   {
     "id": "2022-04-15-45f45384",
@@ -1816,9 +2351,17 @@
     "aperture": "f/3.5",
     "shutter": "1/320s",
     "iso": 100,
+    "shoot": "2022-04-15",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A jaguar lies on a rock ledge in a zoo enclosure, framed by chain-link fencing and a stone wall.",
+    "tags": [
+      "jaguar",
+      "big cat",
+      "zoo",
+      "enclosure",
+      "rock",
+      "chain-link fence"
+    ]
   },
   {
     "id": "2022-05-22-28e9b578",
@@ -1845,9 +2388,19 @@
     "aperture": "f/11",
     "shutter": "1/200s",
     "iso": 100,
+    "shoot": "2022-05-22",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Blue Angels F/A-18 Hornets and a Thunderbirds F-16 sit parked on the tarmac at an airshow with support trucks and crew nearby.",
+    "tags": [
+      "blue angels",
+      "f/a-18 hornet",
+      "thunderbirds",
+      "f-16",
+      "airshow",
+      "fighter jets",
+      "airfield",
+      "trucks"
+    ]
   },
   {
     "id": "2022-05-22-ebccb6b2",
@@ -1874,9 +2427,19 @@
     "aperture": "f/2.8",
     "shutter": "1/2000s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-05-22",
+    "title": "Blue Angels",
+    "caption": "Four U.S. Navy Blue Angels jets fly in tight diamond formation against a clear blue sky, leaving smoke trails.",
+    "tags": [
+      "blue angels",
+      "us navy",
+      "fighter jet",
+      "f/a-18",
+      "airshow",
+      "formation flying",
+      "smoke trail",
+      "sky"
+    ]
   },
   {
     "id": "2022-05-22-8153c649",
@@ -1903,9 +2466,18 @@
     "aperture": "f/3.2",
     "shutter": "1/2000s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-05-22",
+    "title": "Blue Angels F/A-18 Hornet",
+    "caption": "A U.S. Navy Blue Angels F/A-18 fighter jet banks against a clear blue sky.",
+    "tags": [
+      "blue angels",
+      "us navy",
+      "fighter jet",
+      "f/a-18",
+      "airshow",
+      "aircraft",
+      "sky"
+    ]
   },
   {
     "id": "2022-05-22-195bb450",
@@ -1932,9 +2504,18 @@
     "aperture": "f/3.2",
     "shutter": "1/2000s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-05-22",
+    "title": "Blue Angels",
+    "caption": "Four blue and yellow fighter jets fly in tight echelon formation trailing white smoke against a clear blue sky.",
+    "tags": [
+      "airshow",
+      "fighter jets",
+      "f/a-18",
+      "blue angels",
+      "formation flying",
+      "smoke trails",
+      "sky"
+    ]
   },
   {
     "id": "2022-05-22-1835788a",
@@ -1961,9 +2542,19 @@
     "aperture": "f/3.2",
     "shutter": "1/2000s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-05-22",
+    "title": "Blue Angels Diamond Formation",
+    "caption": "Four Blue Angels F/A-18 Hornets fly in a diamond formation against a clear blue sky, trailing white contrails.",
+    "tags": [
+      "blue angels",
+      "fighter jets",
+      "f/a-18 hornet",
+      "airshow",
+      "formation flying",
+      "contrails",
+      "navy",
+      "sky"
+    ]
   },
   {
     "id": "2022-05-22-b26992e0",
@@ -1990,9 +2581,19 @@
     "aperture": "f/3.5",
     "shutter": "1/2000s",
     "iso": 100,
+    "shoot": "2022-05-22",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A formation of six F-16 fighter jets flies overhead in a diamond formation above a row of identical parked jets on the tarmac.",
+    "tags": [
+      "thunderbirds",
+      "f-16",
+      "fighter jets",
+      "air show",
+      "formation flying",
+      "airplane",
+      "runway",
+      "us air force"
+    ]
   },
   {
     "id": "2022-05-22-f32796a4",
@@ -2019,9 +2620,19 @@
     "aperture": "f/3.2",
     "shutter": "1/2000s",
     "iso": 100,
+    "shoot": "2022-05-22",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A yellow Lamborghini sports car parked on a tarmac in front of a row of USAF Thunderbirds F-16 fighter jets.",
+    "tags": [
+      "lamborghini",
+      "sports car",
+      "yellow car",
+      "f-16",
+      "fighter jets",
+      "thunderbirds",
+      "airfield",
+      "runway"
+    ]
   },
   {
     "id": "2022-05-22-55a6d583",
@@ -2048,9 +2659,18 @@
     "aperture": "f/3.2",
     "shutter": "1/2000s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-05-22",
+    "title": "P-51 Mustang",
+    "caption": "A silver propeller warbird with U.S. star roundel banks in a blue sky beside a large plume of dark smoke.",
+    "tags": [
+      "airplane",
+      "warbird",
+      "airshow",
+      "propeller plane",
+      "smoke",
+      "sky",
+      "military aircraft"
+    ]
   },
   {
     "id": "2022-05-22-0635668b",
@@ -2076,9 +2696,18 @@
     "aperture": "f/3.2",
     "shutter": "1/2000s",
     "iso": 100,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-05-22",
+    "title": "B-25 Mitchell \"Panchito\"",
+    "caption": "A restored North American B-25 Mitchell bomber named 'Panchito' flies against a smoke-streaked sky with its twin propeller engines visible.",
+    "tags": [
+      "b-25 mitchell",
+      "warbird",
+      "airplane",
+      "airshow",
+      "wwii bomber",
+      "propeller plane",
+      "smoke trail"
+    ]
   },
   {
     "id": "2022-09-04-5668056b",
@@ -2105,9 +2734,16 @@
     "aperture": "f/2.8",
     "shutter": "1/80s",
     "iso": 5000,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A striped boxfish with yellow spots swims near coral in an aquarium.",
+    "tags": [
+      "fish",
+      "boxfish",
+      "aquarium",
+      "coral",
+      "underwater"
+    ]
   },
   {
     "id": "2022-09-04-c36c4c3e",
@@ -2134,9 +2770,16 @@
     "aperture": "f/2.8",
     "shutter": "1/80s",
     "iso": 5000,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A speckled brown filefish with translucent striped fins swims against a dark aquarium background.",
+    "tags": [
+      "fish",
+      "filefish",
+      "aquarium",
+      "fin",
+      "underwater"
+    ]
   },
   {
     "id": "2022-09-04-96079720",
@@ -2163,9 +2806,16 @@
     "aperture": "f/2.8",
     "shutter": "1/80s",
     "iso": 4000,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A long-snouted gar swims in dark blue water lit by beams of light from above.",
+    "tags": [
+      "fish",
+      "gar",
+      "aquarium",
+      "underwater",
+      "water"
+    ]
   },
   {
     "id": "2022-09-04-1a9b1e1d",
@@ -2192,9 +2842,17 @@
     "aperture": "f/2.8",
     "shutter": "1/80s",
     "iso": 5000,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "An orange and white fantail goldfish swims near driftwood and aquatic plants in an aquarium, with a second pale fish visible in the background.",
+    "tags": [
+      "fish",
+      "goldfish",
+      "aquarium",
+      "aquatic plants",
+      "driftwood",
+      "fish tank"
+    ]
   },
   {
     "id": "2022-09-04-ef4e06e1",
@@ -2221,9 +2879,17 @@
     "aperture": "f/3.2",
     "shutter": "1/160s",
     "iso": 5000,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A long-spined black sea urchin sits on gravel beneath coral rock, surrounded by striped banggai cardinalfish in a reef aquarium.",
+    "tags": [
+      "sea urchin",
+      "banggai cardinalfish",
+      "aquarium",
+      "coral",
+      "reef tank",
+      "fish"
+    ]
   },
   {
     "id": "2022-09-05-5b5e778b",
@@ -2250,9 +2916,18 @@
     "aperture": "f/2.8",
     "shutter": "1/160s",
     "iso": 400,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A blue and yellow striped tang fish swims near coral with two yellow fish blurred in the background.",
+    "tags": [
+      "fish",
+      "aquarium",
+      "coral",
+      "underwater",
+      "tang",
+      "reef",
+      "marine life"
+    ]
   },
   {
     "id": "2022-09-05-cec6b1ff",
@@ -2279,9 +2954,17 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 320,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A yellow tang swims among coral and rock formations in an aquarium.",
+    "tags": [
+      "fish",
+      "yellow tang",
+      "coral",
+      "reef",
+      "aquarium",
+      "underwater"
+    ]
   },
   {
     "id": "2022-09-05-a7eb789e",
@@ -2308,9 +2991,17 @@
     "aperture": "f/2.8",
     "shutter": "1/160s",
     "iso": 500,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "An orange and black clownfish swims near purple and yellow coral formations on a rocky reef.",
+    "tags": [
+      "clownfish",
+      "coral",
+      "reef",
+      "aquarium",
+      "fish",
+      "underwater"
+    ]
   },
   {
     "id": "2022-09-05-dd4b172c",
@@ -2337,9 +3028,18 @@
     "aperture": "f/2.8",
     "shutter": "1/80s",
     "iso": 2000,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A turtle swims at the water's surface, its head above the waterline and legs paddling underwater.",
+    "tags": [
+      "turtle",
+      "pond",
+      "water",
+      "waterline",
+      "split shot",
+      "wildlife",
+      "reptile"
+    ]
   },
   {
     "id": "2022-09-05-4dc7444e",
@@ -2366,9 +3066,18 @@
     "aperture": "f/2.8",
     "shutter": "1/160s",
     "iso": 1600,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A crocodile's head emerges from calm water, its eye and teeth visible above the surface with a mirrored reflection below.",
+    "tags": [
+      "crocodile",
+      "alligator",
+      "reptile",
+      "water",
+      "eye",
+      "teeth",
+      "wildlife"
+    ]
   },
   {
     "id": "2022-09-05-2a03faf8",
@@ -2395,9 +3104,18 @@
     "aperture": "f/2.8",
     "shutter": "1/125s",
     "iso": 2000,
-    "title": null,
-    "caption": null,
-    "tags": []
+    "shoot": "2022-09-04",
+    "title": "Green Tree Python",
+    "caption": "A green snake coiled around a tree branch surrounded by leaves.",
+    "tags": [
+      "snake",
+      "green tree python",
+      "branch",
+      "leaves",
+      "reptile",
+      "coiled",
+      "jungle"
+    ]
   },
   {
     "id": "2022-09-05-881f0b2c",
@@ -2424,9 +3142,18 @@
     "aperture": "f/2.8",
     "shutter": "1/80s",
     "iso": 4000,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A purple and yellow parrotfish swims in an aquarium against a blurred reef background.",
+    "tags": [
+      "fish",
+      "parrotfish",
+      "aquarium",
+      "underwater",
+      "reef",
+      "scales",
+      "fins"
+    ]
   },
   {
     "id": "2022-09-05-f0b61603",
@@ -2453,9 +3180,17 @@
     "aperture": "f/2.8",
     "shutter": "1/80s",
     "iso": 500,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A green-domed jellyfish with long trailing tentacles floats against deep blue water.",
+    "tags": [
+      "jellyfish",
+      "ocean",
+      "underwater",
+      "tentacles",
+      "marine life",
+      "blue water"
+    ]
   },
   {
     "id": "2022-09-05-2c9399d9",
@@ -2482,9 +3217,17 @@
     "aperture": "f/2.8",
     "shutter": "1/80s",
     "iso": 500,
+    "shoot": "2022-09-04",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A dolphin swims underwater in a pool, viewed close up in profile.",
+    "tags": [
+      "dolphin",
+      "underwater",
+      "pool",
+      "aquarium",
+      "marine mammal",
+      "fin"
+    ]
   },
   {
     "id": "2022-10-29-f4caeb42",
@@ -2511,9 +3254,18 @@
     "aperture": "f/3.2",
     "shutter": "1/125s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A performer in a red and black costume and dark goggles bends a metal rod by hand while a crowd watches at an outdoor fair.",
+    "tags": [
+      "performer",
+      "renaissance faire",
+      "blacksmith",
+      "metal bending",
+      "crowd",
+      "goggles",
+      "costume"
+    ]
   },
   {
     "id": "2022-10-29-316ca173",
@@ -2540,9 +3292,19 @@
     "aperture": "f/3.5",
     "shutter": "1/125s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A man in an elaborate Renaissance-style costume with a feathered top hat holds a carved gravestone prop reading \"Sir Philip Sidney\" at an outdoor fair.",
+    "tags": [
+      "renaissance faire",
+      "costume",
+      "tombstone prop",
+      "top hat",
+      "beard",
+      "sword",
+      "crowd",
+      "autumn"
+    ]
   },
   {
     "id": "2022-10-29-3df68bf5",
@@ -2569,9 +3331,18 @@
     "aperture": "f/3.5",
     "shutter": "1/250s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A costumed performer at a renaissance faire holds a wooden sign and points while surrounded by other people in period clothing under autumn trees.",
+    "tags": [
+      "renaissance faire",
+      "costume",
+      "crowd",
+      "wooden sign",
+      "fall foliage",
+      "period dress",
+      "hat"
+    ]
   },
   {
     "id": "2022-10-29-8cf42cca",
@@ -2598,9 +3369,18 @@
     "aperture": "f/5",
     "shutter": "1/250s",
     "iso": 400,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A bearded man in a diamond-patterned doublet, feathered hat, and white stockings stands with hands on hips, a metal tankard hanging at his side.",
+    "tags": [
+      "renaissance faire",
+      "costume",
+      "doublet",
+      "tankard",
+      "feathered hat",
+      "tights",
+      "reenactment"
+    ]
   },
   {
     "id": "2022-10-29-3915e393",
@@ -2627,9 +3407,18 @@
     "aperture": "f/5",
     "shutter": "1/400s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A stone crenellated tower rises between two trees with vivid orange and red autumn foliage under a clear blue sky.",
+    "tags": [
+      "autumn",
+      "fall foliage",
+      "tower",
+      "stone tower",
+      "trees",
+      "castle",
+      "blue sky"
+    ]
   },
   {
     "id": "2022-10-29-41fb8df5",
@@ -2656,9 +3445,19 @@
     "aperture": "f/5",
     "shutter": "1/400s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A performer in a colorful jester costume with a feathered headpiece dances mid-step on a checkered green field at a renaissance faire, with seated spectators in period clothing and a striped umbrella in the background.",
+    "tags": [
+      "renaissance faire",
+      "jester",
+      "costume",
+      "performer",
+      "crowd",
+      "festival",
+      "umbrella",
+      "autumn"
+    ]
   },
   {
     "id": "2022-10-29-f2a34baa",
@@ -2685,9 +3484,17 @@
     "aperture": "f/3.2",
     "shutter": "1/250s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Performers in Renaissance-era costumes stand on an outdoor stage during a live show.",
+    "tags": [
+      "renaissance faire",
+      "costume",
+      "performers",
+      "stage",
+      "period clothing",
+      "actors"
+    ]
   },
   {
     "id": "2022-10-29-7b441ee2",
@@ -2714,9 +3521,17 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Three costumed performers in Renaissance-era attire stand on an outdoor stage, one raising a tankard overhead.",
+    "tags": [
+      "renaissance faire",
+      "costume",
+      "actors",
+      "stage",
+      "performance",
+      "medieval clothing"
+    ]
   },
   {
     "id": "2022-10-29-88dc5ea4",
@@ -2743,9 +3558,17 @@
     "aperture": "f/3.5",
     "shutter": "1/320s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Two costumed performers duel with swords on an outdoor stage while onlookers in period dress stand behind them.",
+    "tags": [
+      "renaissance faire",
+      "sword fight",
+      "swordsman",
+      "costume",
+      "stage performance",
+      "actors"
+    ]
   },
   {
     "id": "2022-10-29-c1951ae7",
@@ -2772,9 +3595,19 @@
     "aperture": "f/3.5",
     "shutter": "1/320s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A bearded man in a white shirt and tartan kilt shouts with an outstretched arm during an outdoor costumed stage performance.",
+    "tags": [
+      "renaissance faire",
+      "actor",
+      "kilt",
+      "tartan",
+      "performance",
+      "costume",
+      "stage",
+      "wooden barrel"
+    ]
   },
   {
     "id": "2022-10-29-89eaa53a",
@@ -2801,9 +3634,18 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 125,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A group of performers in Renaissance-era costumes stand on an outdoor stage beneath a floral canopy, with a seated woman in a green gown at the center.",
+    "tags": [
+      "renaissance faire",
+      "costume",
+      "performers",
+      "stage",
+      "queen",
+      "period dress",
+      "theater"
+    ]
   },
   {
     "id": "2022-10-29-40ed75a8",
@@ -2830,9 +3672,18 @@
     "aperture": "f/3.5",
     "shutter": "1/250s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A performer in a puffy-sleeved shirt, green vest, and tall boots leans back mid-motion on a wooden stage with costumed actors behind them.",
+    "tags": [
+      "renaissance faire",
+      "performer",
+      "costume",
+      "stage",
+      "actor",
+      "outdoor theater",
+      "boots"
+    ]
   },
   {
     "id": "2022-10-29-93d76734",
@@ -2859,9 +3710,18 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 125,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A woman in a renaissance-style corset and skirt gestures with outstretched arms between two costumed men, one holding a sword, on a stage with a crown emblem backdrop.",
+    "tags": [
+      "renaissance faire",
+      "costume",
+      "performers",
+      "sword",
+      "stage performance",
+      "corset",
+      "actors"
+    ]
   },
   {
     "id": "2022-10-29-2b0666de",
@@ -2888,9 +3748,19 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 200,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A bearded man in Renaissance-style costume with puffy sleeves holds up a sign reading \"Huzzah!\" at an outdoor faire.",
+    "tags": [
+      "renaissance faire",
+      "costume",
+      "sign",
+      "beard",
+      "hat",
+      "performer",
+      "actor",
+      "outdoor stage"
+    ]
   },
   {
     "id": "2022-10-29-10439e63",
@@ -2914,9 +3784,17 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 250,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A performer in Renaissance-era costume leans forward with an exaggerated shocked expression during an outdoor stage show, with other costumed performers blurred in the background.",
+    "tags": [
+      "renaissance faire",
+      "costume",
+      "performer",
+      "actor",
+      "period clothing",
+      "stage performance"
+    ]
   },
   {
     "id": "2022-10-29-aa589101",
@@ -2943,9 +3821,18 @@
     "aperture": "f/3.5",
     "shutter": "1/250s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Colorful striped jump poles crossed over a red equestrian jump stand in a sandy riding arena surrounded by trees.",
+    "tags": [
+      "equestrian jumping poles",
+      "horse jump",
+      "jousting equipment",
+      "sand arena",
+      "fence poles",
+      "trees",
+      "wooden fence"
+    ]
   },
   {
     "id": "2022-10-29-e182ff0e",
@@ -2972,9 +3859,19 @@
     "aperture": "f/5.6",
     "shutter": "1/500s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Four heraldic banners with lion, cross, crown, and griffin motifs hang above a wooden fence lined with shields and barrels, backed by autumn trees.",
+    "tags": [
+      "banners",
+      "medieval",
+      "heraldry",
+      "flags",
+      "wooden fence",
+      "shields",
+      "autumn trees",
+      "barrels"
+    ]
   },
   {
     "id": "2022-10-29-c81fd969",
@@ -3001,9 +3898,18 @@
     "aperture": "f/3.5",
     "shutter": "1/250s",
     "iso": 100,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Two people in costume draw traditional recurve bows side by side in front of teal-painted wooden bleachers.",
+    "tags": [
+      "archery",
+      "bow",
+      "arrow",
+      "quiver",
+      "bleachers",
+      "costume",
+      "reenactment"
+    ]
   },
   {
     "id": "2022-10-29-16872136",
@@ -3030,9 +3936,19 @@
     "aperture": "f/3.2",
     "shutter": "1/250s",
     "iso": 320,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Two archers in costume draw longbows aiming upward at an outdoor archery range surrounded by autumn foliage.",
+    "tags": [
+      "archery",
+      "bow",
+      "arrows",
+      "archers",
+      "medieval costume",
+      "autumn",
+      "trees",
+      "range"
+    ]
   },
   {
     "id": "2022-10-29-825ba1a5",
@@ -3059,9 +3975,18 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 1000,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A man in medieval-style plate armor and a red and yellow tunic stands with arms crossed near a chain barrier, facing a person wearing a blue hooded cloak.",
+    "tags": [
+      "renaissance faire",
+      "armor",
+      "knight costume",
+      "cloak",
+      "wooden fence",
+      "chain barrier",
+      "autumn trees"
+    ]
   },
   {
     "id": "2022-10-29-57875022",
@@ -3088,9 +4013,18 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 1000,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A woman in an ornate red and gold historical costume with a feathered hat and dark cape looks off to the side outdoors.",
+    "tags": [
+      "portrait",
+      "costume",
+      "renaissance costume",
+      "cape",
+      "hat",
+      "feather",
+      "outdoor"
+    ]
   },
   {
     "id": "2022-10-29-e26fb08c",
@@ -3117,9 +4051,18 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 200,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A smiling woman in medieval-style costume with a red cape and hip ribbons stands in front of a wooden fence bearing a green heraldic shield.",
+    "tags": [
+      "renaissance faire",
+      "medieval costume",
+      "woman",
+      "heraldic shield",
+      "wooden fence",
+      "crown banner",
+      "ribbons"
+    ]
   },
   {
     "id": "2022-10-29-2b9bb943",
@@ -3146,9 +4089,18 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 640,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A performer in medieval-style costume with a cloak and pouches stands on a platform above a seated audience at an outdoor renaissance faire.",
+    "tags": [
+      "renaissance faire",
+      "performer",
+      "costume",
+      "medieval",
+      "audience",
+      "outdoor stage",
+      "autumn"
+    ]
   },
   {
     "id": "2022-10-29-4eb847b6",
@@ -3175,9 +4127,18 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 8000,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A bearded man in a period costume raises a tankard and his fist amid a crowd at an outdoor autumn event.",
+    "tags": [
+      "renaissance faire",
+      "man",
+      "beard",
+      "costume",
+      "tankard",
+      "crowd",
+      "autumn foliage"
+    ]
   },
   {
     "id": "2022-10-29-01580530",
@@ -3204,9 +4165,18 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 12800,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A performer in an ornate green and gold Renaissance-style costume with a feathered hat waves to a crowd during a parade.",
+    "tags": [
+      "parade",
+      "costume",
+      "performer",
+      "renaissance costume",
+      "crowd",
+      "waving",
+      "hat"
+    ]
   },
   {
     "id": "2022-10-29-1156c5c0",
@@ -3233,9 +4203,18 @@
     "aperture": "f/2.8",
     "shutter": "1/80s",
     "iso": 25600,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A man in plate armor holding a lance sits atop a horse draped in a blue and white caparison at an outdoor jousting event.",
+    "tags": [
+      "knight",
+      "horse",
+      "jousting",
+      "armor",
+      "lance",
+      "renaissance faire",
+      "medieval reenactment"
+    ]
   },
   {
     "id": "2022-10-29-9397e34c",
@@ -3262,9 +4241,18 @@
     "aperture": "f/2.8",
     "shutter": "1/125s",
     "iso": 16000,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A man in medieval plate armor holds a jousting lance while sitting on a white horse draped in decorative barding, with colorful banners and a wooden fence in the background.",
+    "tags": [
+      "knight",
+      "armor",
+      "jousting",
+      "horse",
+      "lance",
+      "renaissance faire",
+      "banners"
+    ]
   },
   {
     "id": "2022-10-29-694689b9",
@@ -3291,9 +4279,18 @@
     "aperture": "f/2.8",
     "shutter": "1/60s",
     "iso": 25600,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A costumed jouster in purple armor holds a lance while riding a horse draped in red and purple fabric at an outdoor arena.",
+    "tags": [
+      "jousting",
+      "knight",
+      "horse",
+      "renaissance faire",
+      "lance",
+      "armor",
+      "costume"
+    ]
   },
   {
     "id": "2022-10-29-034cf4f7",
@@ -3320,9 +4317,18 @@
     "aperture": "f/2.8",
     "shutter": "1/100s",
     "iso": 25600,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A man with long blond hair wears polished metal shoulder armor and a white tunic with a red cross, standing in a dirt arena at dusk.",
+    "tags": [
+      "knight",
+      "armor",
+      "costume",
+      "cross",
+      "reenactment",
+      "performer",
+      "arena"
+    ]
   },
   {
     "id": "2022-10-29-03357efe",
@@ -3349,9 +4355,19 @@
     "aperture": "f/2.8",
     "shutter": "1/100s",
     "iso": 25600,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A knight in plate armor rides a horse draped in blue and white barding while holding a jousting lance during a nighttime reenactment.",
+    "tags": [
+      "knight",
+      "armor",
+      "jousting",
+      "horse",
+      "lance",
+      "medieval reenactment",
+      "arena",
+      "banners"
+    ]
   },
   {
     "id": "2022-10-29-1ceb7378",
@@ -3378,9 +4394,19 @@
     "aperture": "f/2.8",
     "shutter": "1/160s",
     "iso": 25600,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "A man in blue and silver medieval armor holds a long lance while standing in a sand arena at night.",
+    "tags": [
+      "knight",
+      "armor",
+      "jousting",
+      "lance",
+      "medieval reenactment",
+      "arena",
+      "costume",
+      "sand"
+    ]
   },
   {
     "id": "2022-10-29-5e74de39",
@@ -3407,8 +4433,18 @@
     "aperture": "f/2.8",
     "shutter": "1/200s",
     "iso": 3200,
+    "shoot": "2022-10-29",
     "title": null,
-    "caption": null,
-    "tags": []
+    "caption": "Costumed performers stand on a wooden balcony stage lit by green and pink stage lights during a night show.",
+    "tags": [
+      "stage performance",
+      "actors",
+      "balcony",
+      "costumes",
+      "theater",
+      "night show",
+      "renaissance faire",
+      "colored stage lights"
+    ]
   }
 ]

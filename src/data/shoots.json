@@ -1,0 +1,128 @@
+{
+  "2022-10-29": {
+    "count": 32,
+    "from": "2022-10-29",
+    "to": "2022-10-29",
+    "cameras": ["Canon EOS R6"],
+    "name": "Renaissance Faire",
+    "album": null,
+    "summary": "Performers, blacksmiths, jousters, and stage actors in period costume at a renaissance faire."
+  },
+  "2022-09-04": {
+    "count": 14,
+    "from": "2022-09-04",
+    "to": "2022-09-05",
+    "cameras": ["Canon EOS R6"],
+    "name": "Zoo Aquarium Visit",
+    "album": null,
+    "summary": "A day at a zoo/aquarium photographing fish, a turtle, a green tree python, and a dolphin."
+  },
+  "2022-05-22": {
+    "count": 9,
+    "from": "2022-05-22",
+    "to": "2022-05-22",
+    "cameras": ["Canon EOS R6"],
+    "name": "Air Show",
+    "album": null,
+    "summary": "An airshow featuring the Blue Angels and Thunderbirds jet teams, a WWII B-25 bomber, and a Lamborghini display."
+  },
+  "2022-04-15": {
+    "count": 10,
+    "from": "2022-04-15",
+    "to": "2022-04-15",
+    "cameras": ["Canon EOS R6"],
+    "name": "Zoo Trip",
+    "album": null,
+    "summary": "A day at the zoo photographing lemurs, tortoises, giraffes, a maned wolf, and a jaguar."
+  },
+  "2022-02-21": {
+    "count": 7,
+    "from": "2022-02-21",
+    "to": "2022-02-21",
+    "cameras": ["Apple iPhone 13 Pro"],
+    "name": "Nashville",
+    "album": null,
+    "summary": "A day exploring downtown Nashville's churches, streets, and public art, ending at the Tennessee State Capitol at night."
+  },
+  "2021-11-27": {
+    "count": 10,
+    "from": "2021-11-27",
+    "to": "2021-11-27",
+    "cameras": ["Canon EOS R6", "Apple iPhone 13 Pro"],
+    "name": "Washington DC",
+    "album": null,
+    "summary": "A day-to-night visit to Washington DC landmarks and the Air and Space Museum in autumn 2021."
+  },
+  "2021-08-16": {
+    "count": 16,
+    "from": "2021-08-16",
+    "to": "2021-08-18",
+    "cameras": ["Apple iPhone 12 Pro", "Canon EOS R6"],
+    "name": "Caribbean Vacation",
+    "album": null,
+    "summary": "Beach, coastline, and garden scenes from a tropical island trip, likely St. Croix."
+  },
+  "2021-07-02": {
+    "count": 1,
+    "from": "2021-07-02",
+    "to": "2021-07-02",
+    "cameras": ["Canon EOS R6"],
+    "name": "Stuffed Lion Toy",
+    "album": null,
+    "summary": "A plush lion toy tied with a red ribbon sitting on a porch railing."
+  },
+  "2020-02-07": {
+    "count": 1,
+    "from": "2020-02-07",
+    "to": "2020-02-07",
+    "cameras": ["Apple iPhone 11 Pro Max"],
+    "name": null,
+    "album": null,
+    "summary": "A wall clock lying face-up in a rock garden bed."
+  },
+  "2019-09-24": {
+    "count": 2,
+    "from": "2019-09-24",
+    "to": "2019-09-27",
+    "cameras": ["Apple iPhone XS Max"],
+    "name": "Seattle - Amazon Spheres",
+    "album": null,
+    "summary": "A flight sunset view paired with a visit to the Amazon Spheres living wall in Seattle."
+  },
+  "2018-10-09": {
+    "count": 1,
+    "from": "2018-10-09",
+    "to": "2018-10-09",
+    "cameras": ["Apple iPhone XS Max"],
+    "name": null,
+    "album": null,
+    "summary": "Macro photo of a butterfly resting on concrete pavement."
+  },
+  "2017-08-27": {
+    "count": 3,
+    "from": "2017-08-27",
+    "to": "2017-08-27",
+    "cameras": ["Canon EOS 6D"],
+    "name": "Air Show",
+    "album": null,
+    "summary": "Thunderbirds F-16 formation flying and lined up on the tarmac at an air show."
+  },
+  "2017-07-04": {
+    "count": 8,
+    "from": "2017-07-04",
+    "to": "2017-07-04",
+    "cameras": ["Canon EOS 6D"],
+    "name": "Fourth of July Fireworks",
+    "album": null,
+    "summary": "Long-exposure shots of a fireworks show on the 4th of July."
+  },
+  "2017-06-18": {
+    "count": 4,
+    "from": "2017-06-18",
+    "to": "2017-06-19",
+    "cameras": ["Canon EOS 6D"],
+    "name": "Campus",
+    "album": null,
+    "summary": "A historic brick campus with a clock tower, tree-lined lawn, and a nearby field sunset."
+  }
+}

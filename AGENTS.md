@@ -132,12 +132,25 @@ tmux status bar, no terminal/TUI framing. Only _content_ migrated. Older notes s
 otherwise were reversed; see the reversal note in `docs/CONTEXT.md`. (Neon District is a
 new design, not the old one — the resemblance is that both are dark and monospace-heavy.)
 
-**`src/data/photos.json` is generated.** Written by the import script. The only
-hand-editable fields _today_ are `title`, `caption`, and `tags`.
+**`src/data/photos.json` is generated.** Written by the import script. The hand-editable
+fields are `title`, `caption`, and `tags` — which `photos:describe` also writes, so a hand
+edit and a re-run can contend. It only fills in photos that have neither a caption nor
+tags, so an edited photo is left alone unless you pass `--force`.
 
-The writer preserves any other field it finds, so the schema can grow (an `album` is a live
-possibility — see MILESTONES M4) without the import silently deleting it. Adding one means
-declaring it in `src/content.config.ts`, or the collection layer strips it.
+The writer preserves any other field it finds, so the schema can grow without the import
+silently deleting it. Adding one means declaring it in `src/content.config.ts`, or the
+collection layer strips it.
+
+**`src/data/shoots.json` is generated the same way, and is also hand-edited.** Derived
+fields (`count`, `from`, `to`, `cameras`) are rewritten every run; `name`, `album` and
+anything else you add survive untouched. This is the file where albums get named — see
+MILESTONES M4.
+
+**Metadata generation runs once per photo, at import, and never sweeps the library.** This
+is load-bearing, not an optimisation. Re-clustering shoots over the whole manifest could
+merge two shoots that had already been named, silently reattaching those names to the wrong
+photographs. `assignShoots` therefore only ever fills in photos with no shoot, may _extend_
+an existing shoot, and refuses to _merge_ two — a bridge is reported for a human instead.
 
 **Photo privacy is a hard requirement.** EXIF handling is an allowlist, never a denylist —
 GPS plus camera/lens serials, owner fields, and vendor `MakerNote` blobs are all dropped.
@@ -158,7 +171,21 @@ derivatives make it unnecessary.
 - **Astro 7 bundles Zod 4.** Use `z.url()`; `z.string().url()` is deprecated and shows up
   as an `astro check` hint.
 - **`npm run photos:import` needs `--` before its arguments**, or npm swallows them:
-  `npm run photos:import -- ~/Desktop/photos`. Same for `photos:rebuild`.
+  `npm run photos:import -- ~/Desktop/photos`. Same for `photos:rebuild`, `photos:shoots`,
+  `photos:describe` and `photos:name-shoots`.
+- **The photo metadata commands are all idempotent by skipping, not by diffing.** A photo
+  with a caption or any tags is "described"; a photo with a `shoot` is "grouped"; a shoot
+  with a `name` is "named". Each has a `--force` to redo. That is why re-running any of
+  them in steady state costs nothing — and why deleting a field is how you ask for a redo.
+- **`photos:describe` is a backfill, not a routine.** `photos:import` describes each photo
+  as it arrives, so the standalone command normally finds nothing to do. Reach for it after
+  an import run with `--no-metadata`, or after changing the prompt.
+- **Alt text prefers `caption` over `title`**, which reads backwards but is correct: alt
+  text has to describe a picture, not name it. `src/lib/photoAlt.ts` spells out why.
+- **640px is the floor for what the model can see, and it was measured.** At 256px a
+  black-and-white ruffed lemur came back as a "monkey/tamarin" — the failure mode is a
+  confident wrong noun, not a vague one. Don't point `photos:describe` at a smaller
+  derivative without re-running that comparison.
 - **Non-interactive shells get the wrong Node**, which breaks wrangler (it requires
   ≥22) and therefore every photo command. Source nvm first — see Toolchain above.
 - **`sharp` output metadata is asserted, not assumed.** `derive.mjs` re-reads every
