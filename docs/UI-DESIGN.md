@@ -169,11 +169,14 @@ walk. Three depth layers, brightest at the hero and never brighter than 40% belo
 far layer drifts on a 90s loop; a shooting star crosses roughly every 20 seconds. The
 nebula is _in_ the content and lags scroll by a parallax factor, because it is near.
 
-**Since 2026-07-29 the shared sky also carries the nebula proper**: two enormous blurred
-colour fields (violet leading, cyan seconding, a whisper of sodium) drifting on 140s/180s
-loops at single-digit opacity, under the stars and under `.sky-dim`. Every page inherits
-the atmosphere from this one layer. It is deliberately identical on every page — it is
-the sky. What differs per page is the _room_: see the page haze in §6.
+**Since 2026-07-29 every page also carries the nebula proper** (`.neb` in BaseLayout):
+two enormous blurred colour fields (violet leading, cyan seconding, a whisper of sodium)
+drifting on 140s/180s loops at single-digit opacity. It began viewport-fixed inside the
+sky; owner review moved it to the **top of the page**, scrolling away and tapering like
+the hero's haze, because a bloom that followed the viewport read as disconnected
+(`min(150vh, 100%)`, masked — the cap keeps a short page from gaining empty scroll
+range). It is deliberately identical on every page. What differs per page is the
+_room_: see the page haze in §6.
 
 ### 5.2 Type resolves on entry
 
@@ -767,12 +770,20 @@ screenshots and accepted by the owner before landing.
 
 ### The gallery is lit by the shoot on screen
 
-The lightbox trick at room scale. `/photos` holds a fixed two-layer backdrop
-(`.px-ambient`, `z-index: -1` inside `.page` — the slot the scanlines vacated). When the
-rail's tracked run changes, the incoming shoot's **LQIP** — already inlined in the
-markup, so zero network cost — is painted onto the hidden layer at `blur(80px)` and the
-layers cross-fade. Scroll from stage lights into an autumn outing and the room changes
-with you.
+The lightbox trick at room scale. `/photos` holds a two-layer backdrop (`.px-ambient`,
+`z-index: -1` inside `.page`). When the rail's tracked run changes, the incoming shoot's
+**LQIP** — already inlined in the markup, so zero network cost — is painted onto the
+hidden layer at `blur(80px)` and the layers cross-fade. Scroll from stage lights into an
+autumn outing and the room changes with you.
+
+Owner review, later the same day: the layer was viewport-fixed at first, and a bloom
+that follows you down the page read as disconnected from it. It is now **anchored to
+the top of the page like the hero's haze and the nebula** (`min(170vh, 100%)`, masked
+to taper into the dark — never a hard edge). The bloom colours the arrival; the deep
+gallery is plain night. `--live` keeps tracking for the whole scroll regardless, so the
+rail and run headers stay in the current shoot's hue even after the bloom is gone.
+Making all backgrounds viewport-fixed again is noted as a possible future direction —
+if so, it should happen to every page at once, not one.
 
 The accent follows the light. The LQIP's average colour is taken in **OKLab**
 (`src/lib/ambient.ts`, Ottosson's matrices, unit-tested in `tests/ambient.test.ts`), and

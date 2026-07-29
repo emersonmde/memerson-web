@@ -102,6 +102,18 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
     <SiteHeader active={active} back={back} />
 
     <div class="page">
+      {
+        /*
+          The nebula. Anchored to the top of the *page*, not the viewport —
+          the same behaviour as the hero's haze: it colours the arrival and
+          scrolls away, tapering into the plain star field below. (Owner
+          review 2026-07-29: viewport-fixed bloom read as disconnected.)
+        */
+      }
+      <div class="neb" aria-hidden="true">
+        <div class="sky-neb-a"></div>
+        <div class="sky-neb-b"></div>
+      </div>
       <main id="main">
         <slot />
       </main>

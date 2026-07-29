@@ -149,10 +149,24 @@ const monthDay = (d: Date) =>
   }
 
   .entry {
+    position: relative;
     display: block;
     padding: 20px 0;
     border-top: 1px solid rgba(142, 180, 255, 0.1);
     transition: background 0.16s;
+  }
+
+  /* The separator's lit segment — the about page's tick technique, in the
+     archive's violet. Fixed length; the hairline carries the rest. */
+  .entry::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 96px;
+    height: 1px;
+    background: linear-gradient(90deg, oklch(0.8 0.17 286 / 0.75), transparent);
+    box-shadow: 0 0 10px oklch(0.8 0.17 286 / 0.45);
   }
 
   .entry:hover {

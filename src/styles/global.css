@@ -213,14 +213,34 @@ label,
 }
 
 /*
- * The nebula. Two colour fields under the stars, so faint they read as
- * atmosphere rather than graphics — the aim is the airglow behind a night
- * city, not an aurora poster. They sit below `.sky-dim`, so they fade with
- * the stars past the fold and never compete with body text.
+ * The nebula. Two colour fields so faint they read as atmosphere rather than
+ * graphics — the aim is the airglow behind a night city, not an aurora poster.
+ *
+ * `.neb` is anchored to the top of the document and scrolls away with it,
+ * exactly like the hero's haze (owner review 2026-07-29: a viewport-fixed
+ * bloom read as disconnected). The mask tapers it into the plain star field —
+ * no hard edge where it ends. Held at 150vh so the arrival screen and a bit
+ * of the first scroll are coloured, and everything below is night.
  *
  * The hue pair is the ramp's endpoints (violet 286, cyan 200) with a whisper
  * of sodium — the same three lights the rest of the site is allowed to use.
  */
+.neb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Never taller than the page itself, or a short page would gain empty
+     scroll range below its content. */
+  height: min(150vh, 100%);
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: var(--sky);
+  mask-image: linear-gradient(180deg, #000 55%, transparent 97%);
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 97%);
+}
+
 .sky-neb-a,
 .sky-neb-b {
   position: absolute;
@@ -624,6 +644,9 @@ html[data-swapped] [data-fx='resolve'] {
   opacity: 1;
   filter: none;
   letter-spacing: -0.045em;
+  /* No layer for a heading that will never animate — a promoted surface can
+     clip the .neon-h glow to a visible rectangle. */
+  will-change: auto;
 }
 
 .sec-title {
@@ -1182,6 +1205,7 @@ html[data-swapped] [data-fx='resolve'] {
     opacity: 1 !important;
     filter: none !important;
     letter-spacing: -0.045em !important;
+    will-change: auto !important;
   }
 
   .shot {

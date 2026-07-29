@@ -785,16 +785,27 @@ const EAGER = 8;
    * the colour of the air — scroll from stage lights into an autumn outing and
    * the room changes with you.
    *
-   * Fixed and at z-index -1: inside `.page`'s stacking context it paints
-   * behind every plate and tile but still above the sky, in the slot the
-   * scanlines used to hold. The dimming gradient in ::after keeps type and
-   * thumbnails on spec whatever the photograph underneath is doing.
+   * Top-anchored, like the hero's haze and the nebula — it colours the
+   * arrival and the first stretch of the gallery, then tapers into the dark
+   * (owner review 2026-07-29: viewport-fixed bloom read as disconnected).
+   * The cross-fade still tracks the shoot in view while the layer is on
+   * screen, and `--live` keeps tracking for the whole scroll regardless.
+   *
+   * z-index -1: inside `.page`'s stacking context it paints behind every
+   * plate and tile but still above the sky. The dimming gradient in ::after
+   * keeps type and thumbnails on spec whatever the photograph is doing.
    */
   .px-ambient {
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: min(170vh, 100%);
     z-index: -1;
+    overflow: hidden;
     pointer-events: none;
+    mask-image: linear-gradient(180deg, #000 55%, transparent 97%);
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 97%);
   }
 
   .px-amb {
@@ -816,9 +827,9 @@ const EAGER = 8;
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(3, 4, 10, 0.62),
+      rgba(3, 4, 10, 0.55),
       rgba(3, 4, 10, 0.3) 34%,
-      rgba(3, 4, 10, 0.55) 100%
+      rgba(3, 4, 10, 0.45) 100%
     );
   }
 

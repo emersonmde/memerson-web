@@ -157,12 +157,14 @@ const LINKS = [
     font-weight: 500;
   }
 
-  /* The section marker's tick, lit in the room's own sodium. */
+  /* The section marker's tick, lit in the room's own sodium. Long enough to
+     underline the first word or two — a fixed length, deliberately not tied
+     to the text, so a long heading cannot stretch it into a bar. */
   .about-h2::after {
     content: '';
     display: block;
     margin-top: 8px;
-    width: 30px;
+    width: 84px;
     height: 2px;
     background: linear-gradient(90deg, var(--sodium), transparent);
     box-shadow: 0 0 12px oklch(0.82 0.17 66 / 0.6);

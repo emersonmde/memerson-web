@@ -255,7 +255,23 @@ function paint() {
       // A lens finding focus, not a fade-up.
       case 'resolve':
         node.el.style.opacity = (0.12 + p * 0.88).toFixed(3);
-        node.el.style.filter = `blur(${((1 - p) * 13).toFixed(2)}px)`;
+        /*
+         * At p = 1 the filter must come *off*, not settle at `blur(0px)`. Any
+         * non-none filter forces the element into its own render surface, and
+         * both Blink and WebKit clip `text-shadow` to that surface — which
+         * beheaded the `.neon-h` titles' glow into a visible rectangle (and
+         * its clipped halo read as a phantom nav drop shadow). `will-change`
+         * is released with it so the settled heading drops its layer.
+         */
+        if (p >= 1) {
+          // Explicit 'none': clearing the inline value would fall back to the
+          // CSS entry state, which is blur(13px).
+          node.el.style.filter = 'none';
+          node.el.style.willChange = 'auto';
+        } else {
+          node.el.style.filter = `blur(${((1 - p) * 13).toFixed(2)}px)`;
+          node.el.style.willChange = '';
+        }
         node.el.style.letterSpacing = `${(-0.045 + (1 - p) * 0.1).toFixed(3)}em`;
         break;
 
