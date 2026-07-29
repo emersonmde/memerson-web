@@ -119,16 +119,13 @@ rejected — see `docs/ARCHITECTURE.md` §5.1–5.2.
 `custom_domain: true` on `memerson.com`. **There is deliberately no R2 binding** — photos
 are served from an R2 custom domain rather than proxied through the Worker.
 
-**`memerson.com` is live** (2026-07-27). Deploy with `npm run deploy`.
-
-Deployment is intended to run via Cloudflare Workers Builds on push to `main`, but that is
-**not connected yet.** The repo is now public at `github.com/emersonmde/memerson-web`, so
-the remaining step is authorizing Cloudflare's GitHub app, which is dashboard-only. Until
-then `npm run deploy` is the only thing that ships — a push to `main` deploys nothing.
+**`memerson.com` is live** (2026-07-27). **Workers Builds is connected (2026-07-29):** a
+push to `main` builds and deploys automatically. `npm run deploy` still works for a manual
+ship, but the two can race — after pushing, prefer letting the build deploy.
 
 One-time setup from `docs/ARCHITECTURE.md` §3 that **is** done: `wrangler login`, R2
 enabled, both buckets created, `photos.memerson.com` attached, custom domain bound. No R2
-API token was needed. Still outstanding: Workers Builds and mail hardening
+API token was needed. Still outstanding: mail hardening
 (SPF/DKIM/DMARC/DNSSEC). The `errorsignal.dev` cutover is **done** (2026-07-27) and was
 never Bulk Redirects — the redirects live in the old site's own repo, deliberately. See
 `docs/ARCHITECTURE.md` §8.

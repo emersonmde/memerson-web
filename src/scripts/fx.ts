@@ -32,7 +32,7 @@
  * they no longer interleave with writes.
  */
 
-import { chargeDistance, chargeOf, clamp01, nodeLit } from '../lib/rail';
+import { chargeDistance, chargeOf, chaseCharge, clamp01, nodeLit } from '../lib/rail';
 
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -66,7 +66,14 @@ interface RailScene {
   /** Filled by paint()'s read phase, consumed by its write phase. */
   top: number;
   height: number;
+  /**
+   * The painted charge — the clock every consumer reads. It *chases* the
+   * geometric value (see `chaseCharge`), so on a fast flick it rolls through
+   * the frames the scroll skipped instead of teleporting with it.
+   */
   cg: number;
+  /** Last cg actually written to the DOM, so an unchanged frame writes nothing. */
+  drawn: number;
 }
 
 interface FxNode {
@@ -84,6 +91,15 @@ let fx: FxNode[] = [];
 /* ------------------------------------------------------------------ measure */
 
 function measure() {
+  /*
+   * The painted charge survives a re-measure. The 140ms settle timer fires
+   * while the chase is still rolling (it converges in ~5τ ≈ 450ms), and
+   * resetting cg here would snap the tail of that roll — scroll fast, stop,
+   * and the head teleports the last stretch. Position and hue are re-derived;
+   * the clock keeps its time.
+   */
+  const kept = new Map(rails.map((scene) => [scene.rail, scene.cg]));
+
   rails = [];
   for (const scope of document.querySelectorAll<HTMLElement>('[data-rail-scope]')) {
     const rail = scope.querySelector<HTMLElement>('[data-fx="rail"]');
@@ -123,7 +139,8 @@ function measure() {
       nodes,
       top: railBox.top,
       height: railBox.height,
-      cg: -1,
+      cg: kept.get(rail) ?? -1,
+      drawn: -1,
     });
   }
 
@@ -138,9 +155,21 @@ function measure() {
 
 /* -------------------------------------------------------------------- paint */
 
+/** When the previous frame painted, for the chase's dt. */
+let lastPaintAt = 0;
+
 function paint() {
   const vh = window.innerHeight;
   const scrollY = window.scrollY;
+
+  /*
+   * Frame time for the chase. Capped at 34ms so a long idle gap (or a dropped
+   * frame) reads as one slow frame rather than as "infinite time passed, snap
+   * to target" — an anchor jump should still roll in, briskly.
+   */
+  const now = performance.now();
+  const dt = Math.min(now - lastPaintAt, 34);
+  lastPaintAt = now;
 
   /*
    * Read phase. Every rect this frame needs, taken before a single style is
@@ -160,11 +189,15 @@ function paint() {
   }
 
   /* Write phase. Nothing below reads layout. */
+  let chasing = false;
   for (const scene of rails) {
-    const cg = chargeOf(scene.top, scene.height, vh);
+    const target = chargeOf(scene.top, scene.height, vh);
+    const cg = chaseCharge(scene.cg, target, dt, scene.height);
+    scene.cg = cg; // always advances, even when too small to be worth a write
+    if (cg !== target) chasing = true;
 
-    if (Math.abs(cg - scene.cg) > 0.0004) {
-      scene.cg = cg;
+    if (Math.abs(cg - scene.drawn) > 0.0004) {
+      scene.drawn = cg;
       scene.rail.style.setProperty('--cg', `${(cg * 100).toFixed(2)}%`);
 
       const chargeY = chargeDistance(cg, scene.height);
@@ -230,6 +263,20 @@ function paint() {
         node.el.style.transform = `perspective(900px) rotateX(${(34 - p * 30).toFixed(2)}deg)`;
         break;
     }
+  }
+
+  /*
+   * The chase keeps its own heartbeat. Scroll events only *sample* the scroll;
+   * once any rail is off its target the clock has to keep ticking until it
+   * arrives, or the roll would freeze the moment the finger lifts. Shares the
+   * `queued` guard with onScroll, so there is never more than one pending
+   * frame; converged ⇒ chasing is false ⇒ the loop stops costing anything.
+   */
+  if (chasing && !queued) {
+    queued = requestAnimationFrame(() => {
+      queued = 0;
+      paint();
+    });
   }
 }
 

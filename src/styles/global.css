@@ -544,8 +544,7 @@ a.sec-aside:hover {
  * `src/scripts/redraw.ts` sets `data-swapped` on the incoming document, and
  * from the first client-side navigation onward it stays set. The wipe is the
  * transition; the page it reveals is finished. Two moving things would be two
- * light events, and §4 allows one — the same argument that already keeps
- * `::view-transition-new(root)` unanimated.
+ * light events, and §4 allows one.
  *
  * `-0.045em` is not a guess: it is what `paint()` writes at `p = 1`, so a
  * resolved heading here and a resolved heading there are the same heading.
@@ -852,56 +851,89 @@ html[data-swapped] [data-fx='resolve'] {
 /* ---------------------------------------------------------------------------
  * "Redraw" page transition — mockup 6g. See src/scripts/redraw.ts.
  *
- * The outgoing page is erased downward while the incoming page sits underneath,
- * already painted. The incoming page deliberately has no animation of its own:
- * two moving things would be two light events, and the motion law allows one.
+ * One scan line travels top to bottom and the page draws in behind it. Built
+ * entirely in the live document: the View Transitions overlay is skipped by
+ * script before it renders, because real-device iOS composited the overlay's
+ * animations on unreliable clocks (late starts, mutual desync, wrong opacity).
+ * Full history in redraw.ts; the upshot is a single sliding panel whose top
+ * edge is the line, identical on every engine, View Transitions API or not.
  * ------------------------------------------------------------------------ */
 
-@keyframes redrawErase {
+/*
+ * Belt for the skipped overlay: some engines paint one capture frame before
+ * `skipTransition()` lands. Nothing about the overlay is used, so it may
+ * never paint at all.
+ */
+::view-transition {
+  display: none !important;
+}
+
+/*
+ * The line and the wipe are ONE element, and that is the entire design.
+ *
+ * Every two-surface version desynced on real iPhones, each time through a
+ * different crack: overlay pseudo vs live element, overlay pseudo vs overlay
+ * pseudo, and finally a live `clip-path` reveal (main-thread on that device)
+ * trailing a live `transform` line (compositor) by hundreds of pixels. Same
+ * document, same clock — different threads. The only arrangement a compositor
+ * cannot pull apart is one where the seam and the line are the same pixels.
+ *
+ * So `.redraw` is an opaque void panel taller than the screen whose top edge
+ * carries the neon line (`::before`). It starts with that edge at the nav's
+ * measured bottom (`--redraw-top`, set by redraw.ts) and slides down past the
+ * bottom of the viewport: the incoming page — already swapped in and fully
+ * live underneath — is what the edge reveals. One `transform` animation on
+ * one element; there is no second surface left to lag.
+ *
+ * The end keyframe overshoots by 44px to carry the glow off-screen, and the
+ * panel is opaque at both keyframes — any fade-in would show the page through
+ * it, which is the "dim" this design exists to make impossible.
+ */
+@keyframes redrawWipe {
   from {
-    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    transform: translateY(var(--redraw-top, 0px));
   }
   to {
-    clip-path: inset(100% 0 0 0);
+    opacity: 1;
+    transform: translateY(calc(100vh + 44px));
   }
 }
 
-@keyframes redrawLine {
-  0% {
-    transform: translateY(0);
+/* The line fades in over the sweep's first strides; the panel does not. */
+@keyframes redrawEdge {
+  from {
     opacity: 0;
   }
-  8% {
+  25% {
     opacity: 1;
   }
-  92% {
+  to {
     opacity: 1;
   }
-  100% {
-    transform: translateY(100vh);
-    opacity: 0;
-  }
 }
 
-::view-transition-old(root) {
-  animation: redrawErase 380ms cubic-bezier(0.4, 0, 0.5, 1) forwards;
-}
-
-/* Underneath, unanimated — the erase above is what reveals it. */
-::view-transition-new(root) {
-  animation: none;
-}
-
-/* The line that does the cutting. */
 .redraw {
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  height: 2px;
+  /* Generous: must out-span the viewport however the browser chrome resizes
+     it mid-flight, or content peeks out under the panel's bottom edge. */
+  height: 150vh;
   z-index: 60;
   pointer-events: none;
   opacity: 0;
+  background: var(--void);
+}
+
+.redraw::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 2px;
   background: linear-gradient(90deg, transparent, #eaf6ff, transparent);
   box-shadow:
     0 0 16px var(--cyan),
@@ -909,7 +941,11 @@ html[data-swapped] [data-fx='resolve'] {
 }
 
 .redraw.is-running {
-  animation: redrawLine 380ms cubic-bezier(0.4, 0, 0.5, 1) forwards;
+  animation: redrawWipe 300ms cubic-bezier(0.4, 0, 0.5, 1) forwards;
+}
+
+.redraw.is-running::before {
+  animation: redrawEdge 300ms linear forwards;
 }
 
 /* ---------------------------------------------------------------------------
@@ -1086,10 +1122,5 @@ html[data-swapped] [data-fx='resolve'] {
 
   .redraw {
     display: none;
-  }
-
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none !important;
   }
 }

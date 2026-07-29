@@ -194,6 +194,15 @@ in [`design/`](./design/) and the system is documented in [UI-DESIGN.md](./UI-DE
 - [x] **Mockup 6g — the "Redraw" page transition** — done 2026-07-27 via
       `<ClientRouter />` and `src/scripts/redraw.ts`. Needs a real browser to judge; the
       380ms wipe cannot be seen headless.
+      **Rebuilt 2026-07-29 for real-device iOS.** The View Transitions overlay
+      composited unreliably on an actual iPhone (late-starting animations — a ~1s dim —
+      then two independent desyncs), and none of it reproduces in the iOS simulators,
+      so the overlay is now skipped outright and the wipe is a single live-DOM panel
+      whose top edge is the scan line, starting below the nav, at 300ms. Same visual on
+      every engine, View Transitions API or not. Full history in `src/scripts/redraw.ts`.
+      The same session added `chaseCharge` to the rail (UI-DESIGN §5.3): phone flicks
+      outrun the node ramp between frames, so the painted charge now rolls to its
+      geometric target instead of teleporting with the scroll.
 
 ### Review pass, 2026-07-27
 

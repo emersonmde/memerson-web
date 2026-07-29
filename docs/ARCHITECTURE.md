@@ -131,10 +131,10 @@ Cloudflare repo access is undesirable.
    it is a billable storage product; Workers is not gated and needs no equivalent step.)
 3. ~~**Clear the apex record** so `custom_domain` can bind~~ — **done 2026-07-27.** It was
    a proxied CNAME, not the A/AAAA that `dig` reported. See above.
-4. **Workers Builds**: ~~push the repo to GitHub~~ — **done 2026-07-27**, public at
-   `github.com/emersonmde/memerson-web`. Authorizing Cloudflare's GitHub app in the
-   dashboard is **still outstanding**, and is the whole of what remains. Local
-   `npm run deploy` works without it.
+4. ~~**Workers Builds**~~ — **done 2026-07-29.** Repo public at
+   `github.com/emersonmde/memerson-web` (2026-07-27); the GitHub app was authorized and
+   the repo connected in the dashboard, so a push to `main` builds and deploys. Local
+   `npm run deploy` still works but can race a push-triggered build.
 5. ~~Cutover redirects~~ — **live 2026-07-27**, in the **old site's repo** rather than this
    zone (§8), and verified. `memerson.dev` is separate and needs a Route 53 change first.
 6. Decide `www.memerson.com` handling (redirect rule or second custom domain).

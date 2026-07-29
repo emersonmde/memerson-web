@@ -1,60 +1,93 @@
 /*
- * The "Redraw" page transition. Mockup 6g.
+ * The "Redraw" page transition. Mockup 6g: one scan line travels top to
+ * bottom and the page draws in behind it. One light event, per the motion law
+ * in docs/UI-DESIGN.md §4.
  *
- * One scan line travels top to bottom; the outgoing page is erased above it and
- * the incoming page is already sitting underneath. Nothing scales, nothing
- * flashes twice — one light event, per the motion law in docs/UI-DESIGN.md §4.
+ * Implemented entirely in the live document — the View Transitions overlay is
+ * deliberately *skipped*, not driven. Three attempts to run the wipe on the
+ * overlay's pseudo-elements all failed on real iPhones and only there: the
+ * device compositor started overlay animations late (the incoming page held
+ * composited at ~75% for up to a second — the "dim"), ran the erase and the
+ * line on mutually inconsistent clocks (the line visibly clear of the seam, in
+ * either direction), and mis-composited overlay opacity outright. None of it
+ * reproduces in the iOS simulators, Chrome, WebKit trunk, or Firefox, and no
+ * cascade or WAAPI channel could correct it from script. So the overlay is
+ * torn down before it ever renders, and the same visual is built from what the
+ * device demonstrably runs on time: CSS animations on live elements.
  *
- * The erase itself is a view transition (CSS, in global.css). This module only
- * drives the line, because the View Transitions API gives no way to inject an
- * element into the transition and the line is not a snapshot of either page —
- * it is the thing doing the cutting.
+ * The wipe: `.redraw` is an opaque, viewport-covering panel whose top edge
+ * carries the neon line; `is-running` slides it from the nav's bottom edge
+ * down past the bottom of the screen, revealing the already-swapped page
+ * behind it. The seam and the line are the same element — the last two-surface
+ * version (a `clip-path` reveal on `.page` plus a `transform` line) still
+ * desynced on the device, because the two properties animate on different
+ * threads there. One element, one `transform`; nothing left to lag.
  *
- * It also sets the flag that makes "nothing flashes twice" true. The incoming
- * page's entry animations — the resolving headings, the gallery's tiles — are
- * first-load effects, and on a swap they were a second light event on top of
- * the wipe. Worse than untidy: `::view-transition-new(root)` is captured when
- * the swap callback returns, which is before any script on the new page has
- * run, so the frozen image the wipe reveals was the page in its *entry* state —
- * a blurred heading over a gallery of `opacity: 0` tiles — held for the full
- * 380ms and then brightening all at once when the real DOM took over. That is
- * the "whole page loads dimly then brightens". No script can beat that
- * snapshot, because on the first visit to a route the page's own module has not
- * executed yet; only CSS that is already in the document can, which is what
- * `html[data-swapped]` is.
+ * What is given up: the outgoing page vanishes at the swap instead of being
+ * erased — below the line, the void panel shows instead of the old page. On
+ * this design the two are nearly indistinguishable, and it is the trade that
+ * makes the transition identical on every engine — including ones with no
+ * View Transitions API at all. The nav, above `--redraw-top`, never wipes.
+ *
+ * This module also sets `data-swapped`, which is what switches every entry
+ * animation off for the rest of the session — see `html[data-swapped]` in
+ * global.css and the gallery's styles.
  */
 
-const DURATION = 380;
+const DURATION = 300;
 
-const line = document.querySelector<HTMLElement>('.redraw');
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 document.addEventListener('astro:before-swap', (event) => {
   /*
-   * Mark the incoming page as arriving by swap rather than by load, which is
-   * what switches every entry animation off for the rest of the session. See
-   * `html[data-swapped]` in global.css and in the gallery's styles.
-   *
-   * It has to be set here, on `newDocument`, and not on the live root: the swap
-   * clears the root's attributes and copies `newDocument`'s over the top, so
-   * anything written to the live element is discarded moments later. Doing it
-   * before `event.swap()` also means the attribute is in place for the layout
-   * the view transition snapshots — which is the entire point, and is why this
-   * runs whether or not the wipe below does.
+   * Everything for the incoming page is written onto `newDocument`, not the
+   * live root: the swap clears the live root's attributes and copies
+   * `newDocument`'s over the top, so anything written to the live element is
+   * discarded moments later.
+   */
+  const newDocument = (event as unknown as { newDocument: Document }).newDocument;
+  newDocument.documentElement.dataset.swapped = '';
+
+  /*
+   * Tear the browser's transition down before it renders a frame. The swap
+   * itself (Astro's DOM update) is unaffected — skipping only cancels the
+   * overlay and its animations. `::view-transition { display: none }` in
+   * global.css backstops the one capture frame some engines paint anyway.
    */
   (
-    event as unknown as { newDocument: Document }
-  ).newDocument.documentElement.dataset.swapped = '';
+    event as unknown as { viewTransition?: ViewTransition }
+  ).viewTransition?.skipTransition();
 
-  if (!line || reduced.matches) return;
+  if (reduced.matches) return;
 
-  // Restart the animation even if a previous run has not been cleaned up:
-  // removing the class and forcing a reflow resets the keyframe clock.
-  line.classList.remove('is-running');
-  void line.offsetWidth;
-  line.classList.add('is-running');
+  /*
+   * Where the wipe starts: the nav's live bottom edge. The bar is sticky and
+   * always pinned, so its rect is its on-screen position at any scroll depth,
+   * breakpoint, or safe-area inset — and `.page` begins exactly there at the
+   * top of the incoming page, which is what keeps the reveal edge and the
+   * line coincident.
+   */
+  const navBottom = document.querySelector('.nav')?.getBoundingClientRect().bottom ?? 0;
+  newDocument.documentElement.style.setProperty(
+    '--redraw-top',
+    `${navBottom.toFixed(1)}px`,
+  );
 
-  setTimeout(() => line.classList.remove('is-running'), DURATION);
+  // Arm the panel on the incoming document; its animation starts on the
+  // incoming page's first rendered frame.
+  newDocument.querySelector('.redraw')?.classList.add('is-running');
+});
+
+/*
+ * Disarm after the run. The panel ends held off-screen by `fill: forwards`,
+ * so the removal is invisible bookkeeping — it just returns the element to
+ * its resting state for the next navigation. Fires on first load too, where
+ * the class was never set and this is a no-op.
+ */
+document.addEventListener('astro:page-load', () => {
+  window.setTimeout(() => {
+    document.querySelector('.redraw')?.classList.remove('is-running');
+  }, DURATION + 50);
 });
 
 export {};

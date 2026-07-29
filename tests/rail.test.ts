@@ -6,6 +6,7 @@ import {
   chargeDistance,
   chargeOf,
   chargeOriginY,
+  chaseCharge,
   headViewportY,
   nodeLit,
 } from '../src/lib/rail.ts';
@@ -165,6 +166,71 @@ describe('nodeLit', () => {
         assert.ok(lits[i - 1] >= lits[i], `node ${i} lit before node ${i - 1}`);
       }
     }
+  });
+});
+
+describe('chaseCharge', () => {
+  /*
+   * The chase exists because a phone flick moves the scroll further per frame
+   * than a node's whole kindle ramp — the invariants here are about what the
+   * roll may never do, not about its exact shape.
+   */
+  const HEIGHT = 2800;
+
+  test('a first frame arrives instantly, without a roll-in', () => {
+    assert.equal(chaseCharge(-1, 0.62, 16, HEIGHT), 0.62);
+  });
+
+  test('never overshoots, from either direction', () => {
+    for (const [from, to] of [
+      [0.1, 0.9],
+      [0.9, 0.1],
+    ]) {
+      let cg = from;
+      for (let i = 0; i < 200; i++) {
+        const next = chaseCharge(cg, to, 16, HEIGHT);
+        if (to > from) {
+          assert.ok(next >= cg && next <= to, `overshot rising: ${next}`);
+        } else {
+          assert.ok(next <= cg && next >= to, `overshot falling: ${next}`);
+        }
+        cg = next;
+      }
+    }
+  });
+
+  test('converges exactly, not asymptotically', () => {
+    let cg = 0;
+    let frames = 0;
+    while (cg !== 1 && frames < 300) {
+      cg = chaseCharge(cg, 1, 16, HEIGHT);
+      frames++;
+    }
+    assert.equal(cg, 1, 'never landed on the target');
+    // ~5τ at 60fps ≈ 30 frames; 90 is "converges promptly", not a pixel value.
+    assert.ok(frames < 90, `took ${frames} frames to land`);
+  });
+
+  test('is frame-rate independent: two half frames equal one whole one', () => {
+    // Well away from the snap threshold so the pure exponential is compared.
+    const whole = chaseCharge(0.2, 0.8, 16, HEIGHT);
+    const halves = chaseCharge(chaseCharge(0.2, 0.8, 8, HEIGHT), 0.8, 8, HEIGHT);
+    assert.ok(Math.abs(whole - halves) < 1e-9);
+  });
+
+  test('a flick that outruns the ramp still yields intermediate frames', () => {
+    // Target teleports by the equivalent of 80px of rail per frame — more than
+    // the 40px ramp. The painted value must visit strictly intermediate
+    // charges, which is the whole point of the chase.
+    let cg = 0.2;
+    const target = 0.2 + 80 / HEIGHT;
+    const next = chaseCharge(cg, target, 16, HEIGHT);
+    assert.ok(next > cg, 'did not move');
+    assert.ok(next < target, 'teleported with the scroll');
+  });
+
+  test('an arrived charge stays put', () => {
+    assert.equal(chaseCharge(0.5, 0.5, 16, HEIGHT), 0.5);
   });
 });
 

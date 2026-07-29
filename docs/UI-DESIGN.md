@@ -140,6 +140,13 @@ not executed when the capture happens — `runScripts()` is awaited after it —
 moving work between `astro:after-swap` and `astro:page-load` helps. The rule has to already
 be in the document, which is also why the CSS is inlined (ARCHITECTURE §2).
 
+> **2026-07-29:** the snapshot analysis above is now historical — the wipe no longer uses
+> the View Transitions overlay at all. Real-device iOS composited the overlay on unreliable
+> clocks (a held ~75% dim, then two different line/seam desyncs), reproducible on no
+> simulator, so `redraw.ts` skips the transition and slides a single live panel — top edge
+> is the scan line — from under the nav, at 300ms. `data-swapped` and everything in this
+> section still applies unchanged: the page must arrive finished either way.
+
 ### 5.3 The rail charges
 
 One gradient, one mask. A single uninterrupted `linear-gradient` runs the whole index; a
