@@ -163,10 +163,12 @@ const monthDay = (d: Date) =>
     position: absolute;
     top: -1px;
     left: 0;
-    width: 96px;
+    width: 250px;
     height: 1px;
-    background: linear-gradient(90deg, oklch(0.8 0.17 286 / 0.75), transparent);
-    box-shadow: 0 0 10px oklch(0.8 0.17 286 / 0.45);
+    background: linear-gradient(90deg, var(--violet), transparent);
+    box-shadow:
+      0 0 10px oklch(0.8 0.17 286 / 0.7),
+      0 0 26px oklch(0.8 0.17 286 / 0.35);
   }
 
   .entry:hover {

@@ -108,9 +108,13 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
           the same behaviour as the hero's haze: it colours the arrival and
           scrolls away, tapering into the plain star field below. (Owner
           review 2026-07-29: viewport-fixed bloom read as disconnected.)
+
+          `data-page` keys a distinct field composition per section, so each
+          page arrives under its own patch of sky. Static by decree: the only
+          things that move up here are the shooting stars.
         */
       }
-      <div class="neb" aria-hidden="true">
+      <div class="neb" data-page={active ?? 'home'} aria-hidden="true">
         <div class="sky-neb-a"></div>
         <div class="sky-neb-b"></div>
       </div>

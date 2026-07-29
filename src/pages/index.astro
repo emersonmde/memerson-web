@@ -816,6 +816,7 @@ const isoDate = (d: Date | null) =>
   }
 
   .log-row {
+    position: relative;
     display: grid;
     grid-template-columns: 96px 1fr auto;
     gap: 24px;
@@ -823,6 +824,20 @@ const isoDate = (d: Date | null) =>
     padding: 18px 0;
     border-top: 1px solid rgba(142, 180, 255, 0.1);
     transition: background 0.16s;
+  }
+
+  /* The log's lit separator, same as /blog — this row is a piece of the log. */
+  .log-row::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 250px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--violet), transparent);
+    box-shadow:
+      0 0 10px oklch(0.8 0.17 286 / 0.7),
+      0 0 26px oklch(0.8 0.17 286 / 0.35);
   }
 
   .log-row:hover {

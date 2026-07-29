@@ -241,6 +241,13 @@ label,
   -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 97%);
 }
 
+/*
+ * Static, on purpose. These drifted on 140s/180s transform loops at first,
+ * and Firefox flickered repainting the animated 70px blur (bottom-right of
+ * the hero, where the cyan field sits). Owner's rule is stricter and better
+ * anyway: the background holds still; only the shooting stars and the sign's
+ * occasional flicker move up here.
+ */
 .sky-neb-a,
 .sky-neb-b {
   position: absolute;
@@ -248,25 +255,47 @@ label,
   filter: blur(70px);
 }
 
+/* Each section arrives under its own patch of sky. Same three lights,
+   different weather. */
 .sky-neb-a {
   background:
     radial-gradient(46% 38% at 16% 24%, oklch(0.42 0.16 296 / 0.3), transparent 72%),
     radial-gradient(30% 26% at 52% 78%, oklch(0.5 0.11 66 / 0.1), transparent 70%);
-  animation: nebDrift 140s ease-in-out infinite alternate;
 }
 
 .sky-neb-b {
   background: radial-gradient(42% 36% at 82% 42%, oklch(0.58 0.13 205 / 0.2), transparent 74%);
-  animation: nebDrift 180s ease-in-out infinite alternate-reverse;
 }
 
-@keyframes nebDrift {
-  from {
-    transform: translate3d(-1.5%, -1%, 0) scale(1);
-  }
-  to {
-    transform: translate3d(1.5%, 1.5%, 0) scale(1.06);
-  }
+/* The log: the violet archive glow hangs high right, cyan pools low left. */
+.neb[data-page='log'] .sky-neb-a {
+  background:
+    radial-gradient(42% 34% at 74% 18%, oklch(0.42 0.16 296 / 0.32), transparent 72%),
+    radial-gradient(26% 22% at 40% 70%, oklch(0.5 0.11 66 / 0.08), transparent 70%);
+}
+
+.neb[data-page='log'] .sky-neb-b {
+  background: radial-gradient(38% 32% at 14% 52%, oklch(0.58 0.13 205 / 0.18), transparent 74%);
+}
+
+/* About: warm sodium weather, high left — the desk lamp's sky. */
+.neb[data-page='about'] .sky-neb-a {
+  background:
+    radial-gradient(44% 36% at 20% 20%, oklch(0.5 0.13 66 / 0.26), transparent 72%),
+    radial-gradient(28% 24% at 60% 74%, oklch(0.42 0.16 296 / 0.12), transparent 70%);
+}
+
+.neb[data-page='about'] .sky-neb-b {
+  background: radial-gradient(36% 30% at 86% 36%, oklch(0.58 0.13 205 / 0.14), transparent 74%);
+}
+
+/* Photos: barely there — the gallery is lit by the photographs, not the sky. */
+.neb[data-page='photos'] .sky-neb-a {
+  background: radial-gradient(40% 32% at 22% 26%, oklch(0.42 0.16 296 / 0.14), transparent 72%);
+}
+
+.neb[data-page='photos'] .sky-neb-b {
+  background: radial-gradient(34% 28% at 80% 40%, oklch(0.58 0.13 205 / 0.1), transparent 74%);
 }
 
 .sky-far {

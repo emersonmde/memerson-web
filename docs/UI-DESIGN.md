@@ -111,11 +111,14 @@ rail behind them. This is a runtime measurement, not a build-time constant — s
 The three named points are not interchangeable accents. Each carries one fixed meaning,
 sitewide, and every lit element must derive from the one that matches what it _is_:
 
-| Light      | Meaning                | Where it appears                                                    |
-| ---------- | ---------------------- | ------------------------------------------------------------------- |
-| `--sodium` | **Where you are**      | The home rail's charge, the post's reading-progress filament        |
-| `--cyan`   | **What you can touch** | Links, controls, hover glows, heading ticks (a heading is a handle) |
-| `--violet` | **Another voice**      | Blockquotes' lit edge, the log's year signs, series chips, `hr`     |
+| Light      | Meaning                | Where it appears                                                                                |
+| ---------- | ---------------------- | ----------------------------------------------------------------------------------------------- |
+| `--sodium` | **Where you are**      | The home rail's charge, the reading-progress filament, section-marker ticks (about, post `h2`s) |
+| `--cyan`   | **What you can touch** | Links, controls, hover glows                                                                    |
+| `--violet` | **Another voice**      | Blockquotes' lit edge, the log's year signs and lit separators, series chips, `hr`              |
+
+(Section-marker ticks moved from cyan to sodium on owner review: a section head tells
+you where you are in the document, which is sodium's question, not cyan's.)
 
 This is the structural defence against the RGB meme: hue is information, so many small
 lights read as an organised city rather than decoration. A new effect does not pick a
@@ -171,12 +174,19 @@ nebula is _in_ the content and lags scroll by a parallax factor, because it is n
 
 **Since 2026-07-29 every page also carries the nebula proper** (`.neb` in BaseLayout):
 two enormous blurred colour fields (violet leading, cyan seconding, a whisper of sodium)
-drifting on 140s/180s loops at single-digit opacity. It began viewport-fixed inside the
-sky; owner review moved it to the **top of the page**, scrolling away and tapering like
-the hero's haze, because a bloom that followed the viewport read as disconnected
-(`min(150vh, 100%)`, masked — the cap keeps a short page from gaining empty scroll
-range). It is deliberately identical on every page. What differs per page is the
-_room_: see the page haze in §6.
+at single-digit opacity. It began viewport-fixed inside the sky; owner review moved it
+to the **top of the page**, scrolling away and tapering like the hero's haze, because a
+bloom that followed the viewport read as disconnected (`min(150vh, 100%)`, masked — the
+cap keeps a short page from gaining empty scroll range).
+
+Two later rulings, same day. **It is static.** The fields originally drifted on
+140s/180s transform loops, and Firefox flickered repainting the animated 70px blur;
+the owner's rule is stricter and better: the background holds still — only the shooting
+stars and the sign's occasional flicker move. **And each section gets its own weather**:
+`data-page` (from the layout's `active` prop) keys a distinct field composition — home's
+default, the log's high-right violet, about's warm sodium, photos' near-nothing (that
+page is lit by the photographs). Same three lights, different geometry, so the sections
+feel like districts of one city rather than copies of one backdrop.
 
 ### 5.2 Type resolves on entry
 
@@ -776,14 +786,12 @@ The lightbox trick at room scale. `/photos` holds a two-layer backdrop (`.px-amb
 hidden layer at `blur(80px)` and the layers cross-fade. Scroll from stage lights into an
 autumn outing and the room changes with you.
 
-Owner review, later the same day: the layer was viewport-fixed at first, and a bloom
-that follows you down the page read as disconnected from it. It is now **anchored to
-the top of the page like the hero's haze and the nebula** (`min(170vh, 100%)`, masked
-to taper into the dark — never a hard edge). The bloom colours the arrival; the deep
-gallery is plain night. `--live` keeps tracking for the whole scroll regardless, so the
-rail and run headers stay in the current shoot's hue even after the bloom is gone.
-Making all backgrounds viewport-fixed again is noted as a possible future direction —
-if so, it should happen to every page at once, not one.
+This layer is **viewport-fixed, and that is a ruling, not an accident**. It was briefly
+top-anchored with the other blooms during the 2026-07-29 review and reverted the same
+day: the nebula and page hazes are the _arrival's_ light and belong to the top of the
+page, but the gallery bloom is the _room's_ light — it has to be wherever you are, or
+the cross-fade between shoots means nothing. The two behaviours are both deliberate;
+don't unify them in either direction without the owner.
 
 The accent follows the light. The LQIP's average colour is taken in **OKLab**
 (`src/lib/ambient.ts`, Ottosson's matrices, unit-tested in `tests/ambient.test.ts`), and
@@ -809,17 +817,21 @@ that a post's _skeleton_ now obeys the light grammar (§2):
 - **Reading progress** is a sodium filament with a bright breathing head — the home
   charge's identity (sodium = where you are) applied to reading position. The head only
   moves when you do; the breathing is the sole ambient animation on the page.
-- **`h2` headings** carry a short lit cyan tick — a heading is a handle, and cyan means
-  touchable.
+- **`h2` headings** carry a lit sodium tick (150px — long enough to underline the first
+  word or two, fixed so a long heading can't stretch it into a bar). Section-marker
+  ticks are sodium everywhere: a section head tells you where you are in the document.
 - **Blockquotes** wear the violet lit edge, mirroring code's cyan one (§6).
 - **`hr`** is a thin violet light across the dark, not a pencil rule.
 - **Links and log entries** glow cyan on hover: reaching for a touchable thing lights it.
 - **The log's sticky year numeral** glows violet, a district sign that pins and travels.
+- **The log's entry separators** carry a 250px violet-lit segment on the hairline — on
+  `/blog` and on the home page's log preview alike, because those rows are pieces of
+  the same log.
 - **About's section markers** carry sodium ticks, echoing the home section headers.
 
 ### What was deliberately not done
 
 No flicker outside the hero. No wet-floor echo outside the hero. No per-post or per-item
 hue assignment. No colour anywhere that fails the grammar's three questions. The prose
-face never takes a glow. And the sky nebula is identical on every page — rooms differ
-(`.page-haze` keys, §6), the sky does not.
+face never takes a glow. And nothing ambient animates: the nebula holds still (§5.1),
+and each page's field composition and haze key (§6) are the only per-page variation.

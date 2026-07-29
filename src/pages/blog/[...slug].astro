@@ -308,17 +308,18 @@ const minutes = readingTime(post.body);
 
   /*
    * A section head carries a lit tick — the one place light enters the
-   * reading column, and it marks structure, not prose. Cyan, because a
-   * heading is a handle: it is what the eye grabs to navigate.
+   * reading column, and it marks structure, not prose. Sodium, the same
+   * filament as the about page's section markers: a section head tells you
+   * where you are in the document, and sodium is the site's "you are here".
    */
   .prose h2::after {
     content: '';
     display: block;
     margin-top: 10px;
-    width: 110px;
+    width: 150px;
     height: 2px;
-    background: linear-gradient(90deg, var(--cyan), transparent);
-    box-shadow: 0 0 12px oklch(0.8 0.17 200 / 0.7);
+    background: linear-gradient(90deg, var(--sodium), transparent);
+    box-shadow: 0 0 12px oklch(0.82 0.17 66 / 0.65);
   }
   .prose h3 {
     font-size: 24px;
