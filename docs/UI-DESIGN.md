@@ -14,11 +14,47 @@ below it, and why each change is a re-decision rather than a squeeze.
 
 ---
 
+## The vision (read this first)
+
+Everything below this section is codification — Claude's attempt to turn the owner's
+vision into rules a change can be checked against. When a rule and the vision disagree,
+the vision wins, and the rule should be rewritten. Recorded 2026-07-29, in the owner's
+own terms:
+
+The site serves two audiences: **a CV for recruiters and hiring managers, and a place to
+share hobbies** — programming, photography, writing — with friends, family and coworkers.
+The design should be **clean, professional, flashy, and drive a wow factor**.
+
+The aesthetic it aims at: **Cyberpunk 2077's night city** — the colourful landscapes,
+glowing neon, bright colours, reflections, diffusion, specular highlights and lighting
+effects, _not_ the game's UI. **Tron** — bright electric lines, futuristic, digital.
+**80s sci-fi, StarCraft, space: nebulae, galaxies.** Splashes of vivid colour and light
+effects against the dark night.
+
+What it must never become: **the RGB gaming-PC meme.** No rainbow everywhere, no cliché,
+no flashing that distracts from content. The working test that separates the two:
+
+> **Light is emitted by something in the scene, never painted on.**
+
+The hero is lit by its own sign and rail; the viewer is lit by the photograph; the
+gallery is lit by the shoot on screen. Colour that answers a question (where am I? what
+can I touch? who is speaking?) reads as a city at night. Colour that answers nothing
+reads as a gaming keyboard.
+
+The benchmark pages, per the owner: **the home page nails it** (bloom as nebulae, starry
+background, subtle shooting stars, the bright electric rail), and **the viewer nails it**
+(clean and professional, the image itself becoming the background bloom). New work
+should be held against those two, not against this document.
+
+---
+
 ## 1. The one-sentence version
 
 A dark observation deck: a star field that never moves, one continuous neon rail running
 the length of the index, and light that travels along objects rather than objects that
-move. Long-form reading drops the neon entirely and becomes a serif page.
+move. Long-form reading becomes a serif page whose _prose_ carries no neon — since the
+2026-07-29 light pass its structure (headings, quotes, rules, progress) is lit, but the
+sentences never are.
 
 ---
 
@@ -70,6 +106,23 @@ Nodes on the rail call `hueAt()` with **their own measured height** after layout
 node, its offshoot line, and its plate brackets can never drift out of agreement with the
 rail behind them. This is a runtime measurement, not a build-time constant — see §5.3.
 
+### The light grammar (2026-07-29)
+
+The three named points are not interchangeable accents. Each carries one fixed meaning,
+sitewide, and every lit element must derive from the one that matches what it _is_:
+
+| Light      | Meaning                | Where it appears                                                    |
+| ---------- | ---------------------- | ------------------------------------------------------------------- |
+| `--sodium` | **Where you are**      | The home rail's charge, the post's reading-progress filament        |
+| `--cyan`   | **What you can touch** | Links, controls, hover glows, heading ticks (a heading is a handle) |
+| `--violet` | **Another voice**      | Blockquotes' lit edge, the log's year signs, series chips, `hr`     |
+
+This is the structural defence against the RGB meme: hue is information, so many small
+lights read as an organised city rather than decoration. A new effect does not pick a
+colour it likes — it declares which of the three questions it answers. If it answers
+none, it should not be lit. (The gallery's sampled `--live` accent is the one exception,
+and it obeys a stricter rule: see §12.)
+
 ---
 
 ## 3. Type
@@ -115,6 +168,12 @@ Stars are `position: fixed` — the sky is infinitely far away, so it does not m
 walk. Three depth layers, brightest at the hero and never brighter than 40% below it. The
 far layer drifts on a 90s loop; a shooting star crosses roughly every 20 seconds. The
 nebula is _in_ the content and lags scroll by a parallax factor, because it is near.
+
+**Since 2026-07-29 the shared sky also carries the nebula proper**: two enormous blurred
+colour fields (violet leading, cyan seconding, a whisper of sodium) drifting on 140s/180s
+loops at single-digit opacity, under the stars and under `.sky-dim`. Every page inherits
+the atmosphere from this one layer. It is deliberately identical on every page — it is
+the sky. What differs per page is the _room_: see the page haze in §6.
 
 ### 5.2 Type resolves on entry
 
@@ -263,13 +322,22 @@ only chrome the log gets — no breadcrumb, no back-to-top.
 - **Wet-floor echo** — display type mirrored below itself, blurred, masked to fade out.
 - **Haze + shaft** — large blurred radial gradients and one angled light shaft, hero only.
   Strong here because it is the one place it can be without fighting text.
-- **Scanlines** — a 1px repeating gradient at 4.5% opacity, fixed at `z-index: 1` — above the
-  sky, below `.page`. This read "over everything" until 2026-07-28. Over the site's own
-  surfaces it still does: every plate, card and control is translucent, so the texture comes
-  through them exactly as it did from on top. The one surface it must not cross is a
-  photograph, and from above it ruled the gallery's images with visible horizontal lines.
-  Nothing on the site is opaque except the photographs, so putting the layer underneath is
-  the whole fix.
+- **Page haze** (`.page-haze`, global) — the hero haze's quieter sibling: a pocket of
+  nebula behind each interior page's header. Each page keys its own light via
+  `--haze-a` / `--haze-b` on its container: the log stays violet (the archive), a post
+  reads under cyan (the reading room), about sits in warm sodium (the desk lamp). Same
+  physics everywhere, different rooms — which is what keeps one shared effect from
+  reading as one repeated effect.
+- **Neon title** (`.neon-h`, global) — the hero sign's treatment at interior strength:
+  chromatic fringe plus two-stage glow, **without** the flicker or the wet-floor echo.
+  Those two stay unique to the front door on purpose.
+- **The lit edge** — a 2px border plus an offset negative-spread `box-shadow`, and only
+  ever _one_ per element. Code blocks wear it in cyan; blockquotes wear it in violet
+  (another voice — see the light grammar in §2).
+- **Scanlines — removed 2026-07-29.** The 1px CRT texture was a different retro-future
+  than the night-city direction and pulled against it; the sky nebula carries the ambient
+  texture now. Its `z-index: 1` slot (above the sky, below `.page`) is where a page's
+  ambient light lives — the gallery's is the first (§12).
 
 ---
 
@@ -527,9 +595,10 @@ there is no seam.
 
 ### What deliberately did not change
 
-The star field, the scanlines, the neon flicker, the rail charge and terminal, the sticky
-section headers, the redraw wipe between pages, the accent ramp and the plate brackets are
-all identical.
+The star field, the neon flicker, the rail charge and terminal, the sticky section
+headers, the redraw wipe between pages, the accent ramp and the plate brackets are all
+identical. (The scanlines were on this list until they were removed sitewide on
+2026-07-29 — see §6.)
 
 ---
 
@@ -684,4 +753,62 @@ as a flat wash and corrected 2026-07-27.
 Per-photo **accent** colour (brackets, counter, tile hover) is a separate question and is
 **still open**. The five accents in the mockups are per-album, so it is coupled to whether
 albums happen — and if they do, the accent can come straight from the album with no colour
-extraction at all. Tracked in MILESTONES M4.
+extraction at all. Tracked in MILESTONES M4. (The gallery _page_ accent is no longer open —
+`--live` in §12 answers it per shoot, not per photo.)
+
+---
+
+## 12. The light pass (2026-07-29)
+
+The interior pages had structure without illumination: hairlines and plates, one flat
+cyan used as ink. This pass gave each page a light source, on the vision's rule that
+light must be emitted by something in the scene. Everything here was prototyped against
+screenshots and accepted by the owner before landing.
+
+### The gallery is lit by the shoot on screen
+
+The lightbox trick at room scale. `/photos` holds a fixed two-layer backdrop
+(`.px-ambient`, `z-index: -1` inside `.page` — the slot the scanlines vacated). When the
+rail's tracked run changes, the incoming shoot's **LQIP** — already inlined in the
+markup, so zero network cost — is painted onto the hidden layer at `blur(80px)` and the
+layers cross-fade. Scroll from stage lights into an autumn outing and the room changes
+with you.
+
+The accent follows the light. The LQIP's average colour is taken in **OKLab**
+(`src/lib/ambient.ts`, Ottosson's matrices, unit-tested in `tests/ambient.test.ts`), and
+only its **hue** survives: it is re-emitted through the ramp's locked lightness and
+chroma as `--live: oklch(.80 .17 h)`, consumed by the active rail entry and the live run
+header's date. A sampled colour is therefore physically incapable of breaking the
+palette — it can steer the ramp, never leave it. Below `GREY_FLOOR` chroma (monochrome
+shoot, or hues that cancelled in the average) the sample is discarded and everything
+falls back to cyan rather than inventing a hue from noise.
+
+Two invariants: **one hue on screen at a time**, and **the hue is always the
+photographs' own**. This replaced an earlier per-shoot ramp-assignment idea precisely
+because that would have put many unmotivated hues on screen at once — the rainbow
+failure. The scripting lives in `src/scripts/photos.ts` (`setAmbient`), hooks the
+existing `trackRail()`, is stale-guarded per sample, and clears `--live` from `<html>`
+on `astro:before-swap` so a router exit never leaks the last shoot's hue.
+
+### Long pages: light the structure, never the prose
+
+The reading column stays serif and unlit — that rule survives intact. What changed is
+that a post's _skeleton_ now obeys the light grammar (§2):
+
+- **Reading progress** is a sodium filament with a bright breathing head — the home
+  charge's identity (sodium = where you are) applied to reading position. The head only
+  moves when you do; the breathing is the sole ambient animation on the page.
+- **`h2` headings** carry a short lit cyan tick — a heading is a handle, and cyan means
+  touchable.
+- **Blockquotes** wear the violet lit edge, mirroring code's cyan one (§6).
+- **`hr`** is a thin violet light across the dark, not a pencil rule.
+- **Links and log entries** glow cyan on hover: reaching for a touchable thing lights it.
+- **The log's sticky year numeral** glows violet, a district sign that pins and travels.
+- **About's section markers** carry sodium ticks, echoing the home section headers.
+
+### What was deliberately not done
+
+No flicker outside the hero. No wet-floor echo outside the hero. No per-post or per-item
+hue assignment. No colour anywhere that fails the grammar's three questions. The prose
+face never takes a glow. And the sky nebula is identical on every page — rooms differ
+(`.page-haze` keys, §6), the sky does not.

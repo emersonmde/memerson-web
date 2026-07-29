@@ -37,12 +37,13 @@ const LINKS = [
   back={true}
 >
   <article class="about">
+    <div class="page-haze" aria-hidden="true"></div>
     <nav class="about-crumb" aria-label="Breadcrumb">
       <a href="/">/</a>
       <span aria-current="page">ABOUT</span>
     </nav>
 
-    <h1 class="about-h1" data-fx="resolve">Matthew Emerson</h1>
+    <h1 class="about-h1 neon-h" data-fx="resolve">Matthew Emerson</h1>
 
     <div class="about-prose">
       <p>
@@ -95,6 +96,9 @@ const LINKS = [
   .about {
     position: relative;
     padding: 92px var(--gutter) 70px;
+    /* The person page sits in warm light: sodium leads, cyan seconds. */
+    --haze-a: oklch(0.55 0.14 66 / 0.2);
+    --haze-b: oklch(0.58 0.13 205 / 0.12);
   }
 
   .about-crumb {
@@ -151,6 +155,17 @@ const LINKS = [
     letter-spacing: 0.24em;
     color: var(--faint);
     font-weight: 500;
+  }
+
+  /* The section marker's tick, lit in the room's own sodium. */
+  .about-h2::after {
+    content: '';
+    display: block;
+    margin-top: 8px;
+    width: 30px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--sodium), transparent);
+    box-shadow: 0 0 12px oklch(0.82 0.17 66 / 0.6);
   }
 
   .rows-dl {

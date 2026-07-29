@@ -324,6 +324,81 @@ function init() {
     pending = still;
   }
 
+  /* ------------------------------------------------------- ambient light */
+
+  /*
+   * The page is lit by the shoot on screen. When the tracked run changes, the
+   * incoming shoot's LQIP is painted onto the hidden ambient layer and the two
+   * layers cross-fade — the same move the viewer makes with its bloom, scaled
+   * to the room. The accent follows: the LQIP's average colour, taken in
+   * OKLab, sets `--live` at the ramp's locked lightness and chroma, and the
+   * rail indicator and run header borrow it. A grey sample clears the accent
+   * and the page falls back to cyan.
+   */
+  const ambLayers = Array.from(document.querySelectorAll<HTMLElement>('[data-amb]'));
+  let ambFront = 0;
+  let ambKey = '';
+  let ambSample = 0;
+
+  function setLive(accent: string | null) {
+    if (accent) document.documentElement.style.setProperty('--live', accent);
+    else document.documentElement.style.removeProperty('--live');
+  }
+
+  async function sampleAccent(lqip: string): Promise<string | null> {
+    const { liveAccent } = await import('../lib/ambient');
+    const img = new Image();
+    img.src = lqip;
+    try {
+      await img.decode();
+    } catch {
+      return null;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 4;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx) return null;
+    ctx.drawImage(img, 0, 0, 4, 4);
+    const d = ctx.getImageData(0, 0, 4, 4).data;
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    const n = d.length / 4;
+    for (let i = 0; i < d.length; i += 4) {
+      r += d[i];
+      g += d[i + 1];
+      b += d[i + 2];
+    }
+    return liveAccent(r / n / 255, g / n / 255, b / n / 255);
+  }
+
+  function setAmbient(key: string) {
+    if (key === ambKey || ambLayers.length < 2) return;
+    ambKey = key;
+    const run = runs.find((r) => r.key === key);
+    const tile = run?.tiles.find((t) => !t.hidden) ?? run?.tiles[0];
+    const lqip = tile?.dataset.lqip;
+    if (!lqip) {
+      for (const layer of ambLayers) layer.classList.remove('is-on');
+      setLive(null);
+      return;
+    }
+    const back = ambLayers[1 - ambFront];
+    back.style.backgroundImage = `url(${lqip})`;
+    back.classList.add('is-on');
+    ambLayers[ambFront].classList.remove('is-on');
+    ambFront = 1 - ambFront;
+
+    /* Stale-guarded: only the newest sample may set the accent. */
+    const ticket = ++ambSample;
+    void sampleAccent(lqip).then((accent) => {
+      if (ticket === ambSample) setLive(accent);
+    });
+  }
+
+  /* A router swap must not leave the last shoot's hue on <html>. */
+  on(document, 'astro:before-swap', () => setLive(null));
+
   /** The indicator tracks the scroll: whichever run owns the middle of the screen. */
   function trackRail() {
     if (!railItems.length) return;
@@ -346,6 +421,10 @@ function init() {
     for (const item of railItems) {
       item.setAttribute('aria-current', String(item.dataset.shoot === best));
     }
+    for (const run of runs) {
+      run.el.classList.toggle('is-live', run.key === best);
+    }
+    if (best) setAmbient(best);
   }
 
   let ticking = false;

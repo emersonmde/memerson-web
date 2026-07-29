@@ -105,9 +105,21 @@ const EAGER = 8;
   back={true}
 >
   <section class="px-page">
+    {
+      /*
+        The room's light. Two stacked layers so the backdrop can cross-fade:
+        the script paints the incoming shoot's LQIP onto the hidden layer and
+        swaps opacities. Without JavaScript the layers simply stay empty and
+        the page is lit by the sky alone.
+      */
+    }
+    <div class="px-ambient" aria-hidden="true">
+      <div class="px-amb" data-amb></div>
+      <div class="px-amb" data-amb></div>
+    </div>
     <div class="px-head">
       <div>
-        <h1 class="px-title" data-fx="resolve">Photographs</h1>
+        <h1 class="px-title neon-h" data-fx="resolve">Photographs</h1>
         <p class="px-lede">
           Shot mostly for myself. Grouped by the day they were taken — the outing is the
           only unit that has ever mattered.
@@ -765,6 +777,51 @@ const EAGER = 8;
 
   /* ---- runs ---- */
 
+  /* ---- the ambient light ---- */
+
+  /*
+   * The lightbox lights its frame with the photograph; this lights the whole
+   * page with the shoot in view. A LQIP, blurred beyond recognition, becomes
+   * the colour of the air — scroll from stage lights into an autumn outing and
+   * the room changes with you.
+   *
+   * Fixed and at z-index -1: inside `.page`'s stacking context it paints
+   * behind every plate and tile but still above the sky, in the slot the
+   * scanlines used to hold. The dimming gradient in ::after keeps type and
+   * thumbnails on spec whatever the photograph underneath is doing.
+   */
+  .px-ambient {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .px-amb {
+    position: absolute;
+    inset: -14%;
+    background: center / cover no-repeat;
+    filter: blur(80px) saturate(1.25);
+    opacity: 0;
+    transition: opacity 1.6s ease;
+  }
+
+  .px-amb.is-on {
+    opacity: 0.38;
+  }
+
+  .px-ambient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(3, 4, 10, 0.62),
+      rgba(3, 4, 10, 0.3) 34%,
+      rgba(3, 4, 10, 0.55) 100%
+    );
+  }
+
   .px-run {
     position: relative;
     padding-bottom: 34px;
@@ -792,6 +849,12 @@ const EAGER = 8;
 
   .px-run-date {
     color: var(--cyan);
+  }
+
+  /* The run that owns the screen glows in its own light. */
+  .px-run.is-live .px-run-date {
+    color: var(--live, var(--cyan));
+    text-shadow: 0 0 14px var(--live, transparent);
   }
 
   .px-run-rule {
@@ -953,14 +1016,20 @@ const EAGER = 8;
     width: 24px;
   }
 
+  /*
+   * The active entry takes `--live` — the hue sampled from the shoot on
+   * screen, set by the script at the ramp's locked lightness and chroma.
+   * One hue at a time, and always the photographs' own. Cyan is the
+   * no-sample fallback (script off, grey shoot).
+   */
   .px-rail-item[aria-current='true'] {
-    color: var(--cyan);
+    color: var(--live, var(--cyan));
   }
 
   .px-rail-item[aria-current='true'] i {
     width: 30px;
-    background: var(--cyan);
-    box-shadow: 0 0 10px var(--cyan);
+    background: var(--live, var(--cyan));
+    box-shadow: 0 0 10px var(--live, var(--cyan));
   }
 
   .px-rail-n {

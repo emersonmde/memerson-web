@@ -51,6 +51,7 @@ const minutes = readingTime(post.body);
   <div class="progress" data-fx="progress" aria-hidden="true"></div>
 
   <article class="post">
+    <div class="page-haze" aria-hidden="true"></div>
     <nav class="post-crumb" aria-label="Breadcrumb">
       <a href="/">/</a>
       <a href="/blog">LOG</a>
@@ -58,7 +59,7 @@ const minutes = readingTime(post.body);
       <span aria-current="page">{post.id.toUpperCase()}</span>
     </nav>
 
-    <h1 class="post-h1" data-fx="resolve">{post.data.title}</h1>
+    <h1 class="post-h1 neon-h" data-fx="resolve">{post.data.title}</h1>
 
     <div class="post-meta">
       <span>{AUTHOR.name.toUpperCase()}</span>
@@ -102,13 +103,45 @@ const minutes = readingTime(post.body);
     height: 2px;
     width: 0;
     z-index: 10;
-    background: var(--cyan);
-    box-shadow: 0 0 10px var(--cyan);
+    background: linear-gradient(90deg, oklch(0.82 0.17 66 / 0.25), var(--sodium));
+    box-shadow: 0 0 10px var(--sodium);
+  }
+
+  /*
+   * The charge's head, carried over from the home rail: sodium means "where
+   * you are" everywhere on the site, and on a post that is how far you have
+   * read. The head breathes; the bar does not move unless you do.
+   */
+  .progress::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+    background: #fff;
+    box-shadow:
+      0 0 8px 2px var(--sodium),
+      0 0 22px 6px oklch(0.82 0.17 66 / 0.5);
+    animation: headBreathe 2.8s ease-in-out infinite;
+  }
+
+  @keyframes headBreathe {
+    50% {
+      box-shadow:
+        0 0 10px 3px var(--sodium),
+        0 0 32px 10px oklch(0.82 0.17 66 / 0.6);
+    }
   }
 
   .post {
     position: relative;
     padding: 92px var(--gutter) 70px;
+    /* The reading room is keyed cyan; violet steps back to the second light. */
+    --haze-a: oklch(0.55 0.13 205 / 0.24);
+    --haze-b: oklch(0.42 0.16 296 / 0.22);
   }
 
   .post-crumb {
@@ -272,6 +305,21 @@ const minutes = readingTime(post.body);
   .prose h2 {
     font-size: 30px;
   }
+
+  /*
+   * A section head carries a lit tick — the one place light enters the
+   * reading column, and it marks structure, not prose. Cyan, because a
+   * heading is a handle: it is what the eye grabs to navigate.
+   */
+  .prose h2::after {
+    content: '';
+    display: block;
+    margin-top: 10px;
+    width: 34px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), transparent);
+    box-shadow: 0 0 12px oklch(0.8 0.17 200 / 0.7);
+  }
   .prose h3 {
     font-size: 24px;
   }
@@ -292,6 +340,7 @@ const minutes = readingTime(post.body);
 
   .prose a:hover {
     text-decoration-color: var(--cyan);
+    text-shadow: 0 0 14px oklch(0.8 0.17 200 / 0.55);
   }
 
   .prose strong {
@@ -342,9 +391,12 @@ const minutes = readingTime(post.body);
     color: #b7c3d6;
   }
 
+  /* Another voice, another light: quotes take the violet edge the way code
+     takes the cyan one. Same "one lit edge" rule, different speaker. */
   .prose blockquote {
     padding: 0 0 0 22px;
-    border-left: 1px solid rgba(142, 180, 255, 0.24);
+    border-left: 2px solid var(--violet);
+    box-shadow: -8px 0 30px -18px var(--violet);
     font: 300 italic 21px/1.6 var(--serif);
     color: #dde5f2;
   }
@@ -353,10 +405,18 @@ const minutes = readingTime(post.body);
     margin: 0;
   }
 
+  /* A scene break is a thin lit line across the dark, not a pencil rule. */
   .prose hr {
     border: 0;
-    border-top: 1px solid rgba(142, 180, 255, 0.14);
+    height: 1px;
     margin: 40px 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      oklch(0.8 0.17 286 / 0.45),
+      transparent
+    );
+    box-shadow: 0 0 14px oklch(0.8 0.17 286 / 0.3);
   }
 
   /* Colocated screenshots and diagrams, via astro:assets. */
