@@ -98,6 +98,20 @@ through the Worker. Binding R2 would require a Worker script and add a hop for n
 
 `site: 'https://memerson.com'` — required for correct RSS and canonical URLs.
 
+`build.inlineStylesheets: 'always'` — every page carries its CSS in a `<style>` rather than a
+`<link>`. This is about `ClientRouter`, not about request count: a stylesheet inserted by a
+swap is **not** render-blocking, so the incoming page paints, and gets snapshotted by the
+view transition, before its own rules apply. The visible symptom was the home page's kicker
+painting white at the top of the page and then dropping into place and turning grey. It never
+happened on reload, because a parser-inserted stylesheet in `<head>` blocks the first paint —
+that is exactly the guarantee the swap path loses. Inline `<style>` arrives _with_ the
+swapped head, in the same task as the DOM, so the window does not exist.
+
+The default is `auto`, which only inlines below Vite's 4kB `assetsInlineLimit`; every
+stylesheet here is over it. The cost is the shared layout CSS (~3.7kB gzipped) repeating in
+each of nine HTML files instead of being cached once — cheaper, at this size, than the round
+trip it replaces. `tests/build.test.ts` asserts no page links a stylesheet.
+
 ### Workers Builds
 
 Connect the repo in the Cloudflare dashboard: build command `npm run build`, output

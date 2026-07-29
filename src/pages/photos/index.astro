@@ -640,6 +640,21 @@ const EAGER = 8;
     object-fit: cover;
   }
 
+  /*
+   * A gallery arrived at by swap is already developed.
+   *
+   * The entry state above is `opacity: 0`, and `::view-transition-new(root)` is
+   * captured before this page's script has run — so the wipe was revealing an
+   * empty grid and holding it for its whole 380ms, then fading 118 frames in at
+   * once. See the note in `src/scripts/redraw.ts`; the heading has the same
+   * gate in global.css.
+   */
+  html[data-swapped] .px-tile {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+
   .px-tile.is-in {
     opacity: 1;
     filter: none;

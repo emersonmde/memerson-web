@@ -121,6 +121,25 @@ nebula is _in_ the content and lags scroll by a parallax factor, because it is n
 Headings arrive blurred with open tracking and resolve as they enter the viewport — a lens
 finding focus, not a fade-up. Body copy never does this.
 
+**Entry animations are a first-load effect. On a swap the page arrives finished.**
+`src/scripts/redraw.ts` sets `data-swapped` on the incoming document, and
+`html[data-swapped]` switches off both this and the gallery's tile reveal for the rest of
+the session. Scroll-resolve still works afterwards — the gate is a plain declaration, so the
+inline styles `paint()` writes still win.
+
+This is §4 applied literally: the wipe is the light event, and a page resolving underneath it
+is a second one. It is also a correctness fix. `::view-transition-new(root)` is captured when
+the swap callback returns, which is before any script on the incoming page has run — so the
+frozen image the wipe revealed was the page in its entry state: a blurred heading over a
+gallery of `opacity: 0` tiles, held for the full 380ms and then brightening all at once when
+the real DOM took over. Measured at the snapshot, navigating `/` → `/photos`: heading
+`opacity 0.15, blur(13px)` and tiles `opacity 0` before, both fully resolved after.
+
+**Only CSS can fix that snapshot.** On the first visit to a route the page's own module has
+not executed when the capture happens — `runScripts()` is awaited after it — so no amount of
+moving work between `astro:after-swap` and `astro:page-load` helps. The rule has to already
+be in the document, which is also why the CSS is inlined (ARCHITECTURE §2).
+
 ### 5.3 The rail charges
 
 One gradient, one mask. A single uninterrupted `linear-gradient` runs the whole index; a

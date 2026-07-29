@@ -538,6 +538,27 @@ a.sec-aside:hover {
   will-change: opacity, filter, letter-spacing;
 }
 
+/*
+ * …but only on a page that was loaded, not on one that was swapped in.
+ *
+ * `src/scripts/redraw.ts` sets `data-swapped` on the incoming document, and
+ * from the first client-side navigation onward it stays set. The wipe is the
+ * transition; the page it reveals is finished. Two moving things would be two
+ * light events, and §4 allows one — the same argument that already keeps
+ * `::view-transition-new(root)` unanimated.
+ *
+ * `-0.045em` is not a guess: it is what `paint()` writes at `p = 1`, so a
+ * resolved heading here and a resolved heading there are the same heading.
+ * These are plain declarations rather than `!important` because the inline
+ * styles `paint()` writes must still win — scrolling on a swapped-in page goes
+ * on resolving headings below the fold exactly as it does anywhere else.
+ */
+html[data-swapped] [data-fx='resolve'] {
+  opacity: 1;
+  filter: none;
+  letter-spacing: -0.045em;
+}
+
 .sec-title {
   display: block;
   font: 700 54px/1 var(--display);

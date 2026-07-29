@@ -29,6 +29,30 @@ async function htmlFiles(dir = DIST.pathname): Promise<string[]> {
 let pages: { file: string; html: string }[] = [];
 const rel = (f: string) => path.relative(DIST.pathname, f);
 
+/**
+ * Every rule the build ships, wherever it ended up.
+ *
+ * CSS is inlined into each page (astro.config.mjs), so `_astro/*.css` may be
+ * empty or absent — but Astro still emits files for anything it decides not to
+ * inline, and a test that reads only one of the two places would quietly stop
+ * checking anything.
+ */
+async function allCss(): Promise<string> {
+  const inline = pages.flatMap((p) => p.html.match(/<style>([\s\S]*?)<\/style>/g) ?? []);
+  let emitted: string[] = [];
+  try {
+    const names = (await readdir(new URL('_astro/', DIST))).filter((f) =>
+      f.endsWith('.css'),
+    );
+    emitted = await Promise.all(
+      names.map((f) => readFile(new URL(`_astro/${f}`, DIST), 'utf8')),
+    );
+  } catch {
+    // No _astro/ directory at all is fine; everything was inlined.
+  }
+  return [...inline, ...emitted].join('');
+}
+
 before(async () => {
   try {
     await stat(DIST);
@@ -368,13 +392,30 @@ describe('links and assets', () => {
     /*
      * Regression: the paginator was hidden with the `hidden` attribute while
      * .sheet-more set `display: flex`, which silently wins over the UA rule.
+     *
+     * Read from the pages, not from `_astro/`. `build.inlineStylesheets:
+     * 'always'` means there may be no CSS files at all, and an empty directory
+     * would make this assertion vacuously pass rather than fail.
      */
-    const css = (await readdir(new URL('_astro/', DIST))).filter((f) =>
-      f.endsWith('.css'),
-    );
-    const all = (
-      await Promise.all(css.map((f) => readFile(new URL(`_astro/${f}`, DIST), 'utf8')))
-    ).join('');
+    const all = await allCss();
+    assert.ok(all.length > 0, 'no CSS found in the build at all');
     assert.match(all, /\[hidden\]\{display:none/, 'no global [hidden] override');
+  });
+
+  test('page CSS is inlined, so a router swap cannot outrun it', async () => {
+    /*
+     * A `<link rel=stylesheet>` inserted by a swap is not render-blocking, so
+     * the incoming page paints — and gets snapshotted by the view transition —
+     * before its own rules apply. Inline `<style>` arrives with the head.
+     * See the note in astro.config.mjs.
+     */
+    for (const file of await htmlFiles()) {
+      const head = (await readFile(file, 'utf8')).split('</head>')[0];
+      assert.doesNotMatch(
+        head,
+        /<link[^>]+rel="?stylesheet/,
+        `${rel(file)} links a stylesheet instead of inlining it`,
+      );
+    }
   });
 });
