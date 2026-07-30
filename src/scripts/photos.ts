@@ -330,19 +330,52 @@ function init() {
    * The page is lit by the shoot on screen. When the tracked run changes, the
    * incoming shoot's LQIP is painted onto the hidden ambient layer and the two
    * layers cross-fade — the same move the viewer makes with its bloom, scaled
-   * to the room. The accent follows: the LQIP's average colour, taken in
-   * OKLab, sets `--live` at the ramp's locked lightness and chroma, and the
-   * rail indicator and run header borrow it. A grey sample clears the accent
-   * and the page falls back to cyan.
+   * to the room.
+   *
+   * The accent follows, and it is a *property of the shoot*, not of the scroll
+   * position: every run's LQIP is averaged once at init and re-emitted as that
+   * run's `--run` at the ramp's locked lightness and chroma. Everything that
+   * names the shoot then agrees — its date, the tube beside it, the editorial
+   * rule, its rail entry, its row in the shoots sheet, the viewer's tube — and
+   * a row in the sheet cannot show one colour while the header shows another.
+   * Which was the bug: the accent used to live on <html> as `--live`, so only
+   * the run on screen had a hue and everything else fell back to cyan.
+   *
+   * The markup already ships each run's point on the accent ramp as `--run`
+   * (see `runHue` in the page), so this only ever *replaces* an in-palette hue
+   * with the photographs' own, and a rejected sample simply leaves the ramp's.
    */
   const ambLayers = Array.from(document.querySelectorAll<HTMLElement>('[data-amb]'));
   let ambFront = 0;
   let ambKey = '';
-  let ambSample = 0;
 
-  function setLive(accent: string | null) {
-    if (accent) document.documentElement.style.setProperty('--live', accent);
-    else document.documentElement.style.removeProperty('--live');
+  const railFor = new Map(railItems.map((el) => [el.dataset.shoot ?? '', el]));
+  const jumpFor = new Map(
+    Array.from(document.querySelectorAll<HTMLElement>('[data-jump-row]')).map((el) => [
+      el.dataset.shoot ?? '',
+      el,
+    ]),
+  );
+  /** The shoot hue per run key, once sampled. Read by the viewer. */
+  const accents = new Map<string, string>();
+
+  /*
+   * Which run a tile belongs to. A Map rather than `tile.closest('[data-run]')`
+   * because SHEET reparents every tile out of its run and into the flat sheet.
+   */
+  const runOf = new Map<HTMLAnchorElement, string>(
+    runs.flatMap((run) => run.tiles.map((tile) => [tile, run.key] as const)),
+  );
+
+  function paintAccent(key: string, accent: string) {
+    accents.set(key, accent);
+    for (const el of [
+      runs.find((r) => r.key === key)?.el,
+      railFor.get(key),
+      jumpFor.get(key),
+    ]) {
+      el?.style.setProperty('--run', accent);
+    }
   }
 
   async function sampleAccent(lqip: string): Promise<string | null> {
@@ -380,7 +413,6 @@ function init() {
     const lqip = tile?.dataset.lqip;
     if (!lqip) {
       for (const layer of ambLayers) layer.classList.remove('is-on');
-      setLive(null);
       return;
     }
     const back = ambLayers[1 - ambFront];
@@ -388,16 +420,27 @@ function init() {
     back.classList.add('is-on');
     ambLayers[ambFront].classList.remove('is-on');
     ambFront = 1 - ambFront;
-
-    /* Stale-guarded: only the newest sample may set the accent. */
-    const ticket = ++ambSample;
-    void sampleAccent(lqip).then((accent) => {
-      if (ticket === ambSample) setLive(accent);
-    });
   }
 
-  /* A router swap must not leave the last shoot's hue on <html>. */
-  on(document, 'astro:before-swap', () => setLive(null));
+  /*
+   * Every shoot's hue, sampled once. Serial rather than parallel: the whole set
+   * is eleven 4×4 reads of an LQIP that is already inlined in the document, so
+   * there is nothing to gain from flooding the decoder, and a stray run has no
+   * outing to be the colour of. Deferred past first paint — the ramp hue in the
+   * markup is already correct, this only improves it.
+   */
+  async function sampleAllAccents() {
+    for (const run of runs) {
+      if (run.stray) continue;
+      const lqip = run.tiles[0]?.dataset.lqip;
+      if (!lqip) continue;
+      const accent = await sampleAccent(lqip);
+      if (accent) paintAccent(run.key, accent);
+    }
+  }
+
+  if ('requestIdleCallback' in window) requestIdleCallback(() => void sampleAllAccents());
+  else setTimeout(() => void sampleAllAccents(), 200);
 
   /** The indicator tracks the scroll: whichever run owns the middle of the screen. */
   function trackRail() {
@@ -617,8 +660,20 @@ function init() {
       frame.style.backgroundImage = tile.dataset.lqip
         ? `url("${tile.dataset.lqip}")`
         : '';
-      frame.style.setProperty('--bk', tile.dataset.accent || 'var(--cyan)');
     }
+
+    /*
+     * Both of the frame's hues, on the viewer root so the footer inherits them
+     * too: `--bk` marks the photograph's corners (the ramp, per outing) and
+     * `--run` lights the tube beside the shoot name (that shoot's own light,
+     * the same one its header wears on the page). A stray frame has neither.
+     */
+    lb.style.setProperty('--bk', tile.dataset.accent || 'var(--cyan)');
+    const runKey = runOf.get(tile);
+    lb.style.setProperty(
+      '--run',
+      (runKey && accents.get(runKey)) || tile.dataset.accent || 'var(--cyan)',
+    );
 
     const bloom = q<HTMLElement>('.lb-bloom');
     if (bloom) bloom.style.backgroundImage = `url("${cached}")`;

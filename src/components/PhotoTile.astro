@@ -26,9 +26,17 @@ interface Props {
   /** The thread joining recurring outings. Filterable, so it lives on the tile. */
   series?: string | null;
   /**
-   * The outing's point on the accent ramp. The viewer's crop marks take it, so
-   * the frame is marked in the colour of the thing it belongs to. Null for a
-   * stray frame, which belongs to nothing and keeps the default cyan.
+   * The outing's point on the accent ramp, and the colour of every crop mark on
+   * this frame: the tile's own hover marks take it as `--bk`, the viewer's take
+   * the same `--bk` via `data-accent`. It rides on the tile rather than being
+   * inherited from the run because SHEET reparents every tile out of its run.
+   *
+   * Deliberately the *ramp* hue and not the shoot's sampled one: a mark that
+   * touches the photograph must not be the photograph's own average colour, or
+   * it reads as a cast on the image instead of a frame around it. See the
+   * `.lb-frame` comment in the gallery page.
+   *
+   * Null for a stray frame, which belongs to nothing and keeps the default cyan.
    */
   accent?: string | null;
   loading?: 'lazy' | 'eager';
@@ -121,7 +129,7 @@ const capture = [
   data-bloom={bloom}
   data-camera={photo.data.camera ?? undefined}
   data-capture={JSON.stringify(capture.filter(([, v]) => v))}
-  style={`--ar:${aspectRatio}`}
+  style={`--ar:${aspectRatio}${accent ? `;--bk:${accent}` : ''}`}
   aria-label={`Open ${title}`}
 >
   <picture>

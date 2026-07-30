@@ -123,8 +123,8 @@ you where you are in the document, which is sodium's question, not cyan's.)
 This is the structural defence against the RGB meme: hue is information, so many small
 lights read as an organised city rather than decoration. A new effect does not pick a
 colour it likes — it declares which of the three questions it answers. If it answers
-none, it should not be lit. (The gallery's sampled `--live` accent is the one exception,
-and it obeys a stricter rule: see §12.)
+none, it should not be lit. (The gallery's sampled shoot accent, `--run`, is the one
+exception, and it obeys a stricter rule: see §12.)
 
 ---
 
@@ -767,7 +767,8 @@ Per-photo **accent** colour (brackets, counter, tile hover) is a separate questi
 **still open**. The five accents in the mockups are per-album, so it is coupled to whether
 albums happen — and if they do, the accent can come straight from the album with no colour
 extraction at all. Tracked in MILESTONES M4. (The gallery _page_ accent is no longer open —
-`--live` in §12 answers it per shoot, not per photo.)
+`--run` in §12 answers it per shoot, not per photo. The **crop marks** are the part that
+stays ramp-derived, and for a reason given there.)
 
 ---
 
@@ -796,18 +797,49 @@ don't unify them in either direction without the owner.
 The accent follows the light. The LQIP's average colour is taken in **OKLab**
 (`src/lib/ambient.ts`, Ottosson's matrices, unit-tested in `tests/ambient.test.ts`), and
 only its **hue** survives: it is re-emitted through the ramp's locked lightness and
-chroma as `--live: oklch(.80 .17 h)`, consumed by the active rail entry and the live run
-header's date. A sampled colour is therefore physically incapable of breaking the
-palette — it can steer the ramp, never leave it. Below `GREY_FLOOR` chroma (monochrome
-shoot, or hues that cancelled in the average) the sample is discarded and everything
-falls back to cyan rather than inventing a hue from noise.
+chroma as `oklch(.80 .17 h)`. A sampled colour is therefore physically incapable of
+breaking the palette — it can steer the ramp, never leave it. Below `GREY_FLOOR` chroma
+(monochrome shoot, or hues that cancelled in the average) the sample is discarded rather
+than inventing a hue from noise.
 
-Two invariants: **one hue on screen at a time**, and **the hue is always the
-photographs' own**. This replaced an earlier per-shoot ramp-assignment idea precisely
-because that would have put many unmotivated hues on screen at once — the rainbow
-failure. The scripting lives in `src/scripts/photos.ts` (`setAmbient`), hooks the
-existing `trackRail()`, is stale-guarded per sample, and clears `--live` from `<html>`
-on `astro:before-swap` so a router exit never leaks the last shoot's hue.
+#### The accent belongs to the shoot, not to the scroll position (owner review 2026-07-29)
+
+This started as `--live` on `<html>`: **one hue on screen at a time**, the shoot the
+rail was tracking, everything else cyan. That invariant is **withdrawn**. It could not
+survive the shoots sheet — a list of every outing at once, whose eleven dates were all
+cyan while the header behind them was pink, so the sheet and the page disagreed about
+what colour a shoot is. The owner's ruling: _"we already have a different hue for the
+date, and I like those — we should aim to be consistent."_
+
+So the accent is now a property of the shoot. Each run's LQIP is sampled **once**, at
+init, and painted as `--run` on that run's section, its rail entry and its row in the
+shoots sheet; the viewer takes the open frame's `--run` too. Everything that **names** a
+shoot burns in that shoot's hue:
+
+| Fitting                                      | Was                  |
+| -------------------------------------------- | -------------------- |
+| Run header date, and the tube beside it      | cyan date, grey tube |
+| Editorial lead's rule                        | fixed `--sodium`     |
+| Rail entry (active only — it marks position) | `--live`             |
+| Shoots sheet row date                        | cyan                 |
+| Viewer footer's tube                         | cyan                 |
+
+The pre-JS value is the run's point on the **accent ramp** (`runHue` in the gallery
+page), so the markup is already correct and in-palette without a script; sampling only
+ever replaces one ramp hue with the photographs' own, and a rejected sample leaves the
+ramp's in place. This is the same two-stage arrangement `src/lib/ramp.ts` documents for
+the home rail. The rainbow the old ruling feared is bounded by the ramp: lightness and
+chroma are locked, so many hues read as one lit system rather than as decoration.
+
+**The crop marks are the exception and stay ramp-derived** (`--bk`, per outing, on the
+tile and in the viewer). A mark that _touches_ the photograph must not be the
+photograph's own average colour, or it reads as a colour cast on the image instead of a
+frame around it — the full argument is in the `.lb-frame` comment. The tile's hover marks
+were cyan and the viewer's were accented, which meant hovering a frame and then opening
+it changed the colour of its own marks; both now take `--bk`.
+
+The scripting lives in `src/scripts/photos.ts`: `setAmbient` still hooks `trackRail()`
+for the LQIP cross-fade, and `sampleAllAccents` runs the eleven samples once on idle.
 
 ### Long pages: light the structure, never the prose
 

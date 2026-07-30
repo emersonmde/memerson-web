@@ -41,29 +41,8 @@ const yearSpan = years.length ? `${Math.min(...years)} — ${Math.max(...years)}
 const outings = runs.filter((r) => !r.stray).length;
 const strays = runs.filter((r) => r.stray).reduce((n, r) => n + r.items.length, 0);
 
-const MONTH = [
-  'JAN',
-  'FEB',
-  'MAR',
-  'APR',
-  'MAY',
-  'JUN',
-  'JUL',
-  'AUG',
-  'SEP',
-  'OCT',
-  'NOV',
-  'DEC',
-];
-
 /** "2022-10-29" → "2022.10.29" — the site's date voice everywhere but prose. */
 const dots = (iso: string) => iso.replace(/-/g, '.');
-
-/** "2022-10-29" → "29 OCT 2022", for the editorial lead only. */
-const longDate = (iso: string) => {
-  const [y, m, d] = iso.split('-');
-  return `${Number(d)} ${MONTH[Number(m) - 1]} ${y}`;
-};
 
 const isoOf = (p: (typeof photos)[number]) =>
   p.data.takenAt?.toLocaleDateString('en-CA', { timeZone: 'UTC' }) ?? '';
@@ -89,6 +68,22 @@ const runName = (name: string | null, shoot: string | null) =>
  * the only label that frame has.
  */
 const shootNameOf = (shoot: string | null) => shoots[shoot ?? '']?.name ?? null;
+
+/*
+ * One hue per shoot, and everything that *names* that shoot takes it: the run
+ * header's date and the tube beside it, the editorial rule, the rail entry, the
+ * row in the shoots sheet, and the tube in the viewer's footer. The crop marks
+ * are the one exception and take `--bk` instead — see the `.lb-frame` comment.
+ *
+ * This is the pre-JS value — a point on the accent ramp, so the hues are spread
+ * and none of them can leave the palette. `src/scripts/photos.ts` then re-emits
+ * `--run` from the shoot's own photograph (its LQIP average, hue only), the same
+ * two-stage arrangement `src/lib/ramp.ts` describes for the home rail: the
+ * markup is correct without a script, and measured colour wins once there is
+ * one. A stray stretch is not an outing and stays unaccented.
+ */
+const runHue = (run: (typeof runs)[number], index: number) =>
+  run.stray ? undefined : `--run:${hueForIndex(index, runs.length)}`;
 
 /*
  * Eager for the first screenful only. Everything else is lazy, which is what
@@ -191,7 +186,13 @@ const EAGER = 8;
 
           <div data-sheet data-layout="runs">
             {runs.map((run, runIndex) => (
-              <section class="px-run" id={run.key} data-run data-shoot={run.key}>
+              <section
+                class="px-run"
+                id={run.key}
+                data-run
+                data-shoot={run.key}
+                style={runHue(run, runIndex)}
+              >
                 <div class:list={['px-run-head', run.stray && 'is-stray']}>
                   <span class="px-run-date">
                     {run.stray ? spanOf(run.items) : dots(run.shoot ?? '')}
@@ -221,18 +222,15 @@ const EAGER = 8;
                 */}
                 {!run.stray && (
                   <div class="px-lead-meta" data-lead-meta>
-                    <div class="px-lead-kicker">{dots(run.shoot ?? '')}</div>
+                    {/*
+                        No dateline here, and no frame count: the sticky run
+                        header directly above already carries the date, the
+                        count and the camera. It printed the date twice, once
+                        as 2022.10.29 and again as 29 OCT 2022, within 200px.
+                      */}
                     <h2 class="px-lead-title">{runName(run.name, run.shoot)}</h2>
                     <div class="px-lead-line" />
-                    <div class="px-lead-sub">
-                      {run.summary && (
-                        <>
-                          {run.summary}
-                          <br />
-                        </>
-                      )}
-                      {run.items.length} frames · {run.shoot ? longDate(run.shoot) : ''}
-                    </div>
+                    {run.summary && <div class="px-lead-sub">{run.summary}</div>}
                   </div>
                 )}
 
@@ -258,12 +256,13 @@ const EAGER = 8;
   {
     runs.length > 1 && (
       <nav class="px-rail" data-rail aria-label="Shoots">
-        {runs.map((run) => (
+        {runs.map((run, runIndex) => (
           <a
             class:list={['px-rail-item', run.stray && 'is-stray']}
             href={`#${run.key}`}
             data-rail-item
             data-shoot={run.key}
+            style={runHue(run, runIndex)}
           >
             <span>
               {run.stray ? 'STRAY FRAMES' : runName(run.name, run.shoot).toUpperCase()}
@@ -290,11 +289,13 @@ const EAGER = 8;
       <p>JUMP TO AN OUTING</p>
       <div>
         {
-          runs.map((run) => (
+          runs.map((run, runIndex) => (
             <a
               class:list={['px-jumprow', run.stray && 'is-stray']}
               href={`#${run.key}`}
               data-jump-row
+              data-shoot={run.key}
+              style={runHue(run, runIndex)}
             >
               <span class="j-date">
                 {run.stray ? spanOf(run.items) : dots(run.shoot ?? '')}
@@ -761,18 +762,22 @@ const EAGER = 8;
     opacity: 1;
   }
 
+  /* The tile's crop marks and the viewer's are the same device on the same
+     frame, so they take the same `--bk`: the outing's point on the ramp. These
+     were cyan here and accented there, which meant hovering a tile and then
+     opening it changed the colour of its own marks. */
   .px-b-tl {
     top: 5px;
     left: 5px;
-    border-left: 1px solid var(--cyan);
-    border-top: 1px solid var(--cyan);
+    border-left: 1px solid var(--bk, var(--cyan));
+    border-top: 1px solid var(--bk, var(--cyan));
   }
 
   .px-b-br {
     bottom: 5px;
     right: 5px;
-    border-right: 1px solid var(--cyan);
-    border-bottom: 1px solid var(--cyan);
+    border-right: 1px solid var(--bk, var(--cyan));
+    border-bottom: 1px solid var(--bk, var(--cyan));
   }
 
   /* ---- runs ---- */
@@ -852,20 +857,34 @@ const EAGER = 8;
     color: var(--dim);
   }
 
+  /*
+   * The shoot's own hue, on the date and on the tube beside it — the two read
+   * as one fitting, so a grey tube next to a coloured date looked like the
+   * lamp had failed. `--run` is set per run (see the page's `runHue`) and
+   * re-emitted from the photograph by the script; cyan is the fallback for a
+   * stray stretch and for a grey shoot the sample rejected.
+   *
+   * Transitioned because the script's measured hue arrives a frame or two
+   * after the ramp's: the lights come up rather than snapping.
+   */
   .px-run-date {
-    color: var(--cyan);
+    color: var(--run, var(--cyan));
+    transition: color 0.3s;
   }
 
   /* The run that owns the screen glows in its own light. */
   .px-run.is-live .px-run-date {
-    color: var(--live, var(--cyan));
-    text-shadow: 0 0 14px var(--live, transparent);
+    text-shadow: 0 0 14px var(--run, transparent);
   }
 
   .px-run-rule {
     width: 20px;
     height: 1px;
-    background: var(--hairline-strong);
+    background: var(--run, var(--hairline-strong));
+    box-shadow: 0 0 8px -1px var(--run, transparent);
+    transition:
+      background 0.3s,
+      box-shadow 0.3s;
   }
 
   .px-run-name {
@@ -942,12 +961,6 @@ const EAGER = 8;
     padding-bottom: 6px;
   }
 
-  .px-lead-kicker {
-    font: 500 9.5px var(--mono);
-    letter-spacing: 0.24em;
-    color: var(--sodium);
-  }
-
   .px-lead-title {
     margin: 12px 0 0;
     font: 700 40px/1.02 var(--display);
@@ -962,12 +975,17 @@ const EAGER = 8;
     color: var(--dim);
   }
 
+  /* The lead's tube: the same fitting as the run header's, at editorial scale,
+     so it is lit by the same shoot rather than by a fixed sodium. */
   .px-lead-line {
     width: 44px;
     height: 2px;
     margin: 16px 0;
-    background: var(--sodium);
-    box-shadow: 0 0 12px var(--sodium);
+    background: var(--run, var(--cyan));
+    box-shadow: 0 0 12px var(--run, var(--cyan));
+    transition:
+      background 0.3s,
+      box-shadow 0.3s;
   }
 
   @media (max-width: 900px) {
@@ -1022,19 +1040,19 @@ const EAGER = 8;
   }
 
   /*
-   * The active entry takes `--live` — the hue sampled from the shoot on
-   * screen, set by the script at the ramp's locked lightness and chroma.
-   * One hue at a time, and always the photographs' own. Cyan is the
-   * no-sample fallback (script off, grey shoot).
+   * The active entry takes its *own* shoot's hue, the same `--run` the run
+   * header and the shoots sheet use — so the rail can never disagree with the
+   * header it is pointing at. Inactive entries stay grey: the rail is a
+   * position indicator, and eleven lit entries would say nothing.
    */
   .px-rail-item[aria-current='true'] {
-    color: var(--live, var(--cyan));
+    color: var(--run, var(--cyan));
   }
 
   .px-rail-item[aria-current='true'] i {
     width: 30px;
-    background: var(--live, var(--cyan));
-    box-shadow: 0 0 10px var(--live, var(--cyan));
+    background: var(--run, var(--cyan));
+    box-shadow: 0 0 10px var(--run, var(--cyan));
   }
 
   .px-rail-n {
@@ -1120,11 +1138,14 @@ const EAGER = 8;
     background: rgba(142, 180, 255, 0.06);
   }
 
+  /* Each row's date in its own shoot's hue, so the sheet is a legend for the
+     page rather than a second, cyan opinion of it. */
   .px-jumprow .j-date {
     font: 400 9.5px var(--mono);
     letter-spacing: 0.14em;
-    color: var(--cyan);
+    color: var(--run, var(--cyan));
     min-width: 82px;
+    transition: color 0.3s;
   }
 
   .px-jumprow .j-name {
@@ -1213,6 +1234,10 @@ const EAGER = 8;
      * home indicator. 220px clears the tallest of either.
      */
     --lb-over: 220px;
+    /* Both hues the viewer borrows from the frame it opened, defaulted here so
+       they are inherited by the crop marks *and* by the footer's tube — the
+       script sets them on this element when a tile opens. */
+    --bk: var(--cyan);
     animation: lbIn 0.24s cubic-bezier(0.2, 0.85, 0.2, 1);
   }
 
@@ -1397,10 +1422,11 @@ const EAGER = 8;
    * mockup's album accents were reaching for: this frame is part of something,
    * and the colour says which. A stray frame belongs to no outing and keeps the
    * default cyan. The drop shadow keeps any of them legible on a bright corner.
+   *
+   * This is why the marks take `--bk` (the ramp, per outing) while the dates and
+   * tubes take `--run` (the shoot's own light): one divergence, and the frame's
+   * edge is the reason for it.
    */
-  .lb-frame {
-    --bk: var(--cyan);
-  }
 
   .lb-bracket {
     position: absolute;
@@ -1483,11 +1509,14 @@ const EAGER = 8;
     color: var(--dim);
   }
 
+  /* The tube beside the shoot name is the run header's fitting, so it burns in
+     the same `--run` as that shoot's date on the page — not the crop marks'
+     `--bk`, and not a fixed cyan. */
   .lb-dash {
     width: 20px;
     height: 2px;
-    background: var(--cyan);
-    box-shadow: 0 0 10px var(--cyan);
+    background: var(--run, var(--cyan));
+    box-shadow: 0 0 10px var(--run, var(--cyan));
   }
 
   .lb-shoot {
