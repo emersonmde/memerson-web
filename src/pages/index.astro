@@ -826,18 +826,20 @@ const isoDate = (d: Date | null) =>
     transition: background 0.16s;
   }
 
-  /* The log's lit separator, same as /blog — this row is a piece of the log. */
+  /* The log's neon-tube separator, same as /blog — this row is a piece of
+     the log. Same construction as the hero's tube bar, in sodium. */
   .log-row::before {
     content: '';
     position: absolute;
-    top: -1px;
+    top: -2px;
     left: 0;
     width: 250px;
-    height: 1px;
-    background: linear-gradient(90deg, var(--violet), transparent);
+    height: 3px;
+    border-radius: 2px;
+    background: var(--sodium);
     box-shadow:
-      0 0 10px oklch(0.8 0.17 286 / 0.7),
-      0 0 26px oklch(0.8 0.17 286 / 0.35);
+      0 0 9px var(--sodium),
+      0 0 34px oklch(0.82 0.17 66 / 0.55);
   }
 
   .log-row:hover {

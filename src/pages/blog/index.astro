@@ -156,19 +156,20 @@ const monthDay = (d: Date) =>
     transition: background 0.16s;
   }
 
-  /* The separator's lit segment — the about page's tick technique, in the
-     archive's violet. Fixed length; the hairline carries the rest. */
+  /* The separator is a neon tube — the hero's bar (3px, rounded, two-stage
+     glow) in sodium, owner's pick. Fixed length; the hairline carries on. */
   .entry::before {
     content: '';
     position: absolute;
-    top: -1px;
+    top: -2px;
     left: 0;
     width: 250px;
-    height: 1px;
-    background: linear-gradient(90deg, var(--violet), transparent);
+    height: 3px;
+    border-radius: 2px;
+    background: var(--sodium);
     box-shadow:
-      0 0 10px oklch(0.8 0.17 286 / 0.7),
-      0 0 26px oklch(0.8 0.17 286 / 0.35);
+      0 0 9px var(--sodium),
+      0 0 34px oklch(0.82 0.17 66 / 0.55);
   }
 
   .entry:hover {
