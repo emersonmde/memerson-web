@@ -1,34 +1,51 @@
 # memerson-web — Testing
 
 ```bash
-npm test        # build, then every test
+npm test            # build, then every node:test suite
 npm run test:unit   # pure logic only, no build needed (~0.1s)
 npm run check       # astro check — types and diagnostics, keep at 0
+npm run test:e2e    # real-browser suite (Playwright) — planned, see §4
 ```
 
-No test framework and no new dependencies: Node 24 runs TypeScript and ships
-`node:test`. Note that `node --test` wants file paths or a glob, **not** a bare
-directory — `node --test tests/` fails with "Cannot find module".
+Layers 1 and 2 use no test framework and no dependencies: Node 24 runs TypeScript
+and ships `node:test`. Note that `node --test` wants file paths or a glob, **not**
+a bare directory — `node --test tests/` fails with "Cannot find module".
+
+Layer 3 (real browser) uses **Playwright** as its one devDependency. §3 records
+why that reverses an earlier decision, and §4 is the plan for building it out.
 
 ---
 
-## What these are for
+## 1. What these are for
 
-The site is going to keep changing: new projects lengthen the rail, new photos
-lengthen the gallery, and the design is still being revised. These tests exist so
-that core behaviour survives that, not to pin the current pixels.
+The site is going to keep changing in two different ways, and the test strategy
+has to distinguish them:
 
-That distinction drives how they are written. **Assert invariants, not values.**
-A test that pinned "at scroll 800 the head is at 368px" would break the next time
-a plate gained a line of text, and it would be right to break while telling you
-nothing useful. What has to stay true is that the head is on screen for the whole
-run — and that holds at any rail length.
+- **Content churn** — new photos, new posts, new projects. This happens
+  constantly and must require **zero test updates**. A suite that cries wolf on
+  every import stops being an alarm.
+- **Code change** — refactoring, optimization, redesign. This is what the suite
+  exists to police: any change to the look, feel, or behaviour of the site must
+  be a **deliberate** one, visible as a failing test that a human then updates
+  on purpose.
+
+That distinction drives how everything is written. For logic and structure:
+**assert invariants, not values.** A test that pinned "at scroll 800 the head is
+at 368px" would break the next time a plate gained a line of text, and it would
+be right to break while telling you nothing useful. What has to stay true is
+that the head is on screen for the whole run — and that holds at any rail
+length.
+
+For rendering, the rule refines into a doctrine (§3.1): **pixel-pin the pattern
+once, invariant-test the repetition.** Pixels are values, and pinning them is
+the point of visual regression testing — but only ever pin pixels that content
+churn cannot touch.
 
 ---
 
-## The layers
+## 2. The existing layers
 
-### 1. Pure logic — `rail`, `content`, `manifest`
+### 2.1 Pure logic — `rail`, `runs`, `content`, `manifest`, `shoots`, `ambient`, `sheet`
 
 Fast, no browser, no build. The interesting one is **`tests/rail.test.ts`**,
 which covers the charge geometry that decides where the light sits.
@@ -63,10 +80,10 @@ derivative above the 2560px public cap, nothing upscaled past its original,
 LQIPs small enough to inline, slugs unique and matching their own hash, and
 **no location data anywhere in the file**.
 
-`tests/shoots.test.ts` covers the shoot clustering, and it is the clearest case in
-the suite of testing invariants over values. It never asserts "14 shoots" — that
-number changes with every import. It asserts the properties that must hold at any
-library size:
+`tests/shoots.test.ts` covers the shoot clustering, and it is the clearest case
+in the suite of testing invariants over values. It never asserts "14 shoots" —
+that number changes with every import. It asserts the properties that must hold
+at any library size:
 
 - A split happens exactly where the gap exceeds the threshold, and nowhere else.
 - Raising the threshold can only **merge** clusters, never produce more.
@@ -83,11 +100,11 @@ untestable by inspection — it only shows up on an import months later.
 
 `mergeShoots` is tested directly rather than through `writeShoots`, which is why
 the merge logic is a separate pure function. An earlier version mocked
-`node:fs/promises`; ESM namespace objects cannot be redefined, so the test failed
-with `Cannot redefine property` — a good prompt to move the logic rather than
-fight the mock.
+`node:fs/promises`; ESM namespace objects cannot be redefined, so the test
+failed with `Cannot redefine property` — a good prompt to move the logic rather
+than fight the mock.
 
-### 2. Built output — `tests/build.test.ts`
+### 2.2 Built output — `tests/build.test.ts`
 
 Assertions against `dist/`, which is why `npm test` builds first.
 
@@ -113,14 +130,198 @@ The regressions it locks down, all of which actually shipped:
 Also asserts the rail's DOM hooks are present and that every row has exactly one
 node and one offshoot, since a missing pair silently breaks the lighting.
 
-### 3. Not automated — real-browser behaviour
+**A cheap addition that belongs in this layer, not the browser: byte budgets.**
+Per-page HTML size, total client JS, total CSS, all asserted against `dist/`
+with generous ceilings. A refactor that balloons the bundle should fail loudly,
+and this needs no browser at all.
 
-Deliberately out of scope for now. View switching, filtering, the viewer, the
-Redraw transition, the actual motion and every mobile breakpoint need a real
-engine, which would mean Playwright and a large dependency for a site with none.
+---
 
-These were verified manually over the Chrome DevTools Protocol, which is worth
-recording because it is the technique to reach for again:
+## 3. The real-browser layer
+
+### 3.0 Why Playwright now
+
+An earlier version of this doc rejected Playwright as "a large dependency for a
+site with none," and verified browser behaviour by hand over the Chrome DevTools
+Protocol. That was defensible for steady-state maintenance. It is not defensible
+going into a sustained refactoring campaign, where the whole point is that any
+change to rendering or behaviour must be _detected_, not noticed. The
+alternative — hand-rolled CDP drivers plus a pixel differ plus baseline
+management plus trace parsing — is more code to own than the dependency avoided,
+with none of Playwright's trace viewer, auto-waiting, device profiles, or
+second engine. It is a devDependency; nothing ships.
+
+Three bugs from this project's own history are the argument for testing _what
+renders_, not what the DOM says: the stacking-context bug (the nav painted over
+the viewer's close button while every z-index looked correct), the
+`[hidden]`-vs-author-`display` bug, and the scoped-style specificity rule (a
+`@media` rule in the wrong file silently never applies). In all three the DOM
+and the stylesheets read as correct. Only the rendered result was wrong.
+
+The suite runs against **`astro preview` serving `dist/`** — the same artifact
+that deploys — via Playwright's `webServer`. Breakpoints map to Playwright
+projects: **1440 (desktop), 1100, 900, 834, 720, 560, 390 (iPhone profile with
+touch and `hover: none`)**. Functional tests run at 1440 and 390 at minimum,
+since `photos.ts` branches on `(hover: none), (max-width: 720px)`; visual
+baselines run wherever the layout genuinely differs.
+
+### 3.1 The anti-flake doctrine for visual tests
+
+Content churn is the enemy of pixel testing here: a new photo import changes
+the gallery sheet, the LQIP blooms behind the ambient layers, the home-page
+tiles, and the lightbox contents — and a new project lengthens the rail. The
+doctrine, in order of preference:
+
+**1. Pixel-pin the unit cell; invariant-test the repetition.** Repeating,
+growing structures — rail rows, gallery tiles, blog list entries, project
+plates — never get a whole-structure screenshot. One representative element
+gets a close-up element screenshot ("this is what a node, a plate, a tile
+frame looks like"), and the repetition is covered by as-rendered invariant
+assertions: rows evenly ordered, every tile inside its grid cell, hues
+advancing monotonically down the rail, offshoots present on every row. The
+rail with twelve projects must pass the same tests it passes with eight —
+longer, more boxes, same pattern, same gradient traversal.
+
+**2. Prefer stable-by-construction over masking.** Screenshot regions that
+contain no content by design: the nav, the footer, the gallery view bar
+(`.px-bar`), the lightbox chrome (`.lb-bar`, `.lb-nav`, `.lb-foot`), section
+headers (`.sec-head`), the hero sign and tube. An element screenshot of the
+lightbox close button does not care which photograph is open. Full-page
+screenshots are reserved for pages whose entire content is fixed: `404`, and
+the `about` page if its copy is treated as design.
+
+**3. Masks are holes in the alarm.** Every masked pixel is a pixel the suite
+can never again catch a regression in. Masks are for pixels that are
+_genuinely dynamic_ — the photograph in `.lb-img`, the LQIP blooms
+(`.lb-bloom`, `.px-amb`, `data-amb`), tile images, the sky's stars — and never
+for silencing a flake whose real cause is removable nondeterminism (an
+animation not settled, a font not loaded). A mask added to make a test pass is
+a bug in the test.
+
+**4. Masking does not survive reflow.** A mask covers a rectangle where the
+element sits _now_. If added content moves everything below it, the whole page
+diffs regardless of masks. Therefore: **never full-page-screenshot a page that
+grows.** Growing pages get viewport-clipped shots of layout-stable regions
+(the gallery header area above the tiles; the hero) and element shots of their
+chrome, not `fullPage: true`.
+
+**5. Specimen content, pinned on purpose.** A small fixtures file
+(`e2e/specimens.ts`) names one photo slug, one blog post, and one shoot that
+the suite deep-links to. Their rendering is then fully deterministic — the
+lightbox opened at `/photos#<specimen>` shows the same image every run, so
+even the image itself can be verified rather than masked where that's
+valuable. Adding content never touches a specimen. Deleting one is a
+deliberate act: pick a replacement, regenerate its baselines, in one commit.
+(Specimen-adjacent surfaces that _do_ churn — the prev/next thumbnails, the
+frame counter "n / total" — are masked or asserted structurally instead.)
+
+**6. Geometry relations, not geometry snapshots.** Where position matters but
+coordinates churn, assert the relation: the close button is inside the
+viewport at every breakpoint; `document.elementFromPoint()` at its centre
+returns _it_ (real hit-testing — the assertion that would have caught the
+stacking-context bug); the shoot rail clears the last tile column; the capture
+panel does not overlap the title block. Never "the button is at (1361, 24)".
+
+**7. Kill nondeterminism at the source before screenshotting.**
+
+- `await page.evaluate(() => document.fonts.ready)` and wait for specimen
+  images to decode before any shot.
+- Settled-state shots run with `page.emulateMedia({ reducedMotion: 'reduce' })`
+  — the scripts already honour it, so this exercises a real code path while
+  removing every entry animation and the sky's stars.
+- Mid-animation shots don't race the clock: seek explicitly via
+  `document.getAnimations().forEach(a => a.currentTime = t)` and screenshot a
+  chosen frame.
+- Scroll-dependent effects are functions of scroll position (`fx.ts` is
+  strictly so): scroll to a fraction of the rail, wait for the next frame,
+  shoot. Deterministic by construction.
+- One baseline platform. Font rasterization differs across OSes, so baselines
+  are generated and compared on macOS (where the suite runs today). If a CI
+  stage is ever added, it regenerates its own baselines inside Playwright's
+  Docker image rather than sharing the Mac's.
+
+The success criterion for the whole doctrine: **a photo import or a new blog
+post causes zero visual-test failures.** If one ever does, the fix is to
+restructure that test under rules 1–6, not to update its baseline.
+
+### 3.2 Functional tests — `e2e/gallery.spec.ts` and friends
+
+The 1,100 lines of `photos.ts` are the largest untested surface in the project.
+What to assert, drawn from what was previously verified by hand:
+
+- **Tiles move, never rebuild.** Tag the tile elements with a property before
+  switching views; after switching, the same objects are present and **zero
+  image requests fired** (`page.on('request')`). This mechanically pins the
+  CLAUDE.md invariant that view switching reparents `.px-tile` elements.
+- **Filter coherence.** Filtering scopes the count (`data-count`), the query
+  header, and the lightbox sequence together; clearing restores all three.
+- **The lightbox lifecycle.** Open from a tile, arrow through, `ESC` closes,
+  focus returns; the EXIF panel toggles; `/photos#<specimen>` deep-links open
+  the right frame; closing cleans the hash; browser back behaves.
+- **Hit-testing over reading.** With the viewer open, `elementFromPoint` at
+  the close button and at each nav arrow returns those controls — at every
+  breakpoint project. Same for the nav never painting over the wipe.
+- **Router idempotency.** Navigate home → photos → home → photos; the gallery
+  still responds and listeners have not doubled (the `astro:page-load`
+  double-fire and the dead-gallery-on-page-2 class of bug).
+- **The shoots sheet and jump rail**, the card expansion on the home page (and
+  that the rail recomputes — head lands on its computed target after a
+  1332px → 2831px rail change, previously verified by hand once).
+- Everything runs in the desktop project and the 390px touch project; the
+  bottom-sheet capture layout and permanent captions are phone-project
+  assertions.
+
+### 3.3 Motion tests — `e2e/motion.spec.ts`
+
+A screenshot pins one frame; these prove the frames connect. Sample
+`getBoundingClientRect()` of the moving element at a series of scroll
+positions or animation times and assert the trajectory's invariants:
+
+- The rail charge head is on screen across the whole run, monotonic with
+  scroll, and nodes light in rail order — **as rendered**, closing the loop
+  that `rail.test.ts` (pure maths) cannot: that `fx.ts` feeds the maths the
+  right inputs and writes the outputs to the right elements.
+- The Redraw wipe's seam travels top → bottom within its duration, and with
+  reduced motion there is no wipe at all.
+- Entry animations (`data-fx="resolve"`) actually resolve: blurred before,
+  crisp after, and `html[data-swapped]` suppresses them after a router swap.
+
+### 3.4 Performance tests — `e2e/perf.spec.ts`
+
+The sneakiest refactor risk: a cleanup of `fx.ts` reinterleaves reads and
+writes, every functional test stays green, and iOS scrolling stutters. Three
+measures, chosen to be robust to machine speed:
+
+- **Forced-reflow count as an invariant — the strongest one.** Capture a
+  Chrome trace during a synthesized scroll and assert **zero forced
+  synchronous layouts inside the paint loop**. The read-then-write split is
+  the entire performance story of `fx.ts` (see its header comment); this pins
+  the design property itself, and unlike a timing threshold it cannot flake
+  on a slow machine.
+- **Long-frame detection.** A `PerformanceObserver` on `long-animation-frame`
+  during scripted scroll and lightbox open/close; assert no frame beyond a
+  _generous_ bound (~50ms). Loose on purpose — tight timing assertions on
+  shared hardware are flake factories, and the alarm-fatigue rule from §1
+  applies doubly to timing.
+- **Byte budgets** live in layer 2 (§2.2), not here — they need no browser.
+
+### 3.5 Accessibility — `e2e/a11y.spec.ts`
+
+`build.test.ts` guards alt text and heading structure; this layer adds what
+needs an engine: `@axe-core/playwright` across every page and the
+viewer-open state, plus keyboard-only operation of the lightbox (open,
+arrow, `ESC`) and visible focus.
+
+### 3.6 The real-device gap — named honestly
+
+The compositor bugs that shaped `redraw.ts` reproduce on **real iPhones only**
+— not the iOS Simulator, not Playwright's WebKit, not WebKit trunk. No
+automated layer here closes that. Playwright's WebKit project covers the
+_engine_; the device compositor remains a **manual device pass**, required for
+any change touching `src/scripts/redraw.ts`, the `.redraw` styles, or
+compositor-adjacent CSS (transforms, view-transition rules, fixed/sticky
+layering). The recipe (simctl + safaridriver, and the CDP fallback below) is
+recorded so it is a checklist item, not tribal knowledge.
 
 ```bash
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
@@ -130,40 +331,41 @@ recording because it is the technique to reach for again:
 # webSocketDebuggerUrl, and send Runtime.evaluate / Page.captureScreenshot.
 ```
 
-`--screenshot` alone cannot click anything, and an iframe harness is unreliable
-under `--virtual-time-budget`. CDP is what actually works for interaction.
+---
 
-What was verified this way, and would be the first candidates if this is ever
-automated:
+## 4. Build-out plan
 
-- The rail recomputes on card expansion — head position matches its computed
-  target across a 1332px → 2831px rail.
-- A shooting star's travel direction and tail agree to 0.00°.
+Ordered so that each milestone leaves the suite green and useful on its own.
+The baselines must exist **before** the refactoring sessions start — the
+baseline set _is_ the look-and-feel contract those refactors must preserve.
 
-Redone 2026-07-28 for the gallery redesign and the mobile pass, at 1440, 834,
-620 and 390px, with `Emulation.setDeviceMetricsOverride` and touch emulation:
+1. **T1 — Scaffold.** Add `@playwright/test`, `playwright.config.ts`
+   (`webServer: astro preview`, breakpoint projects, single-platform snapshot
+   policy), `npm run test:e2e`, `e2e/specimens.ts`. Gate: one trivial spec
+   passes in every project.
+2. **T2 — Functional gallery + navigation** (§3.2). The highest-value,
+   zero-baseline milestone: no screenshots yet, so nothing to churn while the
+   patterns settle. Gate: green twice in a row from a clean checkout.
+3. **T3 — Visual baselines** (§3.1). Chrome shots, unit-cell shots,
+   specimen deep-link shots, fixed-page shots, at the breakpoints where each
+   layout differs. Gate: the suite passes, then **still passes after adding a
+   dummy photo and post locally** — the churn-immunity criterion — then the
+   dummies are reverted.
+4. **T4 — Motion** (§3.3) and **byte budgets** (§2.2 addition).
+5. **T5 — Performance** (§3.4): the reflow-count trace test first, long-frame
+   bounds second.
+6. **T6 — Accessibility** (§3.5), and update CLAUDE.md's verification gates to
+   include `test:e2e`.
 
-- All three views render and switch by moving tiles, not rebuilding them.
-- The shoot rail tracks the scroll and clears the last column — it is fixed to
-  the right edge, so `.px-page` reserves `--rail-w` above 1240px. Without that
-  it printed illegibly over the photographs.
-- The viewer opens above the nav. It is authored inside `<main>`, and `.page`
-  sets `z-index: 2`, which is a stacking context — so it has to be reparented
-  to `<body>` or the nav paints over its close button and counter.
-- Capture data is opaque on the bottom-sheet layout. At the desktop panel's 95%
-  the title and tags underneath read straight through it.
-- Filtering scopes the count, the query header and the viewer together.
-
-Two things only a real photo library shows, both fixed as a result: the stats
-block ran its three lines together once `<br>` was hidden and the lines were
-bare text nodes, and falling a missing title back to the shoot name printed
-"Renaissance Faire" under all 32 frames of that run once the caption became
-permanent type on a phone.
+Total new dependencies at the end: `@playwright/test`, `@axe-core/playwright`.
 
 ---
 
-## Adding tests
+## 5. Adding tests
 
 Put pure logic in `src/lib/` so it is importable, and prefer asserting a
-property over a number. If a test would need updating because a plate got taller
-or a project was added, it is testing the wrong thing.
+property over a number. If a test would need updating because a plate got
+taller, a photo was imported, or a post was published, it is testing the wrong
+thing — restructure it under §3.1 rather than updating its baseline. Pixel
+baselines change for one reason only: a deliberate design change, updated in
+the same commit that makes it.
