@@ -326,8 +326,14 @@ only chrome the log gets — no breadcrumb, no back-to-top.
 
 **Partially reversed 2026-07-30 (owner request): there is now a site-wide return-to-top
 button** (`src/components/BackToTop.astro`) — a 44px glass circle, fixed bottom-right,
-holding a neon-tube chevron: 3px rounded cyan stroke with the tube's two-stage glow (§6),
-no text. It appears only after ~2.5 viewports of scroll, so short pages — and the log,
+holding a neon-tube chevron: 3px rounded stroke with the tube's two-stage glow (§6), no
+text. **Sodium, not cyan** (owner review, same day): the button floats over the
+photographs, and electric blue at the corner of every frame kept pulling the eye — the
+warm street-lamp hue sits with the pictures instead of competing. The housing keeps the
+crisp hairline ring rather than a feathered edge: every fitting in the material system
+(§6) is a hard line plus soft glow, and the soft component here is already the tube's —
+feathering the ring too would erase the fixture/light contrast and let the button vanish
+against the dark stretches between runs. It appears only after ~2.5 viewports of scroll, so short pages — and the log,
 most sessions — still never see it; the original "no chrome" intent survives as a
 threshold rather than an absence. z-index 30: above the gallery's shoot rail, beneath its
 overlays. The gallery forced the issue — one static page holding every frame is the

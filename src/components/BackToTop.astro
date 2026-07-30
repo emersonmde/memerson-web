@@ -63,22 +63,28 @@
     transform: none;
   }
 
-  /* The tube: 3px rounded stroke, tight glow plus a wide low-opacity one. */
+  /*
+   * The tube: 3px rounded stroke, tight glow plus a wide low-opacity one.
+   * Sodium, not cyan (owner review 2026-07-30): the button floats over the
+   * photographs, and electric blue at the corner of every frame kept pulling
+   * the eye — the warm street-lamp hue sits with the pictures instead of
+   * competing against them.
+   */
   .to-top svg {
     display: block;
     fill: none;
-    stroke: var(--cyan);
+    stroke: var(--sodium);
     stroke-width: 3;
     stroke-linecap: round;
     stroke-linejoin: round;
-    filter: drop-shadow(0 0 3px var(--cyan)) drop-shadow(0 0 12px var(--cyan));
+    filter: drop-shadow(0 0 3px var(--sodium)) drop-shadow(0 0 12px var(--sodium));
   }
 
   /* Lift in value, not position — the plate rule, UI-DESIGN §6. */
   .to-top:hover,
   .to-top:focus-visible {
-    border-color: var(--cyan);
-    box-shadow: 0 0 22px -8px var(--cyan);
+    border-color: var(--sodium);
+    box-shadow: 0 0 22px -8px var(--sodium);
   }
 </style>
 
