@@ -1,6 +1,6 @@
 export const SITE_TITLE = 'Matthew Emerson';
 export const SITE_DESCRIPTION =
-  'Personal site of Matthew Emerson — systems programming projects, writing, and photography.';
+  'Personal site of Matthew Emerson. Side projects, photographs, and writing.';
 export const SITE_URL = 'https://memerson.com';
 
 export const AUTHOR = {

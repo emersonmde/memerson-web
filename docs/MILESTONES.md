@@ -467,7 +467,8 @@ question came up as "is an air show one album, or one per trip?"
 - **`series`** — optional, spans shoots, most are null.
 
 **A recurring event gets one shoot per occurrence, not one shoot forever.** Two air shows
-five years apart are two shoots both called "Air Show", joined by `series: "air-shows"`.
+five years apart are two shoots both called "Thunder Over Dover" — the show is annual, at
+Dover AFB — joined by `series: "air-shows"`.
 [The IPTC standard asks for exactly this](https://www.iptc.org/std/photometadata/documentation/userguide/)
 — name the specific occurrence, never the category ("Maui Classical Music Festival", not
 "festival"). [Lightroom practice matches](https://www.lightroomqueen.com/organize-photos-folders/):
@@ -475,7 +476,8 @@ a photo lives in one dated folder and in any number of Collections.
 
 The reasons are practical, not ceremonial:
 
-1. **An album must be bounded to be browsable.** A merged "Air Show" grows without end.
+1. **An album must be bounded to be browsable.** A merged "Thunder Over Dover" grows
+   without end.
 2. **Chronology inside it stops meaning anything** once occurrences are interleaved.
 3. **You still get "every air show"** from the series, so merging buys nothing it does not
    also cost.

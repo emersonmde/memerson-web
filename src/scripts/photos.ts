@@ -141,7 +141,7 @@ function init() {
       if (needle) {
         qbar.hidden = false;
         if (text) {
-          text.innerHTML = `FILTER &nbsp;<b>${escapeHtml(query.toUpperCase())}</b>&nbsp; — ${shown} of ${tiles.length} frames`;
+          text.innerHTML = `FILTER &nbsp;<b>${escapeHtml(query.toUpperCase())}</b>&nbsp; · ${shown} of ${tiles.length} frames`;
         }
       } else {
         qbar.hidden = true;
@@ -268,8 +268,8 @@ function init() {
   }
 
   /*
-   * The series marker filters to the series. It is the only way two Air Show
-   * shoots three years apart become reachable from each other — which is the
+   * The series marker filters to the series. It is the only way two Thunder Over
+   * Dover shoots five years apart become reachable from each other — which is the
    * entire reason `series` exists in shoots.json rather than a second page.
    */
   for (const marker of document.querySelectorAll<HTMLElement>('[data-series]')) {
@@ -556,8 +556,13 @@ function init() {
   const lbImg = q<HTMLImageElement>('.lb-img');
   const lbExif = q<HTMLElement>('[data-lb-exif]');
 
-  /** What the frame can occupy, for the upgrade pass's source selection. */
-  const VIEWER_SIZES = '(max-width: 720px) 96vw, 900px';
+  /**
+   * What the frame can occupy, for the upgrade pass's source selection. A
+   * deliberate over-estimate of `--lb-w-cap`: `sizes` may not name a custom
+   * property, and asking for one derivative too large is a slower first paint of
+   * a *sharp* frame, while asking for one too small is a soft one.
+   */
+  const VIEWER_SIZES = '(max-width: 720px) 96vw, (max-width: 1900px) 88vw, 1600px';
 
   let cursor = -1;
   let exifOpen = false;
@@ -572,12 +577,31 @@ function init() {
     const tile = visible()[cursor];
     const ar = tile ? Number(tile.style.getPropertyValue('--ar')) || 1.5 : 1.5;
     /*
-     * Wide screens budget the frame against the vertical chrome so the metadata
-     * stack is never pushed off; narrow screens hand sizing to the stage box,
-     * which already reserves room for it.
+     * Wide screens budget the frame against both caps — the vertical one so the
+     * metadata stack is never pushed off, the horizontal one so a panorama stops
+     * short of the arrows; narrow screens hand sizing to the stage box, which
+     * already reserves room for it.
+     *
+     * The aspect ratio is the only part the stylesheet cannot know, which is the
+     * whole reason this runs in script: an <img> with `aspect-ratio` and no
+     * intrinsic size yet lays out at zero, and the frame has to have its final
+     * size before the LQIP paints or the viewer arrives in two jumps.
+     *
+     * The footer follows the same expression so the title, the tags and the
+     * thumbnail strip line up with the photograph's edges rather than with a
+     * width of their own — but only ever *outwards*, past a 900px floor. A
+     * portrait frame is 609px wide on a 1720px window, and a footer that narrow
+     * wraps eight tags onto four rows, which grows the stack up over the
+     * photograph's bottom edge. So the metadata widens to meet a landscape frame
+     * and holds its own width under a tall one.
      */
-    lbImg.style.width =
-      innerWidth <= 720 ? '' : `min(900px, calc((100vh - 250px) * ${ar}))`;
+    const frameWidth = `min(var(--lb-w-cap), calc(var(--lb-h-cap) * ${ar}))`;
+    lbImg.style.width = innerWidth <= 720 ? '' : frameWidth;
+
+    /* Below 900 the metadata stack is vertical and owns the full width; matching
+       it to the frame there would only crowd the tags and the thumbnails. */
+    const foot = q<HTMLElement>('.lb-foot-inner');
+    if (foot) foot.style.width = innerWidth > 900 ? `max(900px, ${frameWidth})` : '';
   }
 
   /*
@@ -663,12 +687,11 @@ function init() {
     }
 
     /*
-     * Both of the frame's hues, on the viewer root so the footer inherits them
-     * too: `--bk` marks the photograph's corners (the ramp, per outing) and
-     * `--run` lights the tube beside the shoot name (that shoot's own light,
-     * the same one its header wears on the page). A stray frame has neither.
+     * The frame's hue, on the viewer root so the footer inherits it: `--run`
+     * lights the tube beside the shoot name — that shoot's own light, the same
+     * one its header wears on the page. A stray frame has none, and nothing is
+     * drawn on the photograph itself (see the crop-marks note in the styles).
      */
-    lb.style.setProperty('--bk', tile.dataset.accent || 'var(--cyan)');
     const runKey = runOf.get(tile);
     lb.style.setProperty(
       '--run',
@@ -766,19 +789,11 @@ function init() {
     );
 
     /*
-     * Half the library is a phone, where the exposure was not an authored
-     * decision. Saying so is more honest than presenting an auto-exposure as
-     * craft — which is also why this panel is never open by default.
+     * There is no prose under the table. It used to carry a line about whether
+     * the exposure was chosen or metered, which nobody opening a panel labelled
+     * CAPTURE DATA asked for: the body, the lens and the six numbers are the
+     * answer, and a caveat about the phone's autoexposure only argued with them.
      */
-    const note = lbExif?.querySelector<HTMLElement>('.lb-exif-note');
-    const camera = tile.dataset.camera || '';
-    if (note) {
-      note.textContent = !camera
-        ? ''
-        : /apple|iphone|pixel|samsung/i.test(camera)
-          ? 'Phone capture — the settings were chosen by the phone, not by me.'
-          : `Shot on the ${camera}. Settings chosen at the frame.`;
-    }
   }
 
   /** Five-wide window around the current frame; all 118 would be unreadable. */

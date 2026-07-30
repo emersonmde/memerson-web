@@ -57,9 +57,9 @@ const isoDate = (d: Date | null) =>
 ---
 
 <BaseLayout
-  title="Systems"
-  description={`${AUTHOR.name} — ${AUTHOR.summary}. Systems programming, writing, and photography.`}
-  active="systems"
+  title={AUTHOR.name}
+  description={`${AUTHOR.name}, ${AUTHOR.summary} at Amazon. Side projects, photographs, and writing.`}
+  active="home"
   shooting={true}
 >
   <section class="hero">
@@ -71,7 +71,14 @@ const isoDate = (d: Date | null) =>
     </div>
 
     <div class="hero-body">
-      <div class="kicker">MEMERSON.COM — DISTRICT 09 / PERSONAL</div>
+      {
+        /* This read `MEMERSON.COM — DISTRICT 09 / PERSONAL`, which was the
+          mockup's placeholder flavour and not a reference to anything. The
+          kicker is the first line on the site, so it now spends itself saying
+          what the site holds. The references that stayed are the ones that mean
+          something: the project names, and the footer's lunar coordinates. */
+      }
+      <div class="kicker">MEMERSON.COM · PROJECTS, PHOTOS, WRITING</div>
 
       <div class="sign-wrap">
         <h1 class="sign">M.EMERSON</h1>
@@ -91,8 +98,8 @@ const isoDate = (d: Date | null) =>
         <div class="bio-tube" aria-hidden="true"></div>
         <div class="bio-row">
           <p>
-            {AUTHOR.name} — {AUTHOR.summary} at Amazon, leading engineers and applied scientists
-            on LLM and agentic systems for hiring. {projects.length} systems below, written
+            {AUTHOR.name}, {AUTHOR.summary} at Amazon, leading engineers and applied scientists
+            on LLM and agentic systems for hiring. {projects.length} projects below, written
             after hours, mostly in Rust.
           </p>
           <div class="bio-langs">RUST · C<br />JAVA · PYTHON<br />TYPESCRIPT</div>
@@ -105,7 +112,7 @@ const isoDate = (d: Date | null) =>
     <div class="sec-head">
       <span class="sec-num" style="--n:var(--sodium)">01</span>
       <span class="sec-rule"></span>
-      <span class="sec-name">SYSTEMS</span>
+      <span class="sec-name">PROJECTS</span>
       <a class="sec-aside" href="https://github.com/emersonmde">ALL REPOS ON GITHUB ↗</a>
     </div>
 
@@ -176,8 +183,12 @@ const isoDate = (d: Date | null) =>
     <a class="sec-title" data-fx="resolve" href="/photos">Photographs</a>
 
     <div class="sec-lede">
+      {
+        /* The section header already prints the count and the span, so this line
+          says what is in them instead of repeating the numbers. */
+      }
       <p>
-        {photos.length} frames, {yearSpan}.
+        Air shows, aquariums, zoos, and cities, on a Canon and on whatever phone I had.
       </p>
       <a class="sec-aside" href="/photos">ALL {photos.length} FRAMES ↗</a>
     </div>
@@ -212,7 +223,7 @@ const isoDate = (d: Date | null) =>
     <a class="sec-title" data-fx="resolve" href="/blog">The log</a>
 
     <div class="sec-lede sec-lede-narrow">
-      <p>Notes on things that broke, and what the profiler said afterwards.</p>
+      <p>Side projects, tools, and things I wanted to understand properly.</p>
       <a class="sec-aside" href="/blog">ALL {posts.length} POSTS ↗</a>
     </div>
 
@@ -229,7 +240,7 @@ const isoDate = (d: Date | null) =>
       {
         remainingPosts > 0 && (
           <a class="log-all" href="/blog">
-            <span>READ THE FULL LOG — {remainingPosts} MORE</span>
+            <span>READ THE FULL LOG · {remainingPosts} MORE</span>
             <span class="log-all-arrow">↗</span>
           </a>
         )

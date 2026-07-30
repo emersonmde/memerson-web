@@ -408,8 +408,35 @@ rather than as a part label.
 
 **The test when importing a mockup:** would this sentence make sense to a visitor who has
 never seen the design document? "Nothing samples a palette" is an answer to a question only
-a reviewer asked. `MEMERSON.COM — DISTRICT 09 / PERSONAL` passes — it is the design's
-fiction, not an instruction, and the 404's `SIGNAL LOST — DISTRICT 09` is the same voice.
+a reviewer asked.
+
+### The copy pass (2026-07-30)
+
+A second sweep, on the owner's read of the live site. The first pass caught mockup
+_annotation_; this one caught copy that was fluent, plausible and wrong about the site.
+
+| Was                                                                    | Now                                                                 | Why                                                                                       |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Nav `SYSTEMS` → `/`                                                    | `HOME`                                                              | `/` carries projects, photographs and writing; SYSTEMS named only the first third         |
+| `01 — SYSTEMS`                                                         | `01 — PROJECTS`                                                     | They are projects. Only some are systems                                                  |
+| "11 systems below, written after hours"                                | "11 projects below, written after hours"                            | Same reason, and the count is live                                                        |
+| `MEMERSON.COM — DISTRICT 09 / PERSONAL`                                | `MEMERSON.COM · PROJECTS, PHOTOS, WRITING`                          | DISTRICT 09 was the mockup's placeholder, not a reference to anything                     |
+| 404 `SIGNAL LOST — DISTRICT 09`                                        | `SIGNAL LOST`                                                       | Same                                                                                      |
+| "Notes on things that broke, and what the profiler said afterwards."   | "Side projects, tools, and things I wanted to understand properly." | Described one post out of five, and ruled out most of what is worth writing next          |
+| "Postmortems on my own code, mostly — the profiler is the antagonist." | "{n} posts, mostly on whatever I was building at the time."         | Same, and the count stays live                                                            |
+| "the outing is the only unit that has ever mattered"                   | "Shot mostly for myself. Grouped by shoot, newest first."           | A grand claim about a private habit. The second sentence is the fact the first dressed up |
+| Footer "Say something"                                                 | "Elsewhere"                                                         | Three links that are not a way to say anything, over no published address                 |
+| View `RUNS` / stats `OUTINGS` / sheet `JUMP TO AN OUTING`              | `SHOOTS` throughout, and the control beside it becomes `JUMP TO ▾`  | Three words for one unit. `shoot` is the one the data model uses                          |
+| Home photos lede "{n} frames, {span}."                                 | "Air shows, aquariums, zoos, and cities…"                           | Repeated the header's own count verbatim                                                  |
+| Viewer's EXIF footnote about who chose the exposure                    | Deleted                                                             | Nobody opening CAPTURE DATA asked; the caveat argued with the numbers above it            |
+
+Em dashes came out of every prose string in the same pass. They stay in numeric label
+forms (`01 — SKILLS`, `2017 — 2022`), where they are punctuation rather than voice.
+
+Two shoots were renamed to what they actually were: `Zoo Aquarium Visit` → **Aquarium**,
+and both air shows → **Thunder Over Dover**, the show at Dover AFB. Two shoots now share
+one name, so the rail — which has room for a name and a count but not a date — appends the
+year when a name recurs.
 
 ### Pagination was removed, and why
 
@@ -763,6 +790,37 @@ by `lb.grad`, which is a _placeholder gradient standing in for the photo_, and w
 image behind it the layer read as decoration rather than as the photo. It was implemented
 as a flat wash and corrected 2026-07-27.
 
+It then went out a second time, invisibly, and the cause is worth keeping. The vignette
+above it grew a `background-color` on 2026-07-28 so its falloff could stop at the visible
+band while the strips behind iOS's chrome stayed filled. A colour paints the **whole** box,
+including the band, so it sat behind the radial's transparent centre at 0.88 opacity and
+dimmed the bloom into nothing on every browser. A transparent gradient stop over an opaque
+`background-color` is not transparent. The overrun strips are now two flat gradient
+_layers_, positioned top and bottom, and the centre is genuinely clear (2026-07-29).
+
+### How large the photograph gets (2026-07-29)
+
+The frame was capped at a flat 900px, which on a wide window meant the viewer showed a
+_smaller_ photograph than the editorial lead behind it — opening a frame zoomed out. It now
+takes the larger of what the window allows, from one budget stated once on `.lb`:
+
+| Cap          | Value                        | Why                                                                            |
+| ------------ | ---------------------------- | ------------------------------------------------------------------------------ |
+| `--lb-w-cap` | `min(1600px, 100vw - 188px)` | The stage's own width: 60px padding, two 40px arrows, two 24px gaps            |
+| `--lb-h-cap` | `100vh - 240px - safe areas` | The 52px bar, the stage's 14px, 156px of metadata, ~18px so it is never wedged |
+
+`sizeFrame()` writes `min(w-cap, h-cap × aspect)` onto the image, because the aspect ratio
+is the one part the stylesheet cannot know and an `<img>` with `aspect-ratio` and no
+intrinsic size yet lays out at zero — the frame must have its final size before the LQIP
+paints. On a 1720×926 window a 3:2 frame goes 900×594 → 1029×686, which is 95% of the
+vertical room there is; the width left over at the sides is the window's aspect, not slack.
+The 1600px ceiling is where a 2× display would start upscaling the 2560 derivative.
+
+The metadata stack follows the frame's width so the title and the thumbnail strip line up
+with the photograph's edges — but only **outwards**, past a 900px floor. A portrait frame is
+609px wide on that same window, and a footer that narrow wraps eight tags onto four rows,
+which grows the stack up over the photograph's bottom edge.
+
 Per-photo **accent** colour (brackets, counter, tile hover) is a separate question and is
 **still open**. The five accents in the mockups are per-album, so it is coupled to whether
 albums happen — and if they do, the accent can come straight from the album with no colour
@@ -831,12 +889,18 @@ ramp's in place. This is the same two-stage arrangement `src/lib/ramp.ts` docume
 the home rail. The rainbow the old ruling feared is bounded by the ramp: lightness and
 chroma are locked, so many hues read as one lit system rather than as decoration.
 
-**The crop marks are the exception and stay ramp-derived** (`--bk`, per outing, on the
-tile and in the viewer). A mark that _touches_ the photograph must not be the
-photograph's own average colour, or it reads as a colour cast on the image instead of a
-frame around it — the full argument is in the `.lb-frame` comment. The tile's hover marks
-were cyan and the viewer's were accented, which meant hovering a frame and then opening
-it changed the colour of its own marks; both now take `--bk`.
+**A tile's hover marks are the exception and stay ramp-derived** (`--bk`, per outing). A
+mark that _touches_ the photograph must not be the photograph's own average colour, or it
+reads as a colour cast on the image instead of a frame around it. They were cyan — the
+site's interactive edge — which fought the warm third of the library.
+
+**The viewer draws no crop marks at all** (2026-07-29). It had four, in the same `--bk`,
+and they were the tile's marks carried inward. On the sheet that mark is doing work: it
+says _this tile is the one you are pointing at_ among a hundred others. In the viewer
+there is one photograph, nothing to disambiguate, and the bloom already draws the frame's
+edge in the photograph's own light — so the brackets were a second, contradicting edge
+drawn on top of it. `--bk` is now a tile-only property; the viewer sets only `--run`, for
+the tube beside the shoot name.
 
 The scripting lives in `src/scripts/photos.ts`: `setAmbient` still hooks `trackRail()`
 for the LQIP cross-fade, and `sampleAllAccents` runs the eleven samples once on idle.

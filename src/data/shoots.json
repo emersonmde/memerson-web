@@ -5,7 +5,7 @@
     "to": "2022-10-29",
     "cameras": ["Canon EOS R6"],
     "name": "Renaissance Faire",
-    "summary": "Performers, blacksmiths, jousters, and stage actors in period costume at a renaissance faire.",
+    "summary": "Actors, blacksmiths and jousters in costume at a renaissance faire.",
     "series": null
   },
   "2022-09-04": {
@@ -13,8 +13,8 @@
     "from": "2022-09-04",
     "to": "2022-09-05",
     "cameras": ["Canon EOS R6"],
-    "name": "Zoo Aquarium Visit",
-    "summary": "A day at a zoo/aquarium photographing fish, a turtle, a green tree python, and a dolphin.",
+    "name": "Aquarium",
+    "summary": "Reef tanks, a green tree python, a crocodile and a dolphin.",
     "series": null
   },
   "2022-05-22": {
@@ -22,8 +22,8 @@
     "from": "2022-05-22",
     "to": "2022-05-22",
     "cameras": ["Canon EOS R6"],
-    "name": "Air Show",
-    "summary": "An airshow featuring the Blue Angels and Thunderbirds jet teams, a WWII B-25 bomber, and a Lamborghini display.",
+    "name": "Thunder Over Dover",
+    "summary": "The Blue Angels and the Thunderbirds at Dover Air Force Base, with a B-25 Mitchell and a Lamborghini on the ground.",
     "series": "air-shows"
   },
   "2022-04-15": {
@@ -32,7 +32,7 @@
     "to": "2022-04-15",
     "cameras": ["Canon EOS R6"],
     "name": "Zoo Trip",
-    "summary": "A day at the zoo photographing lemurs, tortoises, giraffes, a maned wolf, and a jaguar.",
+    "summary": "Lemurs, tortoises, giraffes, a maned wolf and a jaguar.",
     "series": null
   },
   "2022-02-21": {
@@ -41,7 +41,7 @@
     "to": "2022-02-21",
     "cameras": ["Apple iPhone 13 Pro"],
     "name": "Nashville",
-    "summary": "A day exploring downtown Nashville's churches, streets, and public art, ending at the Tennessee State Capitol at night.",
+    "summary": "Churches, streets and public art downtown, ending at the state capitol after dark.",
     "series": null
   },
   "2021-11-27": {
@@ -50,7 +50,7 @@
     "to": "2021-11-27",
     "cameras": ["Canon EOS R6", "Apple iPhone 13 Pro"],
     "name": "Washington DC",
-    "summary": "A day-to-night visit to Washington DC landmarks and the Air and Space Museum in autumn 2021.",
+    "summary": "Landmarks and the Air and Space Museum, afternoon into night.",
     "series": null
   },
   "2021-08-16": {
@@ -59,7 +59,7 @@
     "to": "2021-08-18",
     "cameras": ["Apple iPhone 12 Pro", "Canon EOS R6"],
     "name": "St Croix",
-    "summary": "Beach, coastline and garden scenes from a week in St Croix.",
+    "summary": "Beaches, coastline and gardens over a week in St Croix.",
     "series": null
   },
   "2021-07-02": {
@@ -68,7 +68,7 @@
     "to": "2021-07-02",
     "cameras": ["Canon EOS R6"],
     "name": "Stuffed Lion Toy",
-    "summary": "A plush lion toy tied with a red ribbon sitting on a porch railing.",
+    "summary": "A plush lion tied with a red ribbon on a porch railing.",
     "series": null
   },
   "2020-02-07": {
@@ -77,7 +77,7 @@
     "to": "2020-02-07",
     "cameras": ["Apple iPhone 11 Pro Max"],
     "name": null,
-    "summary": "A wall clock lying face-up in a rock garden bed.",
+    "summary": "A wall clock lying face-up in a rock garden.",
     "series": null
   },
   "2019-09-24": {
@@ -85,8 +85,8 @@
     "from": "2019-09-24",
     "to": "2019-09-27",
     "cameras": ["Apple iPhone XS Max"],
-    "name": "Seattle - Amazon Spheres",
-    "summary": "A flight sunset view paired with a visit to the Amazon Spheres living wall in Seattle.",
+    "name": "Seattle",
+    "summary": "Sunset from the plane, and the living wall inside the Amazon Spheres.",
     "series": null
   },
   "2018-10-09": {
@@ -95,7 +95,7 @@
     "to": "2018-10-09",
     "cameras": ["Apple iPhone XS Max"],
     "name": null,
-    "summary": "Macro photo of a butterfly resting on concrete pavement.",
+    "summary": "A butterfly on concrete, close up.",
     "series": null
   },
   "2017-08-27": {
@@ -103,8 +103,8 @@
     "from": "2017-08-27",
     "to": "2017-08-27",
     "cameras": ["Canon EOS 6D"],
-    "name": "Air Show",
-    "summary": "Thunderbirds F-16 formation flying and lined up on the tarmac at an air show.",
+    "name": "Thunder Over Dover",
+    "summary": "Thunderbirds F-16s in formation and lined up on the tarmac at Dover Air Force Base.",
     "series": "air-shows"
   },
   "2017-07-04": {
@@ -113,7 +113,7 @@
     "to": "2017-07-04",
     "cameras": ["Canon EOS 6D"],
     "name": "Fourth of July Fireworks",
-    "summary": "Long-exposure shots of a fireworks show on the 4th of July.",
+    "summary": "Long exposures of a fireworks show on the fourth of July.",
     "series": null
   },
   "2017-06-18": {
@@ -122,7 +122,7 @@
     "to": "2017-06-19",
     "cameras": ["Canon EOS 6D"],
     "name": "Campus",
-    "summary": "A historic brick campus with a clock tower, tree-lined lawn, and a nearby field sunset.",
+    "summary": "A brick campus with a clock tower, a tree-lined lawn, and a field at sunset.",
     "series": null
   }
 }

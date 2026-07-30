@@ -26,15 +26,16 @@ interface Props {
   /** The thread joining recurring outings. Filterable, so it lives on the tile. */
   series?: string | null;
   /**
-   * The outing's point on the accent ramp, and the colour of every crop mark on
-   * this frame: the tile's own hover marks take it as `--bk`, the viewer's take
-   * the same `--bk` via `data-accent`. It rides on the tile rather than being
-   * inherited from the run because SHEET reparents every tile out of its run.
+   * The outing's point on the accent ramp, and the colour of this frame's hover
+   * marks, which take it as `--bk`. It also rides along as `data-accent`, where
+   * it is the viewer's fallback for `--run` before a shoot's own light has been
+   * sampled. It lives on the tile rather than being inherited from the run
+   * because SHEET reparents every tile out of its run.
    *
    * Deliberately the *ramp* hue and not the shoot's sampled one: a mark that
    * touches the photograph must not be the photograph's own average colour, or
    * it reads as a cast on the image instead of a frame around it. See the
-   * `.lb-frame` comment in the gallery page.
+   * hover-mark comment in the gallery page.
    *
    * Null for a stray frame, which belongs to nothing and keeps the default cyan.
    */

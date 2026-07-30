@@ -13,7 +13,7 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
-  active?: 'systems' | 'photos' | 'log' | 'about';
+  active?: 'home' | 'photos' | 'log' | 'about';
   /** Shooting stars are hero-only, so they default off. */
   shooting?: boolean;
   /** Inner pages point the wordmark back home. */
@@ -52,7 +52,18 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    {
+      /*
+      The "twin elbows" mark: the neon tube fitting from under the sign, turned
+      into an icon. The SVG is the primary — a browser that understands it never
+      touches the rasters — with the PNGs for the ones that don't and the .ico for
+      the address bar's default request. `favicon.svg` carries filters that only a
+      browser renders correctly; ImageMagick flattens them to an empty tile, so the
+      PNGs here are the authored rasters from the handoff, not re-rendered.
+    */
+    }
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
@@ -61,7 +72,11 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#03040a" />
 
-    <title>{title} | {SITE_TITLE}</title>
+    {
+      /* The home page's title *is* the site title; "Matthew Emerson | Matthew
+      Emerson" is what happens if that case is not spelled out. */
+    }
+    <title>{title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
@@ -69,9 +84,15 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL('/icon.png', SITE_URL).href} />
+    <meta
+      property="og:image"
+      content={new URL('/android-chrome-512x512.png', SITE_URL).href}
+    />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:image" content={new URL('/icon.png', SITE_URL).href} />
+    <meta
+      name="twitter:image"
+      content={new URL('/android-chrome-512x512.png', SITE_URL).href}
+    />
 
     <link rel="alternate" type="application/rss+xml" title={SITE_TITLE} href="/rss.xml" />
 

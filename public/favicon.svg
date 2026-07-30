@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<rect width="64" height="64" fill="#03040a"></rect>
+  
+  <g filter="url(#glowSodium)">
+    <path d="M14 22 V50 H42" fill="none" stroke="#ffd9a8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+  </g>
+  
+  <g filter="url(#glowCyan)">
+    <path d="M50 42 V14 H22" fill="none" stroke="#eafcff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+  </g>
+  <defs>
+    <filter id="glowSodium" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="1.6" flood-color="#ffb254" flood-opacity="0.9"></feDropShadow>
+      <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#ffb254" flood-opacity="0.5"></feDropShadow>
+    </filter>
+    <filter id="glowCyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="1.6" flood-color="#3fd2e8" flood-opacity="0.9"></feDropShadow>
+      <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#3fd2e8" flood-opacity="0.5"></feDropShadow>
+    </filter>
+  </defs>
+</svg>

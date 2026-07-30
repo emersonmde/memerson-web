@@ -29,7 +29,7 @@ const monthDay = (d: Date) =>
 
 <BaseLayout
   title="The log"
-  description="Writing on systems programming, storage engines, and things that broke."
+  description="Writing on side projects, tools, and systems programming."
   active="log"
   back={true}
 >
@@ -38,10 +38,12 @@ const monthDay = (d: Date) =>
     <h1 class="log-h1 neon-h" data-fx="resolve">The log</h1>
 
     <div class="log-intro">
-      <p>
-        {posts.length} posts. Postmortems on my own code, mostly — the profiler is usually the
-        antagonist.
-      </p>
+      {
+        /* The count is live, so this line stays true as posts are added. It used
+          to promise postmortems and profiler output, which described one post out
+          of five and ruled out everything else worth writing about. */
+      }
+      <p>{posts.length} posts, mostly on whatever I was building at the time.</p>
       <a class="log-rss" href="/rss.xml">RSS ↗</a>
     </div>
 

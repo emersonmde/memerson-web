@@ -2,7 +2,12 @@
 import { SOCIAL } from '../consts';
 
 /**
- * "Say something" — the tilted grid floor and horizon line.
+ * The tilted grid floor and horizon line.
+ *
+ * The heading was "Say something", from the mockup, over three links that are
+ * not a way to say anything: GitHub, LinkedIn and the feed. With no address
+ * published (see below) it invited a reply it could not receive. "Elsewhere"
+ * describes what is actually there, and matches the about page's own §02.
  *
  * The location is deliberately not a real one. The mockup's `SEATTLE ·
  * 47.6°N 122.3°W` was dropped (a home city is its owner's call, not a
@@ -25,7 +30,7 @@ import { SOCIAL } from '../consts';
   <div class="foot-floor" data-fx="tilt" aria-hidden="true"></div>
   <div class="foot-horizon" aria-hidden="true"></div>
   <div class="foot-body">
-    <span class="foot-title">Say something</span>
+    <span class="foot-title">Elsewhere</span>
     <span class="foot-links">
       <a href={SOCIAL.github}>GITHUB ↗</a>
       <a href={SOCIAL.linkedin}>LINKEDIN ↗</a>

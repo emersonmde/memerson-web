@@ -62,6 +62,26 @@ const runName = (name: string | null, shoot: string | null) =>
   name ?? (shoot ? dots(shoot) : 'UNDATED');
 
 /*
+ * A recurring event is two shoots with one name — "Thunder Over Dover", five
+ * years apart — and in the rail, where there is room for a name and a count but
+ * not a date, they were indistinguishable. So a name that occurs more than once
+ * carries its year there. The run header and the shoots sheet both print the
+ * date already, and neither needs it.
+ */
+const nameUses = new Map<string, number>();
+for (const run of runs) {
+  if (!run.stray && run.name) nameUses.set(run.name, (nameUses.get(run.name) ?? 0) + 1);
+}
+
+const railLabel = (run: (typeof runs)[number]) => {
+  const label = runName(run.name, run.shoot);
+  const year = run.shoot?.slice(0, 4);
+  return run.name && year && (nameUses.get(run.name) ?? 0) > 1
+    ? `${label} ${year}`
+    : label;
+};
+
+/*
  * A tile is labelled with its *own* shoot, not with the run it ended up in. A
  * stray stretch has no name — but the one-off shoots inside it usually do, and
  * dropping "Stuffed Lion Toy" because its outing was a single frame would lose
@@ -72,8 +92,9 @@ const shootNameOf = (shoot: string | null) => shoots[shoot ?? '']?.name ?? null;
 /*
  * One hue per shoot, and everything that *names* that shoot takes it: the run
  * header's date and the tube beside it, the editorial rule, the rail entry, the
- * row in the shoots sheet, and the tube in the viewer's footer. The crop marks
- * are the one exception and take `--bk` instead — see the `.lb-frame` comment.
+ * row in the shoots sheet, and the tube in the viewer's footer. A tile's hover
+ * marks are the one exception and take `--bk` — the outing's point on the ramp,
+ * a hue that cannot be louder than its neighbour's.
  *
  * This is the pre-JS value — a point on the accent ramp, so the hues are spread
  * and none of them can leave the palette. `src/scripts/photos.ts` then re-emits
@@ -115,10 +136,7 @@ const EAGER = 8;
     <div class="px-head">
       <div>
         <h1 class="px-title neon-h" data-fx="resolve">Photographs</h1>
-        <p class="px-lede">
-          Shot mostly for myself. Grouped by the day they were taken — the outing is the
-          only unit that has ever mattered.
-        </p>
+        <p class="px-lede">Shot mostly for myself. Grouped by shoot, newest first.</p>
       </div>
       {
         /* Each line is its own element: below 900px this becomes a wrapping
@@ -126,7 +144,7 @@ const EAGER = 8;
       }
       <div class="px-stats">
         <span><b>{photos.length} FRAMES</b></span>
-        <span>{outings} OUTINGS{strays > 0 && ` + ${strays} STRAYS`}</span>
+        <span>{outings} SHOOTS{strays > 0 && ` + ${strays} STRAYS`}</span>
         <span>{yearSpan}</span>
       </div>
     </div>
@@ -150,14 +168,14 @@ const EAGER = 8;
                 SHEET
               </button>
               <button type="button" data-layout="runs" aria-pressed="true">
-                RUNS
+                SHOOTS
               </button>
               <button type="button" data-layout="editorial" aria-pressed="false">
                 EDITORIAL
               </button>
             </div>
             <button type="button" class="px-jump" data-jump-open aria-haspopup="dialog">
-              SHOOTS ▾
+              JUMP TO ▾
             </button>
             <span class="px-count" data-count aria-live="polite">
               <b>{photos.length}</b> FRAMES
@@ -205,12 +223,14 @@ const EAGER = 8;
                   </span>
                   {run.series && (
                     <button type="button" class="px-run-series" data-series={run.series}>
-                      {run.series.toUpperCase()}
+                      {/* The id is a slug because it is also the filter term;
+                        the chip is copy, so it loses the hyphens. */}
+                      {run.series.replace(/-/g, ' ').toUpperCase()}
                     </button>
                   )}
                   <span class="px-run-aside">
                     {run.stray
-                      ? `${run.items.length} FRAMES / ${dayCount(run.items)} SEPARATE DAY${dayCount(run.items) > 1 ? 'S' : ''}, NO OUTING`
+                      ? `${run.items.length} FRAMES / ${dayCount(run.items)} SEPARATE DAY${dayCount(run.items) > 1 ? 'S' : ''}`
                       : `${run.items.length} FRAME${run.items.length > 1 ? 'S' : ''}${run.cameras.length ? ` / ${run.cameras.join(', ').toUpperCase()}` : ''}`}
                   </span>
                 </div>
@@ -264,9 +284,7 @@ const EAGER = 8;
             data-shoot={run.key}
             style={runHue(run, runIndex)}
           >
-            <span>
-              {run.stray ? 'STRAY FRAMES' : runName(run.name, run.shoot).toUpperCase()}
-            </span>
+            <span>{run.stray ? 'STRAY FRAMES' : railLabel(run).toUpperCase()}</span>
             <span class="px-rail-n">{run.items.length}</span>
             <i aria-hidden="true" />
           </a>
@@ -286,7 +304,7 @@ const EAGER = 8;
     <button type="button" class="px-jumpsheet-close" data-jump-close>CLOSE ×</button>
     <div class="px-jumpsheet-in">
       <h2>Shoots</h2>
-      <p>JUMP TO AN OUTING</p>
+      <p>NEWEST FIRST</p>
       <div>
         {
           runs.map((run, runIndex) => (
@@ -339,10 +357,6 @@ const EAGER = 8;
             paints first, which is the whole point of the sequence. */
         }
         <img class="lb-img" alt="" />
-        <span class="lb-bracket lb-tl"></span>
-        <span class="lb-bracket lb-tr"></span>
-        <span class="lb-bracket lb-bl"></span>
-        <span class="lb-bracket lb-br"></span>
       </figure>
       <button type="button" class="lb-nav" data-lb-step="1" aria-label="Next photo"
         >→</button
@@ -354,7 +368,6 @@ const EAGER = 8;
         <button type="button" class="lb-exif-close" data-lb-exif-close>CLOSE ×</button>
       </h3>
       <dl></dl>
-      <p class="lb-exif-note"></p>
     </aside>
     <div class="lb-foot">
       <div class="lb-foot-inner">
@@ -762,10 +775,12 @@ const EAGER = 8;
     opacity: 1;
   }
 
-  /* The tile's crop marks and the viewer's are the same device on the same
-     frame, so they take the same `--bk`: the outing's point on the ramp. These
-     were cyan here and accented there, which meant hovering a tile and then
-     opening it changed the colour of its own marks. */
+  /* The hover marks take `--bk`, the outing's point on the ramp, rather than a
+     fixed cyan: cyan is the site's interactive edge, and these are the one piece
+     of chrome that touches a photograph — against a warm frame it reads as a
+     colour cast on the image instead of a frame around it. Lightness and chroma
+     are locked across the ramp, so no outing's mark can be louder than
+     another's. The viewer draws no marks at all; its bloom is the edge. */
   .px-b-tl {
     top: 5px;
     left: 5px;
@@ -898,8 +913,8 @@ const EAGER = 8;
   }
 
   /*
-   * A series is the thread joining recurring outings — two Air Show shoots, one
-   * `series: air-shows`. It hangs off the run header rather than earning a page
+   * A series is the thread joining recurring outings: two Thunder Over Dover
+   * shoots, one `series: air-shows`. It hangs off the run header rather than earning a page
    * of its own, because most of the library belongs to no series at all.
    */
   .px-run-series {
@@ -1234,10 +1249,29 @@ const EAGER = 8;
      * home indicator. 220px clears the tallest of either.
      */
     --lb-over: 220px;
-    /* Both hues the viewer borrows from the frame it opened, defaulted here so
-       they are inherited by the crop marks *and* by the footer's tube — the
-       script sets them on this element when a tile opens. */
-    --bk: var(--cyan);
+    /*
+     * The photograph's budget on a pointer viewport, and the one place it is
+     * stated. `sizeFrame()` in the script writes the frame's width as
+     * `min(--lb-w-cap, --lb-h-cap * aspect)` and gives the footer the same
+     * expression, which is what keeps the title and the thumbnail strip aligned
+     * to the image's own edges however the window is shaped.
+     *
+     * The width cap was a flat 900px, which on a wide window left the viewer
+     * showing a *smaller* photograph than the editorial lead behind it. It is
+     * now the stage's own width — 60px of padding plus two 40px arrows and their
+     * 24px gaps — under a ceiling at 1600px, past which the 2560 derivative
+     * starts being upscaled on a 2× display. No slack is subtracted for a
+     * classic scrollbar 100vw counts and the layout does not: the frame's
+     * `max-width: 100%` is measured against the stage and clamps that case.
+     *
+     * The height cap budgets the vertical chrome: the 52px bar, the stage's own
+     * 14px, the 156px reserved for the metadata stack, and ~18px of breathing
+     * so the frame never looks wedged between the two. It is deliberately not
+     * the whole stage: the bloom is the photograph's own light spilling past it
+     * and needs somewhere to spill.
+     */
+    --lb-w-cap: min(1600px, calc(100vw - 188px));
+    --lb-h-cap: calc(100vh - 240px - var(--lb-t) - var(--lb-b));
     animation: lbIn 0.24s cubic-bezier(0.2, 0.85, 0.2, 1);
   }
 
@@ -1275,21 +1309,31 @@ const EAGER = 8;
    * The box overruns the viewport but the gradient must not be stretched with
    * it, or the falloff lands off-screen and the vignette all but disappears.
    * So the radial is sized back to the visible band and centred in it, and the
-   * background *colour* — the gradient's own terminal value — fills the
-   * overrun. The two meet at exactly the same colour, so there is no seam.
+   * overrun strips are filled by two flat layers of the gradient's own terminal
+   * value. They meet at exactly the same colour, so there is no seam.
+   *
+   * The strips are *layers*, not `background-color`: a colour paints across the
+   * whole box, including the band, so it sat behind the radial's transparent
+   * centre at 0.88 and dimmed the bloom into invisibility. A transparent stop
+   * over an opaque background-colour is not transparent.
    */
   .lb-vignette {
     position: absolute;
     inset: calc(-1 * var(--lb-over)) 0;
     pointer-events: none;
-    background-color: rgba(3, 4, 10, 0.88);
-    background-image: radial-gradient(
-      72% 58% at 50% 46%,
-      transparent,
-      rgba(3, 4, 10, 0.88) 78%
-    );
-    background-size: 100% calc(100% - 2 * var(--lb-over));
-    background-position: 50% 50%;
+    --lb-edge: rgba(3, 4, 10, 0.88);
+    background-image:
+      radial-gradient(72% 58% at 50% 46%, transparent, var(--lb-edge) 78%),
+      linear-gradient(var(--lb-edge), var(--lb-edge)),
+      linear-gradient(var(--lb-edge), var(--lb-edge));
+    background-size:
+      100% calc(100% - 2 * var(--lb-over)),
+      100% var(--lb-over),
+      100% var(--lb-over);
+    background-position:
+      50% 50%,
+      50% 0,
+      50% 100%;
     background-repeat: no-repeat;
   }
 
@@ -1386,7 +1430,10 @@ const EAGER = 8;
   .lb-frame {
     position: relative;
     margin: 0;
-    max-width: 900px;
+    /* The cap lives on the image (see `--lb-w-cap`); this is only the hard stop
+       that keeps the frame inside the stage — including when the capture-data
+       drawer slides in and narrows it. */
+    max-width: 100%;
     max-height: 100%;
     transform-origin: top left;
     background-size: cover;
@@ -1404,65 +1451,20 @@ const EAGER = 8;
   }
 
   /*
-   * Crop marks, not an accent.
+   * There are no crop marks on the viewer's frame.
    *
-   * These were cyan, and cyan is the site's "interactive edge" colour — which is
-   * exactly wrong here, because the brackets are the one piece of chrome that
-   * touches the photograph. Against a warm frame (sand, autumn, sodium light)
-   * they read as a colour cast on the image rather than as a frame around it,
-   * and no fixed hue from the ramp avoids that: whatever we pick fights the
-   * complementary third of the library.
+   * There were — one bracket per corner, in the outing's point on the accent
+   * ramp — and they were the tile's hover marks carried inward. On the sheet
+   * that mark is doing work: it says *this tile is the one you are pointing at*
+   * among a hundred others. In the viewer there is one photograph, nothing to
+   * disambiguate, and the bloom already draws the frame's edge in the
+   * photograph's own light. The brackets were a second, contradicting edge on
+   * top of it, and the one piece of chrome touching the image.
    *
-   * Sampling a colour from the photo is not an option either — "the wash behind
-   * a photo *is* the photo, nothing samples a palette" is a rule of the design.
-   *
-   * The answer is the ramp, sampled per *outing* rather than fixed. Lightness
-   * and chroma are locked across it and only hue moves, so no sample can be
-   * louder than another — and the mark then carries the same meaning the
-   * mockup's album accents were reaching for: this frame is part of something,
-   * and the colour says which. A stray frame belongs to no outing and keeps the
-   * default cyan. The drop shadow keeps any of them legible on a bright corner.
-   *
-   * This is why the marks take `--bk` (the ramp, per outing) while the dates and
-   * tubes take `--run` (the shoot's own light): one divergence, and the frame's
-   * edge is the reason for it.
+   * The tile keeps its `--bk`; the viewer no longer sets one. The footer's tube
+   * still burns `--run` — the shoot's own light — so the outing is still named
+   * in colour, just not by drawing on the photograph.
    */
-
-  .lb-bracket {
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    pointer-events: none;
-    filter: drop-shadow(0 0 3px rgba(3, 4, 10, 0.7));
-  }
-
-  .lb-tl {
-    left: -1px;
-    top: -1px;
-    border-left: 2px solid var(--bk);
-    border-top: 2px solid var(--bk);
-  }
-
-  .lb-tr {
-    right: -1px;
-    top: -1px;
-    border-right: 2px solid var(--bk);
-    border-top: 2px solid var(--bk);
-  }
-
-  .lb-bl {
-    left: -1px;
-    bottom: -1px;
-    border-left: 2px solid var(--bk);
-    border-bottom: 2px solid var(--bk);
-  }
-
-  .lb-br {
-    right: -1px;
-    bottom: -1px;
-    border-right: 2px solid var(--bk);
-    border-bottom: 2px solid var(--bk);
-  }
 
   .lb-foot {
     position: absolute;
@@ -1476,8 +1478,10 @@ const EAGER = 8;
     padding: 0 30px calc(18px + var(--lb-b));
   }
 
+  /* The script overwrites `width` with the frame's own expression so the two
+     edges line up; 900px is what a viewer without JavaScript would never see. */
   .lb-foot-inner {
-    width: 900px;
+    width: var(--lb-w-cap, 900px);
     max-width: 100%;
     display: flex;
     align-items: flex-end;
@@ -1713,19 +1717,6 @@ const EAGER = 8;
     text-align: right;
   }
 
-  .lb-exif .lb-exif-note {
-    margin: 13px 0 0;
-    padding-top: 11px;
-    border-top: 1px solid var(--hairline-soft);
-    font: 400 9px/1.7 var(--mono);
-    color: var(--faint);
-    letter-spacing: 0.06em;
-  }
-
-  .lb-exif .lb-exif-note:empty {
-    display: none;
-  }
-
   .lb-swipe {
     display: none;
     position: absolute;
@@ -1815,8 +1806,14 @@ const EAGER = 8;
       display: none;
     }
 
+    /* The metadata stack went vertical above, so it reserves more room — and the
+       frame's height budget has to follow it or the two overlap. */
     .lb-stage {
       inset: calc(52px + var(--lb-t)) 0 calc(190px + var(--lb-b));
+    }
+
+    .lb {
+      --lb-h-cap: calc(100vh - 274px - var(--lb-t) - var(--lb-b));
     }
   }
 
