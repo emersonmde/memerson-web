@@ -363,10 +363,14 @@ const EAGER = 8;
       >
     </div>
     <aside class="lb-exif" data-lb-exif aria-label="Capture data">
-      <h3>
+      {
+        /* An h2, not h3: with the viewer open the page's visible outline is
+          the h1 and this — a jump to h3 is the one thing axe finds. */
+      }
+      <h2>
         CAPTURE DATA
         <button type="button" class="lb-exif-close" data-lb-exif-close>CLOSE ×</button>
-      </h3>
+      </h2>
       <dl></dl>
     </aside>
     <div class="lb-foot">
@@ -1699,7 +1703,7 @@ const EAGER = 8;
     pointer-events: auto;
   }
 
-  .lb-exif h3 {
+  .lb-exif h2 {
     display: flex;
     align-items: center;
     justify-content: space-between;

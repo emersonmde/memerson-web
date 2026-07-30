@@ -4,15 +4,18 @@
 npm test            # build, then every node:test suite
 npm run test:unit   # pure logic only, no build needed (~0.1s)
 npm run check       # astro check — types and diagnostics, keep at 0
-npm run test:e2e    # real-browser suite (Playwright) — planned, see §4
+npm run test:e2e    # real-browser suite (Playwright); builds + previews dist itself
 ```
 
 Layers 1 and 2 use no test framework and no dependencies: Node 24 runs TypeScript
 and ships `node:test`. Note that `node --test` wants file paths or a glob, **not**
 a bare directory — `node --test tests/` fails with "Cannot find module".
 
-Layer 3 (real browser) uses **Playwright** as its one devDependency. §3 records
-why that reverses an earlier decision, and §4 is the plan for building it out.
+Layer 3 (real browser) uses **Playwright** as its one devDependency (plus
+`@axe-core/playwright` for §3.5). §3 records why that reverses an earlier
+decision, and §4 is the build-out plan — **completed 2026-07-30**, T1–T6, each
+gate verified including T3's churn-immunity check. The specs live in `e2e/`,
+the baselines in `e2e/__screenshots__/`.
 
 ---
 
@@ -293,11 +296,18 @@ writes, every functional test stays green, and iOS scrolling stutters. Three
 measures, chosen to be robust to machine speed:
 
 - **Forced-reflow count as an invariant — the strongest one.** Capture a
-  Chrome trace during a synthesized scroll and assert **zero forced
-  synchronous layouts inside the paint loop**. The read-then-write split is
-  the entire performance story of `fx.ts` (see its header comment); this pins
-  the design property itself, and unlike a timing threshold it cannot flake
-  on a slow machine.
+  Chrome trace during a synthesized scroll and assert the forced-layout count
+  stays **O(scroll-stops), never O(frames)** — in practice, at most one per
+  wheel stop. Not literally zero, for a reason worth keeping: a stop's
+  `scrollend` runs `settle()`, whose re-read of fresh layout *is* the
+  re-measure, by design. The regression under test — reads interleaved with
+  writes inside the paint loop — costs several forced layouts per *frame*,
+  far above the bound. The read-then-write split is the entire performance
+  story of `fx.ts` (see its header comment); this pins the design property
+  itself, and unlike a timing threshold it cannot flake on a slow machine.
+  (It caught a real one on arrival: BackToTop read `scrollY` in its rAF after
+  `fx.ts` had written letter-spacing — one forced layout per frame for as
+  long as any heading was resolving. It now reads the offset in the event.)
 - **Long-frame detection.** A `PerformanceObserver` on `long-animation-frame`
   during scripted scroll and lightbox open/close; assert no frame beyond a
   _generous_ bound (~50ms). Loose on purpose — tight timing assertions on

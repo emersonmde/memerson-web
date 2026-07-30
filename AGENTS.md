@@ -43,6 +43,7 @@ npm run preview          # serve the build
 npm run check            # astro check — types + diagnostics; keep at 0 errors
 npm test                 # build, then the full suite
 npm run test:unit        # pure logic only, no build (~0.1s)
+npm run test:e2e         # real-browser suite (Playwright); builds + previews dist itself
 npm run format           # prettier
 npm run deploy           # build, then wrangler deploy (needs `wrangler login` first)
 npx wrangler deploy --dry-run   # validate wrangler.jsonc without deploying
@@ -69,17 +70,23 @@ npm run design:bundle    # snapshot the built site for Claude Design → .design
 Start the dev server in background mode so it doesn't block: `npx astro dev --background`,
 then `astro dev stop` / `status` / `logs [--follow]`.
 
-**Verification gates: `npm run check` at 0 and `npm test` green.** The suite uses Node's
-built-in runner — no framework, no dependencies — and `node --test` needs file paths or a
-glob, not a bare directory.
+**Verification gates: `npm run check` at 0, `npm test` green, and `npm run test:e2e`
+green.** Layers 1–2 use Node's built-in runner — no framework, no dependencies — and
+`node --test` needs file paths or a glob, not a bare directory. Layer 3 is Playwright
+(the one test devDependency besides axe), running against `astro preview` in seven
+breakpoint projects; its pixel baselines live in `e2e/__screenshots__/` and are
+macOS-only by policy.
 
 Tests assert **invariants, not pixel values**, because content changes constantly: every
 project lengthens the rail, every photo lengthens the gallery. A test that would break
-when a plate gets taller is testing the wrong thing. See `docs/TESTING.md`.
+when a plate gets taller is testing the wrong thing. Pixel baselines exist only for what
+churn cannot touch (unit cells, chrome, specimens) — a photo import or a new post must
+cause zero visual failures, and if one ever does the fix is to restructure that test, not
+update its baseline. See `docs/TESTING.md`.
 
-Real-browser behaviour (view switching, filtering, the viewer, transitions, and every
-mobile breakpoint) is _not_ covered by the suite — it is verified over the Chrome DevTools
-Protocol, and `docs/TESTING.md` records how.
+The one gap the suite cannot close is the **real-device compositor**: changes touching
+`src/scripts/redraw.ts` or compositor-adjacent CSS still need the manual device pass in
+`docs/TESTING.md` §3.6.
 
 ## Architecture
 
