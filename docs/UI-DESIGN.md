@@ -115,12 +115,10 @@ sitewide, and every lit element must derive from the one that matches what it _i
 | ---------- | ---------------------- | ----------------------------------------------------------------------------------------------- |
 | `--sodium` | **Where you are**      | The home rail's charge, the reading-progress filament, section-marker ticks (about, post `h2`s) |
 | `--cyan`   | **What you can touch** | Links, controls, hover glows                                                                    |
-| `--violet` | **Another voice**      | Blockquotes' lit edge, the log's year signs, series chips, `hr`                                 |
+| `--violet` | **Another voice**      | Blockquotes' lit edge, the log's year signs and lit separators, series chips, `hr`              |
 
 (Section-marker ticks moved from cyan to sodium on owner review: a section head tells
-you where you are in the document, which is sodium's question, not cyan's. The log's
-entry separators are also sodium — owner's pick over the grammar's violet, and the
-vision outranks the grammar; they are neon tubes, the hero bar's construction.)
+you where you are in the document, which is sodium's question, not cyan's.)
 
 This is the structural defence against the RGB meme: hue is information, so many small
 lights read as an organised city rather than decoration. A new effect does not pick a
@@ -826,9 +824,9 @@ that a post's _skeleton_ now obeys the light grammar (§2):
 - **`hr`** is a thin violet light across the dark, not a pencil rule.
 - **Links and log entries** glow cyan on hover: reaching for a touchable thing lights it.
 - **The log's sticky year numeral** glows violet, a district sign that pins and travels.
-- **The log's entry separators** are 250px sodium neon tubes (the hero bar's
-  construction: 3px, rounded, two-stage glow) on the hairline — on `/blog` and on the
-  home page's log preview alike, because those rows are pieces of the same log.
+- **The log's entry separators** carry a 250px violet-lit segment on the hairline — on
+  `/blog` and on the home page's log preview alike, because those rows are pieces of
+  the same log.
 - **About's section markers** carry sodium ticks, echoing the home section headers.
 
 ### What was deliberately not done

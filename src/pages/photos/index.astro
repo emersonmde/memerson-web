@@ -815,22 +815,15 @@ const EAGER = 8;
     opacity: 0.38;
   }
 
-  /*
-   * The veil is FLAT across the top half, deliberately. It used to run
-   * 0.62 → 0.3 over the first third, and that vertical falloff — darkest
-   * right under the nav — read as the nav casting a drop shadow: over the
-   * bloom in the gap above a rising run header, and through the pinned
-   * header's translucent background. A uniform veil can't cast anything.
-   */
   .px-ambient::after {
     content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(3, 4, 10, 0.36) 0%,
-      rgba(3, 4, 10, 0.36) 50%,
-      rgba(3, 4, 10, 0.52) 100%
+      rgba(3, 4, 10, 0.62),
+      rgba(3, 4, 10, 0.3) 34%,
+      rgba(3, 4, 10, 0.55) 100%
     );
   }
 
