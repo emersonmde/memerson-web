@@ -415,20 +415,26 @@ a reviewer asked.
 A second sweep, on the owner's read of the live site. The first pass caught mockup
 _annotation_; this one caught copy that was fluent, plausible and wrong about the site.
 
-| Was                                                                    | Now                                                                 | Why                                                                                       |
-| ---------------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Nav `SYSTEMS` → `/`                                                    | `HOME`                                                              | `/` carries projects, photographs and writing; SYSTEMS named only the first third         |
-| `01 — SYSTEMS`                                                         | `01 — PROJECTS`                                                     | They are projects. Only some are systems                                                  |
-| "11 systems below, written after hours"                                | "11 projects below, written after hours"                            | Same reason, and the count is live                                                        |
-| `MEMERSON.COM — DISTRICT 09 / PERSONAL`                                | `MEMERSON.COM · PROJECTS, PHOTOS, WRITING`                          | DISTRICT 09 was the mockup's placeholder, not a reference to anything                     |
-| 404 `SIGNAL LOST — DISTRICT 09`                                        | `SIGNAL LOST`                                                       | Same                                                                                      |
-| "Notes on things that broke, and what the profiler said afterwards."   | "Side projects, tools, and things I wanted to understand properly." | Described one post out of five, and ruled out most of what is worth writing next          |
-| "Postmortems on my own code, mostly — the profiler is the antagonist." | "{n} posts, mostly on whatever I was building at the time."         | Same, and the count stays live                                                            |
-| "the outing is the only unit that has ever mattered"                   | "Shot mostly for myself. Grouped by shoot, newest first."           | A grand claim about a private habit. The second sentence is the fact the first dressed up |
-| Footer "Say something"                                                 | "Elsewhere"                                                         | Three links that are not a way to say anything, over no published address                 |
-| View `RUNS` / stats `OUTINGS` / sheet `JUMP TO AN OUTING`              | `SHOOTS` throughout, and the control beside it becomes `JUMP TO ▾`  | Three words for one unit. `shoot` is the one the data model uses                          |
-| Home photos lede "{n} frames, {span}."                                 | "Air shows, aquariums, zoos, and cities…"                           | Repeated the header's own count verbatim                                                  |
-| Viewer's EXIF footnote about who chose the exposure                    | Deleted                                                             | Nobody opening CAPTURE DATA asked; the caveat argued with the numbers above it            |
+| Was                                                                    | Now                                                                | Why                                                                               |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| Nav `SYSTEMS` → `/`                                                    | `HOME`                                                             | `/` carries projects, photographs and writing; SYSTEMS named only the first third |
+| `01 — SYSTEMS`                                                         | `01 — PROJECTS`                                                    | They are projects. Only some are systems                                          |
+| "11 systems below, written after hours"                                | "11 projects below, written after hours"                           | Same reason, and the count is live                                                |
+| `MEMERSON.COM — DISTRICT 09 / PERSONAL`                                | `MEMERSON.COM · PROJECTS, PHOTOS, WRITING`                         | DISTRICT 09 was the mockup's placeholder, not a reference to anything             |
+| 404 `SIGNAL LOST — DISTRICT 09`                                        | `SIGNAL LOST`                                                      | Same                                                                              |
+| "Notes on things that broke, and what the profiler said afterwards."   | "Occasional write-ups from the projects above."                    | Described one post out of five, and ruled out most of what is worth writing next  |
+| "Postmortems on my own code, mostly — the profiler is the antagonist." | "{n} posts, written alongside the projects."                       | Same, and the count stays live                                                    |
+| "the outing is the only unit that has ever mattered"                   | "Every frame in the library, grouped by shoot, newest first."      | A grand claim about a private habit. The replacement is the fact it dressed up    |
+| Footer "Say something"                                                 | "Elsewhere"                                                        | Three links that are not a way to say anything, over no published address         |
+| View `RUNS` / stats `OUTINGS` / sheet `JUMP TO AN OUTING`              | `SHOOTS` throughout, and the control beside it becomes `JUMP TO ▾` | Three words for one unit. `shoot` is the one the data model uses                  |
+| Home photos lede "{n} frames, {span}."                                 | "The full gallery, grouped by shoot."                              | Repeated the header's own count verbatim                                          |
+| Viewer's EXIF footnote about who chose the exposure                    | Deleted                                                            | Nobody opening CAPTURE DATA asked; the caveat argued with the numbers above it    |
+
+A rule that fell out of the second round: **a lede orients, it does not narrate.** The
+first replacements still explained the author — "shot mostly for myself", "whatever phone
+I had", "things I wanted to understand properly" — which reads as apology in a portfolio.
+A lede states what the section is and how it is organised; the work carries the
+personality.
 
 Em dashes came out of every prose string in the same pass. They stay in numeric label
 forms (`01 — SKILLS`, `2017 — 2022`), where they are punctuation rather than voice.
