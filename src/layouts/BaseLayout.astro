@@ -118,6 +118,17 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
         <div class="sky-neb-a"></div>
         <div class="sky-neb-b"></div>
       </div>
+      {
+        /*
+          The nav's lower falloff. Inside `.page`, not next to the nav: it must
+          dissolve content scrolling under the bar while the sticky chrome that
+          meets the nav flush (`.sec-head`, the gallery's control bar and run
+          headers) passes over it untouched. `.page` is a stacking context, so
+          a body-level fade cannot be interleaved with its children at all —
+          it would paint over every one of them and dim their top edge.
+        */
+      }
+      <div class="nav-fade" aria-hidden="true"></div>
       <main id="main">
         <slot />
       </main>

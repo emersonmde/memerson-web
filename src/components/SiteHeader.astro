@@ -38,4 +38,11 @@ const LINKS = [
     ))
   }
 </nav>
-<div class="nav-fade" aria-hidden="true"></div>
+{
+  /*
+    The nav's lower falloff (`.nav-fade`) is deliberately *not* here. It has to
+    paint above ordinary page content but below the sticky section headers, and
+    `.page` is a stacking context — a body-level fade would cover those too and
+    dim their top edge. It lives inside `.page` in BaseLayout instead.
+  */
+}

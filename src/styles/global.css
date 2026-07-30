@@ -487,11 +487,15 @@ label,
 }
 
 /* The nav's lower falloff, so content scrolling under it dissolves rather than
-   hard-clipping at the border. */
+   hard-clipping at the border. Rendered inside `.page` (BaseLayout), and z-index
+   5 is the whole point: above ordinary content, below the sticky headers that
+   butt against the nav (`.sec-head` and the gallery's bar and run headers, at 6
+   and 7). Those are opaque chrome — dimming their top 18px read as a shadow
+   falling on the header instead of behind it. */
 .nav-fade {
   position: sticky;
   top: var(--nav-h);
-  z-index: 7;
+  z-index: 5;
   height: 18px;
   margin-bottom: -18px;
   pointer-events: none;
