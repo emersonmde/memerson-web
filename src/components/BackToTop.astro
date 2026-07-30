@@ -1,0 +1,115 @@
+---
+/**
+ * Return to top — a neon chevron tube in a floating glass circle.
+ *
+ * Added 2026-07-30 at owner request, reversing the "no back-to-top" line in
+ * UI-DESIGN §5.4 — the gallery made the case: one static page holding every
+ * frame is the design (ARCHITECTURE §6), and the deeper it grows the further
+ * the top is. No text, no icon set: the chevron is the site's neon-tube
+ * material (UI-DESIGN §6) bent into a pointer — a 3px rounded stroke in cyan
+ * with the tube's two-stage glow, on the same glass the sticky chrome uses.
+ *
+ * It appears only after ~2.5 viewports of scroll, so short pages never see it
+ * and it can be global chrome without being global noise. `visibility` rides
+ * the transition so the hidden button is out of the tab order, not just
+ * transparent.
+ *
+ * The script is module-level and queries at event time, so a router swap
+ * neither duplicates listeners nor strands the new page's button; scrollTo
+ * takes no `behavior` on purpose — the page's `scroll-behavior: smooth`
+ * applies, and with it the reduced-motion override in global.css.
+ */
+---
+
+<button class="to-top" data-top aria-label="Back to top">
+  <svg viewBox="0 0 18 11" width="18" height="11" aria-hidden="true">
+    <polyline points="2.5,8.5 9,2.5 15.5,8.5"></polyline>
+  </svg>
+</button>
+
+<style>
+  .to-top {
+    position: fixed;
+    right: max(18px, env(safe-area-inset-right));
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    /* Above the gallery's shoot rail (8); under the jump sheet (40), the
+       viewer (50) and the redraw veil (60), which all own the whole screen. */
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 50%;
+    background: rgba(3, 4, 10, 0.94);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition:
+      opacity 0.3s,
+      transform 0.3s,
+      visibility 0.3s,
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .to-top.is-on {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  /* The tube: 3px rounded stroke, tight glow plus a wide low-opacity one. */
+  .to-top svg {
+    display: block;
+    fill: none;
+    stroke: var(--cyan);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 3px var(--cyan)) drop-shadow(0 0 12px var(--cyan));
+  }
+
+  /* Lift in value, not position — the plate rule, UI-DESIGN §6. */
+  .to-top:hover,
+  .to-top:focus-visible {
+    border-color: var(--cyan);
+    box-shadow: 0 0 22px -8px var(--cyan);
+  }
+</style>
+
+<script>
+  const THRESHOLD = 2.5; // viewports of scroll before the way back appears
+
+  let ticking = false;
+
+  function sync() {
+    const button = document.querySelector('[data-top]');
+    if (!button) return;
+    button.classList.toggle('is-on', scrollY > innerHeight * THRESHOLD);
+  }
+
+  addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        sync();
+        ticking = false;
+      });
+    },
+    { passive: true },
+  );
+
+  document.addEventListener('click', (event) => {
+    if ((event.target as Element).closest?.('[data-top]')) scrollTo({ top: 0 });
+  });
+
+  // Fires on first load too, and a swap arrives with a fresh, un-synced button.
+  document.addEventListener('astro:page-load', sync);
+</script>

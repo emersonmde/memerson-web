@@ -3,6 +3,7 @@ import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL } from '../consts';
 import Sky from '../components/Sky.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import BackToTop from '../components/BackToTop.astro';
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 
@@ -156,6 +157,14 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
 
       {footer && <SiteFooter />}
     </div>
+
+    {
+      /*
+        Body-level, like the gallery's overlays: `.page` is a stacking context
+        (z-index 2), and a fixed child inside it could never sit above the rail.
+      */
+    }
+    <BackToTop />
 
     <div class="redraw" aria-hidden="true"></div>
 

@@ -324,6 +324,15 @@ edge of the mask.
 The section number pins while its section passes, then hands off to the next. It is the
 only chrome the log gets — no breadcrumb, no back-to-top.
 
+**Partially reversed 2026-07-30 (owner request): there is now a site-wide return-to-top
+button** (`src/components/BackToTop.astro`) — a 44px glass circle, fixed bottom-right,
+holding a neon-tube chevron: 3px rounded cyan stroke with the tube's two-stage glow (§6),
+no text. It appears only after ~2.5 viewports of scroll, so short pages — and the log,
+most sessions — still never see it; the original "no chrome" intent survives as a
+threshold rather than an absence. z-index 30: above the gallery's shoot rail, beneath its
+overlays. The gallery forced the issue — one static page holding every frame is the
+design (ARCHITECTURE §6), so the way back grows with the library.
+
 ---
 
 ## 6. Materials
