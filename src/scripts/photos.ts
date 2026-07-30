@@ -12,6 +12,8 @@
  * anchors.
  */
 
+import { packColumns } from '../lib/sheet';
+
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
 
 type Layout = 'sheet' | 'runs' | 'editorial';
@@ -77,11 +79,50 @@ function init() {
   const tiles = runs.flatMap((r) => r.tiles);
   if (!tiles.length) return;
 
-  /* The flat contact sheet. One element, reused; SHEET borrows the tiles. */
+  /*
+   * The flat contact sheet. One element, reused; SHEET borrows the tiles.
+   *
+   * Not multicol. `column-count` fills column-by-column, which put the first
+   * third of the library down column one — scroll position stopped meaning
+   * anything about time, and "jump to a shoot" had nowhere to land. The script
+   * packs tiles row-major into real column wrappers instead (see
+   * `src/lib/sheet.ts`), so the sheet reads in the same time order as the
+   * other views and a shoot's first frame is where the shoot starts.
+   */
   const flat = document.createElement('div');
-  flat.className = 'px-sheet';
+  flat.className = 'px-sheet px-flat';
   flat.hidden = true;
   sheet.appendChild(flat);
+  let flatCols: HTMLElement[] = [];
+
+  function packFlat() {
+    const cols = Number(getComputedStyle(flat).getPropertyValue('--sheet-cols')) || 2;
+    if (flatCols.length !== cols) {
+      flat.replaceChildren();
+      flatCols = Array.from({ length: cols }, () => {
+        const col = document.createElement('div');
+        col.className = 'px-flat-col';
+        flat.appendChild(col);
+        return col;
+      });
+    }
+    /*
+     * Heights estimated from the aspect ratio each tile already carries as
+     * `--ar` — no layout read per tile. The +12 is the tile's margin; captions
+     * below 900px add a little real height the estimate ignores, which only
+     * costs a slightly ragged bottom edge, never a wrong order.
+     */
+    const shown = tiles.filter((t) => !t.hidden);
+    const width = Math.max(1, (flat.clientWidth - (cols - 1) * 12) / cols);
+    const heights = shown.map(
+      (t) => width / (Number(t.style.getPropertyValue('--ar')) || 1.5) + 12,
+    );
+    const assign = packColumns(heights, cols);
+    shown.forEach((tile, i) => flatCols[assign[i]].appendChild(tile));
+    // Hidden tiles still need a parent inside the sheet; the filter may
+    // release them later without another layout pass.
+    for (const tile of tiles) if (tile.hidden) flatCols[0].appendChild(tile);
+  }
 
   const countEl = $<HTMLElement>('[data-count]');
   const qbar = $<HTMLElement>('[data-qbar]');
@@ -189,9 +230,9 @@ function init() {
     sheet.dataset.layout = layout;
 
     if (layout === 'sheet') {
-      for (const tile of tiles) flat.appendChild(tile);
-      flat.hidden = false;
       for (const run of runs) run.el.hidden = true;
+      flat.hidden = false; // before packing — a hidden sheet has no width
+      packFlat();
     } else {
       for (const run of runs) run.el.hidden = run.tiles.every((t) => t.hidden);
     }
@@ -495,6 +536,25 @@ function init() {
     document.body.style.overflow = '';
   }
 
+  /*
+   * The rows and the rail are real anchors to `#<run.key>`, which is correct in
+   * RUNS and EDITORIAL. In SHEET every run section is hidden, so the anchor has
+   * no box and the browser scrolls nowhere — the jump lands on the shoot's
+   * first visible tile instead, which row-major packing put exactly where the
+   * shoot begins.
+   */
+  function jumpToShoot(event: Event, key: string | undefined) {
+    if (layout !== 'sheet' || !key) return; // the anchor itself works
+    const tile = runs.find((r) => r.key === key)?.tiles.find((t) => !t.hidden);
+    if (!tile) return;
+    event.preventDefault();
+    tile.scrollIntoView({ block: 'start' });
+  }
+
+  for (const item of railItems) {
+    on(item, 'click', (event: Event) => jumpToShoot(event, item.dataset.shoot));
+  }
+
   if (jump) {
     const opener = $<HTMLElement>('[data-jump-open]');
     if (opener) {
@@ -506,8 +566,12 @@ function init() {
     const closer = $<HTMLElement>('[data-jump-close]');
     if (closer) on(closer, 'click', closeJump);
     for (const row of jump.querySelectorAll<HTMLElement>('[data-jump-row]')) {
-      // The row is a real anchor, so closing is all this has to do.
-      on(row, 'click', closeJump);
+      on(row, 'click', (event: Event) => {
+        // Unlock the body first — a window with `overflow: hidden` cannot
+        // scroll, and both the anchor default and the sheet jump need it to.
+        closeJump();
+        jumpToShoot(event, row.dataset.shoot);
+      });
     }
   }
 
@@ -531,6 +595,15 @@ function init() {
 
   on(window, 'resize', () => {
     syncBar();
+    // Repack only when the breakpoint actually changed the column count —
+    // reparenting 1300 tiles on every resize frame would thrash layout.
+    if (
+      layout === 'sheet' &&
+      flatCols.length !==
+        (Number(getComputedStyle(flat).getPropertyValue('--sheet-cols')) || 2)
+    ) {
+      packFlat();
+    }
     reveal();
     trackRail();
     sizeFrame();

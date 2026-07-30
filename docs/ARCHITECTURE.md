@@ -525,8 +525,18 @@ Packing runs client-side from a small aspect-ratio array so it responds to resiz
 breakpoint changes. Build-time packing would require emitting a separate layout per
 breakpoint.
 
-CSS `column-count` is the no-JS fallback. Caveat: it orders items down each column, so
-chronological ordering reads wrong — acceptable as degradation, not as the target.
+**Implemented 2026-07-30** for the flat SHEET view: `packColumns` in `src/lib/sheet.ts`
+(pure, unit-tested) assigns tiles in time order to the currently shortest column, from the
+`--ar` each tile already carries — no layout reads, no library. Row-major order is what
+makes "jump to a shoot" meaningful in SHEET: the jump lands on the shoot's first visible
+tile, which the packing guarantees is where the shoot starts on the page. The script only
+repacks when the breakpoint changes the column count (it reads `--sheet-cols` off the
+stylesheet, so JS and CSS cannot disagree).
+
+CSS `column-count` is the no-JS fallback, and still lays out the per-run grids in SHOOTS
+and EDITORIAL, where a run is small enough that column order doesn't mislead. Caveat: it
+orders items down each column, so chronological ordering reads wrong — acceptable as
+degradation, not as the target.
 
 ### One page, not pagination (changed 2026-07-28)
 

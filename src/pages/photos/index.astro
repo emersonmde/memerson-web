@@ -628,6 +628,8 @@ const EAGER = 8;
   .px-sheet {
     column-count: 4;
     column-gap: 12px;
+    /* The script reads this so JS and CSS can never disagree on the count. */
+    --sheet-cols: 4;
   }
 
   .px-sheet .px-tile {
@@ -635,15 +637,37 @@ const EAGER = 8;
     margin-bottom: 12px;
   }
 
+  /*
+   * The flat SHEET view only. Multicol fills column-by-column, which ran the
+   * first third of the library down column one — time and scroll position had
+   * nothing to do with each other, and a jump had nowhere meaningful to land.
+   * The script packs tiles row-major into these wrappers instead (`packFlat`),
+   * so the sheet reads in the same time order as the other views. Multicol
+   * stays on `.px-sheet` because the run grids still use it, and because it is
+   * the no-JS rendering — this element only exists once the script runs.
+   */
+  .px-flat {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .px-flat-col {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   @media (max-width: 1100px) {
     .px-sheet {
       column-count: 3;
+      --sheet-cols: 3;
     }
   }
 
   @media (max-width: 720px) {
     .px-sheet {
       column-count: 2;
+      --sheet-cols: 2;
     }
   }
 
@@ -653,6 +677,9 @@ const EAGER = 8;
     overflow: hidden;
     background: var(--ink);
     cursor: pointer;
+    /* Tiles are jump targets too — `#f-<slug>` and the SHEET-view shoot jump
+       both land here, underneath the same sticky chrome as a run header. */
+    scroll-margin-top: calc(var(--nav-h) + var(--bar-h, 38px) + 12px);
     /* Entry state; `.is-in` resolves it. Set here so a tile never flashes. */
     opacity: 0;
     filter: blur(9px);
