@@ -93,10 +93,10 @@
 
   let ticking = false;
 
-  function sync() {
+  function sync(y = scrollY) {
     const button = document.querySelector('[data-top]');
     if (!button) return;
-    button.classList.toggle('is-on', scrollY > innerHeight * THRESHOLD);
+    button.classList.toggle('is-on', y > innerHeight * THRESHOLD);
   }
 
   addEventListener(
@@ -104,8 +104,17 @@
     () => {
       if (ticking) return;
       ticking = true;
+      /*
+       * Read the offset here, in the event, not in the frame callback. Event
+       * handlers run before the rAF queue, while layout is still clean; by
+       * the time this rAF runs, fx.ts's paint may already have written
+       * letter-spacing in the same frame, and reading `scrollY` against that
+       * dirty layout forces a synchronous one — every frame, for as long as
+       * any heading is resolving. e2e/perf.spec.ts counts exactly this.
+       */
+      const y = scrollY;
       requestAnimationFrame(() => {
-        sync();
+        sync(y);
         ticking = false;
       });
     },
