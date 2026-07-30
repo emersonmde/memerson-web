@@ -419,3 +419,61 @@ describe('links and assets', () => {
     }
   });
 });
+
+describe('byte budgets', () => {
+  /*
+   * The cheap layer-2 addition from docs/TESTING.md §2.2: a refactor that
+   * balloons the bundle should fail loudly, and this needs no browser.
+   *
+   * Ceilings are generous (~3× current) and shaped to be churn-proof: the
+   * gallery is budgeted *per frame*, because its absolute size grows with
+   * every import and an absolute ceiling would eventually fail on content
+   * alone — the alarm-fatigue failure §1 forbids. Current values for scale,
+   * 2026-07-30: 36 KB total JS, ~63 KB largest inline CSS, 3.4 KB per frame,
+   * 79 KB largest non-gallery page.
+   */
+
+  test('total client JS stays within budget', async () => {
+    let bytes = 0;
+    const walk = async (dir: string): Promise<void> => {
+      for (const entry of await readdir(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) await walk(full);
+        else if (entry.name.endsWith('.js')) bytes += (await stat(full)).size;
+      }
+    };
+    await walk(DIST.pathname);
+    assert.ok(bytes < 120_000, `client JS is ${bytes} bytes; budget is 120000`);
+  });
+
+  test('no page inlines an outsized stylesheet', () => {
+    // Per page, not total: total CSS grows with every post (each page inlines
+    // its own copy), which would make an absolute ceiling churn-sensitive.
+    for (const { file, html } of pages) {
+      const css = (html.match(/<style>([\s\S]*?)<\/style>/g) ?? []).join('').length;
+      assert.ok(css < 150_000, `${rel(file)} inlines ${css} bytes of CSS; budget is 150000`);
+    }
+  });
+
+  test('the gallery costs a bounded number of bytes per frame', () => {
+    const gallery = pages.find((p) => rel(p.file) === path.join('photos', 'index.html'));
+    assert.ok(gallery, 'no gallery page in the build');
+    const frames = (gallery!.html.match(/data-tile/g) ?? []).length;
+    assert.ok(frames > 0, 'no frames in the gallery');
+    const perFrame = gallery!.html.length / frames;
+    assert.ok(
+      perFrame < 8_192,
+      `gallery HTML is ${Math.round(perFrame)} bytes per frame; budget is 8192`,
+    );
+  });
+
+  test('every other page stays within a flat HTML budget', () => {
+    for (const { file, html } of pages) {
+      if (rel(file) === path.join('photos', 'index.html')) continue;
+      assert.ok(
+        html.length < 250_000,
+        `${rel(file)} is ${html.length} bytes; budget is 250000`,
+      );
+    }
+  });
+});

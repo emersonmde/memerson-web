@@ -290,10 +290,10 @@ test.describe('the shoots sheet and the jump rail', () => {
     await expect
       .poll(async () =>
         page.evaluate(
-          (k) =>
+          (k: string) =>
             document.getElementById(k)!.getBoundingClientRect().top <
             innerHeight * 0.5,
-          key,
+          key!,
         ),
       )
       .toBe(true);
