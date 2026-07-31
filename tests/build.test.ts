@@ -269,15 +269,28 @@ describe('gallery', () => {
     assert.match(first, /href="https:\/\/photos\.memerson\.com/);
   });
 
-  test('every run is headed, and the stray stretch is marked as not an outing', () => {
+  test('every run is headed, and stray stretches are marked and merged', () => {
     const html = gallery().html;
     const runs = html.match(/class="px-run"/g) ?? [];
     const heads = html.match(/class="px-run-head[^"]*"/g) ?? [];
     assert.ok(runs.length > 1, 'the gallery has no runs');
     assert.equal(heads.length, runs.length, 'a run is missing its header');
 
-    const stray = heads.filter((h) => h.includes('is-stray'));
-    assert.equal(stray.length, 1, 'expected exactly one merged stray stretch');
+    /*
+     * Not "exactly one stretch": how many there are is content — a two-frame
+     * outing landing between two real shoots legitimately starts another.
+     * The invariants are that strays exist and are labelled, and that the
+     * merge rule held: two stray stretches can never sit side by side,
+     * because adjacent thin runs fold into one.
+     */
+    const strayFlags = heads.map((h) => h.includes('is-stray'));
+    assert.ok(strayFlags.some(Boolean), 'the library has no stray stretch');
+    for (let i = 1; i < strayFlags.length; i++) {
+      assert.ok(
+        !(strayFlags[i] && strayFlags[i - 1]),
+        'two adjacent stray stretches failed to merge',
+      );
+    }
     assert.match(html, /STRAY FRAMES/);
   });
 
