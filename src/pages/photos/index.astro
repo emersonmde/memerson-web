@@ -701,6 +701,16 @@ const EAGER = 8;
     width: 100%;
     aspect-ratio: var(--ar);
     object-fit: cover;
+    /*
+     * Offscreen tiles cost no rendering and, crucially, no decoded bitmap.
+     * At 232 frames a full scroll of the gallery decodes on the order of a
+     * gigabyte of images at phone DPR, and iOS WebKit answered by killing the
+     * page — intermittently, after scroll-to-bottom then back-to-top ("a
+     * problem repeatedly occurred"). Size containment cannot shift layout
+     * here: the box comes from `width` and `aspect-ratio`, not from the
+     * image's intrinsic size — the same mechanism that sizes it before load.
+     */
+    content-visibility: auto;
   }
 
   /*
