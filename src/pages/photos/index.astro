@@ -1949,7 +1949,14 @@ const EAGER = 8;
     }
 
     .lb-stage {
-      inset: calc(48px + var(--lb-t)) 0 calc(196px + var(--lb-b));
+      /*
+       * The bottom inset is the metadata stack's *measured* height, written by
+       * `sizeFrame()` as `--lb-foot-h`. The 196px fallback was the old fixed
+       * reserve, and it was a lie whenever a title wrapped or tags showed —
+       * portrait frames ran under the footer and the chrome printed on the
+       * photograph. Landscape phones keep their fixed inset below.
+       */
+      inset: calc(48px + var(--lb-t)) 0 var(--lb-foot-h, calc(196px + var(--lb-b)));
       padding: 8px var(--gutter) 0;
       align-items: center;
     }

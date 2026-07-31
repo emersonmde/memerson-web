@@ -675,13 +675,50 @@ function init() {
      * photograph's bottom edge. So the metadata widens to meet a landscape frame
      * and holds its own width under a tall one.
      */
-    const frameWidth = `min(var(--lb-w-cap), calc(var(--lb-h-cap) * ${ar}))`;
-    lbImg.style.width = innerWidth <= 720 ? '' : frameWidth;
+    /*
+     * Portrait phones size the frame against the metadata stack as it actually
+     * is, not as a constant guesses it. The stack's height moves with content —
+     * a title wraps, tags appear, the swipe hint shows on touch — and a fixed
+     * reserve was the bug: portrait frames ran under the footer and the title,
+     * tags and thumbnails printed on top of the photograph. So the stack is
+     * measured, the stage's bottom inset follows it (`--lb-foot-h`), and the
+     * frame gets the room that is honestly left. The swipe hint hangs *above*
+     * the footer box (see `.lb-swipe`), so it is added on top of the measure.
+     */
+    const portraitPhone = innerWidth <= 720 && innerHeight > innerWidth;
+    const stage = q<HTMLElement>('.lb-stage');
+    const footBox = q<HTMLElement>('.lb-foot');
+
+    if (portraitPhone && stage && footBox) {
+      const swipe = q<HTMLElement>('.lb-swipe');
+      const hint =
+        swipe && getComputedStyle(swipe).display !== 'none'
+          ? swipe.offsetHeight + 14
+          : 0;
+      lb.style.setProperty('--lb-foot-h', `${footBox.offsetHeight + hint}px`);
+
+      /* Reading the stage after setting the property forces the reflow on
+         purpose: the inset must move before the free room is measured. */
+      const cs = getComputedStyle(stage);
+      const availW =
+        stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const availH =
+        stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      lbImg.style.width = `${Math.min(availW, availH * ar)}px`;
+    } else {
+      lb.style.removeProperty('--lb-foot-h');
+      const frameWidth = `min(var(--lb-w-cap), calc(var(--lb-h-cap) * ${ar}))`;
+      lbImg.style.width = innerWidth <= 720 ? '' : frameWidth;
+    }
 
     /* Below 900 the metadata stack is vertical and owns the full width; matching
        it to the frame there would only crowd the tags and the thumbnails. */
     const foot = q<HTMLElement>('.lb-foot-inner');
-    if (foot) foot.style.width = innerWidth > 900 ? `max(900px, ${frameWidth})` : '';
+    if (foot)
+      foot.style.width =
+        innerWidth > 900
+          ? `max(900px, min(var(--lb-w-cap), calc(var(--lb-h-cap) * ${ar})))`
+          : '';
   }
 
   /*
@@ -839,6 +876,11 @@ function init() {
 
     drawCapture(tile);
     drawThumbs(list);
+    /* Again, now that the title, tags and thumbs are real: on portrait phones
+       the frame is sized against the metadata stack's measured height, and the
+       first call ran before this frame's stack existed. Same synchronous frame,
+       so nothing visibly moves. */
+    sizeFrame();
     if (from) flip(from);
   }
 

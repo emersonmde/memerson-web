@@ -247,6 +247,59 @@ test.describe('the lightbox lifecycle', () => {
     expect(await page.evaluate(() => location.hash)).toBe('');
   });
 
+  test('the photograph never runs under the chrome, even in portrait', async ({
+    page,
+  }) => {
+    /*
+     * The failure this pins: on portrait phones the stage reserved a fixed
+     * height for the metadata stack, the stack was routinely taller, and a
+     * portrait frame sailed under the title, tags and thumbnails. The frame is
+     * now sized against the stack's *measured* height, so the invariant is
+     * simply that the image intersects neither the top bar nor the stack —
+     * at every breakpoint, for the tallest aspect the library has.
+     */
+    const id = await page.evaluate(() => {
+      const tiles = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-tile]'),
+      );
+      const tallest = tiles.reduce((best, t) => {
+        const ar = Number(t.style.getPropertyValue('--ar')) || 1.5;
+        const bestAr = Number(best.style.getPropertyValue('--ar')) || 1.5;
+        return ar < bestAr ? t : best;
+      });
+      return tallest?.id ?? null;
+    });
+    test.skip(!id, 'the gallery has no tiles');
+
+    const tile = page.locator(`#${id}`);
+    await tile.scrollIntoViewIfNeeded();
+    await tile.click();
+    await expect(page.locator('[data-lb]')).toBeVisible();
+    await viewerImageDecoded(page);
+
+    /* Poll so the open animation has settled before rects are trusted. */
+    await expect
+      .poll(async () =>
+        page.evaluate(() => {
+          const rect = (sel: string) =>
+            document.querySelector(sel)?.getBoundingClientRect() ?? null;
+          const img = rect('.lb-img');
+          const foot = rect('.lb-foot-inner');
+          const bar = rect('.lb-bar');
+          if (!img || !foot) return 'missing';
+          const swipe = document.querySelector<HTMLElement>('.lb-swipe');
+          const swipeTop =
+            swipe && getComputedStyle(swipe).display !== 'none'
+              ? swipe.getBoundingClientRect().top
+              : Infinity;
+          const clearOfBar = !bar || img.top >= bar.bottom - 1;
+          const clearOfFoot = img.bottom <= Math.min(foot.top, swipeTop) + 1;
+          return clearOfBar && clearOfFoot;
+        }),
+      )
+      .toBe(true);
+  });
+
   test('a tag in the viewer becomes the filter', async ({ page }) => {
     await gotoSettled(page, `/photos/#f-${PHOTO}`);
     const lb = page.locator('[data-lb]');

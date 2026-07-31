@@ -761,6 +761,20 @@ straight over the metadata stack rather than pushing it aside, and at 95% the ti
 underneath read through it. **It carries its own close button**, because as a bottom sheet
 it covers the `i` that opened it, which otherwise left no way out at all.
 
+**On portrait phones the frame is sized against the metadata stack as measured, not as
+guessed (2026-07-31).** The stage reserved a fixed 196px for the stack, the stack with a
+title, tags and thumbnails is nearer 300px, and the image was not actually clamped to the
+stage either (`max-height: 100%` against an auto-height parent resolves to nothing) — so a
+portrait frame ran under the footer and the chrome printed on the photograph. `sizeFrame()`
+now measures the stack (plus the swipe hint, which hangs above the footer box), writes it
+as `--lb-foot-h`, and gives the frame the room honestly left. The alternatives were
+considered and rejected: tap-to-hide chrome is iOS Photos' answer and earns its state
+machine only when giving up zero pixels is the requirement — here it would trade a known
+layout bug for discoverability and gesture-conflict bugs; a scrim keeps the size by
+permanently occluding the artwork, which a portfolio must not. Chrome stays off the
+photograph — the same rule the desktop layout and the no-crop-marks decision already
+encode. Landscape phones and desktop are untouched.
+
 ---
 
 ## 11. Iterating on the design
