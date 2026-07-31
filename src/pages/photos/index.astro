@@ -381,6 +381,12 @@ const EAGER = 8;
             <span class="lb-dash"></span>
             <button type="button" class="lb-shoot"></button>
             <span class="lb-meta-text"></span>
+            {
+              /* Widest served derivative, straight from R2. Cross-origin, so
+                 no `download` attribute — it opens in a tab, which is the
+                 right behaviour anyway (look, then save). */
+            }
+            <a class="lb-full" target="_blank" rel="noopener">FULL RES</a>
           </div>
           <div class="lb-tags"></div>
         </div>
@@ -1572,6 +1578,26 @@ const EAGER = 8;
     color: var(--tx-hi);
   }
 
+  /* The take-it-with-you link: the widest rung we serve, in a new tab. A
+     bordered rectangle so it reads as a control among the plain-text meta —
+     the same plate treatment the tags use, at meta-line scale. */
+  .lb-full {
+    font: 500 9px var(--mono);
+    letter-spacing: 0.2em;
+    color: var(--dim);
+    border: 1px solid rgba(220, 240, 255, 0.18);
+    padding: 4px 8px;
+    text-decoration: none;
+    transition: all 0.16s;
+  }
+
+  .lb-full:hover,
+  .lb-full:focus-visible {
+    color: var(--tx-hi);
+    border-color: #fff;
+    box-shadow: 0 0 18px -8px #fff;
+  }
+
   /* Tags are the one thing that makes 390 of them navigation rather than decor. */
   .lb-tags {
     display: flex;
@@ -2012,6 +2038,14 @@ const EAGER = 8;
       padding: 7px 10px;
       min-height: 36px;
       display: flex;
+      align-items: center;
+    }
+
+    /* Touch target for the full-res link, same treatment as the tags. */
+    .lb-full {
+      min-height: 36px;
+      padding: 7px 10px;
+      display: inline-flex;
       align-items: center;
     }
 

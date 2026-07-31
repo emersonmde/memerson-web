@@ -247,6 +247,22 @@ test.describe('the lightbox lifecycle', () => {
     expect(await page.evaluate(() => location.hash)).toBe('');
   });
 
+  test('the full-res link serves the widest derivative of the open frame', async ({
+    page,
+  }) => {
+    await gotoSettled(page, `/photos/#f-${PHOTO}`);
+    const lb = page.locator('[data-lb]');
+    await expect(lb).toBeVisible();
+    /* Same URL as the tile's no-JS href: the widest rung, from the R2 domain. */
+    const href = await lb.locator('.lb-full').getAttribute('href');
+    expect(href).toMatch(/^https:\/\/photos\.memerson\.com\/photos\/.+\/\d+\.webp$/);
+    const tileHref = await page.locator(`#f-${PHOTO}`).getAttribute('href');
+    expect(href).toBe(tileHref);
+    /* Steps move it with the frame. */
+    await lb.locator('[data-lb-step="1"]:visible').first().click();
+    expect(await lb.locator('.lb-full').getAttribute('href')).not.toBe(href);
+  });
+
   test('the photograph never runs under the chrome, even in portrait', async ({
     page,
   }) => {

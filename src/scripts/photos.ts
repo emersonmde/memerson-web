@@ -840,6 +840,10 @@ function init() {
     setText('.lb-counter', `${pad(cursor + 1)} / ${list.length}`);
     setText('.lb-title', tile.dataset.title || '');
 
+    /* The tile's href is already the widest derivative (the no-JS path). */
+    const fullLink = q<HTMLAnchorElement>('.lb-full');
+    if (fullLink) fullLink.href = tile.href;
+
     /*
      * Most frames have no authored title, so the tile falls back to the shoot
      * name. Printing the chip under it as well would stutter — hide it exactly
