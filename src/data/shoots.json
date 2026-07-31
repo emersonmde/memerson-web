@@ -21,10 +21,20 @@
     "series": null,
     "summary": "Night shots across multiple Walt Disney World parks, including Magic Kingdom's Halloween decor and castle, Toy Story Land, Star Wars: Galaxy's Edge, Hollywood Studios, and Epcot's Spaceship Earth."
   },
-  "2022-10-29": {
-    "count": 51,
-    "from": "2022-10-29",
+  "2022-11-05": {
+    "count": 15,
+    "from": "2022-11-05",
     "to": "2022-11-05",
+    "cameras": [
+      "Canon EOS R6"
+    ],
+    "name": "Philadelphia",
+    "series": null
+  },
+  "2022-10-29": {
+    "count": 36,
+    "from": "2022-10-29",
+    "to": "2022-10-29",
     "cameras": [
       "Canon EOS R6"
     ],
