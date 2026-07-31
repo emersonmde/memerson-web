@@ -6,7 +6,7 @@
     "cameras": [
       "Canon EOS R6"
     ],
-    "name": "Air Show",
+    "name": "Thunder Over Dover",
     "series": "air-shows",
     "summary": "An airshow with warbirds, jets, and a jet-powered truck performing on the runway."
   },
@@ -38,7 +38,7 @@
     "cameras": [
       "Canon EOS R6"
     ],
-    "name": "Renaissance Faire",
+    "name": "PA Renaissance Faire",
     "summary": "Actors, blacksmiths and jousters in costume at a renaissance faire.",
     "series": null
   },
@@ -49,7 +49,7 @@
     "cameras": [
       "Canon EOS R6"
     ],
-    "name": "Aquarium",
+    "name": "Baltimore Aquarium",
     "summary": "Reef tanks, a green tree python, a crocodile and a dolphin.",
     "series": null
   },
@@ -71,7 +71,7 @@
     "cameras": [
       "Canon EOS R6"
     ],
-    "name": "Zoo Trip",
+    "name": "Philadelphia Zoo",
     "summary": "Lemurs, tortoises, giraffes, a maned wolf and a jaguar.",
     "series": null
   },
@@ -176,15 +176,35 @@
     "summary": "Long exposures of a fireworks show on the fourth of July.",
     "series": null
   },
-  "2017-06-18": {
-    "count": 18,
-    "from": "2017-06-13",
+  "2017-06-19": {
+    "count": 2,
+    "from": "2017-06-19",
     "to": "2017-06-19",
     "cameras": [
       "Canon EOS 6D"
     ],
-    "name": "Campus",
+    "name": null,
+    "series": null
+  },
+  "2017-06-18": {
+    "count": 13,
+    "from": "2017-06-18",
+    "to": "2017-06-18",
+    "cameras": [
+      "Canon EOS 6D"
+    ],
+    "name": "The Green, Historic Dover",
     "summary": "A brick campus with a clock tower, a tree-lined lawn, and a field at sunset.",
+    "series": null
+  },
+  "2017-06-13": {
+    "count": 3,
+    "from": "2017-06-13",
+    "to": "2017-06-13",
+    "cameras": [
+      "Canon EOS 6D"
+    ],
+    "name": "Silver Lake",
     "series": null
   }
 }
