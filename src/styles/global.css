@@ -121,6 +121,22 @@ html {
   scroll-behavior: smooth;
 }
 
+/*
+ * On touch devices, browser-driven scrolls (anchor navigation, the initial
+ * fragment scroll of a deep link) jump instead of animating. A smooth scroll
+ * to an anchor twenty screens down the gallery is not a transition, it is a
+ * sweep that force-decodes every photograph it passes — and on iOS that was
+ * killing the page outright ("a problem repeatedly occurred"), most reliably
+ * on deep links like /photos/#<shoot>, which animate from the very top on
+ * load. Desktop keeps the smooth default; scripted scrolls make their own
+ * distance-based choice in photos.ts.
+ */
+@media (hover: none) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   margin: 0;
   background: var(--void);

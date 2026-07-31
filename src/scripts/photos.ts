@@ -287,6 +287,18 @@ function init() {
     scrollTo({ top: 0 });
   }
 
+  /*
+   * Smoothness is for hops, not journeys. A smooth scroll spanning many
+   * viewports reads as a blur while force-decoding every tile it crosses —
+   * which on iOS was enough to get the page killed. Under four viewports the
+   * animation still communicates "you moved"; past that, jump.
+   */
+  const toTop = () =>
+    scrollTo({
+      top: 0,
+      behavior: scrollY < innerHeight * 4 ? 'smooth' : 'auto',
+    });
+
   function setQuery(value: string) {
     query = value;
     if (find) find.value = value;
@@ -324,7 +336,7 @@ function init() {
     if (!marker.dataset.series) continue;
     on(marker, 'click', () => {
       setQuery(marker.dataset.series!);
-      scrollTo({ top: 0, behavior: 'smooth' });
+      toTop();
     });
   }
 
@@ -332,7 +344,7 @@ function init() {
   if (qclear) {
     on(qclear, 'click', () => {
       setQuery('');
-      scrollTo({ top: 0, behavior: 'smooth' });
+      toTop();
     });
   }
 
@@ -871,7 +883,7 @@ function init() {
             button.addEventListener('click', () => {
               close();
               setQuery(tag);
-              scrollTo({ top: 0, behavior: 'smooth' });
+              toTop();
             });
             return button;
           }),
@@ -1049,7 +1061,7 @@ function init() {
         close();
         if (name) {
           setQuery(name);
-          scrollTo({ top: 0, behavior: 'smooth' });
+          toTop();
         }
       });
     }
