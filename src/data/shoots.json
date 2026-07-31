@@ -1,36 +1,66 @@
 {
+  "2024-05-18": {
+    "count": 17,
+    "from": "2024-05-18",
+    "to": "2024-05-19",
+    "cameras": [
+      "Canon EOS R6"
+    ],
+    "name": "Air Show",
+    "series": "air-shows",
+    "summary": "An airshow with warbirds, jets, and a jet-powered truck performing on the runway."
+  },
+  "2023-08-20": {
+    "count": 16,
+    "from": "2023-08-20",
+    "to": "2023-08-23",
+    "cameras": [
+      "Canon EOS R6"
+    ],
+    "name": "Walt Disney World",
+    "series": null,
+    "summary": "Night shots across multiple Walt Disney World parks, including Magic Kingdom's Halloween decor and castle, Toy Story Land, Star Wars: Galaxy's Edge, Hollywood Studios, and Epcot's Spaceship Earth."
+  },
   "2022-10-29": {
-    "count": 32,
+    "count": 51,
     "from": "2022-10-29",
-    "to": "2022-10-29",
-    "cameras": ["Canon EOS R6"],
+    "to": "2022-11-05",
+    "cameras": [
+      "Canon EOS R6"
+    ],
     "name": "Renaissance Faire",
     "summary": "Actors, blacksmiths and jousters in costume at a renaissance faire.",
     "series": null
   },
   "2022-09-04": {
-    "count": 14,
+    "count": 16,
     "from": "2022-09-04",
     "to": "2022-09-05",
-    "cameras": ["Canon EOS R6"],
+    "cameras": [
+      "Canon EOS R6"
+    ],
     "name": "Aquarium",
     "summary": "Reef tanks, a green tree python, a crocodile and a dolphin.",
     "series": null
   },
   "2022-05-22": {
-    "count": 9,
+    "count": 18,
     "from": "2022-05-22",
     "to": "2022-05-22",
-    "cameras": ["Canon EOS R6"],
+    "cameras": [
+      "Canon EOS R6"
+    ],
     "name": "Thunder Over Dover",
     "summary": "The Blue Angels and the Thunderbirds at Dover Air Force Base, with a B-25 Mitchell and a Lamborghini on the ground.",
     "series": "air-shows"
   },
   "2022-04-15": {
-    "count": 10,
+    "count": 11,
     "from": "2022-04-15",
     "to": "2022-04-15",
-    "cameras": ["Canon EOS R6"],
+    "cameras": [
+      "Canon EOS R6"
+    ],
     "name": "Zoo Trip",
     "summary": "Lemurs, tortoises, giraffes, a maned wolf and a jaguar.",
     "series": null
@@ -39,25 +69,33 @@
     "count": 7,
     "from": "2022-02-21",
     "to": "2022-02-21",
-    "cameras": ["Apple iPhone 13 Pro"],
+    "cameras": [
+      "Apple iPhone 13 Pro"
+    ],
     "name": "Nashville",
     "summary": "Churches, streets and public art downtown, ending at the state capitol after dark.",
     "series": null
   },
   "2021-11-27": {
-    "count": 10,
+    "count": 25,
     "from": "2021-11-27",
     "to": "2021-11-27",
-    "cameras": ["Canon EOS R6", "Apple iPhone 13 Pro"],
+    "cameras": [
+      "Canon EOS R6",
+      "Apple iPhone 13 Pro"
+    ],
     "name": "Washington DC",
     "summary": "Landmarks and the Air and Space Museum, afternoon into night.",
     "series": null
   },
   "2021-08-16": {
-    "count": 16,
+    "count": 30,
     "from": "2021-08-16",
     "to": "2021-08-18",
-    "cameras": ["Apple iPhone 12 Pro", "Canon EOS R6"],
+    "cameras": [
+      "Apple iPhone 12 Pro",
+      "Canon EOS R6"
+    ],
     "name": "St Croix",
     "summary": "Beaches, coastline and gardens over a week in St Croix.",
     "series": null
@@ -66,7 +104,9 @@
     "count": 1,
     "from": "2021-07-02",
     "to": "2021-07-02",
-    "cameras": ["Canon EOS R6"],
+    "cameras": [
+      "Canon EOS R6"
+    ],
     "name": "Stuffed Lion Toy",
     "summary": "A plush lion tied with a red ribbon on a porch railing.",
     "series": null
@@ -75,16 +115,20 @@
     "count": 1,
     "from": "2020-02-07",
     "to": "2020-02-07",
-    "cameras": ["Apple iPhone 11 Pro Max"],
+    "cameras": [
+      "Apple iPhone 11 Pro Max"
+    ],
     "name": null,
-    "summary": "A wall clock lying face-up in a rock garden.",
+    "summary": "A wall clock near a gravel garden bed with shrubs.",
     "series": null
   },
   "2019-09-24": {
     "count": 2,
     "from": "2019-09-24",
     "to": "2019-09-27",
-    "cameras": ["Apple iPhone XS Max"],
+    "cameras": [
+      "Apple iPhone XS Max"
+    ],
     "name": "Seattle",
     "summary": "Sunset from the plane, and the living wall inside the Amazon Spheres.",
     "series": null
@@ -93,34 +137,42 @@
     "count": 1,
     "from": "2018-10-09",
     "to": "2018-10-09",
-    "cameras": ["Apple iPhone XS Max"],
-    "name": null,
-    "summary": "A butterfly on concrete, close up.",
+    "cameras": [
+      "Apple iPhone XS Max"
+    ],
+    "name": "Butterfly on Pavement",
+    "summary": "A macro shot of a butterfly resting on concrete pavement.",
     "series": null
   },
   "2017-08-27": {
-    "count": 3,
+    "count": 5,
     "from": "2017-08-27",
     "to": "2017-08-27",
-    "cameras": ["Canon EOS 6D"],
+    "cameras": [
+      "Canon EOS 6D"
+    ],
     "name": "Thunder Over Dover",
     "summary": "Thunderbirds F-16s in formation and lined up on the tarmac at Dover Air Force Base.",
     "series": "air-shows"
   },
   "2017-07-04": {
-    "count": 8,
+    "count": 13,
     "from": "2017-07-04",
     "to": "2017-07-04",
-    "cameras": ["Canon EOS 6D"],
+    "cameras": [
+      "Canon EOS 6D"
+    ],
     "name": "Fourth of July Fireworks",
     "summary": "Long exposures of a fireworks show on the fourth of July.",
     "series": null
   },
   "2017-06-18": {
-    "count": 4,
-    "from": "2017-06-18",
+    "count": 18,
+    "from": "2017-06-13",
     "to": "2017-06-19",
-    "cameras": ["Canon EOS 6D"],
+    "cameras": [
+      "Canon EOS 6D"
+    ],
     "name": "Campus",
     "summary": "A brick campus with a clock tower, a tree-lined lawn, and a field at sunset.",
     "series": null

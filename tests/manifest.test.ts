@@ -54,10 +54,12 @@ describe('the committed manifest', () => {
     }
   });
 
-  test('derivatives never exceed the 2560px public cap', async () => {
-    // Full-resolution originals stay in the private archive. See ARCHITECTURE §5.5.
+  test('derivatives never exceed the 5120px cap', async () => {
+    // 5120 fills a 5K display; raised from 2560 on 2026-07-31 — the site exists
+    // to show the photographs. Originals still live only in the private archive.
+    // See ARCHITECTURE §5.5.
     for (const photo of await load()) {
-      assert.ok(Math.max(...photo.variants) <= 2560, `${photo.id} exceeds the cap`);
+      assert.ok(Math.max(...photo.variants) <= 5120, `${photo.id} exceeds the cap`);
     }
   });
 

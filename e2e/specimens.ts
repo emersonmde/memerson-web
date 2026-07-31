@@ -8,8 +8,10 @@
  * replacement and regenerate its baselines in the same commit.
  */
 
-/** One photo slug: titled ("USAF Thunderbirds"), inside a named shoot. */
-export const PHOTO = '2017-08-27-4102ebb8';
+/** One photo slug: titled ("USAF Thunderbirds"), inside a named shoot.
+ * Re-pinned 2026-07-31: the same photograph, re-imported from the higher
+ * quality Lightroom re-export, which gave it a new content-hash slug. */
+export const PHOTO = '2017-08-27-bc2eb60a';
 
 /** The shoot that photo belongs to — also a run anchor id on /photos. */
 export const SHOOT = '2017-08-27';

@@ -184,10 +184,12 @@ merge two shoots that had already been named, silently reattaching those names t
 photographs. `assignShoots` therefore only ever fills in photos with no shoot, may _extend_
 an existing shoot, and refuses to _merge_ two — a bridge is reported for a human instead.
 
-**Photo privacy is a hard requirement.** EXIF handling is an allowlist, never a denylist —
-GPS plus camera/lens serials, owner fields, and vendor `MakerNote` blobs are all dropped.
-Public derivatives cap at 2560px. Full-resolution originals go to a **private** archive
-bucket and are never served publicly.
+**Photo privacy means metadata, not resolution.** EXIF handling is an allowlist, never a
+denylist — GPS plus camera/lens serials, owner fields, and vendor `MakerNote` blobs are all
+dropped. Full-resolution originals go to a **private** archive bucket and are never served
+publicly. Public derivatives cap at 5120px — deliberately raised from 2560 on 2026-07-31,
+because the site's purpose is showing the photographs, not protecting them from scraping.
+Rungs ≥2048 are encoded at higher quality for the lightbox; see `docs/ARCHITECTURE.md` §5.5.
 
 **Never enable Cloudflare Images** — $5/month minimum once switched on, and pre-generated
 derivatives make it unnecessary.

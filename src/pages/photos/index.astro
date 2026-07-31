@@ -1290,10 +1290,13 @@ const EAGER = 8;
      * The width cap was a flat 900px, which on a wide window left the viewer
      * showing a *smaller* photograph than the editorial lead behind it. It is
      * now the stage's own width — 60px of padding plus two 40px arrows and their
-     * 24px gaps — under a ceiling at 1600px, past which the 2560 derivative
-     * starts being upscaled on a 2× display. No slack is subtracted for a
-     * classic scrollbar 100vw counts and the layout does not: the frame's
-     * `max-width: 100%` is measured against the stage and clamps that case.
+     * 24px gaps — under a ceiling at 2048px, past which the 5120 derivative
+     * (the library's widest rung) starts being upscaled on a 2× display. The
+     * ceiling was 1600px when the rungs stopped at 2560; it moved with them
+     * (2026-07-31) so a big screen actually receives the large tier. No slack
+     * is subtracted for a classic scrollbar 100vw counts and the layout does
+     * not: the frame's `max-width: 100%` is measured against the stage and
+     * clamps that case.
      *
      * The height cap budgets the vertical chrome: the 52px bar, the stage's own
      * 14px, the 156px reserved for the metadata stack, and ~18px of breathing
@@ -1301,7 +1304,7 @@ const EAGER = 8;
      * the whole stage: the bloom is the photograph's own light spilling past it
      * and needs somewhere to spill.
      */
-    --lb-w-cap: min(1600px, calc(100vw - 188px));
+    --lb-w-cap: min(2048px, calc(100vw - 188px));
     --lb-h-cap: calc(100vh - 240px - var(--lb-t) - var(--lb-b));
     animation: lbIn 0.24s cubic-bezier(0.2, 0.85, 0.2, 1);
   }

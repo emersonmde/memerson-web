@@ -827,7 +827,7 @@ takes the larger of what the window allows, from one budget stated once on `.lb`
 
 | Cap          | Value                        | Why                                                                            |
 | ------------ | ---------------------------- | ------------------------------------------------------------------------------ |
-| `--lb-w-cap` | `min(1600px, 100vw - 188px)` | The stage's own width: 60px padding, two 40px arrows, two 24px gaps            |
+| `--lb-w-cap` | `min(2048px, 100vw - 188px)` | The stage's own width: 60px padding, two 40px arrows, two 24px gaps            |
 | `--lb-h-cap` | `100vh - 240px - safe areas` | The 52px bar, the stage's 14px, 156px of metadata, ~18px so it is never wedged |
 
 `sizeFrame()` writes `min(w-cap, h-cap × aspect)` onto the image, because the aspect ratio
@@ -835,7 +835,8 @@ is the one part the stylesheet cannot know and an `<img>` with `aspect-ratio` an
 intrinsic size yet lays out at zero — the frame must have its final size before the LQIP
 paints. On a 1720×926 window a 3:2 frame goes 900×594 → 1029×686, which is 95% of the
 vertical room there is; the width left over at the sides is the window's aspect, not slack.
-The 1600px ceiling is where a 2× display would start upscaling the 2560 derivative.
+The 2048px ceiling is where a 2× display would start upscaling the 5120 derivative, the
+library's widest rung (it was 1600px when the rungs stopped at 2560; it moved with them).
 
 The metadata stack follows the frame's width so the title and the thumbnail strip line up
 with the photograph's edges — but only **outwards**, past a 900px floor. A portrait frame is

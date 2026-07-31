@@ -289,7 +289,7 @@ optimization for our case. See §7 for the component.
 
 | Bucket                    | Access                               | Contents                                        |
 | ------------------------- | ------------------------------------ | ----------------------------------------------- |
-| `memerson-photos`         | **public** via `photos.memerson.com` | derivatives only, max 2560px, metadata stripped |
+| `memerson-photos`         | **public** via `photos.memerson.com` | derivatives only, max 5120px, metadata stripped |
 | `memerson-photos-archive` | **private**, no public access        | full-resolution originals                       |
 
 ```
@@ -315,7 +315,7 @@ preference.
   width: number,         // intrinsic dimensions of the original
   height: number,
   aspectRatio: number,   // precomputed; drives layout without loading any image
-  variants: number[],    // widths actually generated, e.g. [640, 1024, 1536, 2048, 2560]
+  variants: number[],    // widths actually generated, e.g. [640, 1024, 1536, 2048, 2560, 3840, 5120]
   formats: string[],     // ["avif", "webp"]
   lqip: string,          // ~16px WebP as a base64 data URI (~300–500 bytes)
   takenAt: string | null,// ISO 8601, from EXIF DateTimeOriginal
@@ -343,17 +343,26 @@ invisible to templates. Neither is destructive. See MILESTONES M4.
 
 ### 5.5 Derivative ladder
 
-- **Widths:** 640, 1024, 1536, 2048, 2560. Never upscale — a 1600px original produces
-  640/1024/1536 only, and `variants` records what actually exists.
+- **Widths:** 640, 1024, 1536, 2048, 2560, 3840, 5120. Never upscale — a 1600px original
+  produces 640/1024/1536 only, and `variants` records what actually exists.
 - **Formats:** AVIF + WebP. No JPEG fallback — AVIF is supported by all current browsers
   and WebP covers anything older, so a third format is ~600 wasted objects and a third more
   encode time.
-- **Cap:** 2560px. Enforced in code, not by convention.
+- **Cap:** 5120px. Enforced in code, not by convention. **Raised from 2560 on 2026-07-31**:
+  the original cap was an anti-scraping posture, deliberately reversed because the site's
+  purpose is to show the photographs — 5120 fills a 5K display, and a 5472px R6 frame can
+  honestly supply it. Originals still never leave the private archive, and the EXIF
+  allowlist (§5.6) is untouched — resolution and metadata privacy are independent decisions.
+- **Quality tiers:** rungs ≤1536 encode at AVIF q50 / WebP q80 — they are grid-tile sizes,
+  where that is invisible. Rungs ≥2048 encode at AVIF q62 / WebP q88: they are only ever
+  selected by the open viewer on a large screen, where encoder artefacts are the thing on
+  display. Roughly 2× the bytes per large rung, paid only on a deliberate lightbox view.
 - **LQIP:** one 16px-wide WebP inlined as a data URI in the manifest. At ~30 photos per
   page that is ~12 KB total, and it costs zero extra requests.
 
-118 photos × 5 widths × 2 formats ≈ 1,180 R2 objects. R2 free tier is 10 GB storage and
-1M Class A ops/month; total footprint (derivatives + 956 MB of originals) stays under it.
+185 photos × ≤7 widths × 2 formats ≈ 2,400 R2 objects. R2 free tier is 10 GB storage and
+1M Class A ops/month; the derivative footprint grows with the large tier but originals plus
+derivatives still fit the free tier at this library size.
 
 ### 5.6 EXIF: allowlist, never a denylist
 

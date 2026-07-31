@@ -79,7 +79,7 @@ count still spreads across the whole ramp — plus reading-time estimation.
 
 `tests/manifest.test.ts` covers slugs and hashing, and asserts things about the
 committed `photos.json` itself: geometry present and self-consistent, no
-derivative above the 2560px public cap, nothing upscaled past its original,
+derivative above the 5120px cap, nothing upscaled past its original,
 LQIPs small enough to inline, slugs unique and matching their own hash, and
 **no location data anywhere in the file**.
 

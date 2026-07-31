@@ -312,8 +312,15 @@ function init() {
    * The series marker filters to the series. It is the only way two Thunder Over
    * Dover shoots five years apart become reachable from each other — which is the
    * entire reason `series` exists in shoots.json rather than a second page.
+   *
+   * `button` matters: tiles also carry `data-series` (it feeds the filter
+   * haystack), and a bare attribute selector bound this handler to every tile
+   * in a series — so clicking one opened the viewer *and* silently rewrote the
+   * filter to the series. Invisible while name-match and series membership
+   * were the same set; the 2024 Air Show joining `air-shows` under a
+   * different shoot name is what surfaced it.
    */
-  for (const marker of document.querySelectorAll<HTMLElement>('[data-series]')) {
+  for (const marker of document.querySelectorAll<HTMLElement>('button[data-series]')) {
     if (!marker.dataset.series) continue;
     on(marker, 'click', () => {
       setQuery(marker.dataset.series!);
@@ -635,7 +642,7 @@ function init() {
    * property, and asking for one derivative too large is a slower first paint of
    * a *sharp* frame, while asking for one too small is a soft one.
    */
-  const VIEWER_SIZES = '(max-width: 720px) 96vw, (max-width: 1900px) 88vw, 1600px';
+  const VIEWER_SIZES = '(max-width: 720px) 96vw, (max-width: 2300px) 88vw, 2048px';
 
   let cursor = -1;
   let exifOpen = false;

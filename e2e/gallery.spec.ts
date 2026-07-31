@@ -298,20 +298,33 @@ test.describe('the shoots sheet and the jump rail', () => {
       )
       .toBe(true);
 
+    /* The shoot's own tiles, captured while the run wrapper still holds them.
+       Not `id^="f-${key}"`: a shoot's key is its *earliest* date, and a
+       multi-day shoot carries slugs from later days too — the prefix names a
+       day, not the shoot. */
+    const runTileIds = await page.evaluate(
+      (k: string) =>
+        Array.from(
+          document.querySelectorAll(`[data-run][data-shoot="${k}"] [data-tile]`),
+        ).map((el) => el.id),
+      key!,
+    );
+
     /* SHEET: every run wrapper is hidden, so the jump must land on the
        shoot's first visible tile instead. */
     await switchView(page, 'sheet');
     await jumpTo(key!);
     await expect
       .poll(async () =>
-        page.evaluate((k) => {
-          const tile = document.querySelector(
-            `.px-flat [data-tile][id^="f-${k}"]:not([hidden])`,
-          );
-          if (!tile) return null;
-          const box = tile.getBoundingClientRect();
-          return box.top > -box.height && box.top < innerHeight;
-        }, key),
+        page.evaluate((ids: string[]) => {
+          for (const id of ids) {
+            const tile = document.getElementById(id);
+            if (!tile || tile.hidden) continue;
+            const box = tile.getBoundingClientRect();
+            if (box.top > -box.height && box.top < innerHeight) return true;
+          }
+          return false;
+        }, runTileIds),
       )
       .toBe(true);
   });

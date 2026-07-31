@@ -1,7 +1,7 @@
 [
   {
-    "id": "2017-06-18-ea73f997",
-    "sourceHash": "ea73f997d732",
+    "id": "2017-06-13-a3f8c83d",
+    "sourceHash": "a3f8c83da85b",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -10,7 +10,126 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADwAQCdASoQAAsAAsBMJQAB8V1fw4LENoAA/vLhDXjbljVy4PPH8PGz+7MMH281e7BQMuOlbAyBqsJ78Yz7AcJvC257QLCAHLbdnMg4pkPZ4mkVPCPFcyey4M5Aew6fZeW15TiDkELx+/ubxAegxGAA",
+    "takenAt": "2017-06-13T19:14:00Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "75mm",
+    "aperture": "f/5",
+    "shutter": "1/250s",
+    "iso": 800,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "A wooden footbridge arches over a still pond framed by leaning trees and reflected foliage.",
+    "tags": [
+      "bridge",
+      "pond",
+      "trees",
+      "reflection",
+      "park",
+      "water"
+    ]
+  },
+  {
+    "id": "2017-06-13-e7eedd94",
+    "sourceHash": "e7eedd94a285",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQAAsAAsBMJagCdAEQELyw5IAA/qbPaxxBwjlk+bRjYKFt6CVEkDP27Mvq70tlrK6jfkp+0dnZfxvezua5KyG/Bre36Gjqma+Uz1TNYNobYAAA",
+    "takenAt": "2017-06-13T19:17:48Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "105mm",
+    "aperture": "f/5.6",
+    "shutter": "1/160s",
+    "iso": 400,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "Tree trunks lining a grassy bank are mirrored in the still water of a park pond.",
+    "tags": [
+      "trees",
+      "pond",
+      "reflection",
+      "park",
+      "grass",
+      "path",
+      "water"
+    ]
+  },
+  {
+    "id": "2017-06-13-d21e7461",
+    "sourceHash": "d21e7461554f",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAsAAsBMJbAC7AClFe+CQAD+wD9nP2y7DyI+4zzQT2jT7z0RDsy+xXOaUlyoCYrpY8b6U8HTIYp8TFubf6FfLDvZKkP4cAA=",
+    "takenAt": "2017-06-13T19:39:36Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "105mm",
+    "aperture": "f/4",
+    "shutter": "1/125s",
+    "iso": 400,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "A brown bird feather lies on a patch of green grass.",
+    "tags": [
+      "feather",
+      "grass",
+      "lawn",
+      "nature",
+      "macro"
+    ]
+  },
+  {
+    "id": "2017-06-18-596a2b32",
+    "sourceHash": "596a2b32e8bd",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -38,8 +157,248 @@
     ]
   },
   {
-    "id": "2017-06-18-4449f43c",
-    "sourceHash": "4449f43c5431",
+    "id": "2017-06-18-8150a4c5",
+    "sourceHash": "8150a4c5a9ab",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQAgCdASoQAAsAAsBMJbACdAYtBTROYS5H5AAA/uzR5KfbsCbIvyjqC7LbazSRWINOm587556HkZuJOM/QTMwsJD7l+GHgGxv3hkGyKHQjl5Rb4fgiu9v5fIHlvNvI2+udXQAA",
+    "takenAt": "2017-06-18T18:28:57Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "105mm",
+    "aperture": "f/5.6",
+    "shutter": "1/160s",
+    "iso": 800,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "Green ivy leaves climbing up the rough bark of a tree trunk.",
+    "tags": [
+      "ivy",
+      "tree bark",
+      "leaves",
+      "vine",
+      "tree trunk",
+      "foliage"
+    ]
+  },
+  {
+    "id": "2017-06-18-711879d1",
+    "sourceHash": "711879d147b9",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwAQCdASoQAAsAAsBMJagCdADL8YnMswAA/tmk/UOmX678uwzysBnQdxMV+cGb2Lj/Ri9LjEBRK3JGCq6yt3lvBtXYOPQkAKCu2ty+alFzHVHzoxc5HB10Z5xxg3VVPeS4k9BEiVAAAA==",
+    "takenAt": "2017-06-18T18:35:55Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "80mm",
+    "aperture": "f/7.1",
+    "shutter": "1/160s",
+    "iso": 1000,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "A round stone millstone rests upright against a brick wall in a garden bed bordered by hosta plants with white flower spikes.",
+    "tags": [
+      "millstone",
+      "garden",
+      "hosta",
+      "mulch",
+      "brick wall",
+      "stone",
+      "landscaping"
+    ]
+  },
+  {
+    "id": "2017-06-18-6e2b61ea",
+    "sourceHash": "6e2b61ea0b53",
+    "width": 5105,
+    "height": 3403,
+    "aspectRatio": 1.5001,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQAAsAAsBMJZQAApNQ1mt5TQAA/ub6HIsVA7WsaZOO9meHbB2gPYHntZNGgudMkHfMY3a72oK9sQ+XJa4D3hXv/z4GBYHzaGqbHyMo8+hSkAAA",
+    "takenAt": "2017-06-18T18:39:57Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "32mm",
+    "aperture": "f/7.1",
+    "shutter": "1/160s",
+    "iso": 400,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "A white Victorian house with a mansard roof, dormer windows, dark shutters, and a columned front porch.",
+    "tags": [
+      "mansard roof",
+      "victorian house",
+      "historic building",
+      "porch",
+      "columns",
+      "shutters",
+      "dormer windows",
+      "street"
+    ]
+  },
+  {
+    "id": "2017-06-18-b9968fe5",
+    "sourceHash": "b9968fe599e0",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQAAsAAsBMJZgCdADc+XmeB+AA/u0hmBZ4GLGiqh0vEnq79KRS/siAc9U5iMhnZSj3yB5iKI2dr7xBQtkp2SemFnGoBtOr5E7I74awEaFzwAAA",
+    "takenAt": "2017-06-18T19:09:32Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/6.3",
+    "shutter": "1/160s",
+    "iso": 400,
+    "shoot": "2017-06-18",
+    "title": "Delaware Law Enforcement Memorial",
+    "caption": "A bronze statue of a kneeling police officer bows before a black granite memorial wall inscribed with 'Delaware Law Enforcement Memorial', decorated with a wreath, set among trees along a brick walkway.",
+    "tags": [
+      "memorial",
+      "statue",
+      "police officer",
+      "wreath",
+      "monument",
+      "brick pathway",
+      "trees"
+    ]
+  },
+  {
+    "id": "2017-06-18-0f7d5d7e",
+    "sourceHash": "0f7d5d7e7909",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADwAQCdASoQAAsAAsBMJYwAAn/FW59Df8AA/Xj5auUu09vip+RS0+0HSqCSlgkVGerSK7UJkbefZsLlMBpHio9/LuPFnuYRUAAAAA==",
+    "takenAt": "2017-06-18T19:22:24Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "105mm",
+    "aperture": "f/4",
+    "shutter": "1/160s",
+    "iso": 320,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "A bronze statue of three Revolutionary War soldiers advancing with muskets and fixed bayonets, set against trees and a flag with a building in the background.",
+    "tags": [
+      "statue",
+      "monument",
+      "soldiers",
+      "bronze sculpture",
+      "bayonet",
+      "musket",
+      "tricorn hat",
+      "flag"
+    ]
+  },
+  {
+    "id": "2017-06-18-81f91608",
+    "sourceHash": "81f91608dd35",
+    "width": 4965,
+    "height": 3310,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQAgCdASoQAAsAAsBMJZACdADweL2pdY+AAPaRMQ2rzfdUvwfVXRqcXO5/fXeL/u+WDVcMqOOsm/dqMYE31bcmxxTJGL9fibjfBEzoCLp2W0MTTa725OSPMWtqMBHnkwAAAA==",
+    "takenAt": "2017-06-18T19:35:56Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/11",
+    "shutter": "1/160s",
+    "iso": 800,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "A symmetrical brick colonial-style building with a white cupola and clock tower stands behind a brick courtyard with steps and lampposts.",
+    "tags": [
+      "brick building",
+      "colonial architecture",
+      "cupola",
+      "clock tower",
+      "courtyard",
+      "lampposts",
+      "staircase",
+      "dormer windows"
+    ]
+  },
+  {
+    "id": "2017-06-18-cbf5336a",
+    "sourceHash": "cbf5336ac07e",
     "width": 5073,
     "height": 3382,
     "aspectRatio": 1.5,
@@ -48,7 +407,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -76,8 +436,8 @@
     ]
   },
   {
-    "id": "2017-06-18-a61d1053",
-    "sourceHash": "a61d10530f51",
+    "id": "2017-06-18-bca6cca8",
+    "sourceHash": "bca6cca88f58",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -86,7 +446,9 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -115,11 +477,52 @@
     ]
   },
   {
-    "id": "2017-06-19-081be004",
-    "sourceHash": "081be004641d",
-    "width": 5455,
-    "height": 3637,
-    "aspectRatio": 1.4999,
+    "id": "2017-06-18-7e14475b",
+    "sourceHash": "7e14475b28b4",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAQAgCdASoQAAsAAsBMJbACdADp6RqcBkAAAP74XtNcVlEhDRaSl7SkXyCoXt5ijWOlM0K2Nw80tx+evNyKiZ9vFHsZ2obV1DWHuhblNAXN1QyTAtL81nQ7zalntaQ/5WZm4amUr8DQ21AAAAA=",
+    "takenAt": "2017-06-18T19:53:50Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/4",
+    "shutter": "1/160s",
+    "iso": 100,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "A large bronze bell mounted in a wooden yoke on a black metal stand sits on a brick path in a park, with a bench, lawn, and brick building in the background.",
+    "tags": [
+      "bell",
+      "bronze bell",
+      "wooden yoke",
+      "park",
+      "lawn",
+      "bench",
+      "brick building",
+      "flag"
+    ]
+  },
+  {
+    "id": "2017-06-18-541db7de",
+    "sourceHash": "541db7de0829",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
     "variants": [
       640,
       1024,
@@ -131,7 +534,167 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAQAgCdASoQAAsAAsBMJbACdGuAAsz6AEnQAP7244ayNT5bvTF0iulQHNel96lu+VHwUzWbEvGELKtP+v9czf/wDYyeAAAA",
+    "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAABwBACdASoQABgAPtFUo0uoJKMhsAgBABoJZQCw7BmCbmyvYhuUW1Qk5iOEAAD+62pO9N7RSw2Y09nSI7XbsVHAIDeJWr1wPa66i3x7wXT1bSTcPxsioceaySvyYKIyQihbGisWnShId5BlA4fo9Mb88CjAAA==",
+    "takenAt": "2017-06-18T20:07:05Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "96mm",
+    "aperture": "f/4",
+    "shutter": "1/160s",
+    "iso": 125,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "Stone steps and iron handrails lead down from a row of large columns along a building's facade to a tree-lined street.",
+    "tags": [
+      "columns",
+      "steps",
+      "handrail",
+      "building",
+      "street",
+      "crosswalk",
+      "trees"
+    ]
+  },
+  {
+    "id": "2017-06-18-a0b3352f",
+    "sourceHash": "a0b3352f1186",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADQAQCdASoQAAsAAsBMJQAARNBg/WXaAAD8++TO4eLHvwHwnBXXVmjCfdlvqJxhh9Rr+LELhQ613dHy27/juQvqc+Ty9wlwGAH2PEerXcgaRltUT7nIXRtEAAA=",
+    "takenAt": "2017-06-18T20:11:55Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4",
+    "shutter": "1/100s",
+    "iso": 2000,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "A brick and whitewashed house with an arched wooden door sits behind a wooden picket fence and garden trees.",
+    "tags": [
+      "brick house",
+      "arched door",
+      "picket fence",
+      "courtyard",
+      "trees",
+      "garden",
+      "lattice fence",
+      "chimney"
+    ]
+  },
+  {
+    "id": "2017-06-18-85f22eb0",
+    "sourceHash": "85f22eb0044c",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAABQBACdASoQABgAPtFWpEuoJKOhsAgBABoJQBdkBMyAATxISi//CQp3XVLsAOAYwEJbohdd+aQwrUxFLVFobT4iOIabdjEDpfSrPzIEZn96Iu55C0hhDXpryQ8C9Rd3d+QXXhctRTyhRXrmH641JmbrXKdE74TiCdMVQUeyuep8+ADTYAA=",
+    "takenAt": "2017-06-18T20:12:45Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "65mm",
+    "aperture": "f/4",
+    "shutter": "1/100s",
+    "iso": 640,
+    "shoot": "2017-06-18",
+    "title": "The Golden Fleece Tavern",
+    "caption": "A hanging wrought-iron sign painted with a golden sheep advertises 'The Golden Fleece Tavern' beside a lit street lamp in front of a brick building.",
+    "tags": [
+      "tavern sign",
+      "hanging sign",
+      "street lamp",
+      "brick building",
+      "sheep",
+      "storefront",
+      "street"
+    ]
+  },
+  {
+    "id": "2017-06-19-28a9b8ea",
+    "sourceHash": "28a9b8ea2e09",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAwAgCdASoQAAsAAsBMJaACdDBRAZILdPHHUAD+6Ns4G8vzPgLq/UGrfNr4X7kCoBoTAz6sFTSy3AdE6ibEVDvv42c29eZhsuq9JEu/AAA=",
+    "takenAt": "2017-06-19T20:34:08Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/5",
+    "shutter": "1/100s",
+    "iso": 500,
+    "shoot": "2017-06-18",
+    "title": null,
+    "caption": "A vivid orange and red sunset sky over a farm field with a silhouetted tree and a water-filled tire track in the foreground.",
+    "tags": [
+      "sunset",
+      "field",
+      "sky",
+      "tree",
+      "silhouette",
+      "clouds",
+      "farmland",
+      "puddle"
+    ]
+  },
+  {
+    "id": "2017-06-19-5adaa399",
+    "sourceHash": "5adaa3997f9e",
+    "width": 5455,
+    "height": 3637,
+    "aspectRatio": 1.4999,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAQAgCdASoQAAsAAsBMJbACdGuAAsz6AEuEAP7244ayNT5bvTF0iulQHNel96lu+VHwUzWbEvGELKtQTr9uGs32Pyj8AAAA",
     "takenAt": "2017-06-19T20:37:16Z",
     "camera": "Canon EOS 6D",
     "lens": "EF24-105mm f/4L IS USM",
@@ -153,8 +716,115 @@
     ]
   },
   {
-    "id": "2017-07-04-da97a34c",
-    "sourceHash": "da97a34c0790",
+    "id": "2017-07-04-4cae0f7e",
+    "sourceHash": "4cae0f7e7a42",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAABwAgCdASoQABgAAsBMJaQAAudQrFno/0Bz8dgAAP77ZjINVR7kOHekys0JWza6kYci4WPcwej45HNHFyahpQUAAAA=",
+    "takenAt": "2017-07-04T21:34:52Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "65mm",
+    "aperture": "f/11",
+    "shutter": "1.1s",
+    "iso": 100,
+    "shoot": "2017-07-04",
+    "title": null,
+    "caption": "Two firework bursts light up a dark night sky, one gold and one white, with smoke trails rising below.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "smoke trails",
+      "long exposure"
+    ]
+  },
+  {
+    "id": "2017-07-04-1c03d4b0",
+    "sourceHash": "1c03d4b0e6e3",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAwCdASoQABgAPtFUo0uoJKMhsAgBABoJZQAAW+k8HT8YTNfNQAD+93Rsw8fJ964aMdRem2PKcve1sDADWN4Tw60YxvoiA/BcrakAAAA=",
+    "takenAt": "2017-07-04T21:35:21Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "65mm",
+    "aperture": "f/8",
+    "shutter": "2.5s",
+    "iso": 100,
+    "shoot": "2017-07-04",
+    "title": null,
+    "caption": "Two purple firework bursts glow against a black night sky with trailing smoke below.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "smoke",
+      "purple",
+      "celebration"
+    ]
+  },
+  {
+    "id": "2017-07-04-b972fdcf",
+    "sourceHash": "b972fdcf802f",
+    "width": 3097,
+    "height": 3384,
+    "aspectRatio": 0.9152,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAAAwAwCdASoQABEAPtFUo0uoJKMhsAgBABoJaQAAW+wCxU5AAP73dNrIm+Z1u1XZCAHWhY9QwQwAAA==",
+    "takenAt": "2017-07-04T21:41:06Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "55mm",
+    "aperture": "f/11",
+    "shutter": "4.5s",
+    "iso": 100,
+    "shoot": "2017-07-04",
+    "title": null,
+    "caption": "A firework burst radiates blue and orange trails of sparks against a black night sky.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "sparks"
+    ]
+  },
+  {
+    "id": "2017-07-04-78d9c17f",
+    "sourceHash": "78d9c17fba2d",
     "width": 2725,
     "height": 4088,
     "aspectRatio": 0.6666,
@@ -189,8 +859,8 @@
     ]
   },
   {
-    "id": "2017-07-04-432595a3",
-    "sourceHash": "432595a38dcc",
+    "id": "2017-07-04-35bf69a9",
+    "sourceHash": "35bf69a92c46",
     "width": 2326,
     "height": 3489,
     "aspectRatio": 0.6667,
@@ -224,8 +894,8 @@
     ]
   },
   {
-    "id": "2017-07-04-f6a846ab",
-    "sourceHash": "f6a846ab50be",
+    "id": "2017-07-04-e88bec6d",
+    "sourceHash": "e88bec6d0b50",
     "width": 3648,
     "height": 5472,
     "aspectRatio": 0.6667,
@@ -295,8 +965,8 @@
     ]
   },
   {
-    "id": "2017-07-04-eb412869",
-    "sourceHash": "eb412869e5ed",
+    "id": "2017-07-04-42209beb",
+    "sourceHash": "42209bebaa69",
     "width": 3128,
     "height": 4692,
     "aspectRatio": 0.6667,
@@ -330,8 +1000,8 @@
     ]
   },
   {
-    "id": "2017-07-04-03d84765",
-    "sourceHash": "03d84765cb1e",
+    "id": "2017-07-04-38490434",
+    "sourceHash": "38490434e5b3",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -340,7 +1010,84 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAACwAQCdASoQAAsAAsBMJZwAAudJ4TAAAP77a8/dJerEKQCPUikFRoHbD9Fxz3oAAAA=",
+    "takenAt": "2017-07-04T21:49:10Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "35mm",
+    "aperture": "f/10",
+    "shutter": "2.8s",
+    "iso": 100,
+    "shoot": "2017-07-04",
+    "title": null,
+    "caption": "A firework bursts into pink and white streaks against a dark night sky, its trailing smoke visible below.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "smoke",
+      "celebration"
+    ]
+  },
+  {
+    "id": "2017-07-04-9d63e074",
+    "sourceHash": "9d63e0746f1f",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAAAwAQCdASoQAAsAAsBMJaQAA3AA/vfoqPYIuD4/95/Wrm08AOfLicW3pBxQdj8vzYAAAA==",
+    "takenAt": "2017-07-04T21:49:36Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "35mm",
+    "aperture": "f/22",
+    "shutter": "1/1s",
+    "iso": 100,
+    "shoot": "2017-07-04",
+    "title": null,
+    "caption": "Multiple firework bursts in green, red, orange, and white trail across a black night sky.",
+    "tags": [
+      "fireworks",
+      "night sky",
+      "long exposure",
+      "sparks"
+    ]
+  },
+  {
+    "id": "2017-07-04-7918bf0a",
+    "sourceHash": "7918bf0afc11",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -366,11 +1113,11 @@
     ]
   },
   {
-    "id": "2017-07-04-50220e0f",
-    "sourceHash": "50220e0f1437",
-    "width": 2362,
+    "id": "2017-07-04-423c11df",
+    "sourceHash": "423c11df5154",
+    "width": 2363,
     "height": 1575,
-    "aspectRatio": 1.4997,
+    "aspectRatio": 1.5003,
     "variants": [
       640,
       1024,
@@ -401,8 +1148,8 @@
     ]
   },
   {
-    "id": "2017-07-04-248a111f",
-    "sourceHash": "248a111f6ab0",
+    "id": "2017-07-04-1f47118a",
+    "sourceHash": "1f47118a07cc",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -411,7 +1158,9 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -437,8 +1186,8 @@
     ]
   },
   {
-    "id": "2017-08-27-4102ebb8",
-    "sourceHash": "4102ebb85417",
+    "id": "2017-08-27-bc2eb60a",
+    "sourceHash": "bc2eb60a54c3",
     "width": 4245,
     "height": 2830,
     "aspectRatio": 1.5,
@@ -447,13 +1196,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoQAAsAAsBMJQBOgCB7B4wAAP7ndeRz533lZy/4gNv0utC6NOXr0foB4i/JMTaq/v1YtI1dAAA=",
+    "lqip": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAACwAQCdASoQAAsAAsBMJQBOgCB7B4wAAP7ndeRz533lZy/4gNv0utC6NOXr0foF/0X5JibVX9+rFpGroAAAAA==",
     "takenAt": "2017-08-27T16:20:21Z",
     "camera": "Canon EOS 6D",
     "lens": "EF24-105mm f/4L IS USM",
@@ -476,8 +1226,8 @@
     ]
   },
   {
-    "id": "2017-08-27-92629cc2",
-    "sourceHash": "92629cc282a5",
+    "id": "2017-08-27-2d4a1897",
+    "sourceHash": "2d4a18976052",
     "width": 3894,
     "height": 2596,
     "aspectRatio": 1.5,
@@ -486,7 +1236,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -515,23 +1266,60 @@
     ]
   },
   {
-    "id": "2017-08-27-c8d7fcb2",
-    "sourceHash": "c8d7fcb2a5cf",
-    "width": 4117,
-    "height": 2745,
-    "aspectRatio": 1.4998,
+    "id": "2017-08-27-2cbce06a",
+    "sourceHash": "2cbce06a6fc5",
+    "width": 1731,
+    "height": 1155,
+    "aspectRatio": 1.4987,
     "variants": [
       640,
       1024,
-      1536,
-      2048,
-      2560
+      1536
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAACwAQCdASoQAAsAAsBMJYwCdAEOqOEgAP7no7TcTYSvtJ0vwedt89IVWxRhsxiSMiYTwAAA",
+    "lqip": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAABQAQCdASoQAAsAAsBMJQBOgCgAAP7sDqxoR8Kt8Jy9zS59Ij7HOujn8rjB9G0QAAA=",
+    "takenAt": "2017-08-27T16:42:40Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "105mm",
+    "aperture": "f/10",
+    "shutter": "1/200s",
+    "iso": 100,
+    "shoot": "2017-08-27",
+    "title": null,
+    "caption": "Six fighter jets in a tight formation trail white smoke across a cloudy sky during an air show.",
+    "tags": [
+      "airshow",
+      "fighter jets",
+      "f-16",
+      "formation flying",
+      "smoke trails",
+      "thunderbirds",
+      "sky"
+    ]
+  },
+  {
+    "id": "2017-08-27-8604e805",
+    "sourceHash": "8604e805bc1a",
+    "width": 4118,
+    "height": 2745,
+    "aspectRatio": 1.5002,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAQCdASoQAAsAAsBMJYwCdAEOr9dGAAD+56O03E2Er7SdL8HnbfPSFU/mbq3pN4vk8IAA",
     "takenAt": "2017-08-27T16:51:31Z",
     "camera": "Canon EOS 6D",
     "lens": "EF24-105mm f/4L IS USM",
@@ -550,6 +1338,45 @@
       "airshow",
       "tarmac",
       "jets"
+    ]
+  },
+  {
+    "id": "2017-08-27-1c57713e",
+    "sourceHash": "1c57713e98b5",
+    "width": 5084,
+    "height": 3389,
+    "aspectRatio": 1.5001,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoQAAsAAsBMJQBOj+ADMqIINYAA/lveCLsNxujpBWKIwln6K2ySEGqKQ1BGCk2/1YYDZgAA",
+    "takenAt": "2017-08-27T16:58:26Z",
+    "camera": "Canon EOS 6D",
+    "lens": "EF24-105mm f/4L IS USM",
+    "focalLength": "32mm",
+    "aperture": "f/4",
+    "shutter": "1/400s",
+    "iso": 100,
+    "shoot": "2017-08-27",
+    "title": null,
+    "caption": "A row of six red-and-white Thunderbirds fighter jets parked in formation on an airport tarmac under a cloudy sky.",
+    "tags": [
+      "thunderbirds",
+      "f-16",
+      "fighter jet",
+      "airshow",
+      "tarmac",
+      "airport",
+      "military aircraft"
     ]
   },
   {
@@ -635,7 +1462,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -674,7 +1502,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -701,8 +1530,8 @@
     ]
   },
   {
-    "id": "2021-07-02-fb0bc3d1",
-    "sourceHash": "fb0bc3d17cfa",
+    "id": "2021-07-02-5df10216",
+    "sourceHash": "5df10216748f",
     "width": 4372,
     "height": 2915,
     "aspectRatio": 1.4998,
@@ -711,13 +1540,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAQAgCdASoQAAsAAsBMJaACdADGmOd56eYAAPwIgqDkpxmU/srEKexudDHk6xM3qT0bjbXOC9Njzsn2Q3vWdyC2dzyjiXfRU5JgAb+Z1jx8dM3qbZdxVuuYpLcCaUAzaf+BEpAAAAA=",
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADwAQCdASoQAAsAAsBMJaACdADGf8cqz5QA/AiCoOSnGZT+ysQp7G50MeTrEzepPRuNtc4L02Mmxg9nj7Y1kviAgLXx4pL8RbLk6ImrPL1EwnAJ46Q4Ae13mqlbsfSuDCsX1oAA",
     "takenAt": "2021-07-02T08:32:37Z",
     "camera": "Canon EOS R6",
     "lens": "RF24-105mm F4 L IS USM",
@@ -747,7 +1577,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -783,7 +1614,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -820,7 +1652,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -857,7 +1690,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -925,11 +1759,52 @@
     ]
   },
   {
-    "id": "2021-08-17-71528fd1",
-    "sourceHash": "71528fd1a2b4",
+    "id": "2021-08-17-935f30a5",
+    "sourceHash": "935f30a5c04d",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoQAAsAAsBMJagCdAEQy3TR/gcgAP7rjeaDeTIIl0hdb21wdiHLPPf5xLX/RXK3vgniJwl1Ce95yY+6f9hyUPigL+Y7DCCARRWlA/pyRddLEAAA",
+    "takenAt": "2021-08-17T21:20:00Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/9",
+    "shutter": "1/320s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A flowering royal poinciana tree with bright red-orange blossoms stands on a grassy hillside overlooking a lake and green hills under a partly cloudy sky.",
+    "tags": [
+      "flamboyant tree",
+      "royal poinciana",
+      "flowers",
+      "hills",
+      "lake",
+      "grass",
+      "clouds",
+      "sky"
+    ]
+  },
+  {
+    "id": "2021-08-17-7eae827a",
+    "sourceHash": "7eae827a7739",
+    "width": 3635,
+    "height": 5452,
+    "aspectRatio": 0.6667,
     "variants": [
       640,
       1024,
@@ -941,7 +1816,127 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAwAgCdASoQAAsAAsBMJbACdFQAAiy3OdagAAD+2+qFIq0DxO/k+0qMG+b6M9CDeAKZu/n7W8NE7ikRSxte0vizrTyHEaNN1BPVcDfpl73dxtNdkYtJ9ay8rQfvwcZjU8cKEs9y7b2IAA==",
+    "lqip": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAAAQBACdASoQABgAPtFUo0uoJKMhsAgBABoJaAAD5knYgjOs9EWpplrTYAD+63F787VF9C3x0wutWog9kfqWu5s3htAM3xPn/u4T/sm96WmqRZPAYeS6nL8w/hqELrU+DN9foaljwsexnW8RojcvTEhTjQU7R/nUU80XsrwvCI4umOg3BAQUGC6OPz3c8H23iN6Juf+scjCwwe2WNPlAAA==",
+    "takenAt": "2021-08-17T21:47:59Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "25mm",
+    "aperture": "f/4.5",
+    "shutter": "1/2500s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A round stone tower ruin with an arched entrance and white staircase railings stands surrounded by tropical trees and a grassy lawn under a partly cloudy sky.",
+    "tags": [
+      "stone tower",
+      "ruins",
+      "windmill tower",
+      "staircase",
+      "stairway railing",
+      "tropical trees",
+      "lawn",
+      "stepping stone path"
+    ]
+  },
+  {
+    "id": "2021-08-17-a0e4c341",
+    "sourceHash": "a0e4c34130a3",
+    "width": 3621,
+    "height": 5432,
+    "aspectRatio": 0.6666,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAABQBACdASoQABgAPtFUo0uoJKMhsAgBABoJbACdABn6BY0WGzizVNVf0/4AAP61E5PJWixVKAB/YRJBLC8XqpBoDAg7BEx4LdCKlYTw5nrU+1kKZ2okD3zlUy+U3mUtYmQ+9taEMzMxRXbkNd8LWKTCangKKG+WhdvkvLdXjewfk0b6t3azne1+W5Jo79wjM2Y9JW6Gtk1+I4qK5ktaUKv8RxCPzZn2BKcAAA==",
+    "takenAt": "2021-08-17T21:50:10Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "30mm",
+    "aperture": "f/16",
+    "shutter": "1/500s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A stone archway with a metal railing frames a view of trees, grass, and the turquoise ocean beyond.",
+    "tags": [
+      "stone archway",
+      "doorway",
+      "ocean",
+      "railing",
+      "trees",
+      "grass",
+      "ruins",
+      "coastline"
+    ]
+  },
+  {
+    "id": "2021-08-17-7df5718b",
+    "sourceHash": "7df5718bacd7",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoQAAsAAsBMJQBOgMX65Po1z7gAAPfbk5SIbDWE5AG2Hxk5d/kB8GkuaEQjTO7tcE8sI672Q2N3xfM+gBmu+oK4kST/YPpbRihroM3Sbi002yqUAtKYUPI3dSXS5DYMttggAA==",
+    "takenAt": "2021-08-17T21:50:33Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "105mm",
+    "aperture": "f/16",
+    "shutter": "1/160s",
+    "iso": 1600,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "Close-up of a stone and mortar wall embedded with flat rocks and a fan-shaped shell.",
+    "tags": [
+      "stone wall",
+      "mortar",
+      "masonry",
+      "texture",
+      "rock",
+      "seashell",
+      "wall"
+    ]
+  },
+  {
+    "id": "2021-08-17-621a970e",
+    "sourceHash": "621a970ebd83",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAwAgCdASoQAAsAAsBMJbACdFQAAiy3OE4IgAD+2+qFIq0DxO/k+0qMG+b6M9CDd/Mn8/a3honbgebpvJu1r2IQv2kFVo05VkeX/QF3u7jaa7IxaT61l5Wg/fg4zGp44UJZ7l23sQAAAA==",
     "takenAt": "2021-08-17T21:50:53Z",
     "camera": "Canon EOS R6",
     "lens": "RF24-105mm F4 L IS USM",
@@ -963,8 +1958,48 @@
     ]
   },
   {
-    "id": "2021-08-17-109e18e9",
-    "sourceHash": "109e18e9172d",
+    "id": "2021-08-17-6dfed9a6",
+    "sourceHash": "6dfed9a61486",
+    "width": 5372,
+    "height": 3581,
+    "aspectRatio": 1.5001,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoQAAsAAsBMJagCdAELWSu+QXfAAN1LOcnR4zO/EZbB6RObAegjeyFvlWfk4pbTfBQZXE5jr8Fq4Wi4YdMz/JMTzDTZHy3xE1c4UtpAKYAAAA==",
+    "takenAt": "2021-08-17T22:56:40Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "43mm",
+    "aperture": "f/10",
+    "shutter": "1/320s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A tall stone monument made of angular masonry pillars stands against a blue sky with scattered clouds near a coastline.",
+    "tags": [
+      "monument",
+      "stone",
+      "sculpture",
+      "sky",
+      "landmark",
+      "clouds",
+      "coast"
+    ]
+  },
+  {
+    "id": "2021-08-17-fc26b78d",
+    "sourceHash": "fc26b78d673e",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -973,13 +2008,15 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADwAQCdASoQAAsAAsBMJbACdAEOrw8FmgAA/tT75CW0puWxxpJlJOzWviBhL2t+bVK/xr1qHxgDrQtnBTP7S+vghe4f1Z5oTVZmdoo6+zu4T5n9dlFSE25aowtjFAAA",
+    "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAADQAQCdASoQAAsAAsBMJbACdAEOrw8CsAD+1PvkJbSm6RPoVp7fzJBpfkTyuHXxC39uuBJApyrd3o0tD1PBQD5XQxt97CiDz+5l6jvIqHY1b2b8BPYjNSgw7mi7WsAA",
     "takenAt": "2021-08-17T22:59:49Z",
     "camera": "Canon EOS R6",
     "lens": "RF24-105mm F4 L IS USM",
@@ -1001,8 +2038,8 @@
     ]
   },
   {
-    "id": "2021-08-17-cd1aaf7c",
-    "sourceHash": "cd1aaf7cb655",
+    "id": "2021-08-17-01e40c35",
+    "sourceHash": "01e40c35e015",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -1011,13 +2048,93 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAwAgCdASoQAAsAAsBMJbACdAYuvdTceMzxeAD+wGDWLJsf64NoGeCRxymeeFG1G4C/KHvXH8JbVMgDY3WZUDBsYIKG3Pkb36BkwplSm8W59DPSugqSXP6XJw+MvaytBdEfZ/ZZp+B7cHijtFknEPFmccd3N27LIj+gAA==",
+    "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoQAAsAAsBMJbACdAEO9aFqn1RsAAD+sj7wCEgKImLzP/bFDZ1Ekc9LwWKmtKm2H4e6stj5fuuegCcVb5v8qfKa1P7+eDq5273rKl00mv8hWd2QAAA=",
+    "takenAt": "2021-08-17T22:59:56Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "67mm",
+    "aperture": "f/7.1",
+    "shutter": "1/250s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A tall clustered cactus grows on a coastal cliff overlooking the blue ocean.",
+    "tags": [
+      "cactus",
+      "ocean",
+      "coastline",
+      "cliff",
+      "plant",
+      "sea"
+    ]
+  },
+  {
+    "id": "2021-08-17-6372e57e",
+    "sourceHash": "6372e57ea851",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQAAsAAsBMJbACdAELY5BnugAA/j4mWl/5x7BJ/lDUuZ4v0YxJ0cS8rA/HQr6rnM14IXDBf/FS7Ra9KRy9K2/v6iMP1wcmn+4LUYilQAA=",
+    "takenAt": "2021-08-17T23:06:10Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "105mm",
+    "aperture": "f/4.5",
+    "shutter": "1/160s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A large white radio telescope dish sits on a hillside covered in dense green vegetation, with a small building nearby.",
+    "tags": [
+      "radio telescope",
+      "satellite dish",
+      "antenna",
+      "hillside",
+      "greenery",
+      "mountain"
+    ]
+  },
+  {
+    "id": "2021-08-17-bb777c42",
+    "sourceHash": "bb777c4257c1",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAwAgCdASoQAAsAAsBMJbACdAYu5dWySVAVYAD+wGE8bop40daWWsuKAr2Uw8aXCovtsEwAcDEX2zIA2I/uOlYrZAP0i2jfMbeIvJ+VlvBOQ6fw/7M5yzYSPbBs/0U59pXtMfYCn6VWvvaLHdOr1Yxx3c3kJyRH9AAAAA==",
     "takenAt": "2021-08-17T23:59:24Z",
     "camera": "Canon EOS R6",
     "lens": "RF24-105mm F4 L IS USM",
@@ -1038,8 +2155,48 @@
     ]
   },
   {
-    "id": "2021-08-18-7e4ad3d3",
-    "sourceHash": "7e4ad3d37aaf",
+    "id": "2021-08-18-0d642f00",
+    "sourceHash": "0d642f004b66",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADQAQCdASoQAAsAAsBMJbAAAtnJax1M4AD+9LSFqEFWYNLDXr+59grW4RismnedtaEj2Muc/K6RcnvzTM8fI/3SNDpznWQj52TvP2X+gvezBznz9zxLoh8slqAAAA==",
+    "takenAt": "2021-08-18T00:03:10Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4",
+    "shutter": "1/400s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A weathered stone building with wooden shutters stands amid tropical trees and foliage, with a wooden bench in the foreground.",
+    "tags": [
+      "stone building",
+      "ruins",
+      "wooden shutters",
+      "wooden bench",
+      "garden",
+      "trees",
+      "tropical foliage"
+    ]
+  },
+  {
+    "id": "2021-08-18-0c0cfbf2",
+    "sourceHash": "0c0cfbf2bde0",
     "width": 3648,
     "height": 5472,
     "aspectRatio": 0.6667,
@@ -1054,7 +2211,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRtIAAABXRUJQVlA4IMYAAABwBACdASoQABgAPtFUo0uoJKMhsAgBABoJbACdMoAloxI1VOuaFJnNLGhzgAD+fKqQIZ8Ka+LvLM8vN2ERnLjeFx+oKd6+hpqB9eWr44TizUzUwhnwyqp67Qa9Lu1FR8Lm4AAaaI5/VqzayoB/XJFkdKcP6+Tq9REEgRSTr6qlxh/uwpg7S3GxdZzMYh4kUP0H4O0kQgdwPQI0r2LSQa+MnCE0QqFDJk4bBnr+w6/lIxwMj4/qmWt9UuwdtGSitrjRrm7QAAA=",
+    "lqip": "data:image/webp;base64,UklGRtIAAABXRUJQVlA4IMYAAABwBACdASoQABgAPtFUo0uoJKMhsAgBABoJbACdMoAloxI14wvEwggBMaTfoAD+fKqQIZ8Ka+LvLM8vN2ERnLjeFx+oKd6+hpqB9eWkXwYaaliL/wk6TkbKSxFFFrUl0HBy70ohT1rrd/hYUCMom6Devphu36+Tq9REEgRSTuoKljrxG5SObpLLPkJpJt3IfJ56v0502mlW8EipuQ8yBYVkH3II/uKmPhJSt8vmHyHyfvQaS8wyqWvheSg5M/dj6KPZbtkAAAA=",
     "takenAt": "2021-08-18T00:03:57Z",
     "camera": "Canon EOS R6",
     "lens": "RF24-105mm F4 L IS USM",
@@ -1075,8 +2232,8 @@
     ]
   },
   {
-    "id": "2021-08-18-a0dcf987",
-    "sourceHash": "a0dcf987650d",
+    "id": "2021-08-18-66d20a41",
+    "sourceHash": "66d20a4122cf",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -1085,13 +2242,15 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoQAAsAAsBMJZQAAura/LrqsAAA/upIL1oR5mljJb3YE8YZlA5lmtJCOkHxhyl0Dy/9kXKw2PupSS+b+V8DM2ZV4poueIOQfiQKgQ9CbaM35aQOkAA=",
+    "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoQAAsAAsBMJZQC7AEN4Nmhu1AA/upIL1oTmM0sZLe7px/zxaMizI6EugqnQZ3d7jjuUw3Dq6F/UvFf62zBT9W7JG6YpGMZ7oZNTrOIdjrIqSsAAAA=",
     "takenAt": "2021-08-18T00:04:57Z",
     "camera": "Canon EOS R6",
     "lens": "RF24-105mm F4 L IS USM",
@@ -1112,8 +2271,8 @@
     ]
   },
   {
-    "id": "2021-08-18-ccedb933",
-    "sourceHash": "ccedb93399c4",
+    "id": "2021-08-18-1e446c6e",
+    "sourceHash": "1e446c6e25d1",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -1122,13 +2281,15 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAABQAgCdASoQAAsAAsBMJaAC7AEREdrH+PoqzIAA/tDhrxixPikEcyrDqlMWfNPMJfYui2Eh/l6Z16exHKXrjzumY6cgshas6dNl7ptv1tmbA1L/wAA=",
+    "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAwAgCdASoQAAsAAsBMJZgC7AEQSimoQXHwdAD+0OGvGLE+KqwV1yBsQfcIiZbIqns81Ux3JjdvcCwW+FjHKRXAq3otn0NFUNVqoAj5obDIXGSmAAA=",
     "takenAt": "2021-08-18T00:05:18Z",
     "camera": "Canon EOS R6",
     "lens": "RF24-105mm F4 L IS USM",
@@ -1151,8 +2312,8 @@
     ]
   },
   {
-    "id": "2021-08-18-97acffda",
-    "sourceHash": "97acffda31c7",
+    "id": "2021-08-18-22d15a58",
+    "sourceHash": "22d15a5865cd",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -1161,13 +2322,132 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADwAQCdASoQAAsAAsBMJQAB8QlG7l85YOAA/kC4HSFjjjkCJ2wUVItedpLEj3PStC2XOWNEGHCE6tcFdfyTMpD/C98+D5qNPEAf3hSDV2PpUweumt5RinNnjAxjbRZlf5VimAAA",
+    "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoQAAsAAsBMJZACw7Ee/LusbxfgAP7mjghKY6QS9M5I7gBNJIBm96Sx7xDdDLQp4hRh0lON9ZC3Cuo7j7nbfy8pEhr3jaVF4lvXX8aqg9wAAA==",
+    "takenAt": "2021-08-18T00:09:41Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "105mm",
+    "aperture": "f/4",
+    "shutter": "1/160s",
+    "iso": 160,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "Spanish moss hangs in draping strands from tree branches surrounded by green foliage.",
+    "tags": [
+      "spanish moss",
+      "tree branch",
+      "foliage",
+      "garden",
+      "plants"
+    ]
+  },
+  {
+    "id": "2021-08-18-a38fd6a3",
+    "sourceHash": "a38fd6a3d661",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABwAgCdASoQAAsAAsBMJYgC7AYtVwk8ymtTm+GAAP7dkT8tHkSnkLR1mS9yoeEfuqkQvTx2WzDdfo8/86pVXPedNMMf0NBby/4lJkxJ3wvrY07Qk6ZYQPdMqwoEVlbU3heZr1keqlnN+zmOHXJTQAAA",
+    "takenAt": "2021-08-18T00:10:43Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "Two large blue-gray agave plants with spiky, toothed leaves growing in a garden surrounded by green foliage.",
+    "tags": [
+      "agave",
+      "succulent",
+      "plant",
+      "garden",
+      "leaves",
+      "foliage"
+    ]
+  },
+  {
+    "id": "2021-08-18-f9916960",
+    "sourceHash": "f9916960667c",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAwAgCdASoQAAsAAsBMJYgCdAYvDViTxA4NAAD5d9WtToAzAS3Dpo5Do9tjJsFF6QVZhcf6jyl5WrTL5qXzpjk2QmfGMQFgTqXdpEa1azRQzDtFVLZKwAAA",
+    "takenAt": "2021-08-18T00:13:07Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A crumbling stone and coral-rock wall of an old ruined building stands amid palm trees and grass under a partly cloudy sky.",
+    "tags": [
+      "ruins",
+      "stone wall",
+      "palm trees",
+      "grass",
+      "tropical",
+      "abandoned building",
+      "coral stone"
+    ]
+  },
+  {
+    "id": "2021-08-18-c688f445",
+    "sourceHash": "c688f445e91e",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAQCdASoQAAsAAsBMJQAB8P1G7dEosAAA/kC4Cv7iVqKsV2PNci9jsAWJT3PStCycuWNEGHCE6tcFdfxSMoD/C98+DqMEmgAf3dMtzf3Kk8IT+BXZhEOiJq5ghJ2tJ819x0GgAAA=",
     "takenAt": "2021-08-18T00:15:24Z",
     "camera": "Canon EOS R6",
     "lens": "RF24-105mm F4 L IS USM",
@@ -1188,8 +2468,8 @@
     ]
   },
   {
-    "id": "2021-08-18-41f2ef67",
-    "sourceHash": "41f2ef672bb3",
+    "id": "2021-08-18-ba011497",
+    "sourceHash": "ba0114976a25",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -1198,13 +2478,96 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoQAAsAAsBMJbACdAYvrQmA+72PSAD+6lQj1U9wBG2hRJI5WPw3AjgWcBQRwnesehoHlzccROw0lprJBhHwfugirmCO/aGjabSBavCqQdVaWzX8XpsDQAAA",
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQAAsAAsBMJbAAAueEj93kBgAA/u3vZX1J5uI/yOOjDPZV2BboaCOgFtZvcPz1HeucnRGI+WwRXeQtE2mG2fO9GN2JD441oC/6lG1X+slG8dAA",
+    "takenAt": "2021-08-18T00:18:09Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4",
+    "shutter": "1/800s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A ruined stone building with a rusted corrugated metal roof stands surrounded by banana plants and tropical foliage under a partly cloudy sky.",
+    "tags": [
+      "ruins",
+      "stone building",
+      "banana plants",
+      "corrugated roof",
+      "wooden door",
+      "tropical vegetation",
+      "clouds"
+    ]
+  },
+  {
+    "id": "2021-08-18-ec61333c",
+    "sourceHash": "ec61333c70a7",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAQAgCdASoQAAsAAsBMJbACdAELz05cqccAAP7wo49aZYNK0oHl9Q9IJQ02fdKv739D3W7F0fD8SqP3Pci4wqMyTkwz/Tm82dv8H4ya5hMbXcJ7aBe5Kd0o4iCE2nR2G7DrCrQ/zSa78yYlYlKAAA==",
+    "takenAt": "2021-08-18T00:20:54Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "35mm",
+    "aperture": "f/4",
+    "shutter": "1/800s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A flowering flame tree with clusters of red-orange blossoms stands over a grassy lawn surrounded by lush greenery, with rooftops visible in the background.",
+    "tags": [
+      "flame tree",
+      "royal poinciana",
+      "tropical",
+      "flowers",
+      "garden",
+      "lawn",
+      "trees",
+      "path"
+    ]
+  },
+  {
+    "id": "2021-08-18-1eadec46",
+    "sourceHash": "1eadec46929f",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoQAAsAAsBMJbACdAYv/QmA2XooxAD+6lQkFW8wns5i2KenTkJfTtK2295O3Jrla2ZZzR7mGo2/MGesAnb6b8eLRfmtI2j5Y2QQitogMFSi6q0tmv4WWh0AAAA=",
     "takenAt": "2021-08-18T00:21:55Z",
     "camera": "Canon EOS R6",
     "lens": "RF24-105mm F4 L IS USM",
@@ -1225,6 +2588,46 @@
     ]
   },
   {
+    "id": "2021-08-18-ee353fa9",
+    "sourceHash": "ee353fa9dae8",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAQAgCdASoQAAsAAsBMJagAAxbQXXt97PKAAP6Im5++cHhv3devWzWPuUczO1dQ1HYnRMCinulGmMzdHCeZskMVBriUkAclGPuFWf/ZRl4+DX4EKPvym4uHAAA=",
+    "takenAt": "2021-08-18T00:22:33Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/5.6",
+    "shutter": "1/125s",
+    "iso": 100,
+    "shoot": "2021-08-16",
+    "title": null,
+    "caption": "A large flowering flame tree with red-orange blossoms stands over a lawn beside a stone-edged driveway surrounded by tropical foliage.",
+    "tags": [
+      "flame tree",
+      "royal poinciana",
+      "garden",
+      "tropical",
+      "lawn",
+      "driveway",
+      "stone wall"
+    ]
+  },
+  {
     "id": "2021-08-18-b7f17151",
     "sourceHash": "b7f17151a6fc",
     "width": 4032,
@@ -1235,7 +2638,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1272,7 +2676,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1310,7 +2715,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1339,8 +2745,48 @@
     ]
   },
   {
-    "id": "2021-11-27-2e180961",
-    "sourceHash": "2e180961be9b",
+    "id": "2021-11-27-9e697c68",
+    "sourceHash": "9e697c688b53",
+    "width": 5177,
+    "height": 3304,
+    "aspectRatio": 1.5669,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAQCdASoQAAoAAsBMJZQCdIIjE478DggA/vIQt1rLM9dwTIjZTQItcomL845yVdzqrBzH9c5aX/8SISOTx4VIJPvCKi414UuEX0WbV7fjX/Dk0cZuRZ9fjmGxQW1FOYKe2fMLOAA=",
+    "takenAt": "2021-11-27T01:11:00Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "53mm",
+    "aperture": "f/4.5",
+    "shutter": "1/60s",
+    "iso": 2500,
+    "shoot": "2021-11-27",
+    "title": null,
+    "caption": "A cutaway jet turbine engine on display in a museum hangar, with another engine and a helicopter visible in the background.",
+    "tags": [
+      "jet engine",
+      "turbofan",
+      "museum",
+      "aircraft engine",
+      "helicopter",
+      "hangar",
+      "aviation exhibit"
+    ]
+  },
+  {
+    "id": "2021-11-27-441e65d3",
+    "sourceHash": "441e65d3807f",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -1349,7 +2795,129 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAwAgCdASoQAAsAAsBMJbACdAYvNLkHuCoGGAD5Tg+/TZ0BHjyVV9I0bYmEpM2z9ngQYl+zoB94etWfuRxrjTiQECci/xOKX+22PRXpyB5vYJQfn4vBcRdGviDeRuDAsrcerhY9kQyoutDylgp0VdnF9IAhWA6il9wAAA==",
+    "takenAt": "2021-11-27T01:42:29Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4.5",
+    "shutter": "1/80s",
+    "iso": 1000,
+    "shoot": "2021-11-27",
+    "title": "Space Shuttle Discovery",
+    "caption": "The space shuttle Discovery is displayed nose-first in a large museum hangar beneath a satellite model and an American flag, with visitors observing below.",
+    "tags": [
+      "space shuttle",
+      "discovery",
+      "museum",
+      "aircraft hangar",
+      "american flag",
+      "satellite model",
+      "visitors",
+      "aerospace"
+    ]
+  },
+  {
+    "id": "2021-11-27-21c1eb2d",
+    "sourceHash": "21c1eb2dc776",
+    "width": 4297,
+    "height": 3648,
+    "aspectRatio": 1.1779,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABQAgCdASoQAA4AAsBMJQBOgMXczk82y2cekAAA/vEhm1HB0KQQ2E7cpWQhOM9E7W0Kk47JxC597o0fG8zvQznzm2gbvXbE7BaPerPh16Dxd1jngpi9EeK3N850uHgB8W5uZN8+GVrwaR5YcctKp2YEF4VN/m5EQAA=",
+    "takenAt": "2021-11-27T01:59:32Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "105mm",
+    "aperture": "f/4",
+    "shutter": "1/125s",
+    "iso": 640,
+    "shoot": "2021-11-27",
+    "title": "Space Shuttle Discovery",
+    "caption": "The nose and cockpit of the Space Shuttle Discovery on display in a museum hangar, with visitors viewing it below.",
+    "tags": [
+      "space shuttle",
+      "discovery",
+      "museum",
+      "hangar",
+      "spacecraft",
+      "aviation museum",
+      "satellite"
+    ]
+  },
+  {
+    "id": "2021-11-27-dc5ac0f0",
+    "sourceHash": "dc5ac0f099d9",
+    "width": 5135,
+    "height": 3348,
+    "aspectRatio": 1.5338,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQAgCdASoQAAoAAsBMJbACdAD7/0RaFhAAAPty4Z9k8T2U+Wa5WRkDo9AVBussMrxMN+qTp+XIbEyRCes+CTUFkJFrbmXQQsuk5RRCke/EiYk4E7FiEe8V5fvj4AAA",
+    "takenAt": "2021-11-27T04:43:19Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/10",
+    "shutter": "1/60s",
+    "iso": 200,
+    "shoot": "2021-11-27",
+    "title": null,
+    "caption": "A paved park path lined with autumn trees in orange and red foliage, benches and a lamppost along the walkway.",
+    "tags": [
+      "park",
+      "autumn",
+      "fall foliage",
+      "trees",
+      "path",
+      "bench",
+      "lamppost"
+    ]
+  },
+  {
+    "id": "2021-11-27-968f982f",
+    "sourceHash": "968f982f8d33",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -1375,6 +2943,282 @@
       "autumn trees",
       "path",
       "bench"
+    ]
+  },
+  {
+    "id": "2021-11-27-977e9e6f",
+    "sourceHash": "977e9e6f5299",
+    "width": 5330,
+    "height": 3641,
+    "aspectRatio": 1.4639,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADwAQCdASoQAAsAAsBMJZwAAvcBOm8NEHAA/vHrWV48R+RU3L/fDnwebymh9WrIXldmj0XH992//nznp1A5v3JQUS139aWW02jZNUVAAAA=",
+    "takenAt": "2021-11-27T04:56:10Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "53mm",
+    "aperture": "f/10",
+    "shutter": "1/160s",
+    "iso": 100,
+    "shoot": "2021-11-27",
+    "title": "Lincoln Memorial",
+    "caption": "Crowds of visitors gather on the steps of the Lincoln Memorial beneath a sky filled with mackerel clouds.",
+    "tags": [
+      "lincoln memorial",
+      "washington dc",
+      "columns",
+      "monument",
+      "tourists",
+      "steps",
+      "clouds"
+    ]
+  },
+  {
+    "id": "2021-11-27-c079970d",
+    "sourceHash": "c079970decd7",
+    "width": 3293,
+    "height": 5149,
+    "aspectRatio": 0.6395,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwBACdASoQABkAPtFWpkuoJKOhsAgBABoJYwCsAGttvDVWfnEIk1zqNBoA/vnXThY9MDBwBy6iUZOZ1qgiK0ElRyCZ4iz3q1RG7GFLiCR/1aSzk7kX0YBCyRgWRe8we1WhpqoFpNLagl98RxgAAA==",
+    "takenAt": "2021-11-27T05:01:19Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "61mm",
+    "aperture": "f/10",
+    "shutter": "1/60s",
+    "iso": 2500,
+    "shoot": "2021-11-27",
+    "title": "Lincoln Memorial",
+    "caption": "A seated marble statue of Abraham Lincoln beneath an inscribed dedication wall inside the Lincoln Memorial.",
+    "tags": [
+      "lincoln memorial",
+      "abraham lincoln",
+      "statue",
+      "washington dc",
+      "marble",
+      "monument"
+    ]
+  },
+  {
+    "id": "2021-11-27-2bb20d26",
+    "sourceHash": "2bb20d268b17",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAwAgCdASoQAAsAAsBMJZQCdAEe4c6Y3OBQAAD+6GQjQGFM5lwsok/E/lEsH18lbUCsmOsu7bMhsDU9Sk3Xc8rGZo6KPKxxG7dtk6TQ7ZFD+vV9Wy4DqgAA",
+    "takenAt": "2021-11-27T05:04:00Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "40mm",
+    "aperture": "f/10",
+    "shutter": "1/80s",
+    "iso": 5000,
+    "shoot": "2021-11-27",
+    "title": "Lincoln Memorial",
+    "caption": "A marble statue of Abraham Lincoln seated in a chair, viewed from below with an inscribed wall and columns in the background.",
+    "tags": [
+      "lincoln memorial",
+      "statue",
+      "abraham lincoln",
+      "sculpture",
+      "columns",
+      "interior",
+      "washington dc",
+      "marble"
+    ]
+  },
+  {
+    "id": "2021-11-27-1bfc45b5",
+    "sourceHash": "1bfc45b5baf1",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoQAAsAAsBMJbACdH8AGAD6RxaAAP7wcptFU4jf0HTxW7BADgnq/Y4WnVb3eYOsOngE4rVo65qZ48KXX5x+kU6oXBcdYYJ1/lv8eXrO6jpeAAAA",
+    "takenAt": "2021-11-27T05:11:04Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "61mm",
+    "aperture": "f/10",
+    "shutter": "1/100s",
+    "iso": 100,
+    "shoot": "2021-11-27",
+    "title": "Washington Monument",
+    "caption": "The Washington Monument rises above the National Mall's reflecting pool, framed by autumn trees and the city skyline.",
+    "tags": [
+      "washington monument",
+      "reflecting pool",
+      "national mall",
+      "obelisk",
+      "autumn trees",
+      "washington dc",
+      "skyline"
+    ]
+  },
+  {
+    "id": "2021-11-27-b73af1f5",
+    "sourceHash": "b73af1f5cbd3",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAwAgCdASoQAAsAAsBMJQBOj+ADCItnF5cnAAD+CyP6XwLJeN/tT8xDZcQQ7D8YsJBAiyyqS8737YLf3tI624pua8NtWOwgvYqXoGPqtyQhkhSiIgknIztqIhZq9gUF1JrHZyAA",
+    "takenAt": "2021-11-27T05:30:10Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "42mm",
+    "aperture": "f/10",
+    "shutter": "1/60s",
+    "iso": 320,
+    "shoot": "2021-11-27",
+    "title": "District of Columbia War Memorial",
+    "caption": "A domed marble colonnade monument stands in a park surrounded by autumn trees at dusk.",
+    "tags": [
+      "memorial",
+      "domed pavilion",
+      "marble columns",
+      "park",
+      "autumn trees",
+      "walking path",
+      "monument"
+    ]
+  },
+  {
+    "id": "2021-11-27-b794b0b3",
+    "sourceHash": "b794b0b3b5cc",
+    "width": 5428,
+    "height": 3619,
+    "aspectRatio": 1.4999,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAQCdASoQAAsAAsBMJQBOgBwx2XlTS9AA/uebkL8TNRyXam6oxTsjn+y0i3oyP3pauxQv4/EYYy0Z1bOecA3puPYBaX6nrAZZvLoM4z0cT/TUoWuXeHMwFpkd94AAAAA=",
+    "takenAt": "2021-11-27T05:44:10Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "42mm",
+    "aperture": "f/5.6",
+    "shutter": "1/125s",
+    "iso": 100,
+    "shoot": "2021-11-27",
+    "title": "World War II Memorial",
+    "caption": "Fountains at the World War II Memorial with the Lincoln Memorial visible in the distance under a colorful sunset sky, people gathered around the pool.",
+    "tags": [
+      "world war ii memorial",
+      "lincoln memorial",
+      "fountain",
+      "national mall",
+      "washington dc",
+      "sunset",
+      "tourists"
+    ]
+  },
+  {
+    "id": "2021-11-27-a8624cb8",
+    "sourceHash": "a8624cb8d361",
+    "width": 3475,
+    "height": 5213,
+    "aspectRatio": 0.6666,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAAAwBACdASoQABgAPtFUo0uoJKMhsAgBABoJZQCdB2gARbw5XHqAGz7FPDgA/teIie6uXVg5vbBd71ktZT1//3ivoxXIU/Ob/Y3npbs3soVRG+dQjmuRaGcZq0xLxIxLSHPyfLRQFT9kD8NJepLvYb7SlSxiV9HRi32U1aBB772D4J7QfKoIg6jl4EMDi2kgoIFIG6VSiXC0AVYResyxYLdYAAA=",
+    "takenAt": "2021-11-27T05:47:42Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "39mm",
+    "aperture": "f/4",
+    "shutter": "1/60s",
+    "iso": 800,
+    "shoot": "2021-11-27",
+    "title": "John Paul Jones Memorial",
+    "caption": "A bronze statue of John Paul Jones in colonial naval uniform stands within a stone memorial monument surrounded by bare trees.",
+    "tags": [
+      "statue",
+      "monument",
+      "john paul jones",
+      "bronze statue",
+      "colonial uniform",
+      "trees",
+      "stone memorial"
     ]
   },
   {
@@ -1417,6 +3261,87 @@
     ]
   },
   {
+    "id": "2021-11-27-160da9df",
+    "sourceHash": "160da9df10d0",
+    "width": 5442,
+    "height": 3628,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAsAAsBMJagCdAEOOTOboAD6k+nopCcn3b1XsMIP+XP5QgjOELrq27Lb+hVAw/QniKtBgry/k9Nk2pe9qAfrzwqsx8rgAAA=",
+    "takenAt": "2021-11-27T06:10:19Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4.5",
+    "shutter": "1/80s",
+    "iso": 6400,
+    "shoot": "2021-11-27",
+    "title": "Jefferson Memorial",
+    "caption": "The Jefferson Memorial's illuminated columned rotunda stands atop its stone steps at dusk with a few visitors walking nearby.",
+    "tags": [
+      "jefferson memorial",
+      "monument",
+      "columns",
+      "steps",
+      "washington dc",
+      "dusk",
+      "trees"
+    ]
+  },
+  {
+    "id": "2021-11-27-e35195e4",
+    "sourceHash": "e35195e43e98",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAQCdASoQAAsAAsBMJYgCdADsUyf3xAAA/lo/uuS0oGihrWoxIjzP7lVsvRA5JpFRCQK4tm4Z3VUbgGc7g/IIkurbSv4SkJ4V6pOxogNH/A8bpOHmMw+ZO2XIAA==",
+    "takenAt": "2021-11-27T06:14:46Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4",
+    "shutter": "1/60s",
+    "iso": 12800,
+    "shoot": "2021-11-27",
+    "title": "Jefferson Memorial",
+    "caption": "A bronze statue of a man in a long coat stands beneath a coffered dome, surrounded by marble columns and engraved inscriptions.",
+    "tags": [
+      "statue",
+      "memorial",
+      "dome",
+      "columns",
+      "engraved text",
+      "bronze statue",
+      "interior",
+      "monument"
+    ]
+  },
+  {
     "id": "2021-11-27-776a4e8d",
     "sourceHash": "776a4e8d1299",
     "width": 5472,
@@ -1427,7 +3352,9 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -1456,6 +3383,86 @@
     ]
   },
   {
+    "id": "2021-11-27-15aa5244",
+    "sourceHash": "15aa5244872f",
+    "width": 5035,
+    "height": 3372,
+    "aspectRatio": 1.4932,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAwAgCdASoQAAsAAsBMJZQCsAEPEP5fI/UIAAD++cU/yXql65W0TlVJScCa4aTTxGIp/fo8tDJnb6BD5SdHjVAnn7eIZxOzradCu4dQAAA=",
+    "takenAt": "2021-11-27T07:11:03Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "50mm",
+    "aperture": "f/4.5",
+    "shutter": "1/60s",
+    "iso": 3200,
+    "shoot": "2021-11-27",
+    "title": "The White House",
+    "caption": "The White House north facade illuminated at night with Christmas wreaths on the windows and a lit fountain in front.",
+    "tags": [
+      "white house",
+      "night",
+      "christmas wreaths",
+      "fountain",
+      "flag",
+      "columns",
+      "washington dc"
+    ]
+  },
+  {
+    "id": "2021-11-27-21f473d5",
+    "sourceHash": "21f473d585bf",
+    "width": 5335,
+    "height": 3409,
+    "aspectRatio": 1.565,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQAAoAAsBMJZQCdAEQTwpwCkAA/vK6avQam8QquC79koKTDLYgOiAHJ4wbbrI/yLDhw3Wc7kOnjNl2X0Sx2ipXLzK1GQkk/p0yCRjgAAA=",
+    "takenAt": "2021-11-27T07:17:09Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4",
+    "shutter": "1/60s",
+    "iso": 12800,
+    "shoot": "2021-11-27",
+    "title": "Eisenhower Executive Office Building",
+    "caption": "A grand stone government building with ornate columns and rows of illuminated windows stands lit up at night, decorated with a large wreath above its entrance.",
+    "tags": [
+      "building",
+      "architecture",
+      "facade",
+      "columns",
+      "windows",
+      "night",
+      "wreath",
+      "flag"
+    ]
+  },
+  {
     "id": "2021-11-27-51656f26",
     "sourceHash": "51656f2661fb",
     "width": 4032,
@@ -1466,7 +3473,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1504,7 +3512,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1543,7 +3552,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1620,7 +3630,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1657,7 +3668,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1810,7 +3822,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1886,7 +3899,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1925,7 +3939,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1963,7 +3978,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -1992,8 +4008,8 @@
     ]
   },
   {
-    "id": "2022-04-15-163d54e7",
-    "sourceHash": "163d54e70d20",
+    "id": "2022-04-15-15fd4ab2",
+    "sourceHash": "15fd4ab275ea",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -2002,7 +4018,9 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -2030,8 +4048,8 @@
     ]
   },
   {
-    "id": "2022-04-15-60974f9e",
-    "sourceHash": "60974f9e0a37",
+    "id": "2022-04-15-8fcaa1b4",
+    "sourceHash": "8fcaa1b477df",
     "width": 4378,
     "height": 2743,
     "aspectRatio": 1.5961,
@@ -2040,13 +4058,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABQAgCdASoQAAoAAsBMJQBOgMWv2/AM9kOs5AAA/ubKVxAC963pNiSgwmYFaZV/Hs8sHfMnpL0VU+QhjK+yTmTzEtORsaIjbaAGYLc+7tuHLtDMgL/kq1/Ja1nQjMDGctMTVnOKgAA=",
+    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAABQAgCdASoQAAoAAsBMJQBOgMWv5MvIrFpki0AA/ubKVxldSiVVjfcZZsda7mL8dCseSQLNcsmhXj5KXduJdrDtbHb06JlWSlW/gfr02sWr5hgWB700/tf4vVY/BJoTutR/vb9HKtFwAA==",
     "takenAt": "2022-04-15T01:26:34Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2067,8 +4086,8 @@
     ]
   },
   {
-    "id": "2022-04-15-a491d607",
-    "sourceHash": "a491d6076c42",
+    "id": "2022-04-15-2d2607b1",
+    "sourceHash": "2d2607b16992",
     "width": 3566,
     "height": 2175,
     "aspectRatio": 1.6395,
@@ -2083,7 +4102,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQAAoAAsBMJbAC7ACXYTTFXiAA/vhatVEY5yBQXMYz7XF6oixpU+BMWxBJr9YYvFdPcdg49t1jYmvG2ftgLBLoQv/D+fyEwibUzPvweslYwAAA",
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAQCdASoQAAoAAsBMJbAC7ACXYf3TzAD++Fq1URjnIFBcxjPtcXqiLGlT4ExbEEmv1hi8V09x2Dj23WNia8bZ+SNPuFdeVYTqD2aIL7UzPvweslYwAAAA",
     "takenAt": "2022-04-15T01:36:03Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2104,23 +4123,24 @@
     ]
   },
   {
-    "id": "2022-04-15-8c53018e",
-    "sourceHash": "8c53018e227a",
-    "width": 4234,
+    "id": "2022-04-15-a69e8d54",
+    "sourceHash": "a69e8d5442a3",
+    "width": 4235,
     "height": 2535,
-    "aspectRatio": 1.6702,
+    "aspectRatio": 1.6706,
     "variants": [
       640,
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAwAgCdASoQAAoAAsBMJQBOgCP1INyTPRzbgAD+3gM8HXCXuLQn4z/NUrWhd0ZzB9MaQ+2CBvYqtZ4mOF3jAXsYeH57egPHl9u/94VsY20kXujju33kIVjJCLJBit7opCjdk3Ym0AA=",
+    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAwAgCdASoQAAoAAsBMJQBOgCP1INyTJHRfAAD+3gM8HIgxhpj70hZJdsndAen3QptIE4Y2WTq5Q9DwVcT1Bgg83Zej9sRGL3mUeOPLnS+gwtb5qHDNXTqqtLq0EvHe6KQo3ZN2JtAAAA==",
     "takenAt": "2022-04-15T02:06:25Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2142,8 +4162,47 @@
     ]
   },
   {
-    "id": "2022-04-15-60534eb5",
-    "sourceHash": "60534eb59894",
+    "id": "2022-04-15-2be12469",
+    "sourceHash": "2be1246968a2",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQAgCdASoQAAsAAsBMJYwCdAEM1khPsyDAAP3jdZvTXykQoMKagRjxP8RkLIIUW1r8xcWLRRQsqFKuT+OTwoHtgevsBkyU6oJ0z4JileUvu4sleBrcWcphBJNgZHAA",
+    "takenAt": "2022-04-15T02:10:42Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/3.2",
+    "shutter": "1/80s",
+    "iso": 200,
+    "shoot": "2022-04-15",
+    "title": null,
+    "caption": "A black bear lies on its back on a bed of straw, head tilted upward.",
+    "tags": [
+      "bear",
+      "black bear",
+      "animal",
+      "straw",
+      "enclosure",
+      "wildlife"
+    ]
+  },
+  {
+    "id": "2022-04-15-631b1574",
+    "sourceHash": "631b15745ef9",
     "width": 3648,
     "height": 5472,
     "aspectRatio": 0.6667,
@@ -2158,7 +4217,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRswAAABXRUJQVlA4IMAAAACQBACdASoQABgAPtFUo0uoJKMhsAgBABoJYgCdMoR3Ac/Ur4k+b1p9Wx5MqAAA/siSwxB80WYlHszQ91/0dpNSsr5MmIU84qsjtsmNWycGgg0DtvBRLRmdbVUg0wmjqD8Njbu4s7kW/Rc/7dthIuMoGJKthQA3zR1l0xmEnqeTkzyA3AJQuFhtsEB01d7Xk496D2vyA92o23nXphbEDCzyno2LUzgVdpoJ/gOfbSXNukDaCYCaiDhAkWAbG9oAAAA=",
+    "lqip": "data:image/webp;base64,UklGRswAAABXRUJQVlA4IMAAAABwBACdASoQABgAPtFUo0uoJKMhsAgBABoJYgCdMoR3Ac/Ir4k+b1p9Gm8ZwAD+yJLDEHzRZiUezND3Q/R2k0qyvkyYfRU0KyO1Q6RFdPSaDQO2kfRLeZltVSDSgvPRDv2Nu7izuCP9FKTcWrq+jDDmnC8bUD+ZXNFM5OMaj1mFcjZ0Koxf30lCmy+X1OUbaEros++M/JF5uPU/j6qtUCDoB5U+pPcuNXNVP1rI19Rp6Wm/HYG0lfgDzM8xWxIcAAA=",
     "takenAt": "2022-04-15T02:18:34Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2189,7 +4248,9 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -2216,8 +4277,8 @@
     ]
   },
   {
-    "id": "2022-04-15-dd4919a7",
-    "sourceHash": "dd4919a7fb34",
+    "id": "2022-04-15-2c495e8d",
+    "sourceHash": "2c495e8dad98",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -2226,13 +4287,15 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQAgCdASoQAAsAAsBMJZACdAdwLfN3qZWgAP73xyzcbanPr7foc7OkQLYDCp9KeI5JJLckzkk1JairinDgxuAjlohsg6zeKziRC19h8HIrIZohlErfn0ydgNz8BqHkAAA=",
+    "lqip": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABQAgCdASoQAAsAAsBMJYgCdAdwLfS3qusE8AAA/vfHLQBuoqMqkT4v5QO0tefWJPB7e24QMWWDDIpO1FY0h7lLbL+DnKoUo6SiVaHwPue3uzwQx2796D8XYDc/MDJgEgAAAA==",
     "takenAt": "2022-04-15T02:41:36Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2253,8 +4316,8 @@
     ]
   },
   {
-    "id": "2022-04-15-a79dc494",
-    "sourceHash": "a79dc4948a8e",
+    "id": "2022-04-15-ee1a8db4",
+    "sourceHash": "ee1a8db46978",
     "width": 3909,
     "height": 2540,
     "aspectRatio": 1.539,
@@ -2263,13 +4326,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoQAAoAAsBMJbACdAEN0qEl+DZAAP7Bfp9PljaAGU24JBLJfsEgmn8hAXK+YkW0HWYC4pVC0xYtD/HB2exNGoeyBLyOdNoKUN/bfiC3BAjgAA==",
+    "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADQAQCdASoQAAoAAsBMJbACdADC3iwRpAD+wX6fUuYTYkOJxs49s80jJUFWW4q7XLxs+lKcT3UKpC59igtD/HB2exNGoeyBLyOdOqdJmCHfoVKbTPgAAA==",
     "takenAt": "2022-04-15T02:47:57Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2290,8 +4354,8 @@
     ]
   },
   {
-    "id": "2022-04-15-c5adb51c",
-    "sourceHash": "c5adb51c169d",
+    "id": "2022-04-15-efaa4b17",
+    "sourceHash": "efaa4b174702",
     "width": 3664,
     "height": 2908,
     "aspectRatio": 1.26,
@@ -2306,7 +4370,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAwAgCdASoQAA0AAsBMJZwAIEAhP+tStPaUAAD+5jp2Et3pBrPWxMNvKbwR/p4uFAoaqF3fiIu5wJ2JIRDIUN6CO+CpdmBC1n/qJzRwAAA=",
+    "lqip": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAQCdASoQAA0AAsBMJZwAAxe6g2tc1AAA/uY8p+ifA0y9wpDHtaWHx2QlwQyjwE/6xbzAgqX/++n1uv+R21y5eBy0AfPoAtXex9CqJdYGOAAA",
     "takenAt": "2022-04-15T03:08:30Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2327,8 +4391,8 @@
     ]
   },
   {
-    "id": "2022-04-15-45f45384",
-    "sourceHash": "45f45384322f",
+    "id": "2022-04-15-68641c8a",
+    "sourceHash": "68641c8a77ac",
     "width": 3536,
     "height": 2448,
     "aspectRatio": 1.4444,
@@ -2343,7 +4407,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAwAgCdASoQAAsAAsBMJQBOgMU3wM+OT+3IAAD8/7xQT08oiuHEGj4FbbkMeDEVmx1eupgkvfmLNGdoNmI3PEtsHjGYWYfaNog6ZvpMTtapwNC+SkwyU1nWfWffJXit9/ixz7MwDt37Q+AAAAA=",
+    "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAwAgCdASoQAAsAAsBMJQBOgMVpwM+OT+3IAAD8/7xQUCOVCuHEGj4F/yguPDtDDlBCc+cxi3mLNHJxJ86hsK9a3Zx3MigygJDzKIPEGkShmfUTaTW9L/u0bXDikmqdAruGuQdfqCST8AAA",
     "takenAt": "2022-04-15T03:25:37Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2374,7 +4438,9 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -2403,8 +4469,83 @@
     ]
   },
   {
-    "id": "2022-05-22-ebccb6b2",
-    "sourceHash": "ebccb6b23efd",
+    "id": "2022-05-22-062f50e8",
+    "sourceHash": "062f50e824f8",
+    "width": 3067,
+    "height": 2091,
+    "aspectRatio": 1.4668,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAQAgCdASoQAAsAAsBMJZgCdAEO/s6RUIAAAP7ehQwsUzSVW/arY1Xmn8g5CWuPrcR6McpP61mMpFCZv11rJtFZ2W0PYXAA",
+    "takenAt": "2022-05-22T01:10:13Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/3.5",
+    "shutter": "1/2000s",
+    "iso": 100,
+    "shoot": "2022-05-22",
+    "title": "Blue Angels F/A-18 Hornet",
+    "caption": "A Blue Angels F/A-18 Hornet with landing gear down banks against a blue sky trailing smoke.",
+    "tags": [
+      "blue angels",
+      "f/a-18 hornet",
+      "fighter jet",
+      "airshow",
+      "military aircraft",
+      "sky",
+      "smoke trail"
+    ]
+  },
+  {
+    "id": "2022-05-22-fa3c8410",
+    "sourceHash": "fa3c8410a4eb",
+    "width": 2271,
+    "height": 1514,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAACwAQCdASoQAAsAAsBMJQBOgCG8OpCgAP7qerViuCOLfaaqbk/fd7be9nsu1X14FqFcB/6UxUZFkAAA",
+    "takenAt": "2022-05-22T01:15:53Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/3.2",
+    "shutter": "1/2000s",
+    "iso": 100,
+    "shoot": "2022-05-22",
+    "title": "Blue Angels F/A-18 Hornet",
+    "caption": "A U.S. Navy Blue Angels F/A-18 Hornet, numbered 6, banks in flight with landing gear extended against a blue sky.",
+    "tags": [
+      "blue angels",
+      "fighter jet",
+      "us navy",
+      "f/a-18 hornet",
+      "airshow",
+      "aircraft",
+      "sky"
+    ]
+  },
+  {
+    "id": "2022-05-22-b1a31b92",
+    "sourceHash": "b1a31b920483",
     "width": 3252,
     "height": 2168,
     "aspectRatio": 1.5,
@@ -2419,7 +4560,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAQCdASoQAAsAAsBMJZgCdADB+3kAAP7tXVJOSZj38lf2ugtnl1snS8IM5sUqJMmu65PG3OMjAppLYV1En3cDVLTy+V2upVg1wtrjdAA=",
+    "lqip": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAACwAQCdASoQAAsAAsBMJZgCdADB+3kAAP7tXVJOSZj38lf2ugtnl1snRe2Lvc4vRMvx1apw9mIo93Tu+/RFxKsnf2vl8sETopGdcLa43QAAAA==",
     "takenAt": "2022-05-22T01:16:47Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2442,8 +4583,8 @@
     ]
   },
   {
-    "id": "2022-05-22-8153c649",
-    "sourceHash": "8153c64934ba",
+    "id": "2022-05-22-c9967695",
+    "sourceHash": "c99676951651",
     "width": 2736,
     "height": 1824,
     "aspectRatio": 1.5,
@@ -2458,7 +4599,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoQAAsAAsBMJZgCdAELZQbspgAA/sPgaEAniuV6bq4a83/yKJ47KjqxQcvldrWkBvctFAIA",
+    "lqip": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAADwAQCdASoQAAsAAsBMJZgCdAELZQbspgAA/sPgaEAniuV6bq4a83/yKJ47Kjqxf7y+V2taQG9y0UAgAAA=",
     "takenAt": "2022-05-22T01:17:43Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2480,8 +4621,8 @@
     ]
   },
   {
-    "id": "2022-05-22-195bb450",
-    "sourceHash": "195bb4509b30",
+    "id": "2022-05-22-4cbf3c4a",
+    "sourceHash": "4cbf3c4af3af",
     "width": 3231,
     "height": 2154,
     "aspectRatio": 1.5,
@@ -2496,7 +4637,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoQAAsAAsBMJZACdAEPUqLrSAAA/sNW4dXQfCHBcaG3o/pdQv4U3GgoAzfr9NrSVUCbq4AQfrXoTLXSuqqwJXQAAAA=",
+    "lqip": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoQAAsAAsBMJZACdAEPUqLrSAAA/sNW4dTbcnJlXwq9xh1W3sLYX0ZRWwaNXvQijPYU2ys/I7DC0qUcGzAwlwAA",
     "takenAt": "2022-05-22T01:20:55Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2518,11 +4659,11 @@
     ]
   },
   {
-    "id": "2022-05-22-1835788a",
-    "sourceHash": "1835788aae49",
-    "width": 5472,
-    "height": 3648,
-    "aspectRatio": 1.5,
+    "id": "2022-05-22-f865e3e6",
+    "sourceHash": "f865e3e6e554",
+    "width": 3016,
+    "height": 2011,
+    "aspectRatio": 1.4998,
     "variants": [
       640,
       1024,
@@ -2534,7 +4675,47 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAwAgCdASoQAAsAAsBMJZgCdAEQ99Vt7F8JAAD+l8sBuuaQ4l9D9ek8dlN3J8zSJHgFDny+LuxGRgBwbJFNdgAA",
+    "lqip": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADwAQCdASoQAAsAAsBMJYgCdAEO63uP2AAA/u2U8dWvOi2GmY+1+R+x7edGA5eNHums3MSIotiDf0t0sIWja2HJqEQAAA==",
+    "takenAt": "2022-05-22T01:21:35Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/3.2",
+    "shutter": "1/2000s",
+    "iso": 100,
+    "shoot": "2022-05-22",
+    "title": null,
+    "caption": "Two U.S. Navy Blue Angels F/A-18 fighter jets fly in a banked crossing formation against a clear blue sky.",
+    "tags": [
+      "blue angels",
+      "f/a-18",
+      "navy",
+      "fighter jet",
+      "airshow",
+      "aircraft",
+      "sky"
+    ]
+  },
+  {
+    "id": "2022-05-22-294e7f0c",
+    "sourceHash": "294e7f0c7d06",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAgCdASoQAAsAAsBMJZgCdAEN/vszXCZQAP6XyuXIfcG24ncenHONrnIlTKOPrRFikqPF3YjIwA4NkimuwAAA",
     "takenAt": "2022-05-22T01:29:44Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2557,8 +4738,48 @@
     ]
   },
   {
-    "id": "2022-05-22-b26992e0",
-    "sourceHash": "b26992e07e03",
+    "id": "2022-05-22-060b58bd",
+    "sourceHash": "060b58bdb15a",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAsAAsBMJZgCdAEK+QQiAAD+tcdLJ7zOdkuRUaMh32zeTnenxt8pcDVSncxCAmxyC/Vlau6MovCCul9vNCZuw5dcLZXQAAA=",
+    "takenAt": "2022-05-22T01:34:27Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "128mm",
+    "aperture": "f/2.8",
+    "shutter": "1/2000s",
+    "iso": 100,
+    "shoot": "2022-05-22",
+    "title": "Blue Angels Diamond Formation",
+    "caption": "Four blue and yellow U.S. Navy Blue Angels jets fly in a tight diamond formation against a blue sky.",
+    "tags": [
+      "blue angels",
+      "us navy",
+      "fighter jets",
+      "f/a-18 hornet",
+      "airshow",
+      "formation flying",
+      "sky"
+    ]
+  },
+  {
+    "id": "2022-05-22-9fd8d099",
+    "sourceHash": "9fd8d099f39b",
     "width": 5079,
     "height": 3342,
     "aspectRatio": 1.5197,
@@ -2567,13 +4788,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAwAgCdASoQAAsAAsBMJZgCdH8AGDYuhwnmAAD+sWE5AmzvnjeGr3eZMLznLwQBL6FsZd/jb2keOTsIoWHz6669JOgAAA==",
+    "lqip": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAgCdASoQAAsAAsBMJZgCdAEQNg/dJSOAAP7FRbkBdDk0r5qjwZNBjMEyfcFb3jQH3iJT+t7WD/KvPjB9UJZ5+AA=",
     "takenAt": "2022-05-22T01:40:48Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2596,11 +4818,11 @@
     ]
   },
   {
-    "id": "2022-05-22-f32796a4",
-    "sourceHash": "f32796a442fa",
-    "width": 5062,
-    "height": 3375,
-    "aspectRatio": 1.4999,
+    "id": "2022-05-22-42ab7a85",
+    "sourceHash": "42ab7a8525d8",
+    "width": 3437,
+    "height": 2291,
+    "aspectRatio": 1.5002,
     "variants": [
       640,
       1024,
@@ -2612,7 +4834,46 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoQAAsAAsBMJbACdAYrxwOsnW5QAP3id029jk21OvdRrQLbQLSWETqgjp8Qy5rHBR8Oywkq3qKtQMNyQvU7Pn9FaAGkQcqwev/HotzWMf/vQuzPD0NvKnxC8lEgk0vR/ZiAAA==",
+    "lqip": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAACwAQCdASoQAAsAAsBMJaACdADzr6wAAP32jl7Y4EuTB63EB8XQvwdULd14boYL0a8Uec0Ud5N9awOMnh2C9ELTK0AAAA==",
+    "takenAt": "2022-05-22T02:02:57Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/3.2",
+    "shutter": "1/2000s",
+    "iso": 100,
+    "shoot": "2022-05-22",
+    "title": "C-5 Galaxy",
+    "caption": "A U.S. Air Force C-5 Galaxy cargo aircraft banks in flight against a clear blue sky.",
+    "tags": [
+      "airplane",
+      "military aircraft",
+      "c-5 galaxy",
+      "us air force",
+      "cargo plane",
+      "sky",
+      "aviation"
+    ]
+  },
+  {
+    "id": "2022-05-22-6ea105fe",
+    "sourceHash": "6ea105feecfe",
+    "width": 5062,
+    "height": 3375,
+    "aspectRatio": 1.4999,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoQAAsAAsBMJbACdAYrxwOsnWhAAP3id029jk21OvdRrQLbQLSWETqgjp8Qy5rHBR8Oywkq3qKtQMNyQvU7Pn9FaAGkQcqwev/HotzWMf/vDGm4nUnWMGWZt6u2TS9H9ZgAAA==",
     "takenAt": "2022-05-22T02:04:52Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2710,6 +4971,163 @@
     ]
   },
   {
+    "id": "2022-05-22-45854184",
+    "sourceHash": "4585418408fc",
+    "width": 4615,
+    "height": 3077,
+    "aspectRatio": 1.4998,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAQAgCdASoQAAsAAsBMJbACdAEKEfT5NgBgAP5TEA9be5UsJUVXu5fRwHZbpxlTM0wUdec3ZHaoTZVby3rsuLxwpLsHcneAYyHIXYAA",
+    "takenAt": "2022-05-22T03:53:38Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/2.8",
+    "shutter": "1/2000s",
+    "iso": 100,
+    "shoot": "2022-05-22",
+    "title": "USAF Thunderbirds",
+    "caption": "Four U.S. Air Force Thunderbirds F-16 fighter jets fly in tight diamond formation against a blue sky, leaving white smoke trails.",
+    "tags": [
+      "thunderbirds",
+      "f-16",
+      "fighter jet",
+      "airshow",
+      "formation flying",
+      "military aircraft",
+      "smoke trail",
+      "sky"
+    ]
+  },
+  {
+    "id": "2022-05-22-01f7c9ba",
+    "sourceHash": "01f7c9baa1c8",
+    "width": 2871,
+    "height": 1914,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAADQAQCdASoQAAsAAsBMJYgCdAEO/J4AQAD+3lcuyLFbdQykPyOd6UxaMJpI7AAA",
+    "takenAt": "2022-05-22T03:58:13Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/3.5",
+    "shutter": "1/2000s",
+    "iso": 100,
+    "shoot": "2022-05-22",
+    "title": "USAF Thunderbirds",
+    "caption": "Two F-16 fighter jets in red, white, and blue livery fly in a mirrored formation, one inverted above the other, against a clear blue sky.",
+    "tags": [
+      "airshow",
+      "fighter jet",
+      "f-16",
+      "thunderbirds",
+      "formation flying",
+      "sky",
+      "aerobatics"
+    ]
+  },
+  {
+    "id": "2022-05-22-54b428ae",
+    "sourceHash": "54b428ae6555",
+    "width": 2862,
+    "height": 1908,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAADwAQCdASoQAAsAAsBMJaACdAEPScE4bkgA/q79fzJ2L6FCmKI/tG4l9Vs3MLB2P2X1o2cDQAA=",
+    "takenAt": "2022-05-22T03:59:13Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/4",
+    "shutter": "1/2000s",
+    "iso": 100,
+    "shoot": "2022-05-22",
+    "title": "USAF Thunderbirds",
+    "caption": "Four U.S. Air Force Thunderbirds F-16 jets fly in tight formation against a clear blue sky, trailing white smoke.",
+    "tags": [
+      "airplane",
+      "jet",
+      "air force",
+      "thunderbirds",
+      "airshow",
+      "formation flying",
+      "sky",
+      "smoke trail"
+    ]
+  },
+  {
+    "id": "2022-05-22-4e04fae2",
+    "sourceHash": "4e04fae27ea4",
+    "width": 4165,
+    "height": 3557,
+    "aspectRatio": 1.1709,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAQCdASoQAA4AAsBMJbACdAEW9GBclwAA/NM3HIJt49pfi0xbicUaylQAEMK2zKrayswZRPvspCOFG9v7o8RyBWW5HgZDnQ1j17+DZIprsAAA",
+    "takenAt": "2022-05-22T04:02:38Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/2.8",
+    "shutter": "1/2000s",
+    "iso": 100,
+    "shoot": "2022-05-22",
+    "title": "USAF Thunderbirds",
+    "caption": "Four F-16 fighter jets in the Thunderbirds livery fly in tight diamond formation against a clear blue sky, leaving faint contrails.",
+    "tags": [
+      "airshow",
+      "jets",
+      "fighter jets",
+      "f-16",
+      "thunderbirds",
+      "formation flying",
+      "sky",
+      "contrails"
+    ]
+  },
+  {
     "id": "2022-09-04-5668056b",
     "sourceHash": "5668056ba226",
     "width": 3542,
@@ -2756,7 +5174,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -2792,7 +5211,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -2818,8 +5238,8 @@
     ]
   },
   {
-    "id": "2022-09-04-1a9b1e1d",
-    "sourceHash": "1a9b1e1d0626",
+    "id": "2022-09-04-c9cb9d46",
+    "sourceHash": "c9cb9d469a90",
     "width": 3330,
     "height": 2220,
     "aspectRatio": 1.5,
@@ -2834,7 +5254,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAQAgCdASoQAAsAAsBMJbACdADhfdSug/kAAP70vifucYZheynNPhJhQ9fXoyDf9XYWjbu8MmtV/v6csDqOuz5S8FYUmlb6/t57uoallDJFA8NkcjBnn58txudU5/CZXqQbgAAA",
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAQAgCdASoQAAsAAsBMJbACdADhfdSug/kAAP70vifucYZheynNPhJhQ9fXoyDf9XYWjbu8MmtV/v6csDqOuz5S8FYUmlb6/t57uoallDJFA8NkcjBnn58txudU5/CZXqYHPgoA",
     "takenAt": "2022-09-04T23:43:41Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2855,8 +5275,8 @@
     ]
   },
   {
-    "id": "2022-09-04-ef4e06e1",
-    "sourceHash": "ef4e06e1794a",
+    "id": "2022-09-04-c0d0d33d",
+    "sourceHash": "c0d0d33d594a",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -2865,13 +5285,54 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABQAgCdASoQAAsAAsBMJYgCdAYtfwnHWJLtwQAA/uoB8/nw7zTmyyp97MOvBreK/ah9kvYlWsX37k6pHUkHiHx+Kg1W58jnE6Khiswkfi7YWtQRLrxHM5qh08NHfebXDb++DISglUgMJ9X5Xk12EAAA",
+    "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAAAwAgCdASoQAAsAAsBMJbACdADp69bET5fWAAD+hfwKdodhSDoD1qxb/5obESNPxuohPqFpcAWhrK+jlft1udVFYyJHCxTIwb6QBd8Wv5bWVDImIy1FNgsXOw2NnoXtLYryq5YRe1J4wHHwAAA=",
+    "takenAt": "2022-09-04T23:45:48Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "153mm",
+    "aperture": "f/2.8",
+    "shutter": "1/160s",
+    "iso": 160,
+    "shoot": "2022-09-04",
+    "title": null,
+    "caption": "A close-up of a green sea anemone with outstretched tentacles surrounded by several other anemones underwater.",
+    "tags": [
+      "sea anemone",
+      "tentacles",
+      "underwater",
+      "marine life",
+      "aquarium",
+      "invertebrate"
+    ]
+  },
+  {
+    "id": "2022-09-04-977810d4",
+    "sourceHash": "977810d46af7",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABQAgCdASoQAAsAAsBMJYgCdAYtVwnHWJLtwQAA/uoB8/nw7zSJyyp97MR3NlcDBm3Rz0orQSXfs2EY4SOkx6jXcJA2Ldy7evjNqQJ0FN9CiPFGsMUN6aVcEaLuJqsgKXoBCqKC9owzlWH6V1zT8AAA",
     "takenAt": "2022-09-04T23:50:10Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2892,8 +5353,8 @@
     ]
   },
   {
-    "id": "2022-09-05-5b5e778b",
-    "sourceHash": "5b5e778b6a52",
+    "id": "2022-09-05-26bc3b2f",
+    "sourceHash": "26bc3b2f8b60",
     "width": 4332,
     "height": 2888,
     "aspectRatio": 1.5,
@@ -2902,13 +5363,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABQAgCdASoQAAsAAsBMJZACdH8AFwDtY79xekAA/vG9AZtXsmz4kPYk0pLHZlFnp5VpDsxZbf69iqpe1v6uhwmKJ/JzD18u6Hs+DuUiqRzhbO5pLpELJg4Rtq+Q7omvYUBiXLKS9ypEVaTgRWGtKNDm6EVSRWVoAAA=",
+    "lqip": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAwAgCdASoQAAsAAsBMJZACdH8AEWXbvV4lOAD+8b0Bm1eybPiQ9iTSkslK4BO8F3GUh2Ystv9exVUva39XQ4TFE/k5h6+XdD2fB3KRVI5wtnc0l0iFkwcI21fId0TXsKAxLllJe5UiKt/dw9cJAnPR1gb391hXAAA=",
     "takenAt": "2022-09-05T00:03:46Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -2930,8 +5392,8 @@
     ]
   },
   {
-    "id": "2022-09-05-cec6b1ff",
-    "sourceHash": "cec6b1ffa5e1",
+    "id": "2022-09-05-2448805c",
+    "sourceHash": "2448805c9621",
     "width": 3542,
     "height": 2361,
     "aspectRatio": 1.5002,
@@ -2946,7 +5408,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAAAwAgCdASoQAAsAAsBMJaACdAYubn+Jl8+o0AD+7SdjqH6FO/fBPefxPecUqGdQBLkoDZ/14WvrutIZzElu/o0mLQURc4YV8Czsde+7WY4MCvPiyJIi+Kfgotm7WGNS8sRvn+v+tf/ihzzRR6oWPX15MAA=",
+    "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAwAgCdASoQAAsAAsBMJZgCdAYubn+Jl8+iQAD+7SdjqH6FO/fBPefxPecUqGdQBLkoDZ/14WvrutIZzElu/o0mLQURc4YV8Czsde+7WY4MCvPiyJIi+Kfgotm7WGNS8sXXipf+KBLc5vyXNQKi9dWNwGwAAA==",
     "takenAt": "2022-09-05T00:03:55Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3004,8 +5466,8 @@
     ]
   },
   {
-    "id": "2022-09-05-dd4b172c",
-    "sourceHash": "dd4b172c3329",
+    "id": "2022-09-05-2446815b",
+    "sourceHash": "2446815bc06d",
     "width": 3963,
     "height": 2642,
     "aspectRatio": 1.5,
@@ -3014,13 +5476,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABQAgCdASoQAAsAAsBMJagCdAYrTWei9WcNUtAA/upNATclSsILU0y7yfzv+Tbb4I3/MkXXsbkdZgVLfljockdOWKxBl6xVxf7ZHzZerD3TtL4v6XJzyQFoHm4B6Osg0pAB8jT/sAA=",
+    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAABQAgCdASoQAAsAAsBMJagCdAYtBWetK3Pr+HAA/upNATdxsr56Lr5HEjvntnZJtdayCJdc7uQG2KgzAuB/KdvNUUrV2/Eky1gBUhOVL+4+K8SVclIO52XeQd4wgR/0W4j1ZHY/dqAAAA==",
     "takenAt": "2022-09-05T00:06:34Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3042,8 +5505,8 @@
     ]
   },
   {
-    "id": "2022-09-05-4dc7444e",
-    "sourceHash": "4dc7444e2746",
+    "id": "2022-09-05-325237be",
+    "sourceHash": "325237be7130",
     "width": 4145,
     "height": 2763,
     "aspectRatio": 1.5002,
@@ -3052,13 +5515,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQAgCdASoQAAsAAsBMJYgCdAEP9yXqUfAAAP70OrO4Ty69/hCzsvYWiw0fj2Vvk2zITiYQh8PLVIhoanTIiY4zsBDE9ldIC4ULzi1uR5HcLaoRa6pAE/kVH4AAAA==",
+    "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoQAAsAAsBMJYgCdAYv1wH/Zes4gAD+9DqpxooutXbs9nrQCpYON7847p3TeM2EI2vN5VE/syXTgGmNyzopEkvWiQViuvG+1NQ7sB9+3Mpl1SAJ/IqPwAAA",
     "takenAt": "2022-09-05T00:10:39Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3080,8 +5544,8 @@
     ]
   },
   {
-    "id": "2022-09-05-2a03faf8",
-    "sourceHash": "2a03faf89da3",
+    "id": "2022-09-05-3d0a81af",
+    "sourceHash": "3d0a81af9a05",
     "width": 3668,
     "height": 2445,
     "aspectRatio": 1.5002,
@@ -3096,7 +5560,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwAQCdASoQAAsAAsBMJbACdADiVej++wAAy0MZNriL9oVN1kIonS7e86xhDAHNI7fwOAO2FVDQw4bYKQ14OIe63cIqVa6mpxf7syu1GIrCOJk5jsSvNv7c0TAgswttf4sANDwcOd4zWhKg1TaeYOgAAAA=",
+    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwAQCdASoQAAsAAsBMJbACdADiVej++wAAy0MZNriL9oVN1kIonS7e86xhDAHNI7fwOAO2FVDQw4bYKQ14OIe63cIqVa6mpxf7syu1GIrCOJk5jsSvNv7c0TAgswvpv8WAGh4OHO8ZrQlQaptPMHQAAAA=",
     "takenAt": "2022-09-05T00:13:44Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3118,8 +5582,8 @@
     ]
   },
   {
-    "id": "2022-09-05-881f0b2c",
-    "sourceHash": "881f0b2ca75b",
+    "id": "2022-09-05-a8565abb",
+    "sourceHash": "a8565abba034",
     "width": 3381,
     "height": 2254,
     "aspectRatio": 1.5,
@@ -3134,7 +5598,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAQAgCdASoQAAsAAsBMJbACdAC9qyojxEoAAP7zYcxKfaeziNqHAUc9lvhO+bkczUekodl4rhrZm5NldPDu6j2VMrNwfgxz4C54u/04liF3tTMgm8Ml06w5oeK67urJeGsmUFcOrRRZg3wA",
+    "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAwAgCdASoQAAsAAsBMJbACdAEDX+ZjewtL4AD+82HMSn2ns4jKeNnyzV3sDouPIxjKJNDf130uIwRxzSxM6j2VMrNwfgxz4C53hNp9swWDf4XVQdTD4wQ+9FZ06VBoJmNu9bdjKI3zhOQA",
     "takenAt": "2022-09-05T00:22:23Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3156,8 +5620,8 @@
     ]
   },
   {
-    "id": "2022-09-05-f0b61603",
-    "sourceHash": "f0b61603b753",
+    "id": "2022-09-05-02cc8955",
+    "sourceHash": "02cc89554b54",
     "width": 2907,
     "height": 4361,
     "aspectRatio": 0.6666,
@@ -3172,7 +5636,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAACwBACdASoQABgAPtFUo0uoJKMhsAgBABoJbACdMoRwN6AAYR/41b3fzGV3L0eAAP7LJ/iW1YkAqNZ1XcEbT+oeMX8f8mDE9IEk3EUpSjj36tNtukz5kJXx23s6310pkFiTZOMdJwBEqpiomhoqpPAA",
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAACwBACdASoQABgAPtFWo0uoJKMhsAgBABoJbACdMoRwN6AAYR/41b3fzGV3L0eAAP7LJ/iW1YkAqNZ1XcEbT+oeMX8f8mDE9IEk3EUpSjj36tNtukz5kJXx23s6310pkFiTZOMdJwBEqpiomhoqpPAA",
     "takenAt": "2022-09-05T01:42:40Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3193,8 +5657,8 @@
     ]
   },
   {
-    "id": "2022-09-05-2c9399d9",
-    "sourceHash": "2c9399d90630",
+    "id": "2022-09-05-854a650b",
+    "sourceHash": "854a650bd431",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -3203,13 +5667,54 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAsAAsBMJbACdLoAArfHGPAA9byLkUiUXBGWDeKHA7aFK6V8OQ5K8AXGO533Bl574Oy//BBXXn3cpsU/+d6lPIE0/9eN4AAAAA==",
+    "lqip": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACQAgCdASoQAAsAAsBMJbACdLoAFyBFrl4L8b8VqAD+9celm47NhJNwYt9o3KRnoWEQlo52+/WY1ATeIWsNSgg7q2bvoWa+N4jeUDzELTW7+MVT5tJMwnNpn/cFKR177xY30JtEE0DE8QkAAAA=",
+    "takenAt": "2022-09-05T01:50:28Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/2.8",
+    "shutter": "1/80s",
+    "iso": 640,
+    "shoot": "2022-09-04",
+    "title": null,
+    "caption": "A brown-and-orange jellyfish swims among several smaller white jellyfish in a blue-lit aquarium tank.",
+    "tags": [
+      "jellyfish",
+      "aquarium",
+      "underwater",
+      "tank",
+      "marine life",
+      "invertebrate"
+    ]
+  },
+  {
+    "id": "2022-09-05-9bc11afc",
+    "sourceHash": "9bc11afc632a",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoQAAsAAsBMJbACdLoAAisO00AA/svWn8K+iMfufJi0cPX/SjxV4+1dZJKfzNTL/nk5G5zOmGpf/yDHcXKnY1kWAAA=",
     "takenAt": "2022-09-05T02:12:52Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3230,8 +5735,8 @@
     ]
   },
   {
-    "id": "2022-10-29-f4caeb42",
-    "sourceHash": "f4caeb42d586",
+    "id": "2022-10-29-56dd8f9b",
+    "sourceHash": "56dd8f9b544b",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -3240,13 +5745,15 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABQAgCdASoQAAsAAsBMJbACdAYtLVa/WH4OOIAA/ut1SXZEzKuevgGpG54kaW4MhOfi8yCTSvj8N4jbwTv20Mi4tIFxXmg/neCqhco+zxGKyD4EMk8eW//dteVNRNd/iz7r8j4oM80J8ZeDaTUmoOihbVQBlJbQcO468qAA",
+    "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAwAgCdASoQAAsAAsBMJbACdAYtfLlqXNFAoAD+63VKdsNwvl6+RgkbniR5bhCFN+LzIJNPGfb+5HDgoNWsPPcJdMZavC3xTUJis2mi6+yluk+FFHZVcTHqqoKl8lBKFqhpOT8MjKCHst2NNvp66xzDpP7BDKCNOmjXwAAA",
     "takenAt": "2022-10-29T02:08:50Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3307,8 +5814,8 @@
     ]
   },
   {
-    "id": "2022-10-29-3df68bf5",
-    "sourceHash": "3df68bf504e0",
+    "id": "2022-10-29-681ea548",
+    "sourceHash": "681ea54813ef",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -3317,13 +5824,15 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAwAgCdASoQAAsAAsBMJbACdAEC3thudmD/QAD+S1fMPca8HPUWdlmOv3a6vDgMpYB+PONTKPsZd4ySX+NmB7/cWutK5MEryBdhB9F8bHz5E11Z4eLVO5W23vPFcG857LMyG1A31FdNWlatA9+0gAAA",
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAwAgCdASoQAAsAAsBMJbACdAEC3tl9OHPHgAD+S1fMPca8HPUWdlmOv3a6vDgMpYB+PONTKPsZd4yUn5SSLYrmgxBeFxedw/GIp6L4tI7QXhdUIy86cFeZdZO2zkJt71+3woERmVwDzIq+HWQVPHAA",
     "takenAt": "2022-10-29T02:55:11Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3345,8 +5854,8 @@
     ]
   },
   {
-    "id": "2022-10-29-8cf42cca",
-    "sourceHash": "8cf42ccaa3f3",
+    "id": "2022-10-29-8772a4ed",
+    "sourceHash": "8772a4ed742c",
     "width": 2805,
     "height": 4207,
     "aspectRatio": 0.6667,
@@ -3361,7 +5870,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRsgAAABXRUJQVlA4ILwAAAAQBACdASoQABgAPtFUo0uoJKMhsAgBABoJQBOgBHpr4OUFJpr6A9zycAD+7x7vFaq3pATmtk+zlkgYejF6cFaSZmfHHevpAwgwJw4x+oJowmPM1KKuUqQraZtaE73nfYkG+/1IXEWoBSfwekSn1sU8IHDs/0NStVToGG1dxved6vIHkXPJegFr/S6eHnGHQ/x1t6RMgqR3hb4oPV50ijiS2OJOQD8d/RK82X28ve5xtpW3z0RNwG3BMvyAAA==",
+    "lqip": "data:image/webp;base64,UklGRsoAAABXRUJQVlA4IL4AAAAQBACdASoQABgAPtFUo0uoJKMhsAgBABoJQBOgBHpr4OUFJwQrEG19wAD+7x7vFaq3pATmtk+zlkgYejF6cFaSZmfHHevpAwgwJw4x+oJowmPM1KKuUqQraZtaE73nfYkG+/1IXEWoBSfwxY0iU+tinhA4dn+hqVqqdAzi5zsNnbhE4XEcnOFUvqSdAPY7R+Rdgn1GhEBMhHHslS3LeCu/daVaOlOZZhyzeRymbHNcivCMSxvjAYMfsBOIAAAA",
     "takenAt": "2022-10-29T03:38:00Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3383,8 +5892,8 @@
     ]
   },
   {
-    "id": "2022-10-29-3915e393",
-    "sourceHash": "3915e393c58e",
+    "id": "2022-10-29-7665e2d0",
+    "sourceHash": "7665e2d01f50",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -3393,7 +5902,9 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -3421,8 +5932,8 @@
     ]
   },
   {
-    "id": "2022-10-29-41fb8df5",
-    "sourceHash": "41fb8df593da",
+    "id": "2022-10-29-c765a5f3",
+    "sourceHash": "c765a5f33903",
     "width": 3648,
     "height": 5472,
     "aspectRatio": 0.6667,
@@ -3437,7 +5948,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRtAAAABXRUJQVlA4IMQAAADwBACdASoQABgAPtFUo0uoJKMhsAgBABoJbACdEf/l2CyBM9igdP6K/Dj654zM8EAA/UoNjDWGWBF9b6kG3w9R0Iyh190HZQn6T7jV6AIgKyekgykMwj/AZ2qxU7WMDB9tF4W0Wd50r/o8RzKBH86khSuF6rdYZUXpW7wV3GaGrOhSdI7CS3qbtWRsGswHs8idS2cPLIzBhAPncE+xAsHwmTT/Cr/gB8f+jz5cZsrIzkYzM84pTNs+Qx5iRnoN8G8vAAAA",
+    "lqip": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAADwBACdASoQABgAPtFUo0uoJKMhsAgBABoJbACdEf/l2CyBM+igdP6K/Dj656BmTwAA/UoPjDYWWBF9cLFzqzjWX1Yg9PodJyzzKxRAROwDWZJg1vCBAFr3D/llepFeDsS9fhbRgzh81nBVITY5f3qiFK4bqt1hlRelbvBXcZoas6FJ0jsJLepu1ZW947a9nyVtn7be09MGEG+900FKHafRxxhdnTGfQQ6qAtluRQuEMGq8KR2Q/WdqASbsiBEG92GAAA==",
     "takenAt": "2022-10-29T03:41:37Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3460,8 +5971,8 @@
     ]
   },
   {
-    "id": "2022-10-29-f2a34baa",
-    "sourceHash": "f2a34baab06c",
+    "id": "2022-10-29-6178a182",
+    "sourceHash": "6178a182d904",
     "width": 2874,
     "height": 1916,
     "aspectRatio": 1.5,
@@ -3476,7 +5987,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwAQCdASoQAAsAAsBMJbACdAEKzs5VqnAA/k07PT0+hEw1uKJNmqOJZ2NHbnLMKJ806a17NSrWULaBUPz8Da2QzZhXfeEZvbxda8gUr8QypuK5/AtWRYNSOuoMpGBBr69w6ynadgaB3yP+We4p0LIFgAA=",
+    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAABwAgCdASoQAAsAAsBMJbACdAfwK9mTJGjJQu+AAP5NOz0Hets3BdMUNXZxhaRvDUBVb77NNUFIxmcKM+WI5LzBK1vBzR4Vw3a6PeqphlvWZox8xxDoeDUqBZV/iRTWMNvm5ZkQBg5rhb+tl42fd7WuAAA=",
     "takenAt": "2022-10-29T04:03:11Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3497,8 +6008,8 @@
     ]
   },
   {
-    "id": "2022-10-29-7b441ee2",
-    "sourceHash": "7b441ee299f3",
+    "id": "2022-10-29-13a75ac0",
+    "sourceHash": "13a75ac03288",
     "width": 3990,
     "height": 2660,
     "aspectRatio": 1.5,
@@ -3507,7 +6018,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -3571,8 +6083,8 @@
     ]
   },
   {
-    "id": "2022-10-29-c1951ae7",
-    "sourceHash": "c1951ae79fbb",
+    "id": "2022-10-29-978971d1",
+    "sourceHash": "978971d17ffa",
     "width": 3149,
     "height": 2099,
     "aspectRatio": 1.5002,
@@ -3587,7 +6099,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAQAgCdASoQAAsAAsBMJaACdAYr7YUmH7AAAP5PHVHsfnCz3jUZEfl/sM6vffMNgkMH5Nd4shajUl6lt3Kbe5fYJYwR3GWCzqK+O61sfl35lO655yAIROMqXo+10Ps1jk301ZUxxU5ORbibiD7bzDNuRsWtq0Hyisd4fIAA",
+    "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAQAgCdASoQAAsAAsBMJaACdAYr7YUmH7AAAP5PHVHsfnCz3jUZEfl/sM6vffMNgkMH5Nd4rEZGpL1LbuU29y+wSxgjuMsFnUV8d1rZE0QXcQ5OLUtelZ8f4wy8kZWphkTQdK8y0fMJM5d5bKyY4FcNLA9wyhi5oT7Ix4AA",
     "takenAt": "2022-10-29T04:08:07Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3610,8 +6122,8 @@
     ]
   },
   {
-    "id": "2022-10-29-89eaa53a",
-    "sourceHash": "89eaa53ae4fd",
+    "id": "2022-10-29-1586577b",
+    "sourceHash": "1586577b8326",
     "width": 4199,
     "height": 2799,
     "aspectRatio": 1.5002,
@@ -3620,13 +6132,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwAgCdASoQAAsAAsBMJZgCdAYu5UF9Voq+sAD+0NpF6FgytIx5Wr7tqkcqkfTJB8iwpLgipK2MtodAAHSvLccKEdLkYOJr1JSuq09Pd/EN7hUpaYgNTRlwAFREWkrKXSODFRrA6W1rK5dyXWgAAA==",
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwAgCdASoQAAsAAsBMJZgCdAYu5UF9Voq2gAD+0NpF6FgytIx5Wr7tqkcqkfTJB8iwpLgipK2MtodAAHSvLccKEdLkYOJr1JSuq09Pd/EN7hUpaYgNTRlwAFREWkrKXwX7aZugVuD1n3ZYLMsAAA==",
     "takenAt": "2022-10-29T04:10:36Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3648,8 +6161,8 @@
     ]
   },
   {
-    "id": "2022-10-29-40ed75a8",
-    "sourceHash": "40ed75a883cf",
+    "id": "2022-10-29-99aa7e51",
+    "sourceHash": "99aa7e5106bb",
     "width": 3042,
     "height": 2028,
     "aspectRatio": 1.5,
@@ -3664,7 +6177,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAwAgCdASoQAAsAAsBMJQBOgMWWwNxmvQFsAAD8MB6bFDg1N5SGhrHJSdqRGVl9eqEyA0JptiGpJzzPRmRaUzsCHqn9J+eAb2iIXPvFpKRjABBr8tiTO9uc63eF0hqibkJcBl/RtYMRuYqOmTYyuw02KAgAAA==",
+    "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAwAgCdASoQAAsAAsBMJQBOgMWRwNxcpB01AAD8MB6TFDdfX5SGhrHJAtWHEUF9eWLPx72ZrJlMzrYNd4h08zsCHqnq56nxGAVQQ8wdQX0z0fZUmVES1BTtyOK8LFd+IQD2ESurJv1k7CE18k5W08fSxbAAAA==",
     "takenAt": "2022-10-29T04:12:19Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3686,6 +6199,44 @@
     ]
   },
   {
+    "id": "2022-10-29-e326ad10",
+    "sourceHash": "e326ad102a0e",
+    "width": 4017,
+    "height": 2678,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAwAgCdASoQAAsAAsBMJQBOgMXS22WwUW/n6AD+0ml0FXbNC/TyuYmzlXtXTeHBocce2pId6tfhjnHLfouzdUpjU4BoHek+qffGf2dzLa408Xk6IAX3PESjbwR8MomUb5McT0SA/XSnMSzP8lbzjUWFbgFcsAAA",
+    "takenAt": "2022-10-29T04:19:32Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/2.8",
+    "shutter": "1/200s",
+    "iso": 200,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A bearded man in period costume and a flat cap holds up a sign reading \"Fight!\"",
+    "tags": [
+      "renaissance faire",
+      "sign",
+      "costume",
+      "beard",
+      "hat",
+      "performer"
+    ]
+  },
+  {
     "id": "2022-10-29-93d76734",
     "sourceHash": "93d76734f3f5",
     "width": 3903,
@@ -3696,7 +6247,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -3763,8 +6315,46 @@
     ]
   },
   {
-    "id": "2022-10-29-10439e63",
-    "sourceHash": "10439e63cefe",
+    "id": "2022-10-29-b90df8fc",
+    "sourceHash": "b90df8fc37d0",
+    "width": 4204,
+    "height": 2803,
+    "aspectRatio": 1.4998,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwAgCdASoQAAsAAsBMJQBOgMXN3oMYu9N5AAD+6jePQv7Pm0LPd8DyOwgJcEi/mkJAYwPHOb03Dz16pafLNeY+H4RVjyxJwa6ioQWuXFPznkFJy3wSF2dBEkb5s2Cw+nGP42GIfAGNQQ133LQAAA==",
+    "takenAt": "2022-10-29T04:21:42Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/2.8",
+    "shutter": "1/200s",
+    "iso": 250,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "Actors in period costume perform an outdoor theater scene, with a bald man dipping a red-haired woman while two costumed men look on.",
+    "tags": [
+      "theater",
+      "actors",
+      "outdoor stage",
+      "performance",
+      "renaissance costume",
+      "audience"
+    ]
+  },
+  {
+    "id": "2022-10-29-d37b7f23",
+    "sourceHash": "d37b7f23765a",
     "width": 1461,
     "height": 2191,
     "aspectRatio": 0.6668,
@@ -3776,7 +6366,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRtYAAABXRUJQVlA4IMoAAADQBACdASoQABgAPtFUo0uoJKMhsAgBABoJbACdAdwLfSVaHDphtXDjF4WkaV2fwADiawLSoqPN63p7e6wp4+VQZ3gGsPF+eld/p2Y1Tm4PPCb71tLaxBl9wVxQVH2tV1TA6H82bd2odV8i7t23Lg6Y0DVXntMOAmn/SSIBQlOFmgp19F2v1ocJecxivqfFZfzFKRB6IEp8kYHQnNFxu7OXTB5HCaY468pzMDwZMTv6VF/aRfM6Lh9fClcEFMByC4gtj5u/GCeRXoQA",
+    "lqip": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACQBACdASoQABgAPtFUo0uoJKMhsAgBABoJbACdAYukq0ONaMvTkQEo2bVJf1AA4msC0qKjzet6e3usKePlUGd4BrDxfnpX02/YUEqxweeE33raW1iDL7gsqQ3sgw1qOkw4Fp7WT/Md5AEaUdxLr/GsAZ7KWoGJQUaxDHrEeYqwjfW5LI3e0HkHuaB2NEzYP7SiIl2SFd+SMDopVfmYbHLTWRqZ0Kb5bnsWUDnmgfgVtd+0i+Z4FKSu6RtSzQx8qJiiR42epSJsNYwAAAA=",
     "takenAt": "2022-10-29T04:24:40Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3797,8 +6387,8 @@
     ]
   },
   {
-    "id": "2022-10-29-aa589101",
-    "sourceHash": "aa5891015942",
+    "id": "2022-10-29-644582ba",
+    "sourceHash": "644582baa214",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -3807,13 +6397,15 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAABQAgCdASoQAAsAAsBMJbACdAYwdgVfKdjOzAAA/uyeXyH5WyY8Ald64jIt2tAf4bViA6/JDlBMCXjdSCu26V8GpZYsIxl/B56q5iALJLa8zCw3RwP20ekv/sqZZc8m5dJRi1EoQCIAAA==",
+    "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAABQAgCdASoQAAsAAsBMJbACdAYxFgYLmOduVgAA/uyeXyN9GewtPV9yQZdbIcDf4/ViBDvFMaxoq/3JaS0ppq5zPveg3tvy5UHnwpZs/pKqOss8gcx8P0QBgh9lTLLnk3LpKMWolCARAAAA",
     "takenAt": "2022-10-29T05:25:11Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -3835,8 +6427,8 @@
     ]
   },
   {
-    "id": "2022-10-29-e182ff0e",
-    "sourceHash": "e182ff0e848b",
+    "id": "2022-10-29-91019a93",
+    "sourceHash": "91019a93131b",
     "width": 5453,
     "height": 3635,
     "aspectRatio": 1.5001,
@@ -3845,7 +6437,9 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -3884,7 +6478,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -3922,7 +6517,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -3961,7 +6557,9 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
@@ -3989,8 +6587,8 @@
     ]
   },
   {
-    "id": "2022-10-29-57875022",
-    "sourceHash": "57875022870f",
+    "id": "2022-10-29-b7b11b47",
+    "sourceHash": "b7b11b4736cd",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -3999,13 +6597,15 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQAgCdASoQAAsAAsBMJbACdADdjfrREMEAAP28ga4iyi7daTkDX2PMsbhQ0ZgDX/3m42GYru2wn4kk6cT+JKr0/Edzvcvjh4Ak5XlqqoxufVTUvnugc6AHGs70/SDqD/ma3MEgTLNYxPdaYA8aFi2S+QAAAA==",
+    "lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQAgCdASoQAAsAAsBMJbACdADdjfrREMEAAP28ga4iyi7daTkDX2PMsbhQ0ZgDX/3m42GYru2wn4kk6cT+JKr0/Edzvcvjh4Ak5XlqsSDp96BkX8VO6SVa9l/1RWH7wt/V96Mb39j1P1dX6wfYPdpFqDUuAAAA",
     "takenAt": "2022-10-29T05:50:00Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -4027,8 +6627,8 @@
     ]
   },
   {
-    "id": "2022-10-29-e26fb08c",
-    "sourceHash": "e26fb08c42f6",
+    "id": "2022-10-29-2c76c075",
+    "sourceHash": "2c76c075a2a7",
     "width": 2690,
     "height": 3031,
     "aspectRatio": 0.8875,
@@ -4043,7 +6643,7 @@
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAACQBACdASoQABIAPtFUo0uoJKMhsAgBABoJbACdMoMYA0k9lbpOKuXmWZ5vXCAA/lqHMVEhl3culbl7rWnrgLOMeBY7zv4TgqljI52WMDR1mzaJlXA+VuRCfqp3q0m2AMHBvbYIIQLfFg2+QmN9Hgp8T1XPHN5t+blEHaYqQykEB3mjiP2h0FFtpBN/R/otPHbwOmxn3cBs/Ztj19tN5iq9yBqukIgcr18CAA==",
+    "lqip": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAAAwBACdASoQABIAPtFUo0uoJKMhsAgBABoJbACdMoMYAELHFWtfT73YkaAA/lqHOZkVd8OzwUNvS+pRebIQjL8vglYVgIw3G4ZqCrMV2Bnxzr2rl0CzmuqVGrelJTAtSQ2JO8z4rWaeoFXlr0d23Ft4sNQjSpPH7yv1POsm+vYfmIpBOw3fELd5cEpLW3th+/y61xs00ktXLZcn5kZIa+F/BB0jn1XxDzsiAA==",
     "takenAt": "2022-10-29T05:53:50Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -4075,7 +6675,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -4103,8 +6704,8 @@
     ]
   },
   {
-    "id": "2022-10-29-4eb847b6",
-    "sourceHash": "4eb847b61b27",
+    "id": "2022-10-29-8575a677",
+    "sourceHash": "8575a6773b21",
     "width": 4264,
     "height": 2843,
     "aspectRatio": 1.4998,
@@ -4113,13 +6714,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAABQAgCdASoQAAsAAsBMJbACdAYp5yxoP2mMUYAA/ukoNDw35H7oUdiz+Z6BKDBCj4s+pOWOmbpexWTkTwKZv9azYy+y4MA22sDeezc8Or+Cxa6xBfvDmdsiffuiHUSYAiTys4/3k8vecOtElGMrOagPXG5FevIvDfbG+C4A",
+    "lqip": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAABQAgCdASoQAAsAAsBMJbACdAYqDyxoP8IHJpAA/ukoNUA6JH7oUdi0CZ6BKDBCkBTIoa9rHW3Rg+uMykAU67dySnu9YGt2WfWJYB6yeVV2fIVYiBF9GVVhUd+10Q6iTRGSeWpFdbN5ahQqwvNL4mhLBT38H35F4b7Y3wXAAAA=",
     "takenAt": "2022-10-29T06:23:45Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -4141,8 +6743,48 @@
     ]
   },
   {
-    "id": "2022-10-29-01580530",
-    "sourceHash": "01580530c63e",
+    "id": "2022-10-29-81898c4f",
+    "sourceHash": "81898c4fc9ce",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAQAgCdASoQAAsAAsBMJbACdAEYEhGLLwCwAP7b42+m7hpiCsFVpDkWXMzBmSebO2nlzbCbBWOclO1npl4LxDZI6iUP7qYMwQOoCRFt0nIEBKDQxQHMV07SmfA/pQ3U1KnNlGwbQQ+RhDuJXAN2SqgmqRNxfzNw9vFtIAAA",
+    "takenAt": "2022-10-29T06:23:50Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "158mm",
+    "aperture": "f/2.8",
+    "shutter": "1/160s",
+    "iso": 8000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A woman in traditional folk costume with an ornate orange hat decorated with dried grasses raises her hand while holding a small hand bell, with a crowd blurred in the background.",
+    "tags": [
+      "morris dancer",
+      "costume",
+      "hat",
+      "crowd",
+      "festival",
+      "folk dance",
+      "hand bell"
+    ]
+  },
+  {
+    "id": "2022-10-29-b885f345",
+    "sourceHash": "b885f34537c7",
     "width": 4145,
     "height": 2763,
     "aspectRatio": 1.5002,
@@ -4151,13 +6793,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAABQAgCdASoQAAsAAsBMJQBOkBswUBB0TFjBWAAA/nXTTZPRT20wQ+2bPOFsq1Yrzf5nDLTBKs5cb9T9jxfly+n06Ofam03fcAshKIvM6Dm6CHuv1QR+m8nIEGHroX+UiedlfjOQBUB9yR7Bn8Z2Nr5AAAA=",
+    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAABQAgCdASoQAAsAAsBMJQBOkBswT5B0eghtv4AA/nXTTZPQT20wQ+2Z/OFsq1X6vhHOQkTBKs5bb3T9jxfly+m2KQ3R3hargsaPz3zRcen8DIuUjUndumk7G5iRIA/171u384bLUBD0Z+BC79XmAY4AAAA=",
     "takenAt": "2022-10-29T06:24:07Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -4189,7 +6832,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -4217,8 +6861,8 @@
     ]
   },
   {
-    "id": "2022-10-29-9397e34c",
-    "sourceHash": "9397e34cc564",
+    "id": "2022-10-29-739d3157",
+    "sourceHash": "739d31576ba7",
     "width": 4735,
     "height": 3157,
     "aspectRatio": 1.4998,
@@ -4227,13 +6871,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAACQAgCdASoQAAsAAsBMJbACdH8AglixKm1N2niwAADgNzTAeziqVfxtGGZXknT9V7C88xTbGEM74KroXsrEtW42lA23Q6tS45G9BO4WgtlTVFH/QhqrKTHUgJ0l7Ljr+kt/rpcMB1fkpMfSd7t26ex6dj0DtaiSXP3WtClQH/uyAAAA",
+    "lqip": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAACQAgCdASoQAAsAAsBMJbACdH8AglCxKo0k3h84AADgNzTAeNCqVfxtCFssQUCji6DAwmVby4U8o1mO16fx6Yg8fMoFqh/VKzJLgKdoLmuMw3v24B5DLMJ1f4/+lQ9d24LELdCeU/KyeE8lIf4uArIO0ze/XT/XpR98Wllm1m8BgAAA",
     "takenAt": "2022-10-29T06:32:59Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -4255,8 +6900,8 @@
     ]
   },
   {
-    "id": "2022-10-29-694689b9",
-    "sourceHash": "694689b9b6cd",
+    "id": "2022-10-29-688de394",
+    "sourceHash": "688de394cd60",
     "width": 4596,
     "height": 3064,
     "aspectRatio": 1.5,
@@ -4265,13 +6910,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAAAQAgCdASoQAAsAAsBMJbACdAEf59KNtFsAAP7eIxvZ1OChq5xhttrj+Kv3f6+3znK81ulybCoUd9u1iyUAQN0K9+G1D54kIOASuuHwKSawSUxLcr9EKnAPNY9sUssdWU/wba2+8LryEEG6C/WbKG+bAAA=",
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAQAgCdASoQAAsAAsBMJbACdAEf3akby/6AAP7eIxvBY6zwCYCGH+VsZWdgadjdmdMK5sYDYVCjvt2sWSgCBuhXvw2ofH8WUYJN7R2sh+m1vTagZEAk37iL2xSyx1ZT/Btrb7wuvIQQboL9Zsob5sAA",
     "takenAt": "2022-10-29T06:36:36Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -4293,8 +6939,8 @@
     ]
   },
   {
-    "id": "2022-10-29-034cf4f7",
-    "sourceHash": "034cf4f7411b",
+    "id": "2022-10-29-02fce682",
+    "sourceHash": "02fce6828d40",
     "width": 4410,
     "height": 2940,
     "aspectRatio": 1.5,
@@ -4303,13 +6949,14 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAQAgCdASoQAAsAAsBMJbACdH8AE6xaBrfAAP7OB92gU6nFx8Zf4GZOnn4rKqWY4Kq+zzvhJXg1ftc/0sHnTz1pmBSIWi7e947gUVpSfRkZTwj6gKyNDyGx8FGUYWIZiL1JmlFct36/zqf4N0kDd24OqhIXUAVmX/JtIBKIAAA=",
+    "lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAQAgCdASoQAAsAAsBMJbACdH8AE7I/BbaYAP7OB92gU6nFx8Zf4GZOnn4rKqWY4Kq+zzvhJXhEJLkMJoGX9v35EUnWxpzs5lkeT+Z/xjpWLFqWv3gUHj546BSH3jwK8D4ryhM5MLyEuGkN/g3SQN3bg6/MSF1AFZl/ybSASiAAAA==",
     "takenAt": "2022-10-29T06:37:39Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -4331,6 +6978,47 @@
     ]
   },
   {
+    "id": "2022-10-29-d7b6f202",
+    "sourceHash": "d7b6f202fb33",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADwAQCdASoQAAsAAsBMJbACdAEebVKdG9QA/vS7Yyop0zreB2vuo6J5T+2AxKXoiNd68hSyRKCeAdUqnhFG2A3bRljX3yCaNsjqIZ1FBQNVVk6mt2c6pivZ2F+Z7ptjXW9usnzIiJsgg54EGQAAAA==",
+    "takenAt": "2022-10-29T06:39:33Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/2.8",
+    "shutter": "1/200s",
+    "iso": 25600,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A man in medieval armor holds a lance while riding a white horse in front of heraldic banners at night.",
+    "tags": [
+      "knight",
+      "armor",
+      "jousting",
+      "horse",
+      "lance",
+      "medieval reenactment",
+      "banners",
+      "night event"
+    ]
+  },
+  {
     "id": "2022-10-29-03357efe",
     "sourceHash": "03357efe7295",
     "width": 4149,
@@ -4341,7 +7029,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -4370,8 +7059,8 @@
     ]
   },
   {
-    "id": "2022-10-29-1ceb7378",
-    "sourceHash": "1ceb7378b457",
+    "id": "2022-10-29-12f16186",
+    "sourceHash": "12f161867b96",
     "width": 5472,
     "height": 3648,
     "aspectRatio": 1.5,
@@ -4380,13 +7069,15 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840,
+      5120
     ],
     "formats": [
       "avif",
       "webp"
     ],
-    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAwAgCdASoQAAsAAsBMJbACdAEQ/g+8JvtEAAD+3PxQrkL+ZaLX2iIRnntJhQaSCtDCWaMDvrFoUVnlEjgh5k1fxhpTwomXkaVAT1CI8xx9+yDbvYgxRo4IK/WwO64X7NkNFQAA",
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAwAgCdASoQAAsAAsBMJbACdAEQ/g+8JvtEAAD+3PxQrkL+ZaLX2iIRnntJhQaSCtDCWaMDvrFoUVnlEjghnzteshX+NpfDKzx0PMUMXOPv2Qbd7EGKNHBBX62B3XC/ZshoqAAA",
     "takenAt": "2022-10-29T06:49:43Z",
     "camera": "Canon EOS R6",
     "lens": "RF70-200mm F2.8 L IS USM",
@@ -4409,8 +7100,8 @@
     ]
   },
   {
-    "id": "2022-10-29-5e74de39",
-    "sourceHash": "5e74de393265",
+    "id": "2022-10-29-a7439ae3",
+    "sourceHash": "a7439ae32ca3",
     "width": 4324,
     "height": 2883,
     "aspectRatio": 1.4998,
@@ -4419,7 +7110,8 @@
       1024,
       1536,
       2048,
-      2560
+      2560,
+      3840
     ],
     "formats": [
       "avif",
@@ -4445,6 +7137,1858 @@
       "night show",
       "renaissance faire",
       "colored stage lights"
+    ]
+  },
+  {
+    "id": "2022-11-05-bc6415cf",
+    "sourceHash": "bc6415cf5b79",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAABQBACdASoQABgAPtFWpEwoJKOiMAgBABoJYwATgAEy8U5YN210P73JAUQAAP7TUnoZ+IPi/MPdjjp3dVSyIcYCUZik3nPMub1O1/E8z8r5d/gNMSQ8YZ0unK8oWzfWshpqXnPDwcj4cp3vpv8mSIgxSQ2ZXCJovcxQVnXzOeWa3iKkj4fhPmZdXuuYDOS14HkAMipplzwTqkyIfNN1cLyBKmSAAA==",
+    "takenAt": "2022-11-05T00:13:59Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "177mm",
+    "aperture": "f/5.6",
+    "shutter": "1/800s",
+    "iso": 100,
+    "shoot": "2022-10-29",
+    "title": "Washington Monument, Philadelphia",
+    "caption": "A bronze equestrian statue atop an ornate sculpted pedestal stands in front of a classical museum building under an overcast sky.",
+    "tags": [
+      "equestrian statue",
+      "bronze sculpture",
+      "monument",
+      "museum",
+      "philadelphia museum of art",
+      "cloudy sky",
+      "trees"
+    ]
+  },
+  {
+    "id": "2022-11-05-63416172",
+    "sourceHash": "634161726aa5",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAADwBACdASoQABgAPtFUo0uoJKMhsAgBABoJYgCdOUE6UITsUv3caYhDeK+Vc7WBxPAA4DFAcWWyDhufrjRya4aZqr98N6rm9/Md6qCvDGlRsVaeZSBONZLKpHtwH2GwpznN2aGNQNnjG0QoRQnl2pykJHRPuMhPmn60j8sLA7CEZ4/uGO5XCfvrk7rcoz9Dux/Doo8qteepl+T91OgEqmQEX0hsOZi3E/lHc0bTx9gM3gzfhjleqWzYsEtOxG28X8AAAA==",
+    "takenAt": "2022-11-05T00:18:52Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/4",
+    "shutter": "1/400s",
+    "iso": 100,
+    "shoot": "2022-10-29",
+    "title": "Rocky Statue",
+    "caption": "A bronze statue of a boxer with arms raised in victory stands at the base of stone steps surrounded by trees with autumn foliage.",
+    "tags": [
+      "statue",
+      "bronze statue",
+      "boxer",
+      "boxing gloves",
+      "steps",
+      "trees",
+      "autumn foliage"
+    ]
+  },
+  {
+    "id": "2022-11-05-9730a465",
+    "sourceHash": "9730a4658c67",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQAgCdASoQAAsAAsBMJaACdIExGZ+KJGBR3gAA/vYpMUrgmQiZ1MTuReCz3O1D9Qb+/S+YdQV7VZJ4hDn/EcJcP6RlZ3SnhbVnM/2Df9UWfVi4Yuexn5nVo4KIzPMb3ErNogAA",
+    "takenAt": "2022-11-05T00:20:04Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "135mm",
+    "aperture": "f/4",
+    "shutter": "1/320s",
+    "iso": 100,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A bronze equestrian statue depicts a rider on a rearing horse wielding a spear over a fallen animal, mounted on a stone pedestal surrounded by trees.",
+    "tags": [
+      "statue",
+      "bronze sculpture",
+      "horse",
+      "rider",
+      "spear",
+      "pedestal",
+      "trees",
+      "park"
+    ]
+  },
+  {
+    "id": "2022-11-05-9d073ac4",
+    "sourceHash": "9d073ac4bea8",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAQCdASoQAAsAAsBMJQBOgBh1e0PsLgD+qri1x+IbPWtXs6pWY+CJZSZyEW3nz1K3qVbeFCXSsQa76J/MU7LTUga8pSQM1hXXj3x8ZvFTf2HxNWD30NAcsJJ4dhw9viAAAA==",
+    "takenAt": "2022-11-05T00:34:52Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/2.8",
+    "shutter": "1/80s",
+    "iso": 320,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A full suit of armor on a mounted mannequin with matching horse armor stands in a museum gallery beneath a stained glass window.",
+    "tags": [
+      "armor",
+      "knight",
+      "horse armor",
+      "museum",
+      "stained glass",
+      "suit of armor",
+      "helmet"
+    ]
+  },
+  {
+    "id": "2022-11-05-d442fcab",
+    "sourceHash": "d442fcaba7ae",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADQAQCdASoQAAsAAsBMJbACdADdYcawAAD2vEqEwmFuuuPBvQdKEWBFp0tpuEBKaa8NpoYKqH8CoDzeOESCuzQf/yBSPIhAjfeOV1Kl5Iynoxf2AAA=",
+    "takenAt": "2022-11-05T00:45:24Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "85mm",
+    "aperture": "f/4",
+    "shutter": "1/60s",
+    "iso": 2000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A curved powder horn engraved with a detailed map showing lakes, creeks, and place names.",
+    "tags": [
+      "powder horn",
+      "engraved map",
+      "antique",
+      "museum artifact",
+      "lake ontario",
+      "colonial history"
+    ]
+  },
+  {
+    "id": "2022-11-05-9f860d35",
+    "sourceHash": "9f860d35f118",
+    "width": 3522,
+    "height": 5283,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAAAQBQCdASoQABgAPtFUo0uoJKMhsAgBABoJZACdMoMYHYAR4BQajAj8KaZhXmIDLAwAAP6jazL7e7DsHSazHEXL4gtRvFetwjHjjAAR3kIWHZXiUuJXrvvOV2KUAMEQ39i0pzvO0iqsFfg/27R3r9Y0XUysW8NCaG4vJpFAGE460wUzxVm41BF/0jWpv3oCRy7xtyRIxJCKlQ7Eb5RatSVSblCqFZCWlnJn+rY6ro3l1V1AwAA=",
+    "takenAt": "2022-11-05T01:17:42Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "50mm",
+    "aperture": "f/4",
+    "shutter": "1/60s",
+    "iso": 8000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A close-up of an aged carved figurine of an elephant-headed deity displayed in a museum glass case.",
+    "tags": [
+      "ganesha",
+      "carving",
+      "ivory",
+      "sculpture",
+      "museum",
+      "elephant",
+      "statue",
+      "display case"
+    ]
+  },
+  {
+    "id": "2022-11-05-f1b41472",
+    "sourceHash": "f1b41472234d",
+    "width": 4772,
+    "height": 3181,
+    "aspectRatio": 1.5002,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoQAAsAAsBMJYwCdAEPLd2Z9+ttQAD2rYNvhYxk7sCZsO7lVOkaS+mUf0QFlUNi158iBUxekWcWG6//bWlUXMArpKZY8gf9C0dSVeTTRcllaRCCE3YGAAAA",
+    "takenAt": "2022-11-05T01:21:59Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/4.5",
+    "shutter": "1/60s",
+    "iso": 8000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "Large ink-wash paintings hang on suspended scrolls arranged in a room, lit from below within a dark gallery space.",
+    "tags": [
+      "art installation",
+      "ink painting",
+      "scrolls",
+      "gallery",
+      "museum interior",
+      "hanging scrolls",
+      "exhibit"
+    ]
+  },
+  {
+    "id": "2022-11-05-7611e43b",
+    "sourceHash": "7611e43bb1df",
+    "width": 5129,
+    "height": 3419,
+    "aspectRatio": 1.5001,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAQCdASoQAAsAAsBMJQBOgCICcpTFy4gA/uPqrY/YtaKCHHYTHeDD/tFBYnEhuump7Zh66hBzx8UH8P17E9n3zG/ZUWeWuVRV4/mGwxHC5/S6ssgdGtxC84AAAA==",
+    "takenAt": "2022-11-05T01:23:24Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "63mm",
+    "aperture": "f/4.5",
+    "shutter": "1/60s",
+    "iso": 8000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A golden seated Buddha statue on a lotus pedestal is flanked by two smaller wooden statues in an alcove display.",
+    "tags": [
+      "buddha statue",
+      "temple",
+      "shrine",
+      "wood carving",
+      "lotus",
+      "altar",
+      "sculpture",
+      "museum"
+    ]
+  },
+  {
+    "id": "2022-11-05-6b4f12ad",
+    "sourceHash": "6b4f12adca42",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAQAgCdASoQAAsAAsBMJbACdLoAAoRy7vdYAP6+Z2Rc2zYVrLCr8aowt0nZLVDPiacERgZD5s/pabume9WTZCz3NTSN5cc5Iia1if2grdQZPHRon5ZK+ySvzt+NxlkuveCJ+jFPkhitr5U8nAAAAA==",
+    "takenAt": "2022-11-05T01:30:46Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "45mm",
+    "aperture": "f/4.5",
+    "shutter": "1/60s",
+    "iso": 6400,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "Rows of intricately carved stone pillars with figural sculptures line a temple-style hall lit in warm tones.",
+    "tags": [
+      "temple",
+      "stone carving",
+      "sculpture",
+      "pillars",
+      "museum",
+      "architecture",
+      "indian art"
+    ]
+  },
+  {
+    "id": "2022-11-05-976ddd61",
+    "sourceHash": "976ddd610ae3",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoQAAsAAsBMJbACdAEDYpsxtSLzAAD+9CdPNS7gd9Qk9JvEfrMxFesi6surXpa6xrEtc09jgLR+Zqil2T04xnSEMTAJiu1lS3si50ZuvhTO9KUQAAA=",
+    "takenAt": "2022-11-05T01:36:15Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/4.5",
+    "shutter": "1/100s",
+    "iso": 2500,
+    "shoot": "2022-10-29",
+    "title": "Diana (Augustus Saint-Gaudens)",
+    "caption": "A gold archer statue stands on a pedestal between two Ionic columns, surrounded by illuminated snowflake decorations at night.",
+    "tags": [
+      "statue",
+      "archer",
+      "gold statue",
+      "columns",
+      "snowflake lights",
+      "night",
+      "architecture"
+    ]
+  },
+  {
+    "id": "2022-11-05-67b84175",
+    "sourceHash": "67b84175424c",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAwBACdASoQABgAPtFUo0uoJKMhsAgBABoJYwCdAywToAf8doFv806NLxAA/c33Rg2eWGEaMZ0MeK3O0W8EnXqZV4wbhWjIeHYul5WBoO3NRleAvwG1FBHC0jNEYa3H5ELyO0fqo4ibMTvMBZb3ZhAMCAtHQfiordVCw8N+g3UxByqcTjCBgzHkIyzHN0Ca4Nw3AAAA",
+    "takenAt": "2022-11-05T01:48:53Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "47mm",
+    "aperture": "f/4",
+    "shutter": "1/60s",
+    "iso": 2000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A marble statue of a bearded, hooded figure draped in flowing robes stands on a pedestal in a museum gallery.",
+    "tags": [
+      "sculpture",
+      "statue",
+      "marble",
+      "museum",
+      "gallery",
+      "pedestal",
+      "bearded figure",
+      "robe"
+    ]
+  },
+  {
+    "id": "2022-11-05-da7cd086",
+    "sourceHash": "da7cd086e144",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAABwBACdASoQABgAPtFUpEuoJKOhsAgBABoJYwCdAYwI4Q3r4HBq/3iGMRfQAAD+rrUcefbkc9sxnm7ddmugn1j6nFbeXj6gZO/jQwe7cmJr412kjKktEs0q3P+30gj17uMJju0q9NH+ifsTkykiECvzaBqdYVkwCVGw7RKDgsV3FrdHI/WJzFGnizOdlOu/8FpqHpwxffo4adiLzkkYpVzrTlmWQAAA",
+    "takenAt": "2022-11-05T01:51:46Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "42mm",
+    "aperture": "f/4.5",
+    "shutter": "1/80s",
+    "iso": 4000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A bronze statue depicting a bearded man draped in cloth seated atop a horned animal, displayed on a white pedestal against a tan wall.",
+    "tags": [
+      "bronze statue",
+      "sculpture",
+      "museum",
+      "mythological figure",
+      "goat",
+      "figurine",
+      "art exhibit"
+    ]
+  },
+  {
+    "id": "2022-11-05-8e7c5dea",
+    "sourceHash": "8e7c5deab9f3",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAQAgCdASoQAAsAAsBMJbACdAEN4QGxTMiAAP71zZibnLyme2Ty7+AxyukIcASWW5l/XVxo+rqoWrHD6EtnlObw3SGrQbjPC3IK0AAA",
+    "takenAt": "2022-11-05T01:57:32Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "61mm",
+    "aperture": "f/4",
+    "shutter": "1/60s",
+    "iso": 5000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A decorative ceramic plate with painted portrait faces stands on a display stand in front of an ornately carved wood-paneled wall featuring profile medallions.",
+    "tags": [
+      "ceramic plate",
+      "wood carving",
+      "wall panel",
+      "portrait medallion",
+      "decorative plate",
+      "interior"
+    ]
+  },
+  {
+    "id": "2022-11-05-0f79b24c",
+    "sourceHash": "0f79b24c7873",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAABwBACdASoQABgAPtFUpEuoJKOhsAgBABoJYwC06Yxi7KChwaDP+xZjdIdhAAD90Xj93LTlfdyherOhuCis7EDDeCOzCJflEBlVEjh/iroeU09th4GRGGtzsnf1ksGW01t4AjtQWUhVWa3zQoZ2k+N/0R/1339NIGOTZr2Gsy2YDWZAgAA=",
+    "takenAt": "2022-11-05T02:06:09Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "45mm",
+    "aperture": "f/4",
+    "shutter": "1/60s",
+    "iso": 2000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A marble sculpture of two draped female figures raising a circular tray of carved fruit above their heads, displayed on a pedestal against a plain wall.",
+    "tags": [
+      "sculpture",
+      "statue",
+      "marble",
+      "museum",
+      "figures",
+      "fruit bowl",
+      "classical art",
+      "pedestal"
+    ]
+  },
+  {
+    "id": "2022-11-05-a54eaa9c",
+    "sourceHash": "a54eaa9ce408",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAACQBACdASoQABgAPtFWpUwoJKOiMAgBABoJYwC06YvCo9FTEFaEGEThLvyMNAAA/tlnFE+24FC3so9OxhY3Ld9FGD6LWMZ+f+skfxsU9ZQlOe2sodIHUOPrNykh7DCYJ1gy22Kjc4MJed8DxEDQEeUdvaNa2OY2xvEhrjPe5hd6+0dNLlxJxmcMXjXzdPir4GjOM6kAAAA=",
+    "takenAt": "2022-11-05T02:13:46Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-105mm F4 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/4.5",
+    "shutter": "1/80s",
+    "iso": 2000,
+    "shoot": "2022-10-29",
+    "title": null,
+    "caption": "A white marble bust of an older man with long wavy hair, displayed on a wooden pedestal against a beige wall.",
+    "tags": [
+      "marble bust",
+      "sculpture",
+      "statue",
+      "museum",
+      "portrait",
+      "indoor"
+    ]
+  },
+  {
+    "id": "2023-08-20-0a8a2ffd",
+    "sourceHash": "0a8a2ffd7737",
+    "width": 5451,
+    "height": 3634,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAwAgCdASoQAAsAAsBMJbACdEf/ged2Rb0oAAD8iamU0hvDZyRV1JYfQh6Bd1sBqBJguVP08RzvBvqV9+rsiehyCxI+RGpAd3bMK37M3fqzQOZioAA=",
+    "takenAt": "2023-08-20T08:21:14Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/3.2",
+    "shutter": "1/60s",
+    "iso": 3200,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "Two large carved jack-o'-lantern pumpkin decorations sit in front of an illuminated train station building at dusk, with a crowd of visitors nearby.",
+    "tags": [
+      "jack-o-lantern",
+      "pumpkins",
+      "halloween",
+      "train station",
+      "flag",
+      "string lights",
+      "dusk",
+      "crowd"
+    ]
+  },
+  {
+    "id": "2023-08-20-1e72279a",
+    "sourceHash": "1e72279a470c",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQAAsAAsBMJbACdAEPAV4MIEqAAP75R/KpZRGr+FYB/MOYAk/DqxcGJQB2j0P6R5v5jKtAUaGT3q0FBnOpLvVd9XGt7ArVgAA=",
+    "takenAt": "2023-08-20T08:24:51Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/2.8",
+    "shutter": "1/80s",
+    "iso": 320,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "A glowing carved pumpkin shaped like mouse ears hangs within a wreath of autumn leaves at night.",
+    "tags": [
+      "jack-o-lantern",
+      "pumpkin",
+      "wreath",
+      "halloween",
+      "mouse ears",
+      "night",
+      "decoration",
+      "string lights"
+    ]
+  },
+  {
+    "id": "2023-08-20-6f26e7fe",
+    "sourceHash": "6f26e7fed0c4",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAABQAgCdASoQAAsAAsBMJbACdH8AGBjaTljFhYAA/vtn5eFdOKeVDTs6QBiIOMn0dYTBwglSncXzefzNrRP/j8hYldtPUh7iGhdhpN7G8NYxp7/fmhsSgAAA",
+    "takenAt": "2023-08-20T11:07:57Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/2.8",
+    "shutter": "1/60s",
+    "iso": 25600,
+    "shoot": "2023-08-20",
+    "title": "Partners Statue, Magic Kingdom",
+    "caption": "A bronze statue of a man and Mickey Mouse stands in front of an illuminated castle at night.",
+    "tags": [
+      "statue",
+      "castle",
+      "night",
+      "theme park",
+      "lights",
+      "bronze statue"
+    ]
+  },
+  {
+    "id": "2023-08-20-f06c2ee7",
+    "sourceHash": "f06c2ee7c40f",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAQAgCdASoQAAsAAsBMJbACdAYsPkiCDKAAAP75Yc8DclJGxAa9XapjTBPTp+vlrX/vT/h4lHRGxR+sMc2lDZmM5r4/tyNSmaJWJq+P+G57XWa+9rg5cpuqvItcIn96VsnjlG+/+Pjfem81D+AAAA==",
+    "takenAt": "2023-08-20T11:12:04Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "46mm",
+    "aperture": "f/2.8",
+    "shutter": "1/60s",
+    "iso": 5000,
+    "shoot": "2023-08-20",
+    "title": "Cinderella Castle",
+    "caption": "A lit castle stands at the end of an empty theme park main street lined with illuminated storefronts and flags at night.",
+    "tags": [
+      "castle",
+      "main street",
+      "theme park",
+      "night",
+      "lights",
+      "flags",
+      "storefronts"
+    ]
+  },
+  {
+    "id": "2023-08-20-ea5cb1f0",
+    "sourceHash": "ea5cb1f06851",
+    "width": 3648,
+    "height": 5472,
+    "aspectRatio": 0.6667,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRsIAAABXRUJQVlA4ILYAAADQBACdASoQABgAPtFWo0uoJKMhsAgBABoJZgBTBNALsA3jUDGQeeOco+VKS7L4oAD+93YhNKFbrqxqOtWf4zAvadQoVgXb+HlS6sDEpD1jAg+967s5+7T8cvWGptx/rRa1yW4IJxy+slMZ5Sw0GOMH7bXiAXAaHVQcGpJfgd63iIJZ/xjiF+0tIOcTBzqzBJcHIEyX7zk1gzi2gIif9XlN7bh04U3bmwzk3VPWHWgG+dnTLiTgAA==",
+    "takenAt": "2023-08-20T22:28:21Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/2.8",
+    "shutter": "1/80s",
+    "iso": 8000,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "A tall thin robot with glowing blue eyes and articulated metal limbs stands in a dimly lit sci-fi themed room with illuminated control panels.",
+    "tags": [
+      "robot",
+      "droid",
+      "animatronic",
+      "theme park",
+      "star wars",
+      "control panel",
+      "lights"
+    ]
+  },
+  {
+    "id": "2023-08-20-fa90174b",
+    "sourceHash": "fa90174ba644",
+    "width": 5022,
+    "height": 3348,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoQAAsAAsBMJQBOgCGU8kBmAAD++GtO5QYr7Ha/kzuYrZCSvDx0KHp6QZ8YSrrzUTGOG2+b9C0euE6lFzAsGWpRGEYooFMMcHTwAAAA",
+    "takenAt": "2023-08-20T23:33:07Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "40mm",
+    "aperture": "f/2.8",
+    "shutter": "1/60s",
+    "iso": 6400,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "A metallic lightsaber-style hilt with red accent rings rests on a display stand.",
+    "tags": [
+      "lightsaber hilt",
+      "prop",
+      "metal",
+      "display stand",
+      "table"
+    ]
+  },
+  {
+    "id": "2023-08-21-905e3ecd",
+    "sourceHash": "905e3ecda17c",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADQAQCdASoQAAsAAsBMJYgCdADuvQWDQAD+7I+OWXBeeX9cP9Nyu87zh+Gm8XMOOFMzD5eOabDvHo71WbpSRzLCJC2WZm1SbRPQp+gpoW1PU+9IoyxGeMQAAAA=",
+    "takenAt": "2023-08-21T00:10:42Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/2.8",
+    "shutter": "1/80s",
+    "iso": 800,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "Rows of white-armored stormtrooper costumed figures stand at attention in a dark hangar lit with blue neon lines.",
+    "tags": [
+      "stormtroopers",
+      "star wars",
+      "costumes",
+      "cosplay",
+      "blue lighting",
+      "hangar"
+    ]
+  },
+  {
+    "id": "2023-08-21-cfd5d3ab",
+    "sourceHash": "cfd5d3abc5f9",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoQAAsAAsBMJbACdAEPADW1zJAA/viVt4gVywzamEZOCE9cQQDR7BSbppPjcFx/bhhtmq9Qf5EF7im57dhZ4vDxvicj/zaC0C/b7dOVHtwVGmkAAAA=",
+    "takenAt": "2023-08-21T00:12:00Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/2.8",
+    "shutter": "1/80s",
+    "iso": 6400,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "Two stormtroopers stand at control consoles inside a red-lit starship corridor.",
+    "tags": [
+      "stormtroopers",
+      "star wars",
+      "costume",
+      "control panel",
+      "spaceship interior",
+      "red lighting",
+      "theme park"
+    ]
+  },
+  {
+    "id": "2023-08-21-0bcd8ea5",
+    "sourceHash": "0bcd8ea52323",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAACQAgCdASoQAAsAAsBMJZgCdH8Aglif0lAu6SqsAAD+9MMf3Oacfzj7LPMT9K/9k8tJjBzt9tNT45VQdlBJiRzk9wupfO6mEOxAdnn7l3ZBgRWLFzQcuhBRGP9uIvj+tDFHNraMmKZlHRT9UsjzKPjgAAA=",
+    "takenAt": "2023-08-21T08:38:56Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/2.8",
+    "shutter": "1/80s",
+    "iso": 5000,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "Oversized colorful bulb string lights hang against a night sky above giant wooden toy figures at an outdoor park.",
+    "tags": [
+      "string lights",
+      "night",
+      "amusement park",
+      "giant toy props",
+      "bulb lights",
+      "outdoor market"
+    ]
+  },
+  {
+    "id": "2023-08-21-c71922c2",
+    "sourceHash": "c71922c2ffbb",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAwAgCdASoQAAsAAsBMJbACdH8AFN8hm6jWMAD++JOML9pgRa51vDHdWOR/LrI95fP+9YCa1/+FV4SSdkopK01u1BnGxt+nkXazqr8MbqLSINTghhju7kAqZSBcn5n5kQACi21qT9I9L0byXxuTdku3EIAAAA==",
+    "takenAt": "2023-08-21T08:42:40Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/2.8",
+    "shutter": "1/80s",
+    "iso": 2500,
+    "shoot": "2023-08-20",
+    "title": "Toy Story Land",
+    "caption": "A large illuminated sign spelling LAND with alphabet blocks beneath a round Toy Story logo, photographed at night.",
+    "tags": [
+      "toy story land",
+      "sign",
+      "theme park",
+      "letter blocks",
+      "night",
+      "disney"
+    ]
+  },
+  {
+    "id": "2023-08-21-5dcb2d5d",
+    "sourceHash": "5dcb2d5d0a57",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAwAgCdASoQAAsAAsBMJbACdADMDKWnNJ8l4AD+6fj0b68lDNl8ah2hASsrucY88TPI9sN1Ji7fx7WGkwnRMCsfk2MZ+SVIa6bm85J3CenE/QnNyfdv0BWPE7MmF11rjMzDsAAA",
+    "takenAt": "2023-08-21T08:48:18Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/3.2",
+    "shutter": "1/80s",
+    "iso": 12800,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "A dimly lit stone-walled workshop area filled with weathered machinery, crates, and hanging props beside an outdoor walkway at night.",
+    "tags": [
+      "themed decor",
+      "workshop set",
+      "stone walls",
+      "props",
+      "lantern",
+      "night",
+      "walkway"
+    ]
+  },
+  {
+    "id": "2023-08-21-2dfcb961",
+    "sourceHash": "2dfcb961e484",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAABwAgCdASoQAAsAAsBMJbACdLoAAwk3bLR+dm4AAP75OdtvTtyiwPhS/XeL6QaaVjesSg5tyYWZiXHJo8ZUpgiWytxpONKX3aE9LOo/HXhrdkudwAA=",
+    "takenAt": "2023-08-21T08:49:30Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "24mm",
+    "aperture": "f/2.8",
+    "shutter": "1/60s",
+    "iso": 25600,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "A full-size X-wing starfighter replica sits illuminated among rocks and trees at night.",
+    "tags": [
+      "x-wing",
+      "starfighter",
+      "theme park",
+      "night photography",
+      "trees",
+      "rockwork",
+      "spacecraft replica"
+    ]
+  },
+  {
+    "id": "2023-08-21-2bf076a7",
+    "sourceHash": "2bf076a7706d",
+    "width": 5224,
+    "height": 3483,
+    "aspectRatio": 1.4999,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAACQAgCdASoQAAsAAsBMJbACdFQAmjkGQm9VIZIZAAD++2nno/OVN3qIpDgnrovLBprF73pLX+tk+ruo+296DPKtl6uYzk3engcw4sC9R71jvm0EzB37aybZ6rS0dgM6KqnTnOXf4f4yLB2T6vwLMuAAAAA=",
+    "takenAt": "2023-08-21T08:57:44Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "45mm",
+    "aperture": "f/3.2",
+    "shutter": "1/60s",
+    "iso": 640,
+    "shoot": "2023-08-20",
+    "title": "Hollywood & Vine",
+    "caption": "A colorful neon marquee reading \"Hollywood & Vine\" glows above a rounded storefront canopy at night.",
+    "tags": [
+      "neon sign",
+      "hollywood and vine",
+      "night photography",
+      "marquee",
+      "storefront",
+      "los angeles"
+    ]
+  },
+  {
+    "id": "2023-08-22-f7c82aa3",
+    "sourceHash": "f7c82aa3b35f",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAABwAgCdASoQAAsAAsBMJYwCw7YtVy5eNH1pFrwAAP4L3v1lvslcItt3AFgLVzK2yyiLgLivFoXoxlf7qdbgfnHFrs8fgbahoHGlwZ4tLI0VJYH8dJjXBIsTYPLVaZl7+QAA3yn9Enr1hIp7cYgAAA==",
+    "takenAt": "2023-08-22T05:33:27Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "38mm",
+    "aperture": "f/6.3",
+    "shutter": "1/320s",
+    "iso": 100,
+    "shoot": "2023-08-20",
+    "title": null,
+    "caption": "Sunlight streams through a gap in a moss-covered floating rock formation draped with hanging vines.",
+    "tags": [
+      "floating rock",
+      "hanging vines",
+      "moss",
+      "sunlight",
+      "theme park",
+      "sculpted stone",
+      "trees"
+    ]
+  },
+  {
+    "id": "2023-08-22-08d2fae1",
+    "sourceHash": "08d2fae1e63e",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAABwAgCdASoQAAsAAsBMJYwCdAYtB2+ZBPa39mEAAP7yMBHVmmrSGMFFy/mP8uZtM0eg1bjmmJClTZx4g5/xHUUWrHHiiQtPWdk/KMHd9tMqWTqvht8YiXilW+OT5oxJboKL5p9kd2p+EP3RJaRSGjB6BmhJgAAA",
+    "takenAt": "2023-08-22T08:12:36Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "42mm",
+    "aperture": "f/2.8",
+    "shutter": "1/60s",
+    "iso": 800,
+    "shoot": "2023-08-20",
+    "title": "Tree of Life",
+    "caption": "A large artificial tree sculpture with an intricately carved trunk stands illuminated against a dusk sky, surrounded by palm trees and lit pathway lamps.",
+    "tags": [
+      "tree of life",
+      "animal kingdom",
+      "theme park",
+      "tree",
+      "sculpture",
+      "twilight",
+      "palm trees"
+    ]
+  },
+  {
+    "id": "2023-08-23-bdc0a888",
+    "sourceHash": "bdc0a888d55e",
+    "width": 5472,
+    "height": 3648,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAAAQAgCdASoQAAsAAsBMJZQCdAEPAAPnyrAAAP77Zwupby2W/QzqlIVWsCyG0IltRXJeOAAA",
+    "takenAt": "2023-08-23T09:14:51Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF24-70mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/2.8",
+    "shutter": "1/320s",
+    "iso": 6400,
+    "shoot": "2023-08-20",
+    "title": "Spaceship Earth",
+    "caption": "An illuminated geodesic sphere glows purple and orange over a lake at night, its light reflected on the water's surface.",
+    "tags": [
+      "spaceship earth",
+      "epcot",
+      "geodesic sphere",
+      "night",
+      "lake",
+      "reflection",
+      "theme park",
+      "lights"
+    ]
+  },
+  {
+    "id": "2024-05-18-888692a3",
+    "sourceHash": "888692a38972",
+    "width": 3772,
+    "height": 2515,
+    "aspectRatio": 1.4998,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoQAAsAAsBMJQBdgB6HBvX+gAD+ZqJyvgEJdDrjAPnpeM4qHUt2QCEtywoe/YKMZqpqnaS1Gedq3cAA",
+    "takenAt": "2024-05-18T23:49:13Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "70mm",
+    "aperture": "f/6.3",
+    "shutter": "1/800s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": null,
+    "caption": "A red vintage pickup truck fitted with a rear-mounted jet engine shoots flames along a runway during an airshow.",
+    "tags": [
+      "jet truck",
+      "pickup truck",
+      "flames",
+      "jet engine",
+      "airshow",
+      "runway",
+      "chevrolet"
+    ]
+  },
+  {
+    "id": "2024-05-18-bd41442c",
+    "sourceHash": "bd41442ccb0f",
+    "width": 2061,
+    "height": 1374,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAACwAQCdASoQAAsAAsBMJZwAAp2MlEDgAP6xkpeLr3gjcZ5yb6YkVrbSL1XvMl9GnpuoskWykKv3AByTUTOQsAAA",
+    "takenAt": "2024-05-18T23:57:17Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/7.1",
+    "shutter": "1/800s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": null,
+    "caption": "Four vintage single-engine military trainer aircraft fly in formation trailing white smoke against an overcast sky.",
+    "tags": [
+      "airplane",
+      "warbird",
+      "airshow",
+      "formation flying",
+      "smoke trail",
+      "vintage aircraft",
+      "navy",
+      "propeller plane"
+    ]
+  },
+  {
+    "id": "2024-05-19-ecb8d4e0",
+    "sourceHash": "ecb8d4e0a2e3",
+    "width": 1409,
+    "height": 939,
+    "aspectRatio": 1.5005,
+    "variants": [
+      640,
+      1024
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkIAAABXRUJQVlA4IDYAAACwAQCdASoQAAsAAsBMJZwAAu19kbGIAP7zdWsj+JrxnJlh3VgoarWBTQwwQX46b65LBcKYAAA=",
+    "takenAt": "2024-05-19T00:19:59Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/5.6",
+    "shutter": "1/800s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": null,
+    "caption": "A vintage yellow and blue single-engine propeller warplane marked with US Navy insignia banks through the sky trailing smoke.",
+    "tags": [
+      "airplane",
+      "propeller plane",
+      "warbird",
+      "airshow",
+      "navy",
+      "vintage aircraft",
+      "sky",
+      "smoke trail"
+    ]
+  },
+  {
+    "id": "2024-05-19-9ce021b7",
+    "sourceHash": "9ce021b706a3",
+    "width": 4033,
+    "height": 2689,
+    "aspectRatio": 1.4998,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoQAAsAAsBMJYgCdBHABfpWi9h0AAD+3y7dTgGce+LDMXnEzwBvmOn6F2RitiOvBhHUBW8lJolh8FT3maU/ytO2nqdrr3q9FwMAAA==",
+    "takenAt": "2024-05-19T01:00:31Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/6.3",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "P-51 Mustang",
+    "caption": "A vintage silver propeller fighter plane with black and white invasion stripes taxis on an airport runway.",
+    "tags": [
+      "airplane",
+      "warbird",
+      "propeller",
+      "airshow",
+      "runway",
+      "vintage aircraft",
+      "military aircraft"
+    ]
+  },
+  {
+    "id": "2024-05-19-e2de9be1",
+    "sourceHash": "e2de9be1d96b",
+    "width": 2336,
+    "height": 1557,
+    "aspectRatio": 1.5003,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAACwAQCdASoQAAsAAsBMJaACdAEOI+oAAP6ufZiweoPav//kfaPDyMt7cHdk6L1v7J2MhvIJEAAAAA==",
+    "takenAt": "2024-05-19T01:03:10Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/6.3",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "B-25 Mitchell \"Panchito\"",
+    "caption": "A twin-engine silver B-25 Mitchell bomber marked \"Panchito\" and tail number 430734 banks in flight against a blue sky.",
+    "tags": [
+      "airplane",
+      "b-25 mitchell",
+      "warbird",
+      "airshow",
+      "military aircraft",
+      "propeller plane",
+      "sky"
+    ]
+  },
+  {
+    "id": "2024-05-19-a3eb6c73",
+    "sourceHash": "a3eb6c73621d",
+    "width": 2072,
+    "height": 1381,
+    "aspectRatio": 1.5004,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQAgCdASoQAAsAAsBMJbACdAEXIJIjvdEAAP7D+K3lcILMUDIwieBecC0ZyXUuGuGDhAZ9VlSirrxbqUY2sjSXtw8TTOfy3EWie1ixoR2KKT1vHaIPDaJ4ip7vKiiRsAA=",
+    "takenAt": "2024-05-19T01:03:16Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "172mm",
+    "aperture": "f/6.3",
+    "shutter": "1/800s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": null,
+    "caption": "A large fireball and dark smoke cloud rise from a runway during an airshow pyrotechnic display.",
+    "tags": [
+      "explosion",
+      "fireball",
+      "smoke",
+      "airshow",
+      "runway",
+      "pyrotechnics",
+      "trees"
+    ]
+  },
+  {
+    "id": "2024-05-19-23ee538e",
+    "sourceHash": "23ee538e6894",
+    "width": 1672,
+    "height": 1115,
+    "aspectRatio": 1.4996,
+    "variants": [
+      640,
+      1024,
+      1536
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAgCdASoQAAsAAsBMJZwCw7Ef9oRmqHtoAP7yVxp2bM1dAIGV7KFTwcgd9k7VYSg0Iu83ThwLDj6YyJ8gztXAAAA=",
+    "takenAt": "2024-05-19T01:24:20Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/6.3",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "MiG-15",
+    "caption": "A silver swept-wing jet fighter with red star markings banks in flight against a cloudy sky, flame visible from its afterburner.",
+    "tags": [
+      "airplane",
+      "jet",
+      "fighter jet",
+      "airshow",
+      "vintage aircraft",
+      "clouds",
+      "sky"
+    ]
+  },
+  {
+    "id": "2024-05-19-7700ee91",
+    "sourceHash": "7700ee91250e",
+    "width": 1737,
+    "height": 1158,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAwAgCdASoQAAsAAsBMJaQAD4rvPW8Fd57QAAD+9yD/fO+aYx8AHF8/67KS/ITlugskNJ92Wyl+EGjrn8E0rPUjO+NM7KL+7ge9VNtYg0HHqN0JAAA=",
+    "takenAt": "2024-05-19T01:40:56Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/3.5",
+    "shutter": "1/1600s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "F-15 Eagle",
+    "caption": "A twin-engine military fighter jet banks against the sky with its afterburners glowing orange.",
+    "tags": [
+      "fighter jet",
+      "military aircraft",
+      "airshow",
+      "twin engine",
+      "afterburner",
+      "sky",
+      "f-15"
+    ]
+  },
+  {
+    "id": "2024-05-19-e933eae4",
+    "sourceHash": "e933eae45ff3",
+    "width": 5522,
+    "height": 3681,
+    "aspectRatio": 1.5001,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAABQAgCdASoQAAsAAsBMJbACdLoAAzf1IV9d1AAA/dKfuRW9JxgNQP80CtZ8ktciWDzTsVrruG+HsfOGoFf5NvopfUMf2fY/8yV9Yy2UXgAAAA==",
+    "takenAt": "2024-05-19T01:42:56Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/3.5",
+    "shutter": "1/1600s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "F-15 Eagle",
+    "caption": "A twin-engine military fighter jet banks steeply against a blue sky with afterburners lit, leaving a contrail.",
+    "tags": [
+      "fighter jet",
+      "military aircraft",
+      "afterburner",
+      "sky",
+      "airshow",
+      "f-15"
+    ]
+  },
+  {
+    "id": "2024-05-19-d4ef85e8",
+    "sourceHash": "d4ef85e8d726",
+    "width": 5264,
+    "height": 3509,
+    "aspectRatio": 1.5001,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840,
+      5120
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAQCdASoQAAsAAsBMJZwAAtz7WNjsWqAA/vT6JA7y3jL3QryV72L1eyI70pb81IBKpewiUNlh80Z0nlLteNs/nuwnRlFXqSuouaJMW3KOTXplA1u8L/o3sZ4AAA==",
+    "takenAt": "2024-05-19T03:30:24Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/5.6",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "F-35 Lightning II",
+    "caption": "An F-35 fighter jet banks in flight against a pale sky with its internal weapons bay doors open.",
+    "tags": [
+      "fighter jet",
+      "f-35",
+      "military aircraft",
+      "weapons bay",
+      "sky",
+      "airshow",
+      "stealth fighter"
+    ]
+  },
+  {
+    "id": "2024-05-19-9884f2a6",
+    "sourceHash": "9884f2a6f322",
+    "width": 5002,
+    "height": 3335,
+    "aspectRatio": 1.4999,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560,
+      3840
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoQAAsAAsBMJaQAAublm2ajMAD+9h7ZX9ssMC6298/cLZd8mQerhQIucFxSrgGwzjLjjuuwEiAAAA==",
+    "takenAt": "2024-05-19T03:31:23Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/5",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "F-35 Lightning II",
+    "caption": "A gray military fighter jet banks sharply against an overcast sky, wrapped in a cloud of condensation vapor along its wings and fuselage.",
+    "tags": [
+      "fighter jet",
+      "military aircraft",
+      "f-35",
+      "sky",
+      "vapor cloud",
+      "airshow"
+    ]
+  },
+  {
+    "id": "2024-05-19-b9728c96",
+    "sourceHash": "b9728c966440",
+    "width": 1978,
+    "height": 1319,
+    "aspectRatio": 1.4996,
+    "variants": [
+      640,
+      1024,
+      1536
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAACwAQCdASoQAAsAAsBMJaQAAuddOVsgAP7zgXQx4NTwzqbEbWZbko+/K14fX8NmFAA=",
+    "takenAt": "2024-05-19T03:32:23Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/5",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": null,
+    "caption": "A fighter jet flies nearly vertically head-on with its afterburner glowing and vapor trailing off the wings against an overcast sky.",
+    "tags": [
+      "fighter jet",
+      "military aircraft",
+      "afterburner",
+      "airshow",
+      "sky",
+      "vapor trail"
+    ]
+  },
+  {
+    "id": "2024-05-19-95b2925e",
+    "sourceHash": "95b2925ed5dd",
+    "width": 2232,
+    "height": 1488,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoQAAsAAsBMJaQAD42QPIyHl5CAAP75bm4MXBbJKRH/GlRi7DhShdUDOg4D7YPlX7ZoN3moW++oosVY8XMQ6s8o8GMRmjGhyWpK1Gnnt14EAA==",
+    "takenAt": "2024-05-19T03:32:44Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "187mm",
+    "aperture": "f/5",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "F-35 Lightning II",
+    "caption": "An F-35 Lightning II fighter jet banks sharply against a pale sky, with vapor trails streaming from its wingtips.",
+    "tags": [
+      "fighter jet",
+      "f-35",
+      "military aircraft",
+      "airshow",
+      "sky",
+      "vapor",
+      "stealth fighter"
+    ]
+  },
+  {
+    "id": "2024-05-19-b42c4547",
+    "sourceHash": "b42c4547b21c",
+    "width": 1590,
+    "height": 1060,
+    "aspectRatio": 1.5,
+    "variants": [
+      640,
+      1024,
+      1536
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoQAAsAAsBMJZwAAtz+2nJDEAD+83cTT1MtF/SaKCKFVC3y+KPYHiRj5DB7bNLOfGzcToNwJtqEAA==",
+    "takenAt": "2024-05-19T03:33:48Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/4.5",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": null,
+    "caption": "A fighter jet flies through a cone of condensation as it banks against a gray sky.",
+    "tags": [
+      "fighter jet",
+      "military aircraft",
+      "vapor cone",
+      "airshow",
+      "sky",
+      "condensation",
+      "transonic"
+    ]
+  },
+  {
+    "id": "2024-05-19-2650be1a",
+    "sourceHash": "2650be1ac086",
+    "width": 2516,
+    "height": 1677,
+    "aspectRatio": 1.5003,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoQAAsAAsBMJaQAD4cwNTYU9QAA/voZ1AU05TQ+ALt2uRPfKI7j43cdpUF9qoZC7fUbj4vNmO0Nm36r/Bar5Ftt7r1MfVAnRYqYOgIJIrJBF3ifoAA=",
+    "takenAt": "2024-05-19T03:37:01Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/5.6",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "F-35 Lightning II",
+    "caption": "An F-35 fighter jet banks steeply, showing its underside against an overcast sky.",
+    "tags": [
+      "fighter jet",
+      "military aircraft",
+      "f-35",
+      "airshow",
+      "sky",
+      "cockpit"
+    ]
+  },
+  {
+    "id": "2024-05-19-c3fd887b",
+    "sourceHash": "c3fd887bda67",
+    "width": 2127,
+    "height": 3191,
+    "aspectRatio": 0.6666,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAABwBACdASoQABgAPtFUo0uoJKMhsAgBABoJZwDA3Yuu3970AebCgQXZfTmkAAD+0xcCIt7oX4cgc7ymULReUlQvHWOGMFrhGTxfk2F2RBHOHYcRQQj0vJKTMFaza4kBR7jJSrmlj9kGuKmX4zG+pY0We+Wzpu95ttV/+F7q25iURY2gwAA=",
+    "takenAt": "2024-05-19T03:37:46Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/5",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": "F-35 Lightning II",
+    "caption": "An F-35 fighter jet banks steeply against a gray sky, its rear engine nozzle glowing orange with afterburner thrust.",
+    "tags": [
+      "f-35",
+      "fighter jet",
+      "military aircraft",
+      "afterburner",
+      "airshow",
+      "sky"
+    ]
+  },
+  {
+    "id": "2024-05-19-bb85d8f2",
+    "sourceHash": "bb85d8f2c6b2",
+    "width": 3578,
+    "height": 2385,
+    "aspectRatio": 1.5002,
+    "variants": [
+      640,
+      1024,
+      1536,
+      2048,
+      2560
+    ],
+    "formats": [
+      "avif",
+      "webp"
+    ],
+    "lqip": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADQAQCdASoQAAsAAsBMJaQAAuEA9/RxAAD+9/9/UIEzC8yPyrl6xVW9kcnNxmKmC+HWQKt6CZPXOxdBoni8guPX41AAAA==",
+    "takenAt": "2024-05-19T03:40:24Z",
+    "camera": "Canon EOS R6",
+    "lens": "RF70-200mm F2.8 L IS USM",
+    "focalLength": "200mm",
+    "aperture": "f/4.5",
+    "shutter": "1/1000s",
+    "iso": 100,
+    "shoot": "2024-05-18",
+    "title": null,
+    "caption": "A P-51 Mustang named Bald Eagle flies in close formation with an F-35 Lightning II against an overcast sky.",
+    "tags": [
+      "p-51 mustang",
+      "f-35 lightning ii",
+      "warbird",
+      "fighter jet",
+      "airshow",
+      "aircraft formation",
+      "propeller plane"
     ]
   }
 ]

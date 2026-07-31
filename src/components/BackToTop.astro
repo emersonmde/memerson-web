@@ -126,5 +126,6 @@
   });
 
   // Fires on first load too, and a swap arrives with a fresh, un-synced button.
-  document.addEventListener('astro:page-load', sync);
+  // Wrapped so the Event object is not mistaken for sync's optional offset.
+  document.addEventListener('astro:page-load', () => sync());
 </script>

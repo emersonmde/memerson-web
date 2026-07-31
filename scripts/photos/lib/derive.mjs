@@ -9,10 +9,16 @@
 import sharp from 'sharp';
 
 /** Never upscale: a 1600px original yields 640/1024/1536 and nothing wider. */
-export const WIDTHS = [640, 1024, 1536, 2048, 2560];
+export const WIDTHS = [640, 1024, 1536, 2048, 2560, 3840, 5120];
 
-/** Hard cap, enforced here rather than by convention. Originals stay private. */
-export const MAX_WIDTH = 2560;
+/**
+ * The cap is sized to the display end, not to secrecy: 5120 fills a 5K screen
+ * and is the most a 5472px R6 frame can honestly supply. The site exists to
+ * show these photographs, so the decision (2026-07-31, reversing the original
+ * 2560 cap) is that anyone with the screen for it gets the full rendering.
+ * Originals still stay in the private archive — EXIF privacy is unchanged.
+ */
+export const MAX_WIDTH = 5120;
 
 /**
  * AVIF plus WebP, no JPEG fallback. AVIF is supported by every current browser
@@ -21,9 +27,22 @@ export const MAX_WIDTH = 2560;
  */
 export const FORMATS = ['avif', 'webp'];
 
+/**
+ * Two quality tiers, split where the audience changes. Rungs up to 1536 are
+ * what the grid fetches (`sizes` tops out around 24vw × 2dpr), where q50 AVIF
+ * is invisible at tile size; 2048 and up are only ever selected by the open
+ * viewer on a large screen, where the photograph *is* the page and encoder
+ * artefacts — smeared texture, ringing on feather and branch edges — are the
+ * thing on display. The large tier costs roughly 2× the bytes per rung, paid
+ * only when someone on a big screen opens the lightbox.
+ */
+const VIEWER_TIER_MIN_WIDTH = 2048;
+
 const ENCODERS = {
-  avif: (image) => image.avif({ quality: 50, effort: 4 }),
-  webp: (image) => image.webp({ quality: 80, effort: 4 }),
+  avif: (image, width) =>
+    image.avif({ quality: width >= VIEWER_TIER_MIN_WIDTH ? 62 : 50, effort: 4 }),
+  webp: (image, width) =>
+    image.webp({ quality: width >= VIEWER_TIER_MIN_WIDTH ? 88 : 80, effort: 4 }),
 };
 
 export const CONTENT_TYPES = { avif: 'image/avif', webp: 'image/webp' };
@@ -85,7 +104,7 @@ export async function deriveAll(slug, buffer) {
         .rotate()
         .resize({ width: targetWidth, withoutEnlargement: true });
 
-      const output = await ENCODERS[format](resized).toBuffer();
+      const output = await ENCODERS[format](resized, targetWidth).toBuffer();
       await assertNoMetadata(output, `${slug}/${targetWidth}.${format}`);
 
       objects.push({
