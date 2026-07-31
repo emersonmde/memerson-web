@@ -343,8 +343,14 @@ invisible to templates. Neither is destructive. See MILESTONES M4.
 
 ### 5.5 Derivative ladder
 
-- **Widths:** 640, 1024, 1536, 2048, 2560, 3840, 5120. Never upscale — a 1600px original
-  produces 640/1024/1536 only, and `variants` records what actually exists.
+- **Widths:** 640, 1024, 1536, 2048, 2560, 3840, 5120 — plus the photo's own width as a
+  final rung when it clears the rung below by >10% (capped at 5120). Never upscale — a
+  1600px original produces 640/1024/1536 only, and `variants` records what actually exists.
+  The native rung exists because a *width* cap reads differently per orientation: 5120 is a
+  landscape's long edge but a portrait's short edge, and portraits were topping out at
+  2560×3840 — half the pixels of an equivalent landscape. Professional galleries size by
+  long edge for this reason (added 2026-07-31); the 10% threshold is measured — a 5472
+  original over a 5120 rung is 1.2dB at display size, invisible.
 - **Formats:** AVIF + WebP. No JPEG fallback — AVIF is supported by all current browsers
   and WebP covers anything older, so a third format is ~600 wasted objects and a third more
   encode time.
