@@ -128,6 +128,20 @@ page is idle or the hero is scrolled out of view.
 
 Ordered by (impact ÷ effort). None change what the site looks like.
 
+**Status (2026-07-31): 4.1–4.8 are implemented.** What each landed as: 4.1
+`public/_headers`; 4.2 `src/scripts/placeholders.ts` (loaded from BaseLayout); 4.3 an
+IntersectionObserver in `index.astro` parking the hero's animations off screen — scoped
+to the hero only, because the star field is viewport-fixed and visible at every scroll
+position, so `twinkle`/`skyDrift` are the design's deliberate always-on floor and were
+left running; 4.4 `travel` became a translated `::after` stripe (`chargeTravel` /
+`tubeTravel`) and `headBreathe` became an opacity cross-fade of a second glow; 4.5 the
+progress bar scales and its head (now a sibling, formerly `::after`) translates; 4.6
+option 1, quantized to 24 steps; 4.7 pre-decode via a detached `Image` before the srcset
+swap; 4.8 the bloom now sources `dataset.lqip`. 4.9 is deliberately **not** done — it is
+a design-token call that wants its own measurement first. 4.10 (the clean re-profile) is
+the outstanding verification, and 4.3–4.6 touch compositor-adjacent CSS and fx.ts, so
+they also owe the manual device pass from docs/TESTING.md §3.6.
+
 ### 4.1 Cache-Control headers for static assets — network, every visit
 
 Every asset served from `memerson.com` ships `cache-control: public, max-age=0,
