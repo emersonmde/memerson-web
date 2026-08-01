@@ -19,27 +19,27 @@ visual difference, and it is the same work that would become jank on a slower de
   tracking amplifies layout activity. Content-JS numbers below are upper bounds.
 - **Profiler screenshots were on.** 4,532 `CompositorScreenshot` readbacks — one per
   composited frame — inflate the GPU-process Renderer numbers and force a render per
-  vsync (`Render reason ASYNC_IMAGE` on all 4,533 frames). The *relative* per-phase
+  vsync (`Render reason ASYNC_IMAGE` on all 4,533 frames). The _relative_ per-phase
   comparison stands; the absolute Renderer total does not.
 - **uBlock's content script** cost ~140 ms of the content JS.
 - A second tab with an old `/photos` load (pid 12595) sat at ~92 MB and ~3 ms CPU —
   background-tab throttling works; it is not part of the story.
 
 For a clean re-measure: fresh profile without DevTools, without screenshots, extensions
-disabled, and let each page sit *idle* for 10 s — the idle segments are where the wins
+disabled, and let each page sit _idle_ for 10 s — the idle segments are where the wins
 below will show up.
 
 ## 2. The session, in numbers
 
 Phases (from navigation markers in the content process, pid 45631):
 
-| Phase | Wall | Main-thread CPU | Utilization |
-| --- | --- | --- | --- |
-| home | 7.7 s | 1,356 ms | 18 % |
-| /photos + lightbox | 20.0 s | 4,232 ms | 21 % |
-| /blog index | 1.5 s | 145 ms | 10 % |
-| blog post | 3.2 s | 369 ms | 12 % |
-| /about | 6.4 s | 390 ms | 6 % |
+| Phase              | Wall   | Main-thread CPU | Utilization |
+| ------------------ | ------ | --------------- | ----------- |
+| home               | 7.7 s  | 1,356 ms        | 18 %        |
+| /photos + lightbox | 20.0 s | 4,232 ms        | 21 %        |
+| /blog index        | 1.5 s  | 145 ms          | 10 %        |
+| blog post          | 3.2 s  | 369 ms          | 12 %        |
+| /about             | 6.4 s  | 390 ms          | 6 %         |
 
 Content main thread total: 6.63 s CPU, of which ~2.5 s is idle/wait. The ~4.1 s of real
 work splits: **Graphics 2.14 s** (display-list building), **Layout 1.04 s** (6,851 style
@@ -69,7 +69,7 @@ against the frame-count threshold in docs/ARCHITECTURE.md §6), and **lightbox s
 One number that looks like a cause but is a symptom: 2.1 s total of "Coalesced input
 move flusher" (966 flushes, 574 of them on /photos). Gecko flushes pending style/layout
 before dispatching mouse moves — no site script listens to pointermove at all — so this
-is the per-frame animation/scroll writes from §3 being paid *again* at input time. It
+is the per-frame animation/scroll writes from §3 being paid _again_ at input time. It
 shrinks to nothing when §4.3–4.5 land; it is not separate work to fix.
 
 **Memory** (net allocations, malloc counter): content process ~65 MB on home → ~100 MB
@@ -93,7 +93,7 @@ through style → display list → raster:
 - `travel` — `background-position` on `.tube-spec` (home hero tube,
   `src/pages/index.astro:412`, keyframes `src/styles/global.css:850`), also used by
   `.plate:hover .plate-charge` (`global.css:801`). Ran ~14.5 s of the session. This alone
-  explains home's 111 display lists/s *while nobody scrolls*.
+  explains home's 111 display lists/s _while nobody scrolls_.
 - `headBreathe` — `box-shadow` on the blog-post progress head
   (`src/pages/blog/[...slug].astro:128`). Infinite, 2.8 s period, active the whole time a
   post is open.
@@ -114,7 +114,7 @@ right), but some of what it writes per frame is expensive by property choice:
 permanent inline `background-image` data-URI (`src/components/PhotoTile.astro:152`,
 `PhotoThumb.astro:95`, `Photo.astro:60`). Once the real photo loads, the placeholder is
 invisible — but it stays in the display list. Of **84,501** image display-items painted
-in this session, ~39 k were data-URI placeholders sitting *under* already-loaded
+in this session, ~39 k were data-URI placeholders sitting _under_ already-loaded
 photographs; one tile's sources were painted 1,811 times. Every display-list rebuild on
 /photos pays for 232 images twice.
 
@@ -163,7 +163,14 @@ already-complete images at init), clear the inline background:
 
 ```ts
 if (img.complete) img.style.backgroundImage = 'none';
-else img.addEventListener('load', () => { img.style.backgroundImage = 'none'; }, { once: true });
+else
+  img.addEventListener(
+    'load',
+    () => {
+      img.style.backgroundImage = 'none';
+    },
+    { once: true },
+  );
 ```
 
 Keep the LQIP markup itself — it is what makes tiles honest before load and without JS.
@@ -254,7 +261,7 @@ comment at `src/pages/photos/index.astro:713`) — verify there per docs/TESTING
 
 ### 4.8 Stale bloom between lightbox opens — drive the bloom from the LQIP
 
-Observed in use: open a photo, close, open another — the *previous* photo's bloom stays
+Observed in use: open a photo, close, open another — the _previous_ photo's bloom stays
 up until the new background arrives. Mechanism, from the code: `show()` swaps
 `.lb-bloom`'s `background-image` to the new tile's `currentSrc`
 (`src/scripts/photos.ts:830–831`), and when that URL isn't decoded yet Gecko keeps
