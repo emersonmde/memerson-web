@@ -49,6 +49,7 @@ const minutes = readingTime(post.body);
   back={true}
 >
   <div class="progress" data-fx="progress" aria-hidden="true"></div>
+  <div class="progress-head" data-fx="proghead" aria-hidden="true"></div>
 
   <article class="post">
     <div class="page-haze" aria-hidden="true"></div>
@@ -95,16 +96,27 @@ const minutes = readingTime(post.body);
 </BaseLayout>
 
 <style>
-  /* The rail, reduced to a hairline. Sits directly under the nav. */
+  /*
+   * The rail, reduced to a hairline. Sits directly under the nav.
+   *
+   * Full-width and scaled rather than sized: fx.ts writes `transform: scaleX()`
+   * here, not `width`, so advancing the bar costs the compositor a matrix
+   * instead of costing the main thread a reflow on every scrolled frame
+   * (docs/PERFORMANCE.md §4.5). Scaling a smooth gradient is invisible; the
+   * head is a sibling below precisely because scaling would squash a dot.
+   */
   .progress {
     position: fixed;
     top: var(--nav-h);
     left: 0;
     height: 2px;
-    width: 0;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
     z-index: 10;
     background: linear-gradient(90deg, oklch(0.82 0.17 66 / 0.25), var(--sodium));
     box-shadow: 0 0 10px var(--sodium);
+    pointer-events: none;
   }
 
   /*
@@ -112,27 +124,49 @@ const minutes = readingTime(post.body);
    * you are" everywhere on the site, and on a post that is how far you have
    * read. The head breathes; the bar does not move unless you do.
    */
-  .progress::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
+  /*
+   * A sibling of the bar, not its ::after: the bar is scaled, and a descendant
+   * dot would squash with it. fx.ts carries it with `translate3d`, the same
+   * write the home rail's head gets.
+   */
+  .progress-head {
+    position: fixed;
+    top: calc(var(--nav-h) + 1px);
+    left: 0;
     width: 6px;
     height: 6px;
+    margin: -3px 0 0 -3px;
     border-radius: 50%;
-    transform: translate(50%, -50%);
+    z-index: 10;
     background: #fff;
     box-shadow:
       0 0 8px 2px var(--sodium),
       0 0 22px 6px oklch(0.82 0.17 66 / 0.5);
+    pointer-events: none;
+  }
+
+  /*
+   * The breathe is a second, brighter glow fading in and out over a constant
+   * base — not the shadow itself interpolating. Animating box-shadow repaints
+   * on the main thread every frame for as long as the post is open; animating
+   * the overlay's opacity runs on the compositor and paints the two shadows
+   * exactly once (docs/PERFORMANCE.md §4.4).
+   */
+  .progress-head::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow:
+      0 0 10px 3px var(--sodium),
+      0 0 32px 10px oklch(0.82 0.17 66 / 0.6);
+    opacity: 0;
     animation: headBreathe 2.8s ease-in-out infinite;
   }
 
   @keyframes headBreathe {
     50% {
-      box-shadow:
-        0 0 10px 3px var(--sodium),
-        0 0 32px 10px oklch(0.82 0.17 66 / 0.6);
+      opacity: 1;
     }
   }
 

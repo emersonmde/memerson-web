@@ -161,6 +161,13 @@ let lastPaintAt = 0;
 function paint() {
   const vh = window.innerHeight;
   const scrollY = window.scrollY;
+  /*
+   * Document height and viewport width belong to the read phase like every
+   * other measurement: the progress bar and its head need them, and reading
+   * them down in the write loop would force layout against the writes above.
+   */
+  const docH = document.documentElement.scrollHeight;
+  const vw = document.documentElement.clientWidth;
 
   /*
    * Frame time for the chase. Capped at 34ms so a long idle gap (or a dropped
@@ -238,17 +245,35 @@ function paint() {
         node.el.style.transform = `translate3d(0,${(-scrollY * 0.14).toFixed(1)}px,0)`;
         continue;
 
+      /*
+       * The bar scales and the head translates — both compositor-only. The
+       * first version wrote `width` here, which reflowed the page on every
+       * scrolled frame of every post (docs/PERFORMANCE.md §4.5).
+       */
       case 'progress': {
-        const max = document.documentElement.scrollHeight - vh;
-        node.el.style.width = `${(max > 0 ? (scrollY / max) * 100 : 0).toFixed(2)}%`;
+        const max = docH - vh;
+        node.el.style.transform = `scaleX(${(max > 0 ? scrollY / max : 0).toFixed(4)})`;
+        continue;
+      }
+
+      case 'proghead': {
+        const max = docH - vh;
+        const x = max > 0 ? (scrollY / max) * vw : 0;
+        node.el.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
         continue;
       }
     }
 
-    const p = clamp01((vh - node.top - vh * 0.12) / (vh * 0.55));
-    // A resolved heading is the common case on a long scroll. Writing
-    // letter-spacing costs a layout, so a settled node writes nothing at all.
-    if (Math.abs(p - node.last) < 0.002) continue;
+    /*
+     * Quantized to 24 steps across the entry band. Every write here is the
+     * expensive kind — letter-spacing reflows the heading, blur re-rasterizes
+     * it — so the write *count* is the cost, and at 120Hz an unquantized ramp
+     * wrote every frame. Twenty-four steps over half a viewport of travel is
+     * finer than the eye tracks mid-scroll, and a settled node still writes
+     * nothing at all (docs/PERFORMANCE.md §4.6).
+     */
+    const p = Math.round(clamp01((vh - node.top - vh * 0.12) / (vh * 0.55)) * 24) / 24;
+    if (p === node.last) continue;
     node.last = p;
 
     switch (node.kind) {
