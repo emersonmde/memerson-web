@@ -108,17 +108,24 @@ function measure() {
     const railBox = rail.getBoundingClientRect();
     if (railBox.height < 8) continue;
 
-    const nodes: RailNode[] = [];
-    for (const row of scope.querySelectorAll<HTMLElement>('[data-row]')) {
-      const dot = row.querySelector<HTMLElement>('[data-dot]');
-      if (!dot) continue;
+    /*
+     * Read phase first, like paint(): every dot rect is taken before a single
+     * style is written, so the writes below cannot force a layout per row.
+     *
+     * Safe to measure even though paint() writes `transform: scale()` on the
+     * dot: the default transform-origin is the centre, and this reads the centre.
+     */
+    const measured = Array.from(scope.querySelectorAll<HTMLElement>('[data-row]'))
+      .map((row) => {
+        const dot = row.querySelector<HTMLElement>('[data-dot]');
+        if (!dot) return null;
+        const d = dot.getBoundingClientRect();
+        return { row, dot, nodeY: d.top + d.height / 2 - railBox.top };
+      })
+      .filter((m) => m !== null);
 
-      /*
-       * Safe to measure even though paint() writes `transform: scale()` here:
-       * the default transform-origin is the centre, and this reads the centre.
-       */
-      const d = dot.getBoundingClientRect();
-      const nodeY = d.top + d.height / 2 - railBox.top;
+    const nodes: RailNode[] = [];
+    for (const { row, dot, nodeY } of measured) {
       const hue = hueAt(nodeY / railBox.height);
 
       // Hue is sampled at the node's measured height, so the colour can never
@@ -159,6 +166,15 @@ function measure() {
 let lastPaintAt = 0;
 
 function paint() {
+  /*
+   * A mid-session flip to reduced motion removes the scroll listener, but the
+   * resize/scrollend/toggle listeners and the ResizeObserver stay live — and a
+   * frame queued before the flip can still land. All of those funnel through
+   * here, so this one check keeps every path from re-animating over
+   * settleStatic()'s finished state.
+   */
+  if (REDUCED.matches) return;
+
   const vh = window.innerHeight;
   const scrollY = window.scrollY;
   /*
@@ -372,6 +388,7 @@ function onScroll() {
 }
 
 function settle() {
+  if (REDUCED.matches) return;
   measure();
   paint();
 }

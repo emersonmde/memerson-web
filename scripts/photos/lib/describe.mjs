@@ -65,10 +65,7 @@ export function normaliseDescription(result) {
 }
 
 export async function describeEntry(entry) {
-  const result = await askAboutImages(
-    [derivativeUrl(entry.id)],
-    buildDescribePrompt(entry),
-  );
+  const result = await askAboutImages([derivativeUrl(entry)], buildDescribePrompt(entry));
   return normaliseDescription(result);
 }
 

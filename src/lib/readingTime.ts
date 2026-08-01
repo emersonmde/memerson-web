@@ -15,7 +15,8 @@ export function readingTime(body: string | undefined): string {
   if (!body) return '1 MIN';
 
   const text = body
-    // Fenced code blocks: keep them, but they should not dominate the count.
+    // Fenced code blocks are dropped: code is skimmed, not read at prose
+    // speed, and a long listing would dominate the count.
     .replace(/```[\s\S]*?```/g, ' ')
     // Inline markdown punctuation that would otherwise split words.
     .replace(/[#>*_`[\]()]/g, ' ');

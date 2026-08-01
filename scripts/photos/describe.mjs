@@ -19,8 +19,10 @@
  * The manifest is in git, so the diff is the review. Read it before committing.
  */
 import { readManifest, writeManifest } from './lib/manifest.mjs';
-import { DESCRIBE_EFFORT, DESCRIBE_MODEL, READ_WIDTH, mapPool } from './lib/claude.mjs';
+import { DESCRIBE_EFFORT, DESCRIBE_MODEL, READ_WIDTH } from './lib/claude.mjs';
 import { describeEntry, needsDescription } from './lib/describe.mjs';
+import { withLock } from './lib/lock.mjs';
+import { pool } from './lib/pool.mjs';
 
 /** Separate `claude` processes, so this bounds process count, not any API limit. */
 const CONCURRENCY = 4;
@@ -38,6 +40,11 @@ function parseArgs(argv) {
       );
       process.exit(1);
     }
+  }
+  // Infinity (the default) passes; NaN from `--limit banana` and zero do not.
+  if (!(options.limit > 0)) {
+    console.error('--limit must be a positive number.');
+    process.exit(1);
   }
   return options;
 }
@@ -75,7 +82,7 @@ async function main() {
     return writeChain;
   };
 
-  await mapPool(pending, CONCURRENCY, async (entry) => {
+  await pool(pending, CONCURRENCY, async (entry) => {
     try {
       const { tags, caption, title } = await describeEntry(entry);
       done += 1;
@@ -102,7 +109,7 @@ async function main() {
   if (failed) process.exitCode = 1;
 }
 
-main().catch((error) => {
+withLock(main).catch((error) => {
   console.error(error);
   process.exit(1);
 });

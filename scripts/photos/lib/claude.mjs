@@ -55,8 +55,17 @@ export const DESCRIBE_EFFORT = process.env.PHOTOS_EFFORT || 'low';
  */
 export const READ_WIDTH = Number(process.env.PHOTOS_READ_WIDTH) || 640;
 
-export function derivativeUrl(slug, width = READ_WIDTH) {
-  return `${PHOTOS_BASE_URL}/photos/${slug}/${width}.webp`;
+/**
+ * The URL of the derivative to show the model, picked from the entry's actual
+ * ladder rather than assumed: the rungs vary per photo (a source narrower than
+ * 640 has no 640), so a hard-coded width would 404 on exactly those frames.
+ * Smallest rung at or above the target keeps the download minimal; when nothing
+ * reaches it, the largest available is the best the photo can do.
+ */
+export function derivativeUrl(entry, width = READ_WIDTH) {
+  const rungs = [...(entry.variants ?? [])].sort((a, b) => a - b);
+  const rung = rungs.find((w) => w >= width) ?? rungs.at(-1) ?? width;
+  return `${PHOTOS_BASE_URL}/photos/${entry.id}/${rung}.webp`;
 }
 
 /**
@@ -143,25 +152,4 @@ export async function askAboutImages(
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
-}
-
-/**
- * Run `worker` over `items` with a bounded number in flight.
- *
- * Each call is a separate `claude` process, so this is bounded to keep from
- * launching a hundred of them at once rather than for any API limit.
- */
-export async function mapPool(items, limit, worker) {
-  const results = new Array(items.length);
-  let cursor = 0;
-
-  async function drain() {
-    while (cursor < items.length) {
-      const index = cursor++;
-      results[index] = await worker(items[index], index);
-    }
-  }
-
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, drain));
-  return results;
 }

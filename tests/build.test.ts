@@ -69,6 +69,10 @@ before(async () => {
 /** Strip inline scripts so their template strings are not mistaken for markup. */
 const markup = (html: string) => html.replace(/<script[\s\S]*?<\/script>/g, '');
 
+/** Every built blog post page — `blog/<slug>/index.html`, not the index. */
+const blogPosts = () =>
+  pages.filter((p) => /blog\/[^/]+\/index\.html$/.test(rel(p.file)));
+
 describe('accessibility', () => {
   test('every image has non-empty alt text', () => {
     /*
@@ -105,10 +109,36 @@ describe('accessibility', () => {
   });
 
   test('breadcrumbs are real links, not inert text', () => {
-    // Regression: these shipped as <div>s and were not clickable.
-    const post = pages.find((p) => p.file.includes('blog/hello-gatsby'));
-    assert.ok(post, 'expected a blog post in the build');
-    assert.match(post!.html, /class="post-crumb"[^>]*>[\s\S]{0,200}<a href="\/blog"/);
+    // Regression: these shipped as <div>s and were not clickable. Any post
+    // will do — the template is shared, and pinning a slug would make this
+    // test fail the day that one post is retired (§1: churn must not break
+    // tests).
+    const posts = blogPosts();
+    assert.ok(posts.length > 0, 'expected a blog post in the build');
+    for (const post of posts) {
+      assert.match(
+        post.html,
+        /class="post-crumb"[^>]*>[\s\S]{0,200}<a href="\/blog"/,
+        `${rel(post.file)} has no breadcrumb link`,
+      );
+    }
+  });
+
+  test('every blog post has exactly one h1, whatever its markdown does', () => {
+    /*
+     * Regression: migrated posts used `#` for sections, and five h1s shipped
+     * on one page. Nothing in the Astro config demotes markdown headings —
+     * authoring convention is the only other line of defence, so the
+     * invariant is enforced here, against what actually built. (The
+     * every-page test above covers this too; this one names the class of
+     * failure so a future scoping of that test cannot silently drop it.)
+     */
+    const posts = blogPosts();
+    assert.ok(posts.length > 0, 'expected a blog post in the build');
+    for (const { file, html } of posts) {
+      const count = (markup(html).match(/<h1[\s>]/g) ?? []).length;
+      assert.equal(count, 1, `${rel(file)} has ${count} h1 elements`);
+    }
   });
 });
 
@@ -370,8 +400,11 @@ describe('links and assets', () => {
       for (const [, href] of html.matchAll(/href="(\/[^"#?]*)"/g)) {
         const clean = href.replace(/\/$/, '');
         if (/\.[a-z0-9]+$/i.test(clean)) {
-          // A file: assert it was emitted.
-          await stat(new URL('.' + clean, DIST));
+          // A file: assert it was emitted — with the referring page in the
+          // failure, not a bare ENOENT with no idea who linked it.
+          await stat(new URL('.' + clean, DIST)).catch(() => {
+            assert.fail(`${rel(file)} links to missing file ${href}`);
+          });
           continue;
         }
         assert.ok(
@@ -464,7 +497,10 @@ describe('byte budgets', () => {
     // its own copy), which would make an absolute ceiling churn-sensitive.
     for (const { file, html } of pages) {
       const css = (html.match(/<style>([\s\S]*?)<\/style>/g) ?? []).join('').length;
-      assert.ok(css < 150_000, `${rel(file)} inlines ${css} bytes of CSS; budget is 150000`);
+      assert.ok(
+        css < 150_000,
+        `${rel(file)} inlines ${css} bytes of CSS; budget is 150000`,
+      );
     }
   });
 

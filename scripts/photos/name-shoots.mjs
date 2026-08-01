@@ -20,7 +20,9 @@
  */
 import { readManifest } from './lib/manifest.mjs';
 import { readShoots, summariseShoots, writeShoots } from './lib/shoots.mjs';
-import { DESCRIBE_MODEL, askAboutImages, derivativeUrl, mapPool } from './lib/claude.mjs';
+import { DESCRIBE_MODEL, askAboutImages, derivativeUrl } from './lib/claude.mjs';
+import { withLock } from './lib/lock.mjs';
+import { pool } from './lib/pool.mjs';
 
 /** Frames shown per shoot. Enough to establish a place; cheap enough to run often. */
 const SAMPLE_SIZE = 6;
@@ -101,7 +103,7 @@ async function main() {
   const proposals = new Map();
   let failed = 0;
 
-  await mapPool(pending, CONCURRENCY, async (id) => {
+  await pool(pending, CONCURRENCY, async (id) => {
     const group = byShoot
       .get(id)
       .slice()
@@ -122,7 +124,7 @@ async function main() {
 
     try {
       const result = await askAboutImages(
-        chosen.map((entry) => derivativeUrl(entry.id)),
+        chosen.map((entry) => derivativeUrl(entry)),
         buildPrompt(context),
       );
       const name =
@@ -161,7 +163,7 @@ async function main() {
   if (failed) process.exitCode = 1;
 }
 
-main().catch((error) => {
+withLock(main).catch((error) => {
   console.error(error);
   process.exit(1);
 });

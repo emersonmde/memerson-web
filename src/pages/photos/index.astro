@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PhotoTile from '../../components/PhotoTile.astro';
 import { groupIntoRuns, type ShootRecord } from '../../lib/runs';
 import { hueForIndex } from '../../lib/ramp';
+import { dots, isoDay, yearSpan as spanOfYears } from '../../lib/dates';
 import shootsData from '../../data/shoots.json';
 
 /**
@@ -36,20 +37,22 @@ const runs = groupIntoRuns(
 const years = photos
   .map((p) => p.data.takenAt?.getUTCFullYear())
   .filter(Boolean) as number[];
-const yearSpan = years.length ? `${Math.min(...years)} — ${Math.max(...years)}` : '';
+const yearSpan = spanOfYears(years);
 
 const outings = runs.filter((r) => !r.stray).length;
 const strays = runs.filter((r) => r.stray).reduce((n, r) => n + r.items.length, 0);
 
-/** "2022-10-29" → "2022.10.29" — the site's date voice everywhere but prose. */
-const dots = (iso: string) => iso.replace(/-/g, '.');
+/** Pluralize the header stats; the script's live count does its own. */
+const s = (n: number) => (n === 1 ? '' : 'S');
 
-const isoOf = (p: (typeof photos)[number]) =>
-  p.data.takenAt?.toLocaleDateString('en-CA', { timeZone: 'UTC' }) ?? '';
+const isoOf = (p: (typeof photos)[number]) => isoDay(p.data.takenAt);
 
 /** Runs are newest-first, so items[0] is the latest frame and the last the earliest. */
 const spanOf = (items: (typeof photos)[number][]) => {
   const dates = items.map(isoOf).filter(Boolean);
+  // Every frame in the stretch can be undated — the schema allows a null
+  // takenAt, and undated frames sort together at the end.
+  if (dates.length === 0) return 'UNDATED';
   const newest = dates[0];
   const oldest = dates[dates.length - 1];
   return newest === oldest ? dots(newest) : `${dots(oldest)} — ${dots(newest)}`;
@@ -116,7 +119,7 @@ const EAGER = 8;
 
 <BaseLayout
   title="Photographs"
-  description={`${photos.length} photographs, ${yearSpan}.`}
+  description={`${photos.length} photographs${yearSpan ? `, ${yearSpan}` : ''}.`}
   active="photos"
   back={true}
 >
@@ -143,8 +146,12 @@ const EAGER = 8;
           flex row, and bare text nodes separated by <br> cannot take a gap. */
       }
       <div class="px-stats">
-        <span><b>{photos.length} FRAMES</b></span>
-        <span>{outings} SHOOTS{strays > 0 && ` + ${strays} STRAYS`}</span>
+        <span><b>{photos.length} FRAME{s(photos.length)}</b></span>
+        <span
+          >{outings} SHOOT{s(outings)}{
+            strays > 0 && ` + ${strays} STRAY${s(strays)}`
+          }</span
+        >
         <span>{yearSpan}</span>
       </div>
     </div>
@@ -178,7 +185,7 @@ const EAGER = 8;
               JUMP TO ▾
             </button>
             <span class="px-count" data-count aria-live="polite">
-              <b>{photos.length}</b> FRAMES
+              <b>{photos.length}</b> FRAME{s(photos.length)}
             </span>
             <span class="px-find">
               <input
@@ -230,8 +237,8 @@ const EAGER = 8;
                   )}
                   <span class="px-run-aside">
                     {run.stray
-                      ? `${run.items.length} FRAMES / ${dayCount(run.items)} SEPARATE DAY${dayCount(run.items) > 1 ? 'S' : ''}`
-                      : `${run.items.length} FRAME${run.items.length > 1 ? 'S' : ''}${run.cameras.length ? ` / ${run.cameras.join(', ').toUpperCase()}` : ''}`}
+                      ? `${run.items.length} FRAME${s(run.items.length)} / ${dayCount(run.items)} SEPARATE DAY${s(dayCount(run.items))}`
+                      : `${run.items.length} FRAME${s(run.items.length)}${run.cameras.length ? ` / ${run.cameras.join(', ').toUpperCase()}` : ''}`}
                   </span>
                 </div>
 
@@ -293,134 +300,167 @@ const EAGER = 8;
     )
   }
 
-  {/* The rail, folded into a list you summon — below 1240px there is no margin. */}
-  <div
-    class="px-jumpsheet"
-    data-jump
-    role="dialog"
-    aria-label="Jump to a shoot"
-    aria-modal="true"
-  >
-    <button type="button" class="px-jumpsheet-close" data-jump-close>CLOSE ×</button>
-    <div class="px-jumpsheet-in">
-      <h2>Shoots</h2>
-      <p>NEWEST FIRST</p>
-      <div>
-        {
-          runs.map((run, runIndex) => (
-            <a
-              class:list={['px-jumprow', run.stray && 'is-stray']}
-              href={`#${run.key}`}
-              data-jump-row
-              data-shoot={run.key}
-              style={runHue(run, runIndex)}
-            >
-              <span class="j-date">
-                {run.stray ? spanOf(run.items) : dots(run.shoot ?? '')}
-              </span>
-              <span class="j-name">
-                {run.stray ? 'Stray frames' : runName(run.name, run.shoot)}
-              </span>
-              <span class="j-n">{run.items.length}</span>
-            </a>
-          ))
-        }
+  {
+    /* The rail, folded into a list you summon — below 1240px there is no margin.
+      Gated like the rail and the bar: an empty library has nothing to jump to,
+      and shipping a bare role="dialog" with no opener would only confuse AT. */
+  }
+  {
+    photos.length > 0 && (
+      <div
+        class="px-jumpsheet"
+        data-jump
+        role="dialog"
+        aria-label="Jump to a shoot"
+        aria-modal="true"
+      >
+        <button type="button" class="px-jumpsheet-close" data-jump-close>
+          CLOSE ×
+        </button>
+        <div class="px-jumpsheet-in">
+          <h2>Shoots</h2>
+          <p>NEWEST FIRST</p>
+          <div>
+            {runs.map((run, runIndex) => (
+              <a
+                class:list={['px-jumprow', run.stray && 'is-stray']}
+                href={`#${run.key}`}
+                data-jump-row
+                data-shoot={run.key}
+                style={runHue(run, runIndex)}
+              >
+                <span class="j-date">
+                  {run.stray ? spanOf(run.items) : dots(run.shoot ?? '')}
+                </span>
+                <span class="j-name">
+                  {run.stray ? 'Stray frames' : runName(run.name, run.shoot)}
+                </span>
+                <span class="j-n">{run.items.length}</span>
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    )
+  }
 
   {/* The viewer. Inert until the script wires it up. */}
-  <div
-    class="lb"
-    data-lb
-    role="dialog"
-    aria-modal="true"
-    aria-label="Photo viewer"
-    hidden
-  >
-    <div class="lb-wash" data-lb-close></div>
-    <div class="lb-bloom">
-      <div class="lb-bloom-layer" data-bloom-layer></div>
-      <div class="lb-bloom-layer" data-bloom-layer></div>
-    </div>
-    <div class="lb-vignette"></div>
-    <div class="lb-bar">
-      <span class="lb-counter"></span>
-      <button type="button" class="lb-close" data-lb-close>
-        CLOSE <span class="lb-close-key">ESC</span> ×
-      </button>
-    </div>
-    <div class="lb-stage">
-      <button type="button" class="lb-nav" data-lb-step="-1" aria-label="Previous photo"
-        >←</button
+  {
+    photos.length > 0 && (
+      <div
+        class="lb"
+        data-lb
+        role="dialog"
+        aria-modal="true"
+        aria-label="Photo viewer"
+        hidden
       >
-      <figure class="lb-frame">
-        {
-          /* No <picture>: a <source> would override the cached URL the script
-            paints first, which is the whole point of the sequence. */
-        }
-        <img class="lb-img" alt="" />
-      </figure>
-      <button type="button" class="lb-nav" data-lb-step="1" aria-label="Next photo"
-        >→</button
-      >
-    </div>
-    <aside class="lb-exif" data-lb-exif aria-label="Capture data">
-      {
-        /* An h2, not h3: with the viewer open the page's visible outline is
-          the h1 and this — a jump to h3 is the one thing axe finds. */
-      }
-      <h2>
-        CAPTURE DATA
-        <button type="button" class="lb-exif-close" data-lb-exif-close>CLOSE ×</button>
-      </h2>
-      <dl></dl>
-    </aside>
-    <div class="lb-foot">
-      <div class="lb-foot-inner">
-        <div>
-          <div class="lb-titleline"><div class="lb-title"></div></div>
-          <div class="lb-meta">
-            <span class="lb-dash"></span>
-            <button type="button" class="lb-shoot"></button>
-            <span class="lb-meta-text"></span>
-            {
-              /* Widest served derivative, straight from R2. Cross-origin, so
-                 no `download` attribute — it opens in a tab, which is the
-                 right behaviour anyway (look, then save). */
-            }
-            <a class="lb-full" target="_blank" rel="noopener">FULL RES</a>
-          </div>
-          <div class="lb-tags"></div>
+        <div class="lb-wash" data-lb-close />
+        <div class="lb-bloom">
+          <div class="lb-bloom-layer" data-bloom-layer />
+          <div class="lb-bloom-layer" data-bloom-layer />
         </div>
-        <div class="lb-right">
-          {/* Keyboard hints where there is a keyboard; real controls on touch. */}
-          <div class="lb-hint">
-            <span><b>I</b> CAPTURE DATA</span><span><b>← →</b> MOVE</span>
+        <div class="lb-vignette" />
+        <div class="lb-bar">
+          <span class="lb-counter" />
+          <button type="button" class="lb-close" data-lb-close>
+            CLOSE <span class="lb-close-key">ESC</span> ×
+          </button>
+        </div>
+        <div class="lb-stage">
+          <button
+            type="button"
+            class="lb-nav"
+            data-lb-step="-1"
+            aria-label="Previous photo"
+          >
+            ←
+          </button>
+          <figure class="lb-frame">
+            {/* No <picture>: a <source> would override the cached URL the script
+            paints first, which is the whole point of the sequence. */}
+            <img class="lb-img" alt="" />
+          </figure>
+          <button type="button" class="lb-nav" data-lb-step="1" aria-label="Next photo">
+            →
+          </button>
+        </div>
+        <aside class="lb-exif" data-lb-exif aria-label="Capture data">
+          {/* An h2, not h3: with the viewer open the page's visible outline is
+          the h1 and this — a jump to h3 is the one thing axe finds. */}
+          <h2>
+            CAPTURE DATA
+            <button type="button" class="lb-exif-close" data-lb-exif-close>
+              CLOSE ×
+            </button>
+          </h2>
+          <dl />
+        </aside>
+        <div class="lb-foot">
+          <div class="lb-foot-inner">
+            <div>
+              <div class="lb-titleline">
+                <div class="lb-title" />
+              </div>
+              <div class="lb-meta">
+                <span class="lb-dash" />
+                <button type="button" class="lb-shoot" />
+                <span class="lb-meta-text" />
+                {/* Widest served derivative, straight from R2. Cross-origin, so
+                 no `download` attribute — it opens in a tab, which is the
+                 right behaviour anyway (look, then save). */}
+                <a class="lb-full" target="_blank" rel="noopener">
+                  FULL RES
+                </a>
+              </div>
+              <div class="lb-tags" />
+            </div>
+            <div class="lb-right">
+              {/* Keyboard hints where there is a keyboard; real controls on touch. */}
+              <div class="lb-hint">
+                <>
+                  <span>
+                    <b>I</b> CAPTURE DATA
+                  </span>
+                  <span>
+                    <b>← →</b> MOVE
+                  </span>
+                </>
+              </div>
+              <div class="lb-thumbs" />
+              <div class="lb-controls">
+                <button
+                  type="button"
+                  class="lb-step"
+                  data-lb-step="-1"
+                  aria-label="Previous photo"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  class="lb-step"
+                  data-lb-step="1"
+                  aria-label="Next photo"
+                >
+                  →
+                </button>
+                <button
+                  type="button"
+                  class="btn-ghost lb-info"
+                  aria-pressed="false"
+                  aria-label="Capture data"
+                >
+                  i
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="lb-thumbs"></div>
-          <div class="lb-controls">
-            <button
-              type="button"
-              class="lb-step"
-              data-lb-step="-1"
-              aria-label="Previous photo">←</button
-            >
-            <button type="button" class="lb-step" data-lb-step="1" aria-label="Next photo"
-              >→</button
-            >
-            <button
-              type="button"
-              class="btn-ghost lb-info"
-              aria-pressed="false"
-              aria-label="Capture data">i</button
-            >
-          </div>
+          <div class="lb-swipe">SWIPE ← → TO MOVE &nbsp;·&nbsp; SWIPE DOWN TO CLOSE</div>
         </div>
       </div>
-      <div class="lb-swipe">SWIPE ← → TO MOVE &nbsp;·&nbsp; SWIPE DOWN TO CLOSE</div>
-    </div>
-  </div>
+    )
+  }
 
   <script>
     import '../../scripts/photos';
@@ -523,7 +563,7 @@ const EAGER = 8;
   .px-seg button {
     font: 500 9.5px var(--mono);
     letter-spacing: 0.2em;
-    color: #9fb0c8;
+    color: var(--dim-4);
     background: none;
     border: 1px solid rgba(142, 180, 255, 0.16);
     border-right: 0;
@@ -554,7 +594,7 @@ const EAGER = 8;
     gap: 7px;
     font: 500 9.5px var(--mono);
     letter-spacing: 0.2em;
-    color: #9fb0c8;
+    color: var(--dim-4);
     background: none;
     border: 1px solid rgba(142, 180, 255, 0.16);
     padding: 6px 11px;
@@ -693,10 +733,19 @@ const EAGER = 8;
     /* Tiles are jump targets too — `#f-<slug>` and the SHEET-view shoot jump
        both land here, underneath the same sticky chrome as a run header. */
     scroll-margin-top: calc(var(--nav-h) + var(--bar-h, 38px) + 12px);
-    /* Entry state; `.is-in` resolves it. Set here so a tile never flashes. */
-    opacity: 0;
-    filter: blur(9px);
-    transform: translateY(12px) scale(0.985);
+  }
+
+  /*
+   * Entry state; `.is-in` resolves it. Set in a rule of its own so a tile
+   * never flashes — and gated on scripting, because only the script ever adds
+   * `.is-in`: with JavaScript off this state would hide the whole gallery.
+   */
+  @media (scripting: enabled) {
+    .px-tile {
+      opacity: 0;
+      filter: blur(9px);
+      transform: translateY(12px) scale(0.985);
+    }
   }
 
   .px-tile img {
@@ -804,7 +853,7 @@ const EAGER = 8;
     transition: opacity 0.2s;
     font: 400 8px var(--mono);
     letter-spacing: 0.12em;
-    color: #c7d2e2;
+    color: var(--dim-5);
     text-shadow: 0 1px 6px rgba(3, 4, 10, 0.9);
   }
 
@@ -1640,7 +1689,7 @@ const EAGER = 8;
   .lb-tag {
     font: 400 9px var(--mono);
     letter-spacing: 0.1em;
-    color: #9fb0c8;
+    color: var(--dim-4);
     background: none;
     border: 1px solid rgba(142, 180, 255, 0.16);
     padding: 3px 8px;

@@ -5,6 +5,7 @@ import PhotoThumb from '../components/PhotoThumb.astro';
 import { AUTHOR } from '../consts';
 import { hueForIndex } from '../lib/ramp';
 import { readingTime } from '../lib/readingTime';
+import { dottedDay, yearSpan as spanOfYears } from '../lib/dates';
 
 /** Mockup 6a. See docs/UI-DESIGN.md §7. */
 
@@ -33,7 +34,7 @@ const remainingPosts = posts.length - previewPosts.length;
 const years = photos
   .map((p) => p.data.takenAt?.getUTCFullYear())
   .filter(Boolean) as number[];
-const yearSpan = years.length ? `${Math.min(...years)} — ${Math.max(...years)}` : '';
+const yearSpan = spanOfYears(years);
 
 const pad = (n: number) => String(n).padStart(2, '0');
 const railHue = (index: number) => hueForIndex(index, projects.length);
@@ -52,8 +53,7 @@ const photoMeta = (p: (typeof photos)[number]) =>
     .join(' · ')
     .toUpperCase();
 
-const isoDate = (d: Date | null) =>
-  d ? d.toLocaleDateString('en-CA', { timeZone: 'UTC' }).replace(/-/g, '.') : '';
+const isoDate = dottedDay;
 ---
 
 <BaseLayout
@@ -132,13 +132,24 @@ const isoDate = (d: Date | null) =>
             <span class="offshoot" data-off aria-hidden="true" />
 
             <details class="plate">
-              <span class="plate-charge" aria-hidden="true" />
-              <span class="bracket bracket-tl" aria-hidden="true" />
-              <span class="bracket bracket-tr" aria-hidden="true" />
-              <span class="bracket bracket-bl" aria-hidden="true" />
-              <span class="bracket bracket-br" aria-hidden="true" />
+              {/*
+                Everything lives inside <summary> — a <details> allows nothing
+                before its summary, and a closed one renders nothing after it,
+                so this is the only slot where the corner brackets stay visible
+                on a collapsed plate. They anchor to `.plate` (the nearest
+                positioned ancestor) either way. All spans, because summary's
+                content model is phrasing. The aria-label keeps the tag list
+                out of the disclosure's accessible name.
+              */}
+              <summary
+                aria-label={`${project.data.name} — ${project.data.shortDescription}`}
+              >
+                <span class="plate-charge" aria-hidden="true" />
+                <span class="bracket bracket-tl" aria-hidden="true" />
+                <span class="bracket bracket-tr" aria-hidden="true" />
+                <span class="bracket bracket-bl" aria-hidden="true" />
+                <span class="bracket bracket-br" aria-hidden="true" />
 
-              <summary>
                 <span class="plate-head">
                   <span class="plate-num">{pad(i + 1)}</span>
                   <span class="plate-name">{project.data.name}</span>
@@ -146,11 +157,11 @@ const isoDate = (d: Date | null) =>
                 </span>
                 <span class="plate-mark" aria-hidden="true" />
 
-                <div class="plate-tags">
+                <span class="plate-tags">
                   {project.data.tags.map((tag) => (
                     <span class="tag">{tag}</span>
                   ))}
-                </div>
+                </span>
               </summary>
 
               <div class="plate-detail">
@@ -177,7 +188,11 @@ const isoDate = (d: Date | null) =>
       <span class="sec-num" style="--n:var(--cyan)">02</span>
       <span class="sec-rule"></span>
       <span class="sec-name">PHOTOGRAPHS</span>
-      <span class="sec-aside">{photos.length} FRAMES · {yearSpan}</span>
+      <span class="sec-aside">
+        {photos.length} FRAME{photos.length === 1 ? '' : 'S'}{
+          yearSpan && ` · ${yearSpan}`
+        }
+      </span>
     </div>
 
     <a class="sec-title" data-fx="resolve" href="/photos">Photographs</a>
@@ -190,7 +205,9 @@ const isoDate = (d: Date | null) =>
           like a caption, and a gear apology reads worse. */
       }
       <p>The full gallery, grouped by shoot.</p>
-      <a class="sec-aside" href="/photos">ALL {photos.length} FRAMES ↗</a>
+      <a class="sec-aside" href="/photos">
+        ALL {photos.length} FRAME{photos.length === 1 ? '' : 'S'} ↗
+      </a>
     </div>
 
     <div class="tease">
@@ -526,7 +543,7 @@ const isoDate = (d: Date | null) =>
     margin: 0;
     max-width: 540px;
     font: 400 14px/1.8 var(--mono);
-    color: #94a2b8;
+    color: var(--dim-3);
     text-wrap: pretty;
   }
 

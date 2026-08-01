@@ -110,4 +110,20 @@ describe('groupIntoRuns', () => {
   test('an empty library produces no runs rather than an empty bucket', () => {
     assert.deepEqual(groupIntoRuns([], SHOOTS), []);
   });
+
+  test('runs sharing a base key stay uniquely addressable', () => {
+    /*
+     * Keys become DOM ids and fragment anchors. Two separated shoot-less
+     * stretches would both be `stray-undated`, and interleaved date ranges can
+     * make the same shoot alternate in the sort — every key must still be
+     * unique or the rail and the jump sheet silently target the first one.
+     */
+    const runs = groupIntoRuns(
+      [photo(null, 'x'), ...run('a', 5), photo(null, 'y'), ...run('a', 3)],
+      SHOOTS,
+    );
+    const keys = runs.map((r) => r.key);
+    assert.equal(new Set(keys).size, keys.length, `duplicate key in ${keys}`);
+    assert.deepEqual(keys, ['stray-undated', 'a', 'stray-undated-2', 'a-2']);
+  });
 });

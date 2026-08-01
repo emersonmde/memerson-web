@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { gotoSettled } from './helpers';
+import { gotoSettled, switchView } from './helpers';
 
 /*
  * Router idempotency and the home page's interactive pieces —
@@ -23,10 +23,7 @@ test('the gallery survives repeated router swaps without doubling', async ({
   await expect(page.locator('h1.px-title')).toHaveText('Photographs');
 
   /* The gallery is alive after the swaps... */
-  await page.click('[data-seg] button[data-layout="sheet"]');
-  await expect(
-    page.locator('[data-seg] button[data-layout="sheet"]'),
-  ).toHaveAttribute('aria-pressed', 'true');
+  await switchView(page, 'sheet');
 
   /* ...and listeners have not stacked: one step moves exactly one frame. */
   await page.locator('[data-tile]:not([hidden])').first().click();

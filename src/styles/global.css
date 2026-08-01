@@ -66,6 +66,10 @@
   --tx-read: #a9b4c6;
   --dim: #8492a8;
   --dim-2: #8f9db3;
+  /* The cool grays between --dim and --tx-body: sign copy, overlay chrome. */
+  --dim-3: #94a2b8;
+  --dim-4: #9fb0c8;
+  --dim-5: #c7d2e2;
   --faint: #4d5869;
   --faint-2: #3d4657;
 
@@ -668,11 +672,19 @@ a.sec-aside:hover {
  * Selected by the same `data-fx` attribute the script dispatches on, rather
  * than a parallel class — one hook, so the two can't drift apart.
  */
-[data-fx='resolve'] {
-  opacity: 0.15;
-  filter: blur(13px);
-  letter-spacing: 0.055em;
-  will-change: opacity, filter, letter-spacing;
+/*
+ * Gated on scripting: the entry state exists for `fx.ts` to resolve, and with
+ * JavaScript off nothing ever would — the page would keep every heading at 15%
+ * behind 13px of blur, forever. A browser too old for the `scripting` query
+ * skips the block, which fails in the same safe direction: readable headings.
+ */
+@media (scripting: enabled) {
+  [data-fx='resolve'] {
+    opacity: 0.15;
+    filter: blur(13px);
+    letter-spacing: 0.055em;
+    will-change: opacity, filter, letter-spacing;
+  }
 }
 
 /*
@@ -826,7 +838,7 @@ html[data-swapped] [data-fx='resolve'] {
 .tag {
   font: 400 9px var(--mono);
   letter-spacing: 0.1em;
-  color: #9fb0c8;
+  color: var(--dim-4);
   border: 1px solid rgba(142, 180, 255, 0.16);
   padding: 3px 7px;
 }
@@ -837,7 +849,7 @@ html[data-swapped] [data-fx='resolve'] {
   letter-spacing: 0.18em;
   padding: 6px 11px;
   cursor: pointer;
-  color: #9fb0c8;
+  color: var(--dim-4);
   border: 1px solid rgba(142, 180, 255, 0.16);
   background: transparent;
   transition: all 0.16s;
@@ -954,19 +966,6 @@ html[data-swapped] [data-fx='resolve'] {
 }
 
 /*
- * A shooting star is mostly *not* happening: the animation spends ~95% of its
- * cycle idle and a fraction of a second visible.
- *
- * The old version applied `cubic-bezier(.2,.4,.5,1)` across the whole cycle,
- * including the idle hold. Easing is defined over the full duration, so the
- * visible slice inherited whatever slope the curve happened to have there —
- * which is why a star could appear to hang still, crawl, or stall before
- * vanishing. The travel is now linear and the shaping lives in the keyframe
- * offsets, where it only affects the part you can see. Opacity and transform
- * also change together at every stop, so the star can never be visible while
- * stationary.
- */
-/*
  * A shooting star is mostly *not* happening: ~96% of the cycle is idle.
  *
  * Two things this gets right that the earlier version did not.
@@ -1004,14 +1003,6 @@ html[data-swapped] [data-fx='resolve'] {
   }
 }
 
-
-
-
-/*
- * Reduced motion. Note this does more than stop animation: `.resolve` starts at
- * 15% opacity and 13px of blur, so simply freezing it would leave every heading
- * permanently unreadable. It has to be forced to its *end* state.
- */
 /* ---------------------------------------------------------------------------
  * "Redraw" page transition — mockup 6g. See src/scripts/redraw.ts.
  *
@@ -1262,6 +1253,11 @@ html[data-swapped] [data-fx='resolve'] {
   }
 }
 
+/*
+ * Reduced motion. Note this does more than stop animation: `[data-fx='resolve']`
+ * starts at 15% opacity and 13px of blur, so simply freezing it would leave
+ * every heading permanently unreadable. It has to be forced to its *end* state.
+ */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

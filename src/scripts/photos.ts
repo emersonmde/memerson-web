@@ -313,10 +313,21 @@ function init() {
   }
 
   if (find) {
+    /*
+     * Debounced: applyLayout() reparents every tile (and in SHEET repacks the
+     * columns), so running it per keystroke is a full pass over the library per
+     * character. 100ms is under the gap between keystrokes of even fast typing,
+     * so a paused user still sees the filter land instantly.
+     */
+    let debounce: ReturnType<typeof setTimeout> | undefined;
     on(find, 'input', () => {
-      query = find.value;
-      applyFilter();
-      applyLayout();
+      clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        if (life.signal.aborted) return;
+        query = find.value;
+        applyFilter();
+        applyLayout();
+      }, 100);
     });
   }
 
@@ -352,9 +363,9 @@ function init() {
 
   /*
    * Tiles resolve on entry with the same blur-to-sharp the page titles use,
-   * staggered across the row so a long scroll feels developed rather than
-   * dumped. The stagger is by column, not by index, or the last tile of a run
-   * would wait on the first.
+   * staggered in small groups (index mod 4, 55ms apart) so a row arrives as a
+   * ripple rather than a block — and so the last tile of a long run never waits
+   * on the first.
    */
   let pending: HTMLAnchorElement[] = [];
 
@@ -367,6 +378,9 @@ function init() {
     pending = tiles.filter((t) => !t.classList.contains('is-in'));
     reveal();
   }
+
+  /* A mid-session flip to reduced motion must resolve everything still pending. */
+  on(REDUCED, 'change', resetReveal);
 
   function reveal() {
     if (!pending.length) return;
@@ -438,6 +452,9 @@ function init() {
     }
   }
 
+  /* One 4×4 canvas for every sample — each drawImage fully repaints it. */
+  let sampleCtx: CanvasRenderingContext2D | null = null;
+
   async function sampleAccent(lqip: string): Promise<string | null> {
     const { liveAccent } = await import('../lib/ambient');
     const img = new Image();
@@ -447,9 +464,12 @@ function init() {
     } catch {
       return null;
     }
-    const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 4;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!sampleCtx) {
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 4;
+      sampleCtx = canvas.getContext('2d', { willReadFrequently: true });
+    }
+    const ctx = sampleCtx;
     if (!ctx) return null;
     ctx.drawImage(img, 0, 0, 4, 4);
     const d = ctx.getImageData(0, 0, 4, 4).data;
@@ -491,6 +511,9 @@ function init() {
    */
   async function sampleAllAccents() {
     for (const run of runs) {
+      // A quick navigation away aborts init; don't keep decoding LQIPs for a
+      // page that is no longer on screen.
+      if (life.signal.aborted) return;
       if (run.stray) continue;
       const lqip = run.tiles[0]?.dataset.lqip;
       if (!lqip) continue;
@@ -511,10 +534,27 @@ function init() {
 
     for (const run of runs) {
       if (run.el.hidden && layout !== 'sheet') continue;
-      const target = layout === 'sheet' ? run.tiles.find((t) => !t.hidden) : run.el;
-      if (!target) continue;
-      const box = target.getBoundingClientRect();
-      const distance = Math.abs(box.top + Math.min(box.height, innerHeight) / 2 - mid);
+      /*
+       * In SHEET the run wrapper is hidden, so the run's extent is measured
+       * from its first to its last visible tile — first alone made "whichever
+       * run owns the middle of the screen" mean "whose first frame is nearest",
+       * which advanced the indicator a shoot early inside long runs.
+       */
+      let top: number;
+      let height: number;
+      if (layout === 'sheet') {
+        const shown = run.tiles.filter((t) => !t.hidden);
+        if (!shown.length) continue;
+        const first = shown[0].getBoundingClientRect();
+        const last = shown[shown.length - 1].getBoundingClientRect();
+        top = first.top;
+        height = Math.max(first.bottom, last.bottom) - top;
+      } else {
+        const box = run.el.getBoundingClientRect();
+        top = box.top;
+        height = box.height;
+      }
+      const distance = Math.abs(top + Math.min(height, innerHeight) / 2 - mid);
       if (distance < bestDistance) {
         bestDistance = distance;
         best = run.key;
@@ -550,9 +590,26 @@ function init() {
 
   const jump = $<HTMLElement>('[data-jump]');
 
+  /*
+   * The sheet is aria-modal, so it owes the keyboard the same three moves the
+   * viewer makes: focus moves in on open, Tab cycles inside, and closing hands
+   * focus back to the opener.
+   */
+  let jumpReturnFocus: HTMLElement | null = null;
+
+  function openJump() {
+    if (!jump) return;
+    jumpReturnFocus = document.activeElement as HTMLElement;
+    jump.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    jump.querySelector<HTMLElement>('[data-jump-close]')?.focus({ preventScroll: true });
+  }
+
   function closeJump() {
     jump?.classList.remove('is-open');
     document.body.style.overflow = '';
+    if (jumpReturnFocus?.isConnected) jumpReturnFocus.focus({ preventScroll: true });
+    jumpReturnFocus = null;
   }
 
   /*
@@ -576,12 +633,7 @@ function init() {
 
   if (jump) {
     const opener = $<HTMLElement>('[data-jump-open]');
-    if (opener) {
-      on(opener, 'click', () => {
-        jump.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-      });
-    }
+    if (opener) on(opener, 'click', openJump);
     const closer = $<HTMLElement>('[data-jump-close]');
     if (closer) on(closer, 'click', closeJump);
     for (const row of jump.querySelectorAll<HTMLElement>('[data-jump-row]')) {
@@ -612,20 +664,28 @@ function init() {
     );
   }
 
+  // rAF-coalesced like the scroll handler: iOS fires a stream of resize events
+  // through toolbar collapse and rotation, and everything below reads layout.
+  let resizing = false;
   on(window, 'resize', () => {
-    syncBar();
-    // Repack only when the breakpoint actually changed the column count —
-    // reparenting 1300 tiles on every resize frame would thrash layout.
-    if (
-      layout === 'sheet' &&
-      flatCols.length !==
-        (Number(getComputedStyle(flat).getPropertyValue('--sheet-cols')) || 2)
-    ) {
-      packFlat();
-    }
-    reveal();
-    trackRail();
-    sizeFrame();
+    if (resizing) return;
+    resizing = true;
+    requestAnimationFrame(() => {
+      resizing = false;
+      syncBar();
+      // Repack only when the breakpoint actually changed the column count —
+      // reparenting 1300 tiles on every resize frame would thrash layout.
+      if (
+        layout === 'sheet' &&
+        flatCols.length !==
+          (Number(getComputedStyle(flat).getPropertyValue('--sheet-cols')) || 2)
+      ) {
+        packFlat();
+      }
+      reveal();
+      trackRail();
+      sizeFrame();
+    });
   });
 
   /* ------------------------------------------------------------- lightbox */
@@ -929,7 +989,7 @@ function init() {
             button.type = 'button';
             button.className = 'lb-tag';
             button.textContent = tag;
-            button.addEventListener('click', () => {
+            on(button, 'click', () => {
               close();
               setQuery(tag);
               toTop();
@@ -1006,7 +1066,7 @@ function init() {
         if (list[i].dataset.bloom) {
           button.style.backgroundImage = `url("${list[i].dataset.bloom}")`;
         }
-        button.addEventListener('click', () => show(i));
+        on(button, 'click', () => show(i));
         return button;
       }),
     );
@@ -1101,7 +1161,8 @@ function init() {
       on(el, 'click', () => show(cursor + Number(el.dataset.lbStep)));
     }
 
-    on(q<HTMLElement>('.lb-info')!, 'click', () => toggleExif());
+    const info = q<HTMLElement>('.lb-info');
+    if (info) on(info, 'click', () => toggleExif());
     const exifClose = q<HTMLElement>('[data-lb-exif-close]');
     if (exifClose) on(exifClose, 'click', () => toggleExif(false));
 
@@ -1153,6 +1214,23 @@ function init() {
   on(window, 'keydown', (event: KeyboardEvent) => {
     if (jump?.classList.contains('is-open')) {
       if (event.key === 'Escape') closeJump();
+      else if (event.key === 'Tab') {
+        // Same trap as the viewer below: the sheet is aria-modal, so Tab must
+        // not walk out into the page behind it.
+        const focusable = Array.from(
+          jump.querySelectorAll<HTMLElement>('button:not([hidden]), a[href]'),
+        ).filter((el) => el.offsetParent !== null);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
       return;
     }
 
@@ -1181,7 +1259,13 @@ function init() {
       return;
     }
 
-    if (event.key === '/' && document.activeElement !== find) {
+    if (
+      event.key === '/' &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      !event.altKey &&
+      document.activeElement !== find
+    ) {
       event.preventDefault();
       find?.focus();
     } else if (event.key === 'Escape' && document.activeElement === find) {
@@ -1203,7 +1287,14 @@ function init() {
    * browser still scrolls to it.
    */
   function openFromHash() {
-    const id = decodeURIComponent(location.hash.slice(1));
+    let id = '';
+    try {
+      id = decodeURIComponent(location.hash.slice(1));
+    } catch {
+      // A malformed hash (bad percent-encoding) is nobody's frame — and a
+      // throw here would escape init() before the swap cleanup registers.
+      return;
+    }
     if (!id.startsWith('f-')) return;
     if (lb && !lb.hidden) return;
     const target = tiles.find((t) => t.id === id);

@@ -70,25 +70,6 @@ function createSemaphore(limit) {
 
 const withUploadSlot = createSemaphore(UPLOAD_CONCURRENCY);
 
-/**
- * Run `fn` over every item with at most `limit` in flight. Results keep input
- * order. The first rejection propagates once in-flight work settles.
- */
-export async function pool(items, limit, fn) {
-  const results = new Array(items.length);
-  let cursor = 0;
-
-  const worker = async () => {
-    while (cursor < items.length) {
-      const index = cursor++;
-      results[index] = await fn(items[index], index);
-    }
-  };
-
-  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
-  return results;
-}
-
 // ---------------------------------------------------------------------------
 // wrangler
 // ---------------------------------------------------------------------------
@@ -123,20 +104,30 @@ function runWrangler(args, stdin) {
   });
 }
 
+/**
+ * Only transient failures are worth retrying — network blips, wrangler races.
+ * Bad credentials or a bucket that does not exist will fail identically three
+ * times, so those bail immediately with the real message intact instead of
+ * adding 1.5s of sleeps to an error the retries cannot fix.
+ */
+function isPermanent(error) {
+  return /\b(401|403|404)\b|unauthorized|not authorized|does not exist|no such bucket/i.test(
+    error.message,
+  );
+}
+
 async function withRetry(label, fn) {
-  let lastError;
-  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+  for (let attempt = 1; ; attempt++) {
     try {
       return await fn();
     } catch (error) {
-      lastError = error;
-      if (attempt < MAX_ATTEMPTS) {
-        // A failed object is retried in place; the run is never restarted.
-        await new Promise((r) => setTimeout(r, 500 * attempt));
+      if (attempt >= MAX_ATTEMPTS || isPermanent(error)) {
+        throw new Error(`${label} failed (attempt ${attempt}): ${error.message}`);
       }
+      // A failed object is retried in place; the run is never restarted.
+      await new Promise((r) => setTimeout(r, 500 * attempt));
     }
   }
-  throw new Error(`${label} failed after ${MAX_ATTEMPTS} attempts: ${lastError.message}`);
 }
 
 /**
@@ -184,17 +175,28 @@ export async function getObject(bucket, key, destination) {
  * is `wrangler login`, same as for every other command here.
  */
 async function wranglerAuth() {
-  const configPath = path.join(
-    os.homedir(),
-    'Library/Preferences/.wrangler/config/default.toml',
-  );
+  // wrangler resolves its global config dir as WRANGLER_HOME, then the
+  // platform's XDG-style config dir, so mirror that order rather than
+  // hard-coding the macOS default this started as.
+  const home = os.homedir();
+  const configDirs = [
+    process.env.WRANGLER_HOME,
+    process.env.XDG_CONFIG_HOME && path.join(process.env.XDG_CONFIG_HOME, '.wrangler'),
+    path.join(home, 'Library/Preferences/.wrangler'), // macOS
+    path.join(home, '.config/.wrangler'), // Linux
+    path.join(home, '.wrangler'), // legacy
+  ].filter(Boolean);
+  const configPaths = configDirs.map((dir) => path.join(dir, 'config/default.toml'));
 
   let raw;
-  try {
-    raw = await readFile(configPath, 'utf8');
-  } catch {
+  for (const configPath of configPaths) {
+    raw = await readFile(configPath, 'utf8').catch(() => undefined);
+    if (raw !== undefined) break;
+  }
+  if (raw === undefined) {
     throw new Error(
-      `No wrangler credentials at ${configPath}. Run \`npx wrangler login\`.`,
+      `No wrangler credentials found (looked in ${configPaths.join(', ')}). ` +
+        'Run `npx wrangler login`.',
     );
   }
 
@@ -211,6 +213,9 @@ async function defaultAccountId(token) {
   const response = await fetch('https://api.cloudflare.com/client/v4/accounts', {
     headers: { Authorization: `Bearer ${token}` },
   });
+  if (!response.ok) {
+    throw new Error(`Could not resolve a Cloudflare account: HTTP ${response.status}`);
+  }
   const body = await response.json();
   if (!body.success || body.result.length === 0) {
     throw new Error(
@@ -242,6 +247,9 @@ export async function listObjects(bucket, prefix = '') {
     if (cursor) url.searchParams.set('cursor', cursor);
 
     const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!response.ok) {
+      throw new Error(`Listing ${bucket} failed: HTTP ${response.status}`);
+    }
     const body = await response.json();
     if (!body.success) {
       throw new Error(`Listing ${bucket} failed: ${JSON.stringify(body.errors)}`);

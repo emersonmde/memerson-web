@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 /*
  * Shared plumbing for the real-browser suite. The rules these encode are
@@ -7,9 +7,13 @@ import type { Page } from '@playwright/test';
  * reduced-motion code path, scroll effects driven to a settled frame.
  */
 
-/** Navigate and wait for fonts, so no shot or geometry read races a swap. */
+/** Navigate and wait for fonts, so no shot or geometry read races a swap.
+ * `load`, not `networkidle`: networkidle waits for 500ms of network silence,
+ * which lazy-loaded gallery images can defer indefinitely on a long page —
+ * and Playwright's own docs deprecate it. Fonts are the thing geometry and
+ * screenshots actually race, and they get their own explicit wait. */
 export async function gotoSettled(page: Page, path: string) {
-  await page.goto(path, { waitUntil: 'networkidle' });
+  await page.goto(path, { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
 }
 
@@ -23,13 +27,14 @@ export async function gotoReduced(page: Page, path: string) {
   await gotoSettled(page, path);
 }
 
-/** Scroll to a fraction of the document and wait for the next painted frame. */
-export async function scrollToFraction(page: Page, fraction: number) {
-  await page.evaluate(async (f) => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    scrollTo({ top: max * f, behavior: 'instant' as ScrollBehavior });
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-  }, fraction);
+/** Switch the gallery view and wait for the control to confirm it — shared
+ * because reimplementing the click-then-wait pair invites a version that
+ * forgets the wait and races the reparenting. */
+export async function switchView(page: Page, layout: 'sheet' | 'runs' | 'editorial') {
+  await page.click(`[data-seg] button[data-layout="${layout}"]`);
+  await expect(
+    page.locator(`[data-seg] button[data-layout="${layout}"]`),
+  ).toHaveAttribute('aria-pressed', 'true');
 }
 
 /** Wait until the lightbox's main image has fully decoded. */
@@ -39,7 +44,10 @@ export async function viewerImageDecoded(page: Page) {
     return !!img && img.complete && img.naturalWidth > 0;
   });
   await page.evaluate(() =>
-    document.querySelector<HTMLImageElement>('.lb-img')!.decode().catch(() => {}),
+    document
+      .querySelector<HTMLImageElement>('.lb-img')!
+      .decode()
+      .catch(() => {}),
   );
 }
 

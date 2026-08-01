@@ -19,8 +19,8 @@ interface Props {
   shooting?: boolean;
   /** Inner pages point the wordmark back home. */
   back?: boolean;
-  /** Pages that supply their own footer (the home page's contact block). */
-  footer?: boolean;
+  /** Blog posts are articles to link unfurlers; everything else is a page. */
+  publishedAt?: Date;
 }
 
 const {
@@ -29,7 +29,7 @@ const {
   active,
   shooting = false,
   back = false,
-  footer = true,
+  publishedAt,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
@@ -83,7 +83,12 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={publishedAt ? 'article' : 'website'} />
+    {
+      publishedAt && (
+        <meta property="article:published_time" content={publishedAt.toISOString()} />
+      )
+    }
     <meta property="og:url" content={canonical} />
     <meta
       property="og:image"
@@ -155,7 +160,7 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
         <slot />
       </main>
 
-      {footer && <SiteFooter />}
+      <SiteFooter />
     </div>
 
     {

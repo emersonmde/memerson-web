@@ -13,12 +13,14 @@ import { gotoSettled } from './helpers';
  * slow machine — which is why it comes first and the timing bound second.
  *
  * Chromium-only by design (the trace format is Chrome's), and the config runs
- * this file in the desktop project alone.
+ * this file in its own `perf` project, which `dependencies` on every other
+ * project — so by the time a trace starts, no sibling worker is scrolling
+ * another page on the same machine.
  */
 
-/* One worker, one test at a time: a timing measurement taken while two other
-   tests trace and scroll on the same machine measures the contention, not the
-   page. */
+/* One test at a time within the project, too: a timing measurement taken
+   while another perf test traces and scrolls measures the contention, not
+   the page. */
 test.describe.configure({ mode: 'default' });
 
 /* No Playwright trace here: its per-action DOM snapshots read layout from an
@@ -37,7 +39,11 @@ async function forcedLayoutsDuring(
 ): Promise<number> {
   /* Let the arrival transients land first — the fonts-ready re-measure and
      the entry reveals all schedule work just after load, and a trace that
-     starts under them counts startup, not the scroll loop. */
+     starts under them counts startup, not the scroll loop. A sleep is the
+     honest tool here: the reveals are rAF-driven script (fx.ts writes styles
+     per frame while a heading resolves), invisible to getAnimations() and to
+     every load signal — fonts.ready is already awaited in gotoSettled. There
+     is no event that says "startup work is done", only quiescence. */
   await page.waitForTimeout(400);
   await page.evaluate(
     () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))),
@@ -91,21 +97,36 @@ async function wheelScroll(page: Page, steps: number, delta: number) {
       () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))),
     );
   }
-  /* Let the last settle land inside the trace — that path is measured too. */
-  await page.waitForTimeout(400);
+  /* Let the last settle land inside the trace — that path is measured too.
+     The concrete signal is the burst's final `scrollend`, plus two frames so
+     settle()'s read runs before the trace stops. The timer is only a bounded
+     fallback for the race where scrollend already fired before the listener
+     attached (headless fires one per wheel burst, on its own schedule). */
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) => {
+        const done = () =>
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+        const timer = setTimeout(done, 400);
+        addEventListener(
+          'scrollend',
+          () => {
+            clearTimeout(timer);
+            done();
+          },
+          { once: true },
+        );
+      }),
+  );
 }
 
-test('scrolling the home rail never interleaves reads with writes', async ({
-  page,
-}) => {
+test('scrolling the home rail never interleaves reads with writes', async ({ page }) => {
   await gotoSettled(page, '/');
   const forced = await forcedLayoutsDuring(page, () => wheelScroll(page, STEPS, 300));
   expect(forced).toBeLessThanOrEqual(STEPS);
 });
 
-test('scrolling the gallery never interleaves reads with writes', async ({
-  page,
-}) => {
+test('scrolling the gallery never interleaves reads with writes', async ({ page }) => {
   await gotoSettled(page, '/photos/');
   const forced = await forcedLayoutsDuring(page, () => wheelScroll(page, STEPS, 550));
   expect(forced).toBeLessThanOrEqual(STEPS);
@@ -120,27 +141,40 @@ test('no long frames during scroll and viewer open/close', async ({ page }) => {
    * that no frame *blocks* meaningfully past the 50ms deadline.
    */
   await page.evaluate(() => {
-    const w = window as never as { __loaf: number[] };
+    const w = window as never as { __loaf: number[]; __obs: PerformanceObserver };
     w.__loaf = [];
-    new PerformanceObserver((list) => {
+    w.__obs = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
         w.__loaf.push(
           (entry as PerformanceEntry & { blockingDuration: number }).blockingDuration,
         );
       }
-    }).observe({ type: 'long-animation-frame', buffered: false });
+    });
+    w.__obs.observe({ type: 'long-animation-frame', buffered: false });
   });
 
   await wheelScroll(page, 16, 600);
   await page.locator('[data-tile]:not([hidden])').first().click();
-  await expect(page.locator('[data-lb]')).toBeVisible();
+  const lb = page.locator('[data-lb]');
+  await expect(lb).toBeVisible();
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('Escape');
-  await page.waitForTimeout(300);
+  await expect(lb).toBeHidden();
 
-  const blocking = await page.evaluate(
-    () => (window as never as { __loaf: number[] }).__loaf,
-  );
+  /* The close frame has ended once two more frames have run; any long frame
+     it produced is then in the observer's queue, and takeRecords() drains
+     entries queued but not yet delivered — the concrete signal that replaces
+     "sleep and hope the callback ran". */
+  const blocking = await page.evaluate(async () => {
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const w = window as never as { __loaf: number[]; __obs: PerformanceObserver };
+    for (const entry of w.__obs.takeRecords()) {
+      w.__loaf.push(
+        (entry as PerformanceEntry & { blockingDuration: number }).blockingDuration,
+      );
+    }
+    return w.__loaf;
+  });
   const worst = Math.max(0, ...blocking);
   expect(
     worst,

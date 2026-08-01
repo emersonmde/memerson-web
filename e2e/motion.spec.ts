@@ -17,14 +17,12 @@ async function scrollAndSettle(page: Page, top: number) {
   await expect
     .poll(
       () =>
-        page.evaluate(
-          async () => {
-            const rail = document.querySelector<HTMLElement>('[data-fx="rail"]')!;
-            const a = rail.style.getPropertyValue('--cg');
-            await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 60)));
-            return a === rail.style.getPropertyValue('--cg') ? a : null;
-          },
-        ),
+        page.evaluate(async () => {
+          const rail = document.querySelector<HTMLElement>('[data-fx="rail"]')!;
+          const a = rail.style.getPropertyValue('--cg');
+          await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 60)));
+          return a === rail.style.getPropertyValue('--cg') ? a : null;
+        }),
       { timeout: 5000 },
     )
     .not.toBeNull();
@@ -159,26 +157,23 @@ test('the wipe runs on a real swap — and not at all under reduced motion', asy
     /* The document object survives a ClientRouter swap, so a listener armed
        here can read the incoming page's panel the moment it goes live. */
     await page.evaluate(() => {
-      (window as never as { __wipe: Promise<boolean> }).__wipe = new Promise(
-        (resolve) =>
-          document.addEventListener(
-            'astro:page-load',
-            () =>
-              resolve(
-                document.querySelector('.redraw')?.classList.contains('is-running') ??
-                  false,
-              ),
-            { once: true },
-          ),
+      (window as never as { __wipe: Promise<boolean> }).__wipe = new Promise((resolve) =>
+        document.addEventListener(
+          'astro:page-load',
+          () =>
+            resolve(
+              document.querySelector('.redraw')?.classList.contains('is-running') ??
+                false,
+            ),
+          { once: true },
+        ),
       );
     });
     await page.click('.nav a[href="/photos"]');
     const ran = await page.evaluate(
       () => (window as never as { __wipe: Promise<boolean> }).__wipe,
     );
-    expect(ran, reduce ? 'no wipe under reduced motion' : 'wipe on a swap').toBe(
-      !reduce,
-    );
+    expect(ran, reduce ? 'no wipe under reduced motion' : 'wipe on a swap').toBe(!reduce);
   }
 });
 
@@ -201,9 +196,7 @@ test('entry resolve: blurred before, crisp after, suppressed after a swap', asyn
   await expect
     .poll(() => title.evaluate((el) => getComputedStyle(el).filter))
     .toBe('none');
-  await expect
-    .poll(() => title.evaluate((el) => getComputedStyle(el).opacity))
-    .toBe('1');
+  await expect.poll(() => title.evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
 
   /* After a router swap the session is marked and the incoming page's
      visible headings are crisp from their first frame. */

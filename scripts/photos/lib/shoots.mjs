@@ -144,13 +144,27 @@ export function assignShoots(entries, gapDays = SHOOT_GAP_DAYS) {
   const created = [];
   const extended = [];
   const bridged = [];
+  const collided = [];
+
+  // Every shoot id already in play, so a freshly minted one can never collide
+  // with a shoot elsewhere in the library — or with one minted this run.
+  const usedIds = new Set(entries.map((e) => e.shoot).filter(Boolean));
 
   for (const cluster of clusters) {
     const existing = [...new Set(cluster.map((e) => e.shoot).filter(Boolean))];
     const pending = cluster.filter((e) => !e.shoot);
 
     if (existing.length === 0) {
-      const id = shootId(cluster);
+      // Ids are calendar dates, so two clusters starting the same day (only
+      // possible with a sub-day gap threshold) would silently pour into one
+      // shoot. Suffix the later one and report it instead.
+      let id = shootId(cluster);
+      if (usedIds.has(id)) {
+        const base = id;
+        for (let n = 2; usedIds.has(id); n++) id = `${base}-${n}`;
+        collided.push({ shoot: id, base });
+      }
+      usedIds.add(id);
       for (const entry of cluster) assignments.set(entry.id, id);
       created.push({ shoot: id, count: cluster.length });
       continue;
@@ -162,7 +176,10 @@ export function assignShoots(entries, gapDays = SHOOT_GAP_DAYS) {
       continue;
     }
 
-    // Several named shoots now sit inside one cluster. Keep them apart.
+    // Several named shoots now sit inside one cluster. Keep them apart. With
+    // nothing pending there is nothing to place and nothing to report — the
+    // shoots were already distinct last run and warned about then.
+    if (pending.length === 0) continue;
     for (const entry of pending) {
       const nearest = cluster
         .filter((other) => other.shoot)
@@ -177,7 +194,7 @@ export function assignShoots(entries, gapDays = SHOOT_GAP_DAYS) {
     bridged.push({ shoots: existing, added: pending.length });
   }
 
-  return { assignments, created, extended, bridged, undated };
+  return { assignments, created, extended, bridged, collided, undated };
 }
 
 /**
@@ -260,6 +277,9 @@ export function mergeShoots(summary, existing = {}) {
     merged[id] = { ...existing[id], ...derived };
     if (!('name' in merged[id])) merged[id].name = null;
     if (!('series' in merged[id])) merged[id].series = null;
+    // Being in the summary means the shoot is back in the manifest, so an
+    // orphaned mark from an earlier run no longer applies.
+    delete merged[id].orphaned;
   }
 
   // A shoot that vanished from the manifest keeps its record rather than being

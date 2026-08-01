@@ -10,12 +10,12 @@
  * second one matters to a visitor.
  */
 import { readManifest } from './lib/manifest.mjs';
+import { pool } from './lib/pool.mjs';
 import {
   ARCHIVE_BUCKET,
   PHOTOS_BASE_URL,
   PUBLIC_BUCKET,
   listObjects,
-  pool,
 } from './lib/r2.mjs';
 
 const SPOT_CHECK_COUNT = 5;
@@ -120,4 +120,7 @@ async function main() {
   console.log('\nVerification passed.');
 }
 
-await main();
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

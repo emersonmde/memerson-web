@@ -72,15 +72,27 @@ describe('the committed manifest', () => {
     }
   });
 
-  test('carries no location data, ever', async () => {
-    // Privacy is a hard requirement, not a preference. ARCHITECTURE §5.6.
-    const raw = await readFile(
-      new URL('../src/data/photos.json', import.meta.url),
-      'utf8',
-    );
-    for (const banned of ['latitude', 'longitude', 'GPS', 'gps']) {
-      assert.ok(!raw.includes(banned), `manifest contains ${banned}`);
-    }
+  test('carries no location field, ever', async () => {
+    /*
+     * Privacy is a hard requirement, not a preference. ARCHITECTURE §5.6.
+     * The scan is over *field names*, recursively, not the raw text: location
+     * data leaks as a field (`gps`, `GPSLatitude`, `location.longitude`), and
+     * a raw-text scan would instead fail the day a caption honestly mentions
+     * "GPS" or a photograph of a latitude marker — churn tripping a privacy
+     * alarm, which is how alarms get ignored.
+     */
+    const banned = /gps|latitude|longitude|location/i;
+    const walk = (value: unknown, at: string) => {
+      if (Array.isArray(value)) {
+        value.forEach((v, i) => walk(v, `${at}[${i}]`));
+      } else if (value && typeof value === 'object') {
+        for (const [key, v] of Object.entries(value)) {
+          assert.ok(!banned.test(key), `manifest has location field ${at}.${key}`);
+          walk(v, `${at}.${key}`);
+        }
+      }
+    };
+    walk(await load(), 'manifest');
   });
 
   test('slugs are unique and match their own hash', async () => {

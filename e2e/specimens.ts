@@ -16,5 +16,15 @@ export const PHOTO = '2017-08-27-bc2eb60a';
 /** The shoot that photo belongs to — also a run anchor id on /photos. */
 export const SHOOT = '2017-08-27';
 
+/*
+ * The specimen's display strings, content-coupled by design (rule 5): the
+ * suite types the shoot name into the filter and asserts the photo title in
+ * the viewer, so renaming either in the data is the same deliberate act as
+ * deleting the specimen — update these constants and any baselines in the
+ * same commit. Named here so the coupling has exactly one home.
+ */
+export const SHOOT_NAME = 'Thunder Over Dover';
+export const PHOTO_TITLE = 'USAF Thunderbirds';
+
 /** One blog post id, used for the post-page checks. */
 export const POST = '1-billion-row-challenge-part-1';

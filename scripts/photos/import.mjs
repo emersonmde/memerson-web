@@ -14,14 +14,15 @@
  */
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
-import sharp from 'sharp';
 
 import { expandPaths } from './lib/files.mjs';
 import { readAllowedExif } from './lib/exif.mjs';
 import { deriveAll } from './lib/derive.mjs';
+import { withLock } from './lib/lock.mjs';
 import { hashOriginal, makeSlug, readManifest, writeManifest } from './lib/manifest.mjs';
-import { ARCHIVE_BUCKET, PUBLIC_BUCKET, pool, putObject } from './lib/r2.mjs';
-import { DESCRIBE_EFFORT, DESCRIBE_MODEL, READ_WIDTH, mapPool } from './lib/claude.mjs';
+import { pool } from './lib/pool.mjs';
+import { ARCHIVE_BUCKET, PUBLIC_BUCKET, putObject } from './lib/r2.mjs';
+import { DESCRIBE_EFFORT, DESCRIBE_MODEL, READ_WIDTH } from './lib/claude.mjs';
 import { describeEntry, needsDescription } from './lib/describe.mjs';
 import { assignShoots, readShoots, summariseShoots, writeShoots } from './lib/shoots.mjs';
 
@@ -44,7 +45,7 @@ const DESCRIBE_CONCURRENCY = 4;
 async function metadataPass(importedIds) {
   const manifest = await readManifest();
 
-  const { assignments, created, extended, bridged } = assignShoots(manifest);
+  const { assignments, created, extended, bridged, collided } = assignShoots(manifest);
   if (assignments.size > 0) {
     const grouped = manifest.map((entry) =>
       assignments.has(entry.id) ? { ...entry, shoot: assignments.get(entry.id) } : entry,
@@ -60,6 +61,9 @@ async function metadataPass(importedIds) {
         `  ! new photos fall between existing shoots ${shoots.join(' and ')} — ` +
           'kept apart. Merge by hand if they are one thing.',
       );
+    }
+    for (const { shoot, base } of collided) {
+      console.warn(`  ! shoot id ${base} was taken by another cluster — used ${shoot}`);
     }
   }
 
@@ -80,7 +84,7 @@ async function metadataPass(importedIds) {
   let described = 0;
   let failed = 0;
 
-  await mapPool(pending, DESCRIBE_CONCURRENCY, async (entry) => {
+  await pool(pending, DESCRIBE_CONCURRENCY, async (entry) => {
     try {
       const { tags, caption, title } = await describeEntry(entry);
       byId.set(entry.id, { ...byId.get(entry.id), tags, caption, title });
@@ -189,7 +193,9 @@ async function main() {
 
       const derived = await deriveAll(slug, buffer);
 
-      const format = (await sharp(buffer).metadata()).format;
+      // deriveAll already parsed the source's metadata; reuse its format
+      // rather than paying a second full parse per photo.
+      const format = derived.format;
       const originalKey = `originals/${slug}.${ORIGINAL_EXTENSIONS[format] ?? 'bin'}`;
 
       // Derivatives are public and metadata-stripped; the original keeps its
@@ -262,4 +268,7 @@ async function main() {
   }
 }
 
-await main();
+withLock(main).catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

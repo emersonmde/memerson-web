@@ -68,15 +68,26 @@ export function groupIntoRuns<T extends RunnablePhoto>(
   shoots: Record<string, ShootRecord>,
 ): Run<T>[] {
   // Pass one: consecutive frames sharing a shoot.
+  //
+  // Keys become DOM ids and fragment anchors, so they must be unique even when
+  // the same base recurs — two separated groups of shoot-less photos would both
+  // be `undated`, and two shoots with interleaved date ranges can alternate in
+  // the newest-first sort. A repeat gets a `-2`, `-3`… suffix; the first
+  // occurrence keeps the bare key so existing anchors stay stable.
+  const seen = new Map<string, number>();
   const raw: Run<T>[] = [];
   for (const photo of photos) {
-    const key = photo.shoot ?? 'undated';
+    const base = photo.shoot ?? 'undated';
     const last = raw[raw.length - 1];
 
     if (last && last.shoot === photo.shoot) {
       last.items.push(photo);
       continue;
     }
+
+    const n = (seen.get(base) ?? 0) + 1;
+    seen.set(base, n);
+    const key = n === 1 ? base : `${base}-${n}`;
 
     const record = (photo.shoot ? shoots[photo.shoot] : undefined) ?? {};
     raw.push({

@@ -1,7 +1,7 @@
 ---
 import { getEntry } from 'astro:content';
-import { PHOTOS_BASE_URL } from '../consts';
 import { photoAlt } from '../lib/photoAlt';
+import { srcSetFor, widestUrl } from '../lib/photoUrls';
 
 interface Props {
   /** Photo slug from the manifest, e.g. "2022-03-14-a3f9c1b2". */
@@ -31,11 +31,8 @@ const text = caption ?? photo.data.caption;
 
 const alt = photoAlt(photo, caption);
 
-const srcSet = (format: string) =>
-  variants.map((w) => `${PHOTOS_BASE_URL}/photos/${id}/${w}.${format} ${w}w`).join(', ');
-
-const widest = Math.max(...variants);
-const fallback = `${PHOTOS_BASE_URL}/photos/${id}/${widest}.webp`;
+const srcSet = (format: string) => srcSetFor(id, variants, format);
+const fallback = widestUrl(id, variants);
 ---
 
 <figure>

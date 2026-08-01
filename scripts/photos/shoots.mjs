@@ -10,6 +10,7 @@
  * that have no shoot yet. See `lib/shoots.mjs` for why that restriction is the
  * whole design, and docs/MILESTONES.md M4 for the threshold's derivation.
  */
+import { withLock } from './lib/lock.mjs';
 import { readManifest, writeManifest } from './lib/manifest.mjs';
 import {
   SHOOT_GAP_DAYS,
@@ -46,7 +47,7 @@ async function main() {
     return;
   }
 
-  const { assignments, created, extended, bridged, undated } = assignShoots(
+  const { assignments, created, extended, bridged, collided, undated } = assignShoots(
     manifest,
     gapDays,
   );
@@ -61,6 +62,12 @@ async function main() {
   }
   for (const { shoot, added } of extended) {
     console.log(`  extended shoot ${shoot} (+${added})`);
+  }
+
+  // Two clusters started the same calendar day (a sub-day --gap-days). The
+  // second got a suffixed id rather than silently joining the first.
+  for (const { shoot, base } of collided) {
+    console.warn(`  ! shoot id ${base} was taken by another cluster — used ${shoot}`);
   }
 
   /*
@@ -107,7 +114,7 @@ async function main() {
   if (unnamed) console.log('Name them by hand, or run: npm run photos:name-shoots');
 }
 
-main().catch((error) => {
+withLock(main).catch((error) => {
   console.error(error);
   process.exit(1);
 });

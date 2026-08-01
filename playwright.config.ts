@@ -19,7 +19,9 @@ import { defineConfig, devices } from '@playwright/test';
  * Docker image, not reuse these.
  */
 
-/** Specs that assert behaviour, not pixels. */
+/** Everything the phone layout must re-prove: the functional suite plus the
+ * visual baselines (visual.spec.ts pins pixels — the phone layout genuinely
+ * differs, so it gets its own). Perf is excluded: traces are desktop-only. */
 const FUNCTIONAL = [
   '**/smoke.spec.ts',
   '**/gallery.spec.ts',
@@ -57,13 +59,17 @@ export default defineConfig({
   webServer: {
     command: 'npm run build && npm run preview -- --host 127.0.0.1 --port 4321',
     url: 'http://127.0.0.1:4321',
-    reuseExistingServer: true,
+    /* Locally, a running `npm run preview` skips the rebuild. In CI a leftover
+       server would silently test a stale dist — fail instead. */
+    reuseExistingServer: !process.env.CI,
     timeout: 180_000,
   },
   projects: [
     {
       name: 'desktop',
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
+      /* Perf runs in its own dependent project below, alone at the end. */
+      testIgnore: ['**/perf.spec.ts'],
     },
     {
       name: 'w1100',
@@ -97,6 +103,18 @@ export default defineConfig({
       name: 'phone',
       use: { ...devices['iPhone 14'], defaultBrowserType: 'chromium' },
       testMatch: FUNCTIONAL,
+    },
+    {
+      /* Performance traces measure the page, so nothing else may share the
+         machine while they run. `dependencies` makes Playwright finish every
+         other project before this one starts — the perf specs then have the
+         box to themselves, serialized further by the file's own
+         `mode: 'default'`. (A `--project perf` run pulls the dependencies in
+         first; that is the price of a measurement that means something.) */
+      name: 'perf',
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
+      testMatch: ['**/perf.spec.ts'],
+      dependencies: ['desktop', 'w1100', 'w900', 'w834', 'w720', 'w560', 'phone'],
     },
   ],
 });

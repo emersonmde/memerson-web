@@ -113,10 +113,16 @@ const stripScripts = (html) =>
     .replace(/<script[\s\S]*?<\/script>/g, '')
     .replace(/<link rel="modulepreload"[^>]*>/g, '');
 
+/** A dist page's `<body>` contents, or a clear failure naming the page. */
+function bodyOf(page, relPath) {
+  const match = page.match(/<body[^>]*>([\s\S]*)<\/body>/);
+  if (!match) throw new Error(`${relPath} has no <body> — is the build complete?`);
+  return match[1];
+}
+
 async function buildSheet() {
   const page = await readFile(path.join(DIST, 'photos/index.html'), 'utf8');
-  const bodyMatch = page.match(/<body[^>]*>([\s\S]*)<\/body>/);
-  const body = stripScripts(bodyMatch[1])
+  const body = stripScripts(bodyOf(page, 'photos/index.html'))
     .replace(/<link rel="stylesheet"[^>]*>/g, '')
     .replace(/<style>[\s\S]*?<\/style>/g, '');
 
@@ -161,17 +167,6 @@ async function buildLightbox(css, manifest) {
   const index = manifest.indexOf(photo);
   const url = (slug, w, f = 'webp') =>
     `https://photos.memerson.com/photos/${slug}/${w}.${f}`;
-
-  const label = photo.takenAt ? photo.takenAt.slice(0, 10).replace(/-/g, '.') : 'UNDATED';
-  const meta = [
-    photo.camera,
-    photo.aperture,
-    photo.shutter,
-    photo.iso && `ISO ${photo.iso}`,
-  ]
-    .filter(Boolean)
-    .join(' · ')
-    .toUpperCase();
 
   // A run centred on the sample, so prev/next cross a shoot boundary and the
   // bloom visibly changes colour — which is the thing worth judging.
@@ -235,7 +230,9 @@ async function buildLightbox(css, manifest) {
 
 <script>
   (() => {
-    const slides = ${JSON.stringify(slides)};
+    // "<" escaped at build time so a caption containing "</" + "script>"
+    // cannot end this block early.
+    const slides = ${JSON.stringify(slides).replace(/</g, '\\u003c')};
     const total = ${manifest.length};
     const root = document.querySelector('.lb');
     const q = (s) => root.querySelector(s);
@@ -293,7 +290,7 @@ async function buildLightbox(css, manifest) {
 /** Any built page, inlined with its own stylesheets and de-scripted. */
 async function buildPage(relPath, { card, group, subtitle, note }) {
   const page = await readFile(path.join(DIST, relPath), 'utf8');
-  const body = stripScripts(page.match(/<body[^>]*>([\s\S]*)<\/body>/)[1])
+  const body = stripScripts(bodyOf(page, relPath))
     .replace(/<link rel="stylesheet"[^>]*>/g, '')
     .replace(/<style>[\s\S]*?<\/style>/g, '');
 
@@ -310,7 +307,8 @@ async function buildPage(relPath, { card, group, subtitle, note }) {
 
 async function buildTokens(css) {
   const source = await readFile(path.join(REPO_ROOT, 'src/styles/global.css'), 'utf8');
-  const root = source.match(/:root\s*\{([\s\S]*?)\n\}/)[1];
+  const root = source.match(/:root\s*\{([\s\S]*?)\n\}/)?.[1];
+  if (!root) throw new Error('src/styles/global.css has no :root block to render');
 
   const rows = [...root.matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm)].map(
     ([, name, value]) => {
@@ -422,9 +420,14 @@ async function main() {
   const manifest = JSON.parse(
     await readFile(path.join(REPO_ROOT, 'src/data/photos.json'), 'utf8'),
   );
-  const shoots = JSON.parse(
-    await readFile(path.join(REPO_ROOT, 'src/data/shoots.json'), 'utf8'),
-  );
+  // Tolerated when absent, same as readShoots — a library with no shoots yet
+  // still deserves a bundle; the metadata card just renders an empty table.
+  const shoots = await readFile(path.join(REPO_ROOT, 'src/data/shoots.json'), 'utf8')
+    .then((raw) => JSON.parse(raw))
+    .catch((error) => {
+      if (error.code === 'ENOENT') return {};
+      throw error;
+    });
 
   await rm(OUT, { recursive: true, force: true });
   for (const dir of ['foundations', 'photos-current', 'pages-current']) {

@@ -1,7 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { PHOTOS_BASE_URL } from '../consts';
 import { photoAlt } from '../lib/photoAlt';
+import { srcSetFor, widestUrl, smallestUrl } from '../lib/photoUrls';
+import { dottedDay } from '../lib/dates';
 
 /**
  * A frame in the gallery.
@@ -52,15 +53,11 @@ const {
 } = Astro.props;
 const { id, variants, formats, lqip, aspectRatio, takenAt } = photo.data;
 
-const srcSet = (format: string) =>
-  variants.map((w) => `${PHOTOS_BASE_URL}/photos/${id}/${w}.${format} ${w}w`).join(', ');
-
-const widest = Math.max(...variants);
-const smallest = Math.min(...variants);
-const full = `${PHOTOS_BASE_URL}/photos/${id}/${widest}.webp`;
+const srcSet = (format: string) => srcSetFor(id, variants, format);
+const full = widestUrl(id, variants);
 /* The bloom is blurred to 70px, so the smallest derivative is the right
    source — and it is already in cache from the tile itself. */
-const bloom = `${PHOTOS_BASE_URL}/photos/${id}/${smallest}.webp`;
+const bloom = smallestUrl(id, variants);
 
 /*
  * The gallery is four columns at desk width, three at 1100, two at 720, and one
@@ -71,9 +68,7 @@ const bloom = `${PHOTOS_BASE_URL}/photos/${id}/${smallest}.webp`;
 const SIZES =
   '(max-width: 560px) 94vw, (max-width: 720px) 46vw, (max-width: 1100px) 31vw, 24vw';
 
-const date = takenAt
-  ? takenAt.toLocaleDateString('en-CA', { timeZone: 'UTC' }).replace(/-/g, '.')
-  : '';
+const date = dottedDay(takenAt);
 
 /*
  * Two different fallbacks, on purpose.
@@ -88,7 +83,9 @@ const date = takenAt
  * display type under all 32 frames of that run, directly below a header
  * already saying it. An untitled frame gets the dateline alone.
  */
-const title = photo.data.title ?? shootName ?? date ?? 'Frame';
+// `||`, not `??`: `date` is '' (never null) for an undated frame, and an
+// untitled, shootless, undated one still needs a name for its aria-label.
+const title = photo.data.title ?? shootName ?? (date || 'Frame');
 const capTitle = photo.data.title;
 const capMeta = [shootName?.toUpperCase(), date].filter(Boolean).join(' · ');
 

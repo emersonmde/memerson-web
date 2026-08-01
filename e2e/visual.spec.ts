@@ -41,12 +41,17 @@ async function shot(locator: Locator, name: string, mask: Locator[] = []) {
       el.style.left = `${-dx}px`;
     }
   });
-  await expect(locator).toHaveScreenshot(`${name}.png`, { ...SHOT, mask });
-  await locator.evaluate((el: HTMLElement) => {
-    el.style.position = '';
-    el.style.top = '';
-    el.style.left = '';
-  });
+  try {
+    await expect(locator).toHaveScreenshot(`${name}.png`, { ...SHOT, mask });
+  } finally {
+    /* Restore even when the shot fails: a later shot() in the same test must
+       not inherit a stale offset and diff for the wrong reason. */
+    await locator.evaluate((el: HTMLElement) => {
+      el.style.position = '';
+      el.style.top = '';
+      el.style.left = '';
+    });
+  }
 }
 
 /** Fonts + every image inside the element decoded, so no shot races a load. */
@@ -75,9 +80,7 @@ test.describe('site chrome', () => {
     await shot(page.locator('.hero'), 'hero');
   });
 
-  test('section header and one plate — the unit cell, not the rail', async ({
-    page,
-  }) => {
+  test('section header and one plate — the unit cell, not the rail', async ({ page }) => {
     await gotoReduced(page, '/');
     await shot(page.locator('.sec-head').first(), 'sec-head');
     /* One row: node, offshoot, collapsed plate. The repetition is covered by
@@ -124,9 +127,7 @@ test.describe('the gallery', () => {
     /* Viewer chrome: the counter places the specimen in a growing sequence
        and the thumbnails window onto neighbouring frames — both churn. */
     await shot(page.locator('.lb-bar'), 'lb-bar', [page.locator('.lb-counter')]);
-    await shot(page.locator('.lb-foot-inner'), 'lb-foot', [
-      page.locator('.lb-thumbs'),
-    ]);
+    await shot(page.locator('.lb-foot-inner'), 'lb-foot', [page.locator('.lb-thumbs')]);
   });
 });
 

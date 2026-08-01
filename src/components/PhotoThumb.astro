@@ -1,11 +1,12 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { PHOTOS_BASE_URL } from '../consts';
 import { photoAlt } from '../lib/photoAlt';
+import { srcSetFor, widestUrl } from '../lib/photoUrls';
 
 /**
- * A gallery thumbnail. Used by both the home
- * page preview strip and the contact sheet.
+ * A gallery thumbnail — the home page's preview strip. The gallery's own unit
+ * is `PhotoTile`, which carries the metadata the lightbox reads; this one has
+ * no lightbox behind it and carries nothing a script would consume.
  *
  * Unlike <Photo>, this emits no <figure>/<figcaption> — it is a tile in a grid,
  * and its label is chrome rather than a caption.
@@ -15,67 +16,28 @@ interface Props {
   sizes: string;
   /** Overlay label, bottom-left. */
   label?: string;
-  /** Fixed height for the masonry sheet; omitted, the tile keeps aspect ratio. */
-  height?: string;
   /** Hover-revealed metadata, top-right. */
   meta?: string;
-  /** Index within the page, for the lightbox to address. */
-  index?: number;
   loading?: 'lazy' | 'eager';
   /**
-   * Where the tile goes when clicked. Defaults to the full-size derivative,
-   * which is what the contact sheet wants: the lightbox intercepts the click,
-   * and without JS you still get the photograph.
-   *
-   * The home page's preview strip overrides this to `/photos` — there is no
-   * lightbox there, so the default would strand the visitor on a bare image
-   * file with no navigation back.
+   * Where the tile goes when clicked. Defaults to the full-size derivative;
+   * the home page overrides this to `/photos#f-<slug>`, which lands on the
+   * frame in the gallery — there is no lightbox here, so the default would
+   * strand the visitor on a bare image file with no navigation back.
    */
   href?: string;
 }
 
-const { photo, sizes, label, height, meta, index, loading = 'lazy', href } = Astro.props;
+const { photo, sizes, label, meta, loading = 'lazy', href } = Astro.props;
 const { id, variants, formats, lqip, aspectRatio } = photo.data;
 
-const srcSet = (format: string) =>
-  variants.map((w) => `${PHOTOS_BASE_URL}/photos/${id}/${w}.${format} ${w}w`).join(', ');
-
-const widest = Math.max(...variants);
-const full = `${PHOTOS_BASE_URL}/photos/${id}/${widest}.webp`;
-
-/*
- * The lightbox's ambient bloom is a blurred copy of the photograph itself, so
- * the smallest derivative is the right source: it gets blurred to 80px anyway,
- * and it is already in cache from the tile. Loading the 2560px version to throw
- * away every detail would be pure waste.
- */
-const smallest = Math.min(...variants);
-const bloom = `${PHOTOS_BASE_URL}/photos/${id}/${smallest}.webp`;
+const srcSet = (format: string) => srcSetFor(id, variants, format);
+const full = widestUrl(id, variants);
 
 const alt = photoAlt(photo);
 ---
 
-{
-  /*
-  The tile is a real link to the full image, so it works with no JS at all.
-  The lightbox intercepts the click and reuses these data attributes rather
-  than duplicating the manifest into a second payload on the page.
-*/
-}
-<a
-  class="tile"
-  href={href ?? full}
-  data-tile
-  data-index={index}
-  data-avif={formats.includes('avif') ? srcSet('avif') : undefined}
-  data-webp={formats.includes('webp') ? srcSet('webp') : undefined}
-  data-alt={alt}
-  data-label={label}
-  data-meta={meta}
-  data-bloom={bloom}
-  data-ar={aspectRatio}
-  style={`--ar:${aspectRatio};${height ? `--h:${height};` : ''}`}
->
+<a class="tile" href={href ?? full} style={`--ar:${aspectRatio};`}>
   <picture>
     {
       formats.includes('avif') && (
@@ -116,16 +78,9 @@ const alt = photoAlt(photo);
     box-shadow: 0 0 54px -18px var(--cyan);
   }
 
-  /*
-   * Two sizing modes from one rule. With --h set (the masonry sheet) the fixed
-   * height wins and aspect-ratio is ignored, because width and height are both
-   * definite. With --h unset, `height` is invalid at computed-value time and
-   * falls back to auto, leaving aspect-ratio in charge. Either way the ratio
-   * comes from the manifest, so no tile ever reflows when the image lands.
-   */
+  /* The ratio comes from the manifest, so no tile reflows when the image lands. */
   .tile img {
     width: 100%;
-    height: var(--h);
     aspect-ratio: var(--ar);
     object-fit: cover;
     display: block;
@@ -165,7 +120,7 @@ const alt = photoAlt(photo);
     bottom: 7px;
     font: 400 8.5px var(--mono);
     letter-spacing: 0.14em;
-    color: #c7d2e2;
+    color: var(--dim-5);
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.2s;
@@ -182,7 +137,7 @@ const alt = photoAlt(photo);
     top: 8px;
     font: 400 8px var(--mono);
     letter-spacing: 0.12em;
-    color: #c7d2e2;
+    color: var(--dim-5);
     opacity: 0;
     transition: opacity 0.2s;
     pointer-events: none;

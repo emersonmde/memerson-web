@@ -48,7 +48,7 @@ churn cannot touch.
 
 ## 2. The existing layers
 
-### 2.1 Pure logic — `rail`, `runs`, `content`, `manifest`, `shoots`, `ambient`, `sheet`
+### 2.1 Pure logic — `rail`, `runs`, `content`, `manifest`, `shoots`, `ambient`, `sheet`, `photoAlt`
 
 Fast, no browser, no build. The interesting one is **`tests/rail.test.ts`**,
 which covers the charge geometry that decides where the light sits.
@@ -107,7 +107,7 @@ the merge logic is a separate pure function. An earlier version mocked
 failed with `Cannot redefine property` — a good prompt to move the logic rather
 than fight the mock.
 
-### 2.2 Built output — `tests/build.test.ts`
+### 2.2 Built output — `tests/build.test.ts`, `tests/rss.test.ts`
 
 Assertions against `dist/`, which is why `npm test` builds first.
 
@@ -299,9 +299,9 @@ measures, chosen to be robust to machine speed:
   Chrome trace during a synthesized scroll and assert the forced-layout count
   stays **O(scroll-stops), never O(frames)** — in practice, at most one per
   wheel stop. Not literally zero, for a reason worth keeping: a stop's
-  `scrollend` runs `settle()`, whose re-read of fresh layout *is* the
+  `scrollend` runs `settle()`, whose re-read of fresh layout _is_ the
   re-measure, by design. The regression under test — reads interleaved with
-  writes inside the paint loop — costs several forced layouts per *frame*,
+  writes inside the paint loop — costs several forced layouts per _frame_,
   far above the bound. The read-then-write split is the entire performance
   story of `fx.ts` (see its header comment); this pins the design property
   itself, and unlike a timing threshold it cannot flake on a slow machine.
@@ -326,8 +326,9 @@ arrow, `ESC`) and visible focus.
 
 The compositor bugs that shaped `redraw.ts` reproduce on **real iPhones only**
 — not the iOS Simulator, not Playwright's WebKit, not WebKit trunk. No
-automated layer here closes that. Playwright's WebKit project covers the
-_engine_; the device compositor remains a **manual device pass**, required for
+automated layer here closes that: the suite runs **Chromium only** (there is
+no WebKit project, and adding one would still not reach the device
+compositor). The gap remains a **manual device pass**, required for
 any change touching `src/scripts/redraw.ts`, the `.redraw` styles, or
 compositor-adjacent CSS (transforms, view-transition rules, fixed/sticky
 layering). The recipe (simctl + safaridriver, and the CDP fallback below) is

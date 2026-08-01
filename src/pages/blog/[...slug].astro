@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { AUTHOR } from '../../consts';
 import { readingTime } from '../../lib/readingTime';
+import { dottedDay } from '../../lib/dates';
 
 /**
  * Mockup 6d — the post. 68ch serif measure, one lit edge on code, and the rail
@@ -36,9 +37,7 @@ type Props = {
 const { post, newer, older } = Astro.props;
 const { Content } = await render(post);
 
-const stamp = post.data.date
-  .toLocaleDateString('en-CA', { timeZone: 'UTC' })
-  .replace(/-/g, '.');
+const stamp = dottedDay(post.data.date);
 const minutes = readingTime(post.body);
 ---
 
@@ -47,6 +46,7 @@ const minutes = readingTime(post.body);
   description={post.data.description}
   active="log"
   back={true}
+  publishedAt={post.data.date}
 >
   <div class="progress" data-fx="progress" aria-hidden="true"></div>
   <div class="progress-head" data-fx="proghead" aria-hidden="true"></div>
@@ -332,9 +332,11 @@ const minutes = readingTime(post.body);
   }
 
   /*
-   * One level lower than the raw tag suggests: astro.config.mjs demotes every
-   * heading inside a post so the page keeps a single h1. An authored `#` lands
-   * here as h2 and should still look like a top-level section head.
+   * Posts start their headings at `##` by convention — nothing demotes an
+   * authored `#`, so one would render as a second h1 the page never styles.
+   * The build test asserts every post page keeps a single h1, which turns a
+   * slip into a red test instead of a silent outline break. h2 is therefore
+   * the top-level section head inside a post, and looks it.
    */
   .prose h2 {
     font-size: 30px;

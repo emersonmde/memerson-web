@@ -16,13 +16,14 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { deriveAll } from './lib/derive.mjs';
+import { withLock } from './lib/lock.mjs';
 import { readManifest, writeManifest } from './lib/manifest.mjs';
+import { pool } from './lib/pool.mjs';
 import {
   ARCHIVE_BUCKET,
   PUBLIC_BUCKET,
   getObject,
   listObjects,
-  pool,
   putObject,
 } from './lib/r2.mjs';
 
@@ -109,4 +110,7 @@ async function main() {
   console.log('Run `npm run photos:verify` to check for now-orphaned objects.');
 }
 
-await main();
+withLock(main).catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

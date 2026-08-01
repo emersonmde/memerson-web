@@ -18,12 +18,10 @@ const ALLOWED_TAGS = [
   'Make',
   'Model',
   'LensModel',
-  'LensMake',
   'FocalLength',
   'FNumber',
   'ExposureTime',
   'ISO',
-  'Orientation',
 ];
 
 /**
@@ -38,7 +36,10 @@ function exifDateToIso(value) {
   const match = value.match(/^(\d{4}):(\d{2}):(\d{2})[ T](\d{2}):(\d{2}):(\d{2})/);
   if (!match) return null;
   const [, year, month, day, hour, minute, second] = match;
-  return `${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
+  const iso = `${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
+  // Cameras with an unset clock write syntactically valid garbage —
+  // "0000:00:00 00:00:00" is the classic. Treat it as missing, same as no tag.
+  return Number.isNaN(Date.parse(iso)) ? null : iso;
 }
 
 /** "Canon" + "Canon EOS R6" reads as "Canon Canon EOS R6" if naively joined. */
@@ -69,8 +70,9 @@ function formatFocalLength(focalLength) {
 /**
  * Read the allowlisted fields from an image buffer.
  *
- * `orientation` is returned for rotation handling but is deliberately not part
- * of the manifest — derivatives are written already upright.
+ * Orientation is deliberately absent: derive.mjs reads it from sharp's own
+ * metadata (which parses it even from formats exifr does not), and derivatives
+ * are written already upright, so nothing downstream needs it from here.
  */
 export async function readAllowedExif(buffer) {
   // reviveValues: false keeps dates as their raw strings so exifDateToIso can
@@ -88,6 +90,5 @@ export async function readAllowedExif(buffer) {
     aperture: formatAperture(tags.FNumber),
     shutter: formatShutter(tags.ExposureTime),
     iso: Number.isFinite(tags.ISO) ? Math.round(tags.ISO) : null,
-    orientation: Number.isFinite(tags.Orientation) ? tags.Orientation : 1,
   };
 }

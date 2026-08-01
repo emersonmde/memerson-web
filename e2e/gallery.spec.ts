@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
-import { gotoSettled, viewerImageDecoded } from './helpers';
-import { PHOTO } from './specimens';
+import { gotoSettled, switchView, viewerImageDecoded } from './helpers';
+import { PHOTO, PHOTO_TITLE, SHOOT_NAME } from './specimens';
 
 /*
  * The functional gallery suite — docs/TESTING.md §3.2. Everything here was
@@ -11,13 +11,6 @@ import { PHOTO } from './specimens';
 
 const total = (page: Page) => page.locator('[data-tile]').count();
 const shown = (page: Page) => page.locator('[data-tile]:not([hidden])').count();
-
-async function switchView(page: Page, layout: 'sheet' | 'runs' | 'editorial') {
-  await page.click(`[data-seg] button[data-layout="${layout}"]`);
-  await expect(
-    page.locator(`[data-seg] button[data-layout="${layout}"]`),
-  ).toHaveAttribute('aria-pressed', 'true');
-}
 
 test.beforeEach(async ({ page }) => {
   await gotoSettled(page, '/photos/');
@@ -117,20 +110,22 @@ test.describe('view switching', () => {
       if (run.stray) {
         expect(run.hasLead, 'a stray stretch never gets a lead').toBe(false);
       } else {
-        expect(run.hasLead && run.hasMeta, 'a named run leads with its title').toBe(
-          true,
-        );
+        expect(run.hasLead && run.hasMeta, 'a named run leads with its title').toBe(true);
       }
     }
   });
 });
 
 test.describe('filter coherence', () => {
-  test('the count, the query header and the viewer sequence agree', async ({
-    page,
-  }) => {
+  test('the count, the query header and the viewer sequence agree', async ({ page }) => {
     const all = await total(page);
-    await page.fill('[data-find]', 'thunder over dover');
+    await page.fill('[data-find]', SHOOT_NAME.toLowerCase());
+
+    /* The input is debounced, so wait for the observable signal — the query
+       header appearing — before taking any raw counts. */
+    const qbar = page.locator('[data-qbar]');
+    await expect(qbar).toBeVisible();
+
     const matching = await shown(page);
     expect(matching).toBeGreaterThan(0);
     expect(matching).toBeLessThan(all);
@@ -138,16 +133,12 @@ test.describe('filter coherence', () => {
     /* The count is the matching count. */
     await expect(page.locator('[data-count]')).toContainText(String(matching));
     /* The query header names the filter and the coverage. */
-    const qbar = page.locator('[data-qbar]');
-    await expect(qbar).toBeVisible();
-    await expect(qbar).toContainText('THUNDER OVER DOVER');
+    await expect(qbar).toContainText(SHOOT_NAME.toUpperCase());
     await expect(qbar).toContainText(`${matching} of ${all}`);
 
     /* The viewer's sequence is scoped to the same set. */
     await page.locator('[data-tile]:not([hidden])').first().click();
-    await expect(page.locator('.lb-counter')).toHaveText(
-      `001 / ${matching}`,
-    );
+    await expect(page.locator('.lb-counter')).toHaveText(`001 / ${matching}`);
     await page.locator('.lb-close').click();
 
     /* Clearing restores all three. */
@@ -167,7 +158,9 @@ test.describe('filter coherence', () => {
   });
 
   test('filtering scopes the rail counts to matching frames', async ({ page }) => {
-    await page.fill('[data-find]', 'thunder over dover');
+    await page.fill('[data-find]', SHOOT_NAME.toLowerCase());
+    /* Debounced input — wait for the filter to have landed before counting. */
+    await expect(page.locator('[data-qbar]')).toBeVisible();
     const matching = await shown(page);
     const railState = await page.evaluate(() =>
       Array.from(document.querySelectorAll<HTMLElement>('[data-rail-item]')).map(
@@ -187,6 +180,10 @@ test.describe('filter coherence', () => {
 test.describe('the lightbox lifecycle', () => {
   test('open, step, escape; focus returns to the tile', async ({ page, isMobile }) => {
     const first = page.locator('[data-tile]:not([hidden])').first();
+    /* Capture *which* tile before opening: "some element has data-tile" would
+       pass even if focus landed on the wrong tile — or never moved at all. */
+    const tileId = await first.getAttribute('id');
+    expect(tileId).toBeTruthy();
     await first.click();
     const lb = page.locator('[data-lb]');
     await expect(lb).toBeVisible();
@@ -205,11 +202,8 @@ test.describe('the lightbox lifecycle', () => {
 
     await page.keyboard.press('Escape');
     await expect(lb).toBeHidden();
-    /* Focus lands back where the viewer grew from. */
-    const focused = await page.evaluate(() =>
-      document.activeElement?.getAttribute('data-tile'),
-    );
-    expect(focused).not.toBeUndefined();
+    /* Focus lands back on the exact tile the viewer grew from. */
+    expect(await page.evaluate(() => document.activeElement?.id)).toBe(tileId);
   });
 
   test('the capture-data panel toggles and closes', async ({ page, isMobile }) => {
@@ -229,14 +223,12 @@ test.describe('the lightbox lifecycle', () => {
     await expect(exif).not.toHaveClass(/is-open/);
   });
 
-  test('deep-linking opens the specimen; closing cleans the hash', async ({
-    page,
-  }) => {
+  test('deep-linking opens the specimen; closing cleans the hash', async ({ page }) => {
     await gotoSettled(page, `/photos/#f-${PHOTO}`);
     const lb = page.locator('[data-lb]');
     await expect(lb).toBeVisible();
     await viewerImageDecoded(page);
-    await expect(lb.locator('.lb-title')).toHaveText('USAF Thunderbirds');
+    await expect(lb.locator('.lb-title')).toHaveText(PHOTO_TITLE);
     /* The viewer writes the frame it shows back to the URL as you step. */
     await lb.locator('[data-lb-step="1"]:visible').first().click();
     expect(await page.evaluate(() => location.hash)).toMatch(/^#f-/);
@@ -275,9 +267,7 @@ test.describe('the lightbox lifecycle', () => {
      * at every breakpoint, for the tallest aspect the library has.
      */
     const id = await page.evaluate(() => {
-      const tiles = Array.from(
-        document.querySelectorAll<HTMLElement>('[data-tile]'),
-      );
+      const tiles = Array.from(document.querySelectorAll<HTMLElement>('[data-tile]'));
       const tallest = tiles.reduce((best, t) => {
         const ar = Number(t.style.getPropertyValue('--ar')) || 1.5;
         const bestAr = Number(best.style.getPropertyValue('--ar')) || 1.5;
@@ -360,8 +350,7 @@ test.describe('the shoots sheet and the jump rail', () => {
       .poll(async () =>
         page.evaluate(
           (k: string) =>
-            document.getElementById(k)!.getBoundingClientRect().top <
-            innerHeight * 0.5,
+            document.getElementById(k)!.getBoundingClientRect().top < innerHeight * 0.5,
           key!,
         ),
       )
@@ -416,5 +405,69 @@ test.describe('the shoots sheet and the jump rail', () => {
       return !!item && !!live && item.dataset.shoot === live.dataset.shoot;
     });
     expect(agree).toBe(true);
+  });
+});
+
+test.describe('input shortcuts', () => {
+  test('the "/" shortcut reaches the filter; Escape backs out of it', async ({
+    page,
+    isMobile,
+  }) => {
+    test.skip(isMobile, 'keyboard shortcuts are a pointer-profile concern');
+    /* "/" focuses the filter from anywhere on the page — and must not also
+       type a slash into it, which is why the handler preventDefaults. */
+    await page.keyboard.press('/');
+    const find = page.locator('[data-find]');
+    await expect(find).toBeFocused();
+    await expect(find).toHaveValue('');
+
+    /* Escape while the filter is focused clears the query and restores the
+       full library — the keyboard round-trip out of a filtered state. */
+    await find.fill('zzz-no-such-frame');
+    await expect(page.locator('[data-empty]')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(find).toHaveValue('');
+    await expect(page.locator('[data-empty]')).toBeHidden();
+    expect(await shown(page)).toBe(await total(page));
+  });
+
+  test('swiping the open viewer steps the sequence', async ({ page, isMobile }) => {
+    test.skip(!isMobile, 'swipe replaces the arrows on touch only');
+    await page.locator('[data-tile]:not([hidden])').first().click();
+    const lb = page.locator('[data-lb]');
+    await expect(lb).toBeVisible();
+    await viewerImageDecoded(page);
+    const count = await shown(page);
+    await expect(lb.locator('.lb-counter')).toHaveText(`001 / ${count}`);
+
+    /*
+     * Real touch input through the browser's input pipeline (CDP), not a
+     * synthetic TouchEvent dispatched at the handler — the point is that a
+     * finger produces the gesture, not that the handler works when fed the
+     * right object. The phone project is Chromium, so the session exists.
+     * Geometry: the handler wants |dx| > 46 with |dx| dominating |dy|, inside
+     * 700ms; a straight half-viewport horizontal drag clears all three.
+     */
+    const cdp = await page.context().newCDPSession(page);
+    const { width, height } = page.viewportSize()!;
+    const swipe = async (from: number, to: number) => {
+      const y = height / 2;
+      await cdp.send('Input.dispatchTouchEvent', {
+        type: 'touchStart',
+        touchPoints: [{ x: from, y }],
+      });
+      await cdp.send('Input.dispatchTouchEvent', {
+        type: 'touchMove',
+        touchPoints: [{ x: to, y }],
+      });
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    };
+
+    /* Left swipe advances… */
+    await swipe(width * 0.75, width * 0.25);
+    await expect(lb.locator('.lb-counter')).toHaveText(`002 / ${count}`);
+    /* …right swipe returns. */
+    await swipe(width * 0.25, width * 0.75);
+    await expect(lb.locator('.lb-counter')).toHaveText(`001 / ${count}`);
   });
 });

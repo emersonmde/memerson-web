@@ -108,12 +108,11 @@ export async function deriveAll(slug, buffer) {
    * measured 1.2dB at display size — bytes nobody can see. The portrait's 42%
    * jump is the case this exists for (measured ~4dB at display size).
    */
+  // This also covers a source narrower than the smallest standard rung: the
+  // ladder is empty, `top` is 0, and the native width becomes the only rung.
   const nativeCap = Math.min(width, MAX_WIDTH);
   const top = variants.at(-1) ?? 0;
   if (nativeCap > top * 1.1) variants.push(nativeCap);
-
-  // A source narrower than the smallest rung would otherwise produce nothing.
-  if (variants.length === 0) variants.push(Math.min(width, WIDTHS[0]));
 
   const objects = [];
   for (const targetWidth of variants) {
@@ -147,6 +146,9 @@ export async function deriveAll(slug, buffer) {
     width,
     height,
     aspectRatio: Number((width / height).toFixed(4)),
+    // The source format, already parsed above — returned so the caller can
+    // name the archived original without a second metadata pass.
+    format: metadata.format,
     variants,
     formats: [...FORMATS],
     lqip: `data:image/webp;base64,${lqipBuffer.toString('base64')}`,
