@@ -59,6 +59,19 @@ main thread was repainting, not just the compositor animating. `RefreshDriverTic
 Frame-level health is fine: max tick 46 ms, `CONTENT_FULL_PAINT_TIME` avg 1.9 ms, max
 event delay 90 ms (never over 100), LCP ~190 ms, `DocumentLoad` 257 ms.
 
+The two places long tasks actually clustered: the **view-transition swap into /photos**
+(~200 ms of main thread across 150 ms wall: 55 ms style/layout flush in the update
+callback, 53 ms module evaluation, 62 ms input-move flush — the 232-tile DOM landing at
+once; this is the moment behind the 90 ms max event delay, and the number to watch
+against the frame-count threshold in docs/ARCHITECTURE.md §6), and **lightbox stepping**
+(20–45 ms synchronous image paints, §4.7).
+
+One number that looks like a cause but is a symptom: 2.1 s total of "Coalesced input
+move flusher" (966 flushes, 574 of them on /photos). Gecko flushes pending style/layout
+before dispatching mouse moves — no site script listens to pointermove at all — so this
+is the per-frame animation/scroll writes from §3 being paid *again* at input time. It
+shrinks to nothing when §4.3–4.5 land; it is not separate work to fix.
+
 **Memory** (net allocations, malloc counter): content process ~65 MB on home → ~100 MB
 with the gallery up → **peak 280 MB while stepping the lightbox** (2560 px AVIF decodes;
 ~180 MB spike) → settles back to ~95 MB. No leak — it all returns. GPU process 171–198 MB
@@ -211,17 +224,56 @@ order of ambition (pick 1; the others are recorded so we don't re-litigate):
 Note the `redraw.ts` caveat: anything touching these effects still needs the manual
 device pass (docs/TESTING.md §3.6).
 
-### 4.7 Lightbox decode spike — memory, nice-to-have
+### 4.7 Lightbox stepping: decode before swap — dropped frames + memory spike
 
-Stepping the lightbox decoded ~180 MB above baseline (peak 280 MB net-alloc), fully
-reclaimed afterwards. Not a leak, and desktop absorbs it — but iOS was the platform that
-already killed this page once over decoded-bitmap pressure (see the comment at
-`src/pages/photos/index.astro:713`). Worth: (a) confirming the viewer drops the
-*previous* slide's `<img>` src / lets it leave the DOM rather than accumulating siblings,
-and (b) using `img.decode()` before swap so decode happens off the click path. Measure on
-device, not in this desktop profile.
+Two measured costs, one fix. Every "next" through the lightbox produced a synchronous
+main-thread `Image Paint` of the incoming 2560 px AVIF, **20–45 ms each** (19 steps over
+15 ms in this session; the worst, 44.8 ms, blew a 45.8 ms refresh tick — 3–5 dropped
+frames per step at 120 Hz). The same stepping run drove the content process's ~180 MB
+decode spike (peak 280 MB net-alloc, fully reclaimed afterwards — not a leak).
 
-### 4.8 Sticky section headers' `backdrop-filter` — GPU per scrolled frame
+The srcset-swap design in `show()` (`src/scripts/photos.ts:844–850`) is right; what's
+missing is forcing the decode off the paint path. Pre-decode the chosen large derivative
+in a detached image, then hand the already-decoded bytes to the visible `<img>`:
+
+```ts
+const pre = new Image();
+pre.sizes = VIEWER_SIZES;
+pre.srcset = set;
+pre.decode().then(() => {
+  if (token !== epoch) return;
+  lbImg.sizes = VIEWER_SIZES;
+  lbImg.srcset = set;
+});
+```
+
+(Keep the epoch guard; a stale decode must not clobber a newer slide.) Optionally warm
+the next/prev tiles' 640s on open. Desktop absorbs the memory spike, but iOS was the
+platform that already killed this page once over decoded-bitmap pressure (see the
+comment at `src/pages/photos/index.astro:713`) — verify there per docs/TESTING.md §3.6.
+
+### 4.8 Stale bloom between lightbox opens — drive the bloom from the LQIP
+
+Observed in use: open a photo, close, open another — the *previous* photo's bloom stays
+up until the new background arrives. Mechanism, from the code: `show()` swaps
+`.lb-bloom`'s `background-image` to the new tile's `currentSrc`
+(`src/scripts/photos.ts:830–831`), and when that URL isn't decoded yet Gecko keeps
+painting the old background (the `transition: background-image 0.45s` at
+`src/pages/photos/index.astro:1344` doesn't help — Gecko treats background-image as
+discretely animatable). The fallback is worse: a tile whose image never loaded falls back
+to `tile.href` — the **widest** derivative — as both slide and bloom source
+(`photos.ts:801`).
+
+Fix: source the bloom from `tile.dataset.lqip` instead of the derivative. It is a data
+URI already in the DOM (zero latency — staleness becomes impossible), and under
+`blur(70px) saturate(2.2)` (`index.astro:1341`) it is visually indistinguishable from
+blurring the 640 px file — the same argument the bloom's own comment makes for using the
+smallest rung. It also makes the blur(70px) re-raster cheaper (tiny source bitmap) and
+drops the bloom's dependency on image cache state entirely. The shoots sheet buttons
+(`photos.ts:957–958`) make their own use of `data-bloom` — leave that path alone, or
+give it the same treatment separately.
+
+### 4.9 Sticky section headers' `backdrop-filter` — GPU per scrolled frame
 
 `.sec-head` is `rgba(3,4,10,0.94)` + `backdrop-filter: blur(10px)`
 (`global.css:627–628`). A backdrop blur re-samples everything under it on every frame it
@@ -230,7 +282,7 @@ invisible. Candidate: make it opaque and drop the filter — but this is a Neon 
 design token call, so check docs/UI-DESIGN.md / the design boards before changing;
 measure first with a targeted profile (scroll /blog with and without).
 
-### 4.9 Re-profile clean, and once per release
+### 4.10 Re-profile clean, and once per release
 
 After 4.1–4.5 land: record the same journey without DevTools/screenshots/extensions,
 plus 10 s idle on home, /photos and a post. Compare: `SetDisplayList` count while idle
@@ -251,6 +303,17 @@ Worth recording so nobody "fixes" it later:
   over 38 s of heavy use was under 400 ms including DevTools noise.
 - **Initial load**: LCP ~190 ms, DocumentLoad 257 ms, fonts h3 + preloaded.
 - **View-transition wipes** (`redrawWipe`/`redrawEdge`): 300 ms, compositor, done.
-- **No unbounded growth**: memory returns to baseline after the lightbox; GC/CC totals
-  are trivial; the tag-filter/view-switching reparenting design shows no re-render cost
-  in the profile (tile moves, not rebuilds — as designed).
+- **GC pressure**: 3 major GCs in 38 s (worst 61 ms, sliced; minor slices ≤ 6 ms),
+  53 nursery collections totalling 16 ms. Timer churn is trivial (374 setTimeout
+  callbacks, 34 ms total). Nothing allocation-shaped to fix.
+- **Event handling**: no pointermove/mousemove listeners in site code; the legacy
+  wheel/scroll event trio dispatches ~10 k times but costs ~15 ms total. Scroll and
+  scrollend handlers (fx.ts) total ~300 ms across 3,130 scroll events — thin.
+- **No unbounded growth**: memory returns to baseline after the lightbox; the
+  tag-filter/view-switching reparenting design shows no re-render cost in the profile
+  (tile moves, not rebuilds — as designed).
+
+One blind spot to carry into any future reading of this profile: Firefox decodes images
+on `ImgDecoder` worker threads, and none were captured in this recording — the decode
+cost of 278 photo loads is invisible here except where it leaks onto the main thread
+(the §4.7 paints). A future profile wanting decode truth needs those threads included.
