@@ -827,8 +827,17 @@ function init() {
       (runKey && accents.get(runKey)) || tile.dataset.accent || 'var(--cyan)',
     );
 
+    /*
+     * The bloom comes from the LQIP, not the derivative. Under blur(70px) the
+     * two are indistinguishable — the same argument that once picked the
+     * smallest rung over the 2560 — but the LQIP is a data URI already in the
+     * DOM, so it can never arrive late. Sourcing it from a URL was what made
+     * the previous photograph's bloom linger between opens: Gecko keeps
+     * painting the old background until the new image decodes, and a swap to
+     * an uncached file left the stale glow up for the whole fetch.
+     */
     const bloom = q<HTMLElement>('.lb-bloom');
-    if (bloom) bloom.style.backgroundImage = `url("${cached}")`;
+    if (bloom) bloom.style.backgroundImage = `url("${tile.dataset.lqip || cached}")`;
 
     /*
      * Only then, and only if the frame can show more than the tile did, ask for
@@ -842,11 +851,25 @@ function init() {
     )?.srcset;
 
     if (set) {
-      requestAnimationFrame(() => {
+      /*
+       * Decode the big derivative *before* the visible <img> ever sees it.
+       * Handing srcset straight to the on-screen image made the swap frame
+       * decode 2560px of AVIF on the paint path — 20–45ms per lightbox step in
+       * the profile, three to five dropped frames each at 120Hz. A detached
+       * image decodes off-thread; by the time srcset lands on the real one the
+       * bytes are already pixels. decode() can reject (a GC'd image, a codec
+       * hiccup) and the swap must still happen — the old behaviour, sync
+       * decode and all, is the fallback rather than a lost upgrade.
+       */
+      const pre = new Image();
+      pre.sizes = VIEWER_SIZES;
+      pre.srcset = set;
+      const swap = () => {
         if (token !== epoch) return;
         lbImg.sizes = VIEWER_SIZES;
         lbImg.srcset = set;
-      });
+      };
+      pre.decode().then(swap, swap);
     }
 
     setText('.lb-counter', `${pad(cursor + 1)} / ${list.length}`);
