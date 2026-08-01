@@ -249,6 +249,33 @@ const isoDate = (d: Date | null) =>
   </section>
 </BaseLayout>
 
+<script>
+  /*
+   * Park the hero's infinite animations while the hero is scrolled out of
+   * view. The sign's flicker, the tube's pulse and the fog all run forever by
+   * design — but past the first viewport none of them can be seen, and left
+   * running they keep the compositor sampling and rendering at the display's
+   * full frame rate for the whole page (docs/PERFORMANCE.md §4.3). The star
+   * field is deliberately not parked: it is viewport-fixed and genuinely
+   * visible at every scroll position.
+   *
+   * The module runs once; the listener re-arms it after router swaps. On a
+   * page without a hero it finds nothing and does nothing, and observers left
+   * on a swapped-out document go with it to the collector.
+   */
+  function watchHero() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    const io = new IntersectionObserver(([entry]) => {
+      hero.classList.toggle('is-parked', !entry.isIntersecting);
+    });
+    io.observe(hero);
+  }
+
+  watchHero();
+  document.addEventListener('astro:page-load', watchHero);
+</script>
+
 <style>
   /* ------------------------------------------------------------------ hero */
 
@@ -401,15 +428,56 @@ const isoDate = (d: Date | null) =>
     overflow: hidden;
   }
 
-  /* Energy travels; the tube itself holds still. */
+  /*
+   * Energy travels; the tube itself holds still.
+   *
+   * The pulse is a translated child rather than an animated
+   * background-position — the paint-property version repainted the hero on
+   * the main thread every frame it was on screen (docs/PERFORMANCE.md §4.4).
+   * The blur rides the moving element, so it rasterizes once and the
+   * compositor just carries the surface. Keyframe offsets are the old
+   * background-position endpoints in element-widths: ±45% of the untravelled
+   * 70% of track, over a 30%-wide stripe.
+   */
   .tube-spec {
     position: absolute;
     inset: -2px;
+  }
+
+  .tube-spec::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 30%;
     background: linear-gradient(90deg, transparent, #fff7e6, transparent);
-    background-size: 30% 100%;
-    background-repeat: no-repeat;
     filter: blur(1.5px);
-    animation: travel 6.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    transform: translate3d(-105%, 0, 0);
+    animation: tubeTravel 6.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes tubeTravel {
+    from {
+      transform: translate3d(-105%, 0, 0);
+    }
+    to {
+      transform: translate3d(338%, 0, 0);
+    }
+  }
+
+  /*
+   * Set by the IntersectionObserver above when the hero leaves the viewport.
+   * Paused, not none: the animations hold their phase and resume where they
+   * were, so scrolling back up never restarts the flicker from zero.
+   */
+  .hero.is-parked .sign,
+  .hero.is-parked .haze-2 {
+    animation-play-state: paused;
+  }
+
+  .hero.is-parked .tube-spec::after {
+    animation-play-state: paused;
   }
 
   .tube-cap {

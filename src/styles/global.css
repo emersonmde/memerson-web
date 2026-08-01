@@ -781,24 +781,46 @@ html[data-swapped] [data-fx='resolve'] {
   border-bottom: 1px solid var(--h, var(--cyan));
 }
 
-/* The charge that runs the top edge on hover. */
+/*
+ * The charge that runs the top edge on hover.
+ *
+ * The moving gradient is a translated child, not an animated
+ * background-position: background-position is a paint property, so the old
+ * version re-rasterized the strip on the main thread at the display's full
+ * frame rate for as long as the pointer rested on a plate
+ * (docs/PERFORMANCE.md §4.4). A transform runs on the compositor. The
+ * keyframe offsets are the old background-position endpoints converted to
+ * element-widths: -45%/145% of (100% − 32%) travel ÷ 32% width.
+ */
 .plate-charge {
   position: absolute;
   left: 0;
   top: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--h, var(--cyan)), transparent);
-  background-size: 32% 100%;
-  background-repeat: no-repeat;
+  overflow: hidden;
   opacity: 0;
   transition: opacity 0.2s;
   pointer-events: none;
 }
 
+.plate-charge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 32%;
+  background: linear-gradient(90deg, transparent, var(--h, var(--cyan)), transparent);
+  transform: translate3d(-96%, 0, 0);
+}
+
 .plate:hover .plate-charge {
   opacity: 1;
-  animation: travel 1.6s linear infinite;
+}
+
+.plate:hover .plate-charge::after {
+  animation: chargeTravel 1.6s linear infinite;
 }
 
 .tag {
@@ -847,12 +869,14 @@ html[data-swapped] [data-fx='resolve'] {
  * Motion
  * ------------------------------------------------------------------------ */
 
-@keyframes travel {
+/* The plate charge's stripe: 32% wide, so ±45% of the remaining 68% of track
+   converts to −95.6%/+308.1% of its own width. Compositor-only. */
+@keyframes chargeTravel {
   from {
-    background-position: -45% 0;
+    transform: translate3d(-96%, 0, 0);
   }
   to {
-    background-position: 145% 0;
+    transform: translate3d(308%, 0, 0);
   }
 }
 
