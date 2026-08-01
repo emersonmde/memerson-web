@@ -294,6 +294,19 @@ drops the bloom's dependency on image cache state entirely. The shoots sheet but
 (`photos.ts:957–958`) make their own use of `data-bloom` — leave that path alone, or
 give it the same treatment separately.
 
+**Follow-up (owner-observed after the first fix): the LQIP source was necessary but not
+sufficient.** The bloom still lingered on close-and-reopen because the _transition_ held
+it there: `transition: background-image 0.45s` cross-fades old→new in Blink/WebKit
+(450 ms of the previous photo, by definition) and in Gecko — where background-image is
+discretely animatable — just delays the flip to the 225 ms midpoint. The fix is
+structural: `.lb-bloom` is now two layers that alternate, incoming image fading in by
+_opacity_ over the outgoing — correct light from the first frame, the same softness in
+every engine, and the blur now sits per-layer so a swap rasterizes one surface once
+instead of re-blurring every frame of the fade. A fresh open (viewer was closed) skips
+the fade entirely; there is nothing on screen worth fading from. Verified in a real
+browser: on reopen the visible layer carries the new tile's LQIP at full opacity on the
+first frame.
+
 ### 4.9 Sticky section headers' `backdrop-filter` — GPU per scrolled frame
 
 `.sec-head` is `rgba(3,4,10,0.94)` + `backdrop-filter: blur(10px)`

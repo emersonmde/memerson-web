@@ -704,9 +704,7 @@ function init() {
     if (portraitPhone && stage && footBox) {
       const swipe = q<HTMLElement>('.lb-swipe');
       const hint =
-        swipe && getComputedStyle(swipe).display !== 'none'
-          ? swipe.offsetHeight + 14
-          : 0;
+        swipe && getComputedStyle(swipe).display !== 'none' ? swipe.offsetHeight + 14 : 0;
       lb.style.setProperty('--lb-foot-h', `${footBox.offsetHeight + hint}px`);
 
       /* Reading the stage after setting the property forces the reflow on
@@ -770,6 +768,43 @@ function init() {
     );
   }
 
+  /*
+   * The bloom sources the LQIP, not a derivative. Under blur(70px) the two are
+   * indistinguishable — the same argument that once picked the smallest rung
+   * over the 2560 — but the LQIP is a data URI already in the DOM, so the
+   * room's light can never arrive after the photograph. Sourcing a URL was
+   * what left the previous photograph's glow hanging between opens.
+   *
+   * Two layers alternate: the incoming one gets the image and fades in while
+   * the outgoing fades out — correct light from the first frame, the same
+   * 450ms softness the old background-image transition only delivered in
+   * Blink/WebKit. A fresh open skips the fade entirely: there is nothing on
+   * screen worth fading *from*, and the wipe-in already covers the entrance.
+   */
+  let bloomFlip = false;
+  let freshOpen = false;
+
+  function setBloom(image: string, instant: boolean) {
+    const layers = lb?.querySelectorAll<HTMLElement>('[data-bloom-layer]');
+    if (!layers || layers.length < 2) return;
+    const incoming = layers[bloomFlip ? 1 : 0];
+    const outgoing = layers[bloomFlip ? 0 : 1];
+    bloomFlip = !bloomFlip;
+
+    if (instant) {
+      incoming.style.transition = 'none';
+      outgoing.style.transition = 'none';
+      requestAnimationFrame(() => {
+        incoming.style.transition = '';
+        outgoing.style.transition = '';
+      });
+    }
+
+    incoming.style.backgroundImage = `url("${image}")`;
+    incoming.style.opacity = '1';
+    outgoing.style.opacity = '0';
+  }
+
   function show(i: number, from?: HTMLAnchorElement) {
     const list = visible();
     if (!list.length || !lb || !lbImg) return;
@@ -827,17 +862,8 @@ function init() {
       (runKey && accents.get(runKey)) || tile.dataset.accent || 'var(--cyan)',
     );
 
-    /*
-     * The bloom comes from the LQIP, not the derivative. Under blur(70px) the
-     * two are indistinguishable — the same argument that once picked the
-     * smallest rung over the 2560 — but the LQIP is a data URI already in the
-     * DOM, so it can never arrive late. Sourcing it from a URL was what made
-     * the previous photograph's bloom linger between opens: Gecko keeps
-     * painting the old background until the new image decodes, and a swap to
-     * an uncached file left the stale glow up for the whole fetch.
-     */
-    const bloom = q<HTMLElement>('.lb-bloom');
-    if (bloom) bloom.style.backgroundImage = `url("${tile.dataset.lqip || cached}")`;
+    setBloom(tile.dataset.lqip || cached, freshOpen);
+    freshOpen = false;
 
     /*
      * Only then, and only if the frame can show more than the tile did, ask for
@@ -1031,6 +1057,8 @@ function init() {
   function open(i: number, from: HTMLAnchorElement) {
     if (!lb) return;
     lastFocused = document.activeElement as HTMLElement;
+    // A reopened viewer must not fade from the previous visit's bloom.
+    freshOpen = true;
     lb.hidden = false;
     document.body.style.overflow = 'hidden';
     show(i, from);

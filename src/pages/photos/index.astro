@@ -339,7 +339,10 @@ const EAGER = 8;
     hidden
   >
     <div class="lb-wash" data-lb-close></div>
-    <div class="lb-bloom"></div>
+    <div class="lb-bloom">
+      <div class="lb-bloom-layer" data-bloom-layer></div>
+      <div class="lb-bloom-layer" data-bloom-layer></div>
+    </div>
     <div class="lb-vignette"></div>
     <div class="lb-bar">
       <span class="lb-counter"></span>
@@ -1333,16 +1336,33 @@ const EAGER = 8;
    * Ambient bloom — a blurred, saturated copy of the photograph sitting behind
    * itself. No colour is ever extracted or stored; the glow *is* the photo.
    */
+  /*
+   * Two layers cross-fading by opacity, not one layer transitioning its
+   * background-image. The single-layer version was soft in Blink and WebKit
+   * (they cross-fade background-image) but Gecko treats the property as
+   * discrete, so the "transition" there was just the old bloom held for
+   * 225ms — and in every engine the old photograph stayed on screen for the
+   * whole fade. Opacity fades the same 450ms everywhere, the incoming light
+   * is correct from its first frame, and the blur sits on each layer so a
+   * swap rasterizes one surface once instead of re-blurring every frame of
+   * the fade. See docs/PERFORMANCE.md §4.8.
+   */
   .lb-bloom {
     position: absolute;
     inset: -12%;
+    opacity: 0.95;
+    transform: scale(1.2);
+    pointer-events: none;
+  }
+
+  .lb-bloom-layer {
+    position: absolute;
+    inset: 0;
     background-position: center;
     background-size: cover;
     filter: blur(70px) saturate(2.2) brightness(1.35);
-    opacity: 0.95;
-    transform: scale(1.2);
-    transition: background-image 0.45s ease;
-    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.45s ease;
   }
 
   /*
