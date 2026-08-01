@@ -338,3 +338,152 @@ One blind spot to carry into any future reading of this profile: Firefox decodes
 on `ImgDecoder` worker threads, and none were captured in this recording — the decode
 cost of 278 photo loads is invisible here except where it leaks onto the main thread
 (the §4.7 paints). A future profile wanting decode truth needs those threads included.
+
+## 6. How the analysis and the fixes were done
+
+Recorded so the method is repeatable, because the interesting part was not the tooling —
+it was which numbers turned out to mean something.
+
+**Reading the profile.** The recording is a 245 MB processed-format JSON (51 MB gzipped),
+far past what the profiler UI or a text editor handles comfortably, so the analysis was
+Node scripts against the raw tables: markers (name/start/end/phase/payload), samples
+(stack index + `threadCPUDelta` per 1 ms tick), the shared stack/frame/func tables, and
+the per-process `malloc` counters. Three format details cost time and are worth writing
+down: newer profiles share one string/stack/frame table across all 53 threads
+(`profile.shared`, with `prefixOffset` delta-encoding for stack parents); marker
+durations are only real when `phase == 1` — treating interval-_start_ markers as
+intervals manufactures phantom 160-second tasks, which briefly polluted the first pass;
+and sample `timeDeltas` accumulate to absolute timestamps, not profile-relative ones.
+
+**Finding the story.** The session was segmented into per-page phases using the
+document `Load` network markers (the client router makes the whole journey one process),
+and every metric was bucketed per phase. The single most diagnostic ratio was
+`SetDisplayList` vs `EmptyTransaction` on the GPU-process compositor thread — 8,296 full
+scene rebuilds against 162 empty transactions is the difference between "the compositor
+is animating" and "the main thread is repainting". From there, Gecko's per-animation CSS
+markers (`CSSAnimation`/`CSSTransition` payloads carry the property, the target element
+and an `oncompositor` flag) named the exact selectors responsible, and the `Image Paint`
+markers' payloads exposed the LQIP double-painting — half the 84 k paints were `data:`
+URIs. Every finding was then confirmed in source before it went in this document; two
+"findings" died that way (the sky is viewport-fixed and visible everywhere, so pausing
+it would be a regression, and the input-move flusher turned out to be a symptom).
+
+**Separating signal from instrument.** Three contaminants had to be identified and
+discounted before the numbers were trustworthy: DevTools' reflow/walker actors (~0.5 s
+of apparent site JS), the profiler's own per-frame screenshot readbacks (4,532 of them,
+inflating the GPU renderer total and forcing a render every vsync), and an ad-blocker
+content script. The report quotes upper bounds where those overlap.
+
+**The fixes.** Each change replaces a mechanism, not a look: same pixels at rest,
+different cost while moving. The pattern behind nearly all of them is the same one —
+move work from the main-thread paint pipeline to the compositor, or from steady-state
+to once:
+
+| Change                     | Was                                   | Is now                            |
+| -------------------------- | ------------------------------------- | --------------------------------- |
+| Fonts/icons per navigation | max-age=0, six re-downloads each      | immutable, cached                 |
+| LQIP after image load      | painted under every tile forever      | cleared on `load`                 |
+| Tube pulse, plate charge   | `background-position` (paint, ∞)      | translated `::after` (compositor) |
+| Progress head breathe      | `box-shadow` interpolating (paint, ∞) | glow overlay opacity (compositor) |
+| Progress bar advance       | `width` (reflow per scrolled frame)   | `scaleX()` (compositor)           |
+| Heading resolve ramp       | write per 120 Hz frame                | 24 quantized writes total         |
+| Lightbox step              | sync 2560 px decode on paint path     | detached `Image.decode()` first   |
+| Lightbox bloom             | derivative URL (can arrive late)      | LQIP data URI (cannot)            |
+| Hero animations off screen | running forever                       | `animation-play-state: paused`    |
+
+Verification so far is the desktop gates (astro check clean, 101 unit tests, 150
+Playwright tests across seven breakpoints — including the pixel baselines for the hero
+sign/tube and chrome, which is what certifies "same pixels at rest"), plus live header
+checks after deploy. Still owed: the §4.10 clean re-profile and the docs/TESTING.md §3.6
+device pass for the compositor-adjacent changes.
+
+## 7. An engineering opinion: why this site is fast, and where it spends
+
+An honest assessment of the architecture, written after taking it apart frame by frame.
+Short version: the site is fast because its expensive problems were solved at build time
+or by decree, and the profile's findings were all in the one place where work happens at
+runtime — the ornament layer. That is the right failure distribution.
+
+**The static-by-decree hosting is the foundation everything else stands on.** No SSR, no
+adapter, no runtime data fetching — every page is a file, served from the edge, and the
+measured result is a 190 ms LCP and a 257 ms DocumentLoad on a page carrying a full
+design system. The architecture doc frames this as an operational decision (the old
+site's runtime API dependency is what has kept AWS alive); the profile shows it is also
+the performance decision. There is nothing to optimize in a request path that does not
+exist.
+
+**The JavaScript posture is the rarest thing here: a styled, animated, interactive site
+whose own scripts total ~16 KB and under 400 ms of CPU across 38 s of hard use.** No
+framework runtime, no hydration, no component re-rendering — Astro ships the site's
+five hand-written vanilla modules and nothing else. The gallery's core trick
+(server-render every tile once, then _reparent_ the same DOM nodes between views instead
+of re-rendering them) is why switching views costs nothing and why the page carries no
+second copy of the manifest. Most sites this visual carry two orders of magnitude more
+script. The discipline that keeps it this way is architectural, not stylistic: content
+is data at build time (three collections), so no client code ever has to know how to
+construct the page.
+
+**The image pipeline is the strongest technical work in the repo.** The decisions
+compound:
+
+- **Pre-generated derivatives, never CI, never runtime.** Seven rungs
+  (640/1024/1536/2048/2560/3840/5120, never upscaled), encoded once at import on the
+  machine that has the originals. The build never touches an image, so a photo import
+  cannot slow a deploy, and there is no image CDN bill and no cold-cache re-encode risk.
+- **AVIF first, WebP as the universal floor.** `<picture>` offers AVIF then WebP, and
+  the bare `<img src>` is WebP — a deliberate choice that the no-JS/no-`<picture>` path
+  is still a modern codec, since everything that can render this site's CSS can decode
+  WebP. JPEG is correctly absent. Measured payoff: **~23 KB per 640 px thumbnail**; a
+  full scroll of all 232 frames costs 6.0 MB, which is one hero image on a lot of
+  portfolio sites.
+- **Two quality tiers split by audience.** Rungs ≤ 1536 encode at AVIF q50/WebP q80 —
+  artifacts are invisible at tile size; rungs ≥ 2048 go q62/q88 because only the
+  lightbox ever selects them and there a compression artifact reads as a flaw in the
+  photograph. Spending bytes exactly where eyes will be is the whole game with `srcset`,
+  and most pipelines use one number everywhere.
+- **The layout never learns anything from an image.** Aspect ratios ship in the
+  manifest and become CSS `aspect-ratio` boxes, so zero layout shift is structural, not
+  hoped for. LQIP data URIs paint inside those boxes before the network answers (and,
+  since §4.2, leave when the photograph arrives).
+- **`content-visibility: auto` on tiles** is the reason a 232-frame single page is
+  viable at all — offscreen tiles cost no rendering and no decoded bitmap, which is
+  what stopped iOS from killing the page. The un-paginated gallery is a real trade
+  (the ~200 ms swap in §2 is its price, and ARCHITECTURE §6 records the frame count
+  where it stops being defensible), but the profile supports it at today's size.
+- **R2 behind a plain custom domain with immutable caching**, not proxied through the
+  Worker. The photo request path is DNS → edge cache → done; there is no code in it.
+
+**The effects layer is where all the findings were, and even there the architecture was
+right — the properties were wrong.** fx.ts is built the way scroll effects should be
+and almost never are: one read phase, one write phase, a converging charge that stops
+scheduling frames when it lands, caches invalidated by ResizeObserver rather than
+polling. Every §4 fix in that layer kept the structure and changed only _what_ gets
+written (transform instead of width, opacity instead of box-shadow, 24 steps instead of
+120 Hz). The lesson worth keeping: **on the modern web, which property you animate
+matters more than how much you animate it.** A 2 px progress bar animated by `width`
+cost more per frame than the entire star field, because one ran layout on the main
+thread and the other interpolates a matrix on the compositor.
+
+**What the site deliberately pays for, with eyes open.** The viewport-fixed star field
+animates forever on every page — that is the design's ambient floor, it is
+compositor-only, and after §4.3 it is the _only_ thing left running on an idle page.
+The big blurs (70 px nebulas, 46 px haze, the 10 px backdrop-filter under sticky
+headers) are GPU spend for atmosphere; WebRender caches them well as long as nothing
+invalidates every frame, which is exactly what the §4 fixes stopped. `prefers-reduced-
+motion` zeroes all of it. This is the correct shape for ornament cost: bounded,
+compositor-side, opt-out-able, and paid only while the page is actually being looked at.
+
+**Weaknesses, so this section is an assessment and not a brochure:** steady-state
+efficiency regressed invisibly precisely because the site _feels_ fast — nothing here
+janked; the waste was only visible in a profiler, and it took a deliberate recording to
+find fonts being re-downloaded on every navigation. The single-page gallery has a real
+scaling ceiling and now carries the largest one-time task in the profile. The lightbox
+still allocates ~180 MB stepping through 2560 px decodes (better after §4.7, unmeasured
+on the platform that actually enforces memory limits). And the whole analysis is one
+desktop browser on one machine — the real-device pass is not optional, it is where two
+of this repo's past bugs lived.
+
+Overall: this is what a performant content site looks like in 2026 — not because any
+single trick is exotic, but because the expensive decisions (hosting, images, JS budget)
+were made once, structurally, and the cheap decisions (which CSS property carries an
+animation) were the only ones that ever needed fixing.
