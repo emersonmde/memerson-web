@@ -4,8 +4,12 @@ The depth post: written for the curious non-technical or semi-technical reader w
 thinks "it's binary, travels as electrical signals between computers, reconstructs
 data" — which is true and a massive simplification. One concrete thread (watching a
 YouTube video) pulled end to end, going as deep as each layer deserves. Inspired by
-explaining this to a non-technical friend, and by a paper/article tracing a packet
-through the Linux kernel (find and cite it — see open questions).
+explaining this to a non-technical friend, and by Alexander Stephan and Lars Wüstrich,
+"The Path of a Packet Through the Linux Kernel" (TUM, Seminar ITM WS 23,
+doi 10.2313/NET-2024-04-1_16,
+https://www.net.in.tum.de/fileadmin/TUM/NET/NET-2024-04-1/NET-2024-04-1_16.pdf) —
+a trace of the TCP/IPv4 and UDP/IPv4 stack in Linux. The post does for the whole
+camera-to-eye pipeline what that paper does for one kernel traversal.
 
 Working title/slug "light to light": the journey starts as photons reflecting off a
 subject and ends as photons leaving a screen into an eye; everything between is the
@@ -39,7 +43,8 @@ post. Title and slug are open.
 
 ## Material to gather
 
-- The packet-tracing paper/article that inspired this (identify the actual source).
+- Re-read the Stephan/Wüstrich paper for the kernel-path section: it covers the sk_buff
+  journey through the stack and is the model for the "one layer, honestly traced" move.
 - Layer-by-layer fact-checking: CMOS photodiode → ADC chain, container vs codec,
   what an export actually rearranges, TCP/QUIC congestion + TLS + FEC specifics,
   CDN edge distribution, adaptive bitrate ladders, display path back out
@@ -53,9 +58,6 @@ post. Title and slug are open.
 
 ## Open questions
 
-- Find the inspiration source: "tracing a packet through the Linux kernel" — a known
-  genre (e.g. kernel datapath walkthroughs); which one was it, and does the post cite
-  it or just credit the genre?
 - How deep is too deep? One paragraph per layer with a "and this alone is a career"
   gesture, or pick 2–3 layers to actually descend into and summarize the rest?
 - Does the YouTube framing survive, or generalize to "a video call" / "this page you
