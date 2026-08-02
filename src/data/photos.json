@@ -3009,44 +3009,6 @@
     ]
   },
   {
-    "id": "2021-11-27-c079970d",
-    "sourceHash": "c079970decd7",
-    "width": 3293,
-    "height": 5149,
-    "aspectRatio": 0.6395,
-    "variants": [
-      640,
-      1024,
-      1536,
-      2048,
-      2560,
-      3293
-    ],
-    "formats": [
-      "avif",
-      "webp"
-    ],
-    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAwBACdASoQABkAPtFWpkuoJKOhsAgBABoJYwCsAGttvDVWfnEIk1zqNBoA/vnXThY9MDBwBy6iUZOZ1qgiK0ElRyCZ4iz3q1RG7GFLiCR/1aSzk7kX0YBCyRgWRe8we1WhpqoFpNLagl98RxgAAA==",
-    "takenAt": "2021-11-27T05:01:19Z",
-    "camera": "Canon EOS R6",
-    "lens": "RF24-105mm F4 L IS USM",
-    "focalLength": "61mm",
-    "aperture": "f/10",
-    "shutter": "1/60s",
-    "iso": 2500,
-    "shoot": "2021-11-27",
-    "title": "Lincoln Memorial",
-    "caption": "A seated marble statue of Abraham Lincoln beneath an inscribed dedication wall inside the Lincoln Memorial.",
-    "tags": [
-      "lincoln memorial",
-      "abraham lincoln",
-      "statue",
-      "washington dc",
-      "marble",
-      "monument"
-    ]
-  },
-  {
     "id": "2021-11-27-2bb20d26",
     "sourceHash": "2bb20d268b17",
     "width": 5472,
@@ -3324,47 +3286,6 @@
       "washington dc",
       "dusk",
       "trees"
-    ]
-  },
-  {
-    "id": "2021-11-27-e35195e4",
-    "sourceHash": "e35195e43e98",
-    "width": 5472,
-    "height": 3648,
-    "aspectRatio": 1.5,
-    "variants": [
-      640,
-      1024,
-      1536,
-      2048,
-      2560,
-      3840,
-      5120
-    ],
-    "formats": [
-      "avif",
-      "webp"
-    ],
-    "lqip": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAQCdASoQAAsAAsBMJYgCdADsUyf3xAAA/lo/uuS0oGihrWoxIjzP7lVsvRA5JpFRCQK4tm4Z3VUbgGc7g/IIkurbSv4SkJ4V6pOxogNH/A8bpOHmMw+ZO2XIAA==",
-    "takenAt": "2021-11-27T06:14:46Z",
-    "camera": "Canon EOS R6",
-    "lens": "RF24-105mm F4 L IS USM",
-    "focalLength": "24mm",
-    "aperture": "f/4",
-    "shutter": "1/60s",
-    "iso": 12800,
-    "shoot": "2021-11-27",
-    "title": "Jefferson Memorial",
-    "caption": "A bronze statue of a man in a long coat stands beneath a coffered dome, surrounded by marble columns and engraved inscriptions.",
-    "tags": [
-      "statue",
-      "memorial",
-      "dome",
-      "columns",
-      "engraved text",
-      "bronze statue",
-      "interior",
-      "monument"
     ]
   },
   {
