@@ -2,12 +2,12 @@ name: chip8-emulator
 language: c
 shortDescription: CHIP-8 virtual machine
 description: >-
-  Emulator for the CHIP-8 interpreted language. SDL2 graphics rendering, opcode
-  decoding, and memory-mapped I/O. Classic first step into emulation
-  development.
+  A first step into emulation — a CHIP-8 interpreter in C with SDL2
+  rendering, opcode decoding, and memory-mapped I/O. Runs real ROMs; getting
+  Pong playable was the milestone that made emulators click.
 tags:
   - emulator
   - sdl2
-  - graphics
+  - retro
 github: https://github.com/emersonmde/chip8-emulator
-order: 9
+order: 12

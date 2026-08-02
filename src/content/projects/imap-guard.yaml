@@ -1,0 +1,16 @@
+name: imap-guard
+language: go
+shortDescription: IMAP delete-protection proxy
+description: >-
+  Fills a gap no existing project covered: full mail servers offer ACLs, but
+  there was no simple IMAP proxy with them — exactly what's needed to let an
+  LLM agent read a mailbox without being able to destroy it. Parses the
+  command stream (rewriting literals so a split command can't bypass
+  matching), negotiates COMPRESS DEFLATE mid-session, and can permit EXPUNGE
+  only when every affected UID was first copied elsewhere.
+tags:
+  - imap
+  - protocol
+  - proxy
+github: https://github.com/emersonmde/imap-guard
+order: 9

@@ -2,9 +2,11 @@ name: daedalus
 language: rust
 shortDescription: Bare-metal kernel for RPi4
 description: >-
-  AArch64 kernel running on Raspberry Pi 4 (BCM2711/Cortex-A72). Implements
-  exception handling at EL2, PL011 UART driver, and an interactive shell. No
-  OS, no std - just registers and memory.
+  AArch64 kernel for the Raspberry Pi 4 — hand-built MMU page tables, GIC-400
+  interrupts, and a Broadcom GENET Ethernet driver with DMA descriptor rings.
+  From-scratch packet path (sk_buffs, ARP, sockets) and kexec-based network
+  boot for hot-reloading kernels over Ethernet. CI runs the test suite in
+  QEMU.
 tags:
   - kernel
   - arm64

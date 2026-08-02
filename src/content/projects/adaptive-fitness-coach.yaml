@@ -1,0 +1,15 @@
+name: adaptive-fitness-coach
+language: swift
+shortDescription: Adaptive run/walk coach for watchOS
+description: >-
+  Watch-first iOS + watchOS app that reshapes run/walk intervals mid-workout
+  from live heart-rate data — a pure, deterministic interval state machine
+  with explicit sensor-degradation behavior. Strength progression, and meal
+  logging through on-device Foundation Models with tool calling. On TestFlight
+  and in daily use.
+tags:
+  - watchos
+  - healthkit
+  - llm
+github: https://github.com/emersonmde/adaptive-fitness-coach
+order: 8

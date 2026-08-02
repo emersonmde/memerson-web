@@ -1,0 +1,16 @@
+name: warp-core
+language: verilog
+shortDescription: Post-quantum crypto accelerator
+description: >-
+  CRYSTALS-Kyber / ML-KEM-768 (FIPS 203) datapath in Verilog, built from
+  primitives — Barrett reduction, NTT butterfly engines, CBD sampling, and an
+  on-chip Keccak sponge for autonomous KeyGen and Encaps — verified bit-exact
+  against NIST ACVP vectors across 117 cocotb testbench cases. An exercise in
+  directing Claude Code through an unfamiliar domain: RTL design and hardware
+  verification.
+tags:
+  - rtl
+  - post-quantum
+  - fips-203
+github: https://github.com/emersonmde/warp-core
+order: 5

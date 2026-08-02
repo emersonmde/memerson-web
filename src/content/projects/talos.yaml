@@ -1,0 +1,16 @@
+name: talos
+language: rust
+shortDescription: Autonomous-agent OS experiment
+description: >-
+  An experiment in autonomous development: agents for task breakdown,
+  implementation, and code review running on cron against real hardware,
+  through a lab harness for swapping PXE boot images, toggling PoE power, and
+  capturing serial logs. Given "build a POSIX-compliant Pi 5 OS" and minimal
+  direction after that, the loop reached SMP scheduling and EL0 syscalls on
+  hardware.
+tags:
+  - agents
+  - aarch64
+  - automation
+github: https://github.com/emersonmde/talos
+order: 4

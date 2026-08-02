@@ -1,0 +1,16 @@
+name: eqprop
+language: python
+shortDescription: Analog NN trained by physics
+description: >-
+  A resistive network that learns XOR through equilibrium propagation —
+  Kirchhoff's laws do the forward pass and the gradient falls out of two
+  nudged equilibria. Implements the approach from active research (Kendall
+  2020; Laborieux 2021): the Python equilibrium solver is cross-validated
+  against ngspice to within 1%, and the KiCad board design is in progress
+  toward fabricating the physical network.
+tags:
+  - analog
+  - equilibrium-propagation
+  - spice
+github: https://github.com/emersonmde/eqprop
+order: 7

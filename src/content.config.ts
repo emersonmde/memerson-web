@@ -23,7 +23,7 @@ const projects = defineCollection({
   loader: glob({ base: './src/content/projects', pattern: '**/*.yaml' }),
   schema: z.object({
     name: z.string(),
-    language: z.enum(['rust', 'c', 'typescript', 'python', 'java']),
+    language: z.enum(['rust', 'c', 'typescript', 'python', 'java', 'swift', 'go', 'verilog']),
     shortDescription: z.string(),
     description: z.string(),
     tags: z.array(z.string()),

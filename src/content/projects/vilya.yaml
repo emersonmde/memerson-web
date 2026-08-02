@@ -1,0 +1,16 @@
+name: vilya
+language: verilog
+shortDescription: Taped-out SHA-3 accelerator
+description: >-
+  SHA-3-256 engine with a full combinational Keccak-f[1600] round — one round
+  per clock, 24 cycles per permutation — taped out on Tiny Tapeout IHP 26a
+  (SG13G2 130nm) through synthesis, place-and-route, and precheck to a real
+  shuttle run. The algorithm first implemented by hand in C from the Keccak
+  paper years earlier; here, Claude Code was directed through the RTL and fab
+  flow to put it in silicon.
+tags:
+  - asic
+  - keccak
+  - tiny-tapeout
+github: https://github.com/emersonmde/vilya
+order: 6
