@@ -35,6 +35,12 @@ post. Title and slug are open.
 
 - Not a tutorial and not a survey — one specific everyday act, traced honestly, to
   make the point that the simplified mental model hides staggering depth.
+- The abstraction point cuts both ways: even highly technical software engineers work
+  with most of this stack abstracted away. The post isn't condescending to the
+  non-technical reader — nobody holds all of it, including the professionals.
+- The scale of the achievement is part of the thesis: sending that one YouTube video
+  is an incredible feat of human ingenuity, built by thousands of people over
+  hundreds of years — the math, the materials, the protocols all accumulated effort.
 - Audience calibration is the hard problem: the reader who needs this post can't
   follow a DCT diagram. Each layer gets the plain-phrase treatment (VOICE.md), one
   clause of grounding per term of art, depth signaled rather than exhausted.

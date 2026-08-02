@@ -17,9 +17,9 @@ Each post lives in its own directory and moves through four files:
 4. **`review.md`** — open questions and notes from read-throughs. A review pass checks
    each section against `staging.md` for what was *left out*, not just what's there.
 
-`VOICE.md` is the style contract shared by every post. Every writing prompt starts from
-it. When a draft teaches something new about the voice, the lesson goes into VOICE.md,
-not just the draft.
+`VOICE.md` is the shared style guide — guidelines under revision, not a fixed contract.
+Every writing prompt starts from it. When a draft teaches something new about the voice,
+or feedback contradicts it, the lesson goes into VOICE.md, not just the draft.
 
 Gates before publishing: a full read-aloud pass, a check against VOICE.md, a spell/grammar
 pass (the older posts shipped typos; new ones don't), and a final look at staging.md for

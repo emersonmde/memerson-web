@@ -1,8 +1,13 @@
 # Voice
 
-The style contract for every post. Derived from the existing posts (1BRC parts 1–2,
-A Brave Neo World) minus the parts being retired. Audience: engineers, including future
-employers and coworkers. The posts are a portfolio as much as a journal.
+The working style guide for every post — guidelines, not law. This file is a first
+draft: Claude derived it from brief direction and the existing posts (1BRC parts 1–2,
+A Brave Neo World) minus the parts being retired, so it almost certainly doesn't fully
+capture the voice Matthew is after yet. Expect it to be modified and corrected as
+posts move through the pipeline; when his edits or feedback on a draft contradict
+something here, the feedback wins and this file gets updated to match. Audience:
+engineers, including future employers and coworkers. The posts are a portfolio as
+much as a journal.
 
 ## What the writing is
 
@@ -37,7 +42,7 @@ employers and coworkers. The posts are a portfolio as much as a journal.
 - **Typos.** The old posts shipped several. Every draft gets a spelling and grammar pass
   before publishing.
 
-## Hard rules
+## Standing rules (current best guess — revisable like everything here)
 
 - No marketing buzzwords, hype, or AI-slop phrasing ("delve", "dive deep", "game-changer",
   "seamless", "leverage" as a verb).
