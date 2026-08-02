@@ -16,8 +16,13 @@ export function readingTime(body: string | undefined): string {
 
   const text = body
     // Fenced code blocks are dropped: code is skimmed, not read at prose
-    // speed, and a long listing would dominate the count.
+    // speed, and a long listing would dominate the count. CommonMark allows
+    // both ``` and ~~~ fences, and a closing fence must match its opener.
     .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/~~~[\s\S]*?~~~/g, ' ')
+    // An unclosed fence runs to the end of the document (CommonMark §4.5),
+    // so everything after it is code and is excluded from the word count.
+    .replace(/(?:```|~~~)[\s\S]*$/, ' ')
     // Inline markdown punctuation that would otherwise split words.
     .replace(/[#>*_`[\]()]/g, ' ');
 

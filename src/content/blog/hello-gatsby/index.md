@@ -28,7 +28,7 @@ wrestling with the CDK or the pre-built WYSIWYG component meant I just avoided
 making any improvements and eventually abandoned the idea of blogging
 altogether.
 
-### Enter GitHub Actions
+## Enter GitHub Actions
 
 My first exposure to [GitHub Actions](https://github.com/features/actions) was from the book [Zero To Production In Rust](https://www.zero2prod.com/index.html?country_code=US)
 which has a section on CI/CD pipelines. The book provides a single workflow
@@ -84,7 +84,7 @@ of auto scaling serverless solutions. The last piece of the puzzle was a way to
 manage and edit blog posts as markdown files without the need to create a bespoke
 backend solution. Thats where Gatsby comes in.
 
-### The Almost Great Gatsby
+## The Almost Great Gatsby
 
 [Gatsby](https://www.gatsbyjs.com/) is an open source framework based on React that includes a
 [GraphQL data layer](https://www.netlify.com/platform/connect/) and works out of the box to compile
@@ -132,7 +132,7 @@ not a big fan of learning GraphQL to access files and data, but only time will t
 if scaling or extending this website in the future proves to be more trouble than
 it's worth.
 
-### Final Thoughts
+## Final Thoughts
 
 Overall I'm really happy with the current setup. GitHub Actions and Pages have
 been a true pleasure to work with compared to some other solutions. I'm excited to

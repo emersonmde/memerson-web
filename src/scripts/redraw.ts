@@ -38,7 +38,17 @@ const DURATION = 300;
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+/**
+ * The pending disarm timer. Module-scoped so a navigation can cancel the
+ * previous page's timer: without this, navigating again inside the 350ms
+ * window let page A's stale timer strip `is-running` from page B's wipe
+ * mid-animation — the panel snapped to rest and the page popped in.
+ */
+let disarmTimer = 0;
+
 document.addEventListener('astro:before-swap', (event) => {
+  clearTimeout(disarmTimer);
+
   /*
    * Everything for the incoming page is written onto `newDocument`, not the
    * live root: the swap clears the live root's attributes and copies
@@ -85,7 +95,8 @@ document.addEventListener('astro:before-swap', (event) => {
  * the class was never set and this is a no-op.
  */
 document.addEventListener('astro:page-load', () => {
-  window.setTimeout(() => {
+  clearTimeout(disarmTimer);
+  disarmTimer = window.setTimeout(() => {
     document.querySelector('.redraw')?.classList.remove('is-running');
   }, DURATION + 50);
 });

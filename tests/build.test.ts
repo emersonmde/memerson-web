@@ -233,18 +233,17 @@ describe('gallery', () => {
   });
 
   test('every tile carries the data the viewer reads', () => {
+    /*
+     * The viewer reads alt, title and LQIP off the tile's own markup rather
+     * than duplicated data-* copies (see PhotoTile.astro and tileData.ts):
+     * the alt is the img's alt, the title lives in the aria-label, and the
+     * LQIP is the img's inline background-image. The tile itself still needs
+     * its hook, its aspect ratio, and a working aria-label.
+     */
     const tiles = gallery().html.match(/<a class="px-tile"[^>]*>/g) ?? [];
     assert.ok(tiles.length > 0, 'no tiles in the gallery');
     for (const tile of tiles) {
-      for (const attr of [
-        'data-tile',
-        'data-alt',
-        'data-title',
-        // The frame and the bloom both paint from this before a byte is
-        // requested, which is what makes the viewer arrive in one piece.
-        'data-lqip',
-        '--ar:',
-      ]) {
+      for (const attr of ['data-tile', '--ar:', 'aria-label="']) {
         assert.ok(tile.includes(attr), `tile missing ${attr}`);
       }
     }
@@ -258,6 +257,7 @@ describe('gallery', () => {
      */
     const html = gallery().html;
     assert.ok(!html.includes('data-webp='), 'srcsets are duplicated onto the tile');
+    assert.ok(!html.includes('data-avif='), 'srcsets are duplicated onto the tile');
     assert.match(html, /<source type="image\/webp" srcset="[^"]*640\.webp 640w/);
   });
 
@@ -346,20 +346,41 @@ describe('gallery', () => {
     }
   });
 
-  test('the series marker is a control, not a label', () => {
+  test('the series marker is a control, not a label', async () => {
     /*
-     * `series` is the only thing joining two Air Show shoots three years apart.
+     * `series` is the only thing joining two recurring shoots years apart.
      * Rendering it as inert text is the same mistake as an albums page that
      * cannot be opened — the thread exists in the data and nowhere in the UI.
+     *
+     * Expected values come from shoots.json, not literals — pinning a series
+     * name would break the day that shoot is renamed (§1: churn must not
+     * break tests).
      */
+    const shoots = JSON.parse(
+      await readFile(new URL('../src/data/shoots.json', import.meta.url), 'utf8'),
+    ) as Record<string, { series?: string | null }>;
+    const known = new Set(
+      Object.values(shoots)
+        .map((s) => s.series)
+        .filter((s): s is string => typeof s === 'string' && s.length > 0),
+    );
+    assert.ok(known.size > 0, 'shoots.json declares no series at all');
+
     const html = gallery().html;
     const markers = html.match(/<button[^>]*class="px-run-series"[^>]*>/g) ?? [];
     assert.ok(markers.length > 0, 'no series marker rendered');
     for (const marker of markers) {
-      assert.match(marker, /data-series="[^"]+"/, 'series marker carries no query');
+      const value = /data-series="([^"]+)"/.exec(marker)?.[1];
+      assert.ok(value, 'series marker carries no query');
+      assert.ok(known.has(value!), `marker names unknown series: ${value}`);
+      // …and the frames it would filter to have to be findable by that query:
+      // at least one tile must carry the same data-series value.
+      assert.match(
+        html,
+        new RegExp(`<a class="px-tile"[^>]*data-series="${value}"`),
+        `no tile answers the series filter: ${value}`,
+      );
     }
-    // …and the frames it would filter to have to be findable by that query.
-    assert.match(html, /data-series="air-shows"[\s\S]*data-tile/);
   });
 
   test('the viewport opts into the safe areas', () => {
@@ -397,7 +418,10 @@ describe('links and assets', () => {
     );
 
     for (const { file, html } of pages) {
-      for (const [, href] of html.matchAll(/href="(\/[^"#?]*)"/g)) {
+      // markup(): scan the document, not inline script bodies — same as the
+      // alt-text test, so a template string in a script cannot fail (or,
+      // worse, satisfy) the link check.
+      for (const [, href] of markup(html).matchAll(/href="(\/[^"#?]*)"/g)) {
         const clean = href.replace(/\/$/, '');
         if (/\.[a-z0-9]+$/i.test(clean)) {
           // A file: assert it was emitted — with the referring page in the

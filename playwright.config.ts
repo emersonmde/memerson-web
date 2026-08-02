@@ -72,6 +72,11 @@ export default defineConfig({
       testIgnore: ['**/perf.spec.ts'],
     },
     {
+      name: 'w1240',
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1240, height: 800 } },
+      testMatch: PER_LAYOUT,
+    },
+    {
       name: 'w1100',
       use: { ...devices['Desktop Chrome'], viewport: { width: 1100, height: 800 } },
       testMatch: PER_LAYOUT,
@@ -114,7 +119,7 @@ export default defineConfig({
       name: 'perf',
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
       testMatch: ['**/perf.spec.ts'],
-      dependencies: ['desktop', 'w1100', 'w900', 'w834', 'w720', 'w560', 'phone'],
+      dependencies: ['desktop', 'w1240', 'w1100', 'w900', 'w834', 'w720', 'w560', 'phone'],
     },
   ],
 });

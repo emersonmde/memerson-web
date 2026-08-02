@@ -23,7 +23,8 @@ import { hashOriginal, makeSlug, readManifest, writeManifest } from './lib/manif
 import { pool } from './lib/pool.mjs';
 import { ARCHIVE_BUCKET, PUBLIC_BUCKET, putObject } from './lib/r2.mjs';
 import { DESCRIBE_EFFORT, DESCRIBE_MODEL, READ_WIDTH } from './lib/claude.mjs';
-import { describeEntry, needsDescription } from './lib/describe.mjs';
+import { describePending, mergeDescription, needsDescription } from './lib/describe.mjs';
+import { serialWriter } from './lib/serial.mjs';
 import { assignShoots, readShoots, summariseShoots, writeShoots } from './lib/shoots.mjs';
 
 /** Concurrent `claude` processes during the description pass. */
@@ -80,27 +81,21 @@ async function metadataPass(importedIds) {
       `${DESCRIBE_MODEL}, effort ${DESCRIBE_EFFORT}, ${READ_WIDTH}px`,
   );
 
-  let writeChain = Promise.resolve();
-  let described = 0;
-  let failed = 0;
-
-  await pool(pending, DESCRIBE_CONCURRENCY, async (entry) => {
-    try {
-      const { tags, caption, title } = await describeEntry(entry);
-      byId.set(entry.id, { ...byId.get(entry.id), tags, caption, title });
-      described += 1;
-      console.log(`  ~ ${entry.id}${title ? ` — "${title}"` : ''}: ${caption ?? ''}`);
-      writeChain = writeChain.then(() => writeManifest([...byId.values()]));
-      await writeChain;
-    } catch (error) {
-      failed += 1;
-      console.error(`  ! ${entry.id}: ${error.message}`);
-    }
+  const writer = serialWriter();
+  const { described, failed } = await describePending(pending, {
+    concurrency: DESCRIBE_CONCURRENCY,
+    apply: (entry, description) => {
+      // mergeDescription keeps a hand-written title; the model only fills gaps.
+      byId.set(entry.id, mergeDescription(byId.get(entry.id), description));
+      return writer.write(() => writeManifest([...byId.values()]));
+    },
   });
 
-  await writeChain;
+  const writeErrors = await writer.done();
   console.log(`described ${described}, failed ${failed}`);
-  if (failed) console.error('Backfill the rest with: npm run photos:describe');
+  if (failed || writeErrors.length > 0) {
+    console.error('Backfill the rest with: npm run photos:describe');
+  }
 }
 
 /**
@@ -109,12 +104,14 @@ async function metadataPass(importedIds) {
  */
 const PHOTO_CONCURRENCY = 3;
 
+// No heif entries: .heic left IMAGE_EXTENSIONS (prebuilt sharp cannot decode
+// HEVC — see lib/files.mjs), so sharp never reports `heif` for anything that
+// gets this far.
 const ORIGINAL_CONTENT_TYPES = {
   jpeg: 'image/jpeg',
   png: 'image/png',
   tiff: 'image/tiff',
   webp: 'image/webp',
-  heif: 'image/heic',
 };
 
 const ORIGINAL_EXTENSIONS = {
@@ -122,7 +119,6 @@ const ORIGINAL_EXTENSIONS = {
   png: 'png',
   tiff: 'tif',
   webp: 'webp',
-  heif: 'heic',
 };
 
 function usage() {
@@ -154,16 +150,15 @@ async function main() {
     `${files.length} candidate file(s); manifest has ${manifest.length} photo(s).`,
   );
 
-  // Manifest writes are serialised through one promise chain so concurrent
-  // photos can never interleave a read-modify-write and lose an entry.
-  let writeChain = Promise.resolve();
-  const commit = (entry) => {
-    writeChain = writeChain.then(async () => {
+  // Manifest writes are serialised through one writer so concurrent photos
+  // can never interleave a read-modify-write and lose an entry — and one
+  // failed write cannot poison the writes queued behind it (lib/serial.mjs).
+  const writer = serialWriter();
+  const commit = (entry) =>
+    writer.write(async () => {
       manifest.push(entry);
       await writeManifest(manifest);
     });
-    return writeChain;
-  };
 
   let imported = 0;
   let skipped = 0;
@@ -249,7 +244,10 @@ async function main() {
     }
   });
 
-  await writeChain;
+  // Write failures were already attributed per photo above; this only makes
+  // sure a run with any lost write cannot exit clean.
+  const writeErrors = await writer.done();
+  if (writeErrors.length > 0) process.exitCode = 1;
 
   console.log(`\nimported ${imported}, skipped ${skipped}, failed ${failures.length}`);
 

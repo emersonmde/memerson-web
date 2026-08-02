@@ -7,6 +7,7 @@
  * schema marks as hand-authored; nothing derived is ever touched here.
  */
 import { askAboutImages, derivativeUrl } from './claude.mjs';
+import { pool } from './pool.mjs';
 
 /**
  * Capture settings are free context and measurably steer the answer — 600mm at
@@ -76,4 +77,55 @@ export async function describeEntry(entry) {
  */
 export function needsDescription(entry) {
   return !entry.caption && (entry.tags ?? []).length === 0;
+}
+
+/**
+ * Merge a model description into a manifest entry.
+ *
+ * `title` is one of the three hand-editable fields (see CLAUDE.md), and
+ * `needsDescription` selects on caption/tags only — so an entry can arrive
+ * here with a hand-written title and no caption. The model's title therefore
+ * only ever fills a missing one; it never overwrites, and never nulls, a
+ * title a human wrote.
+ */
+export function mergeDescription(current, { tags, caption, title }) {
+  return { ...current, tags, caption, title: current.title ?? title };
+}
+
+/**
+ * The describe → commit loop shared by `photos:describe` and the metadata
+ * pass in `photos:import` — one prompt, one loop, one set of rules about what
+ * gets written.
+ *
+ * `apply(entry, description)` persists one result; a rejection from it (or
+ * from the model) counts against `failed` for that entry alone and never
+ * stops the loop.
+ */
+export async function describePending(
+  pending,
+  { concurrency = 4, dryRun = false, apply },
+) {
+  let described = 0;
+  let failed = 0;
+
+  await pool(pending, concurrency, async (entry) => {
+    try {
+      const description = await describeEntry(entry);
+      described += 1;
+      const { title, caption, tags } = description;
+      console.log(
+        `  [${described + failed}/${pending.length}] ${entry.id}` +
+          `${title ? ` — "${title}"` : ''}\n      ${caption ?? '(no caption)'}` +
+          `\n      ${tags.join(', ')}`,
+      );
+
+      if (dryRun) return;
+      await apply(entry, description);
+    } catch (error) {
+      failed += 1;
+      console.error(`  ! ${entry.id}: ${error.message}`);
+    }
+  });
+
+  return { described, failed };
 }

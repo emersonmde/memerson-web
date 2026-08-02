@@ -14,7 +14,7 @@ accurately benchmarking every solution, I am interested in the rough
 comparison and what the final code would look like. With that out of the way,
 let's dive into a real complied language - Rust.
 
-### Blazing Fast (TM)
+## Blazing Fast (TM)
 
 I had an approach from the Java solution that I wanted to try to implement in
 Rust: memory map the file, split it into chunks, process each chunk with a
@@ -158,7 +158,7 @@ let results = results.iter().fold(AHashMap::new(), combine_maps);
 
 ```
 
-### To Infinity
+## To Infinity
 
 Turns out it didn't even finish. I let it run for a few minutes before
 assuming there was an infinite loop or deadlock and killed it. After
@@ -169,7 +169,7 @@ that was already being read. The worst part was since `Vec` is a dynamic
 array, it was constantly being sized up requiring a new array to be allocated
 and the data to be painstakingly copied over.
 
-### A New Hope
+## A New Hope
 
 I decided to forget about SIMD and compiler optimizations for
 now and change this implementation to more closely match the Java solution.
@@ -214,7 +214,7 @@ let handle = thread::spawn(move || {
 });
 ```
 
-### The Race Is On
+## The Race Is On
 
 After the updates, running the program resulted in processing all 1 billion
 rows in just 22 seconds, almost a 30% improvement over the previous Java
@@ -234,7 +234,7 @@ Although supporting more general workloads has its overhead, I figured loading
 a CSV and calculating the min, max, and mean would be its bread and butter.
 How naive I was...
 
-### Postgres
+## Postgres
 
 I haven't used Postgres in years, but I'm sure ChatGPT can pick up the slack.
 First was getting it installed and the table created.
@@ -278,7 +278,7 @@ max_parallel_maintenance_workers = 10	# taken from max_parallel_workers
 max_parallel_workers = 10		# maximum number of max_worker_processes that
 ```
 
-### Crunch The Numbers
+## Crunch The Numbers
 
 In addition to the `postgres.conf` settings, I set `maintenance_work_mem`
 for good measure. With that I started copying the data:
@@ -318,7 +318,7 @@ the metadata for the table and Postgres internals. Then the entire table needs
 to be scanned, reading from disk, while preforming arbitrary calculations over
 the data. It's pretty impressive this can still be done in just about a minute!
 
-### Conclusion
+## Conclusion
 
 As expected the Rust solution ended up being the fastest of the three I tried.
 However it was surprising that there wasn't that much difference between the

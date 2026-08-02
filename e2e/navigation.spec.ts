@@ -45,7 +45,8 @@ test('back leaves /photos, viewer open or not', async ({ page }) => {
      back gesture leaves the page rather than replaying viewer states. */
   await page.locator('[data-tile]:not([hidden])').first().click();
   await expect(page.locator('[data-lb]')).toBeVisible();
-  expect(await page.evaluate(() => location.hash)).toMatch(/^#f-/);
+  /* The fragment write is debounced to the settled frame — poll for it. */
+  await expect.poll(() => page.evaluate(() => location.hash)).toMatch(/^#f-/);
 
   await page.goBack();
   await expect(page).toHaveURL(/\/$/);

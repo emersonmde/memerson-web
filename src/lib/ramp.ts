@@ -1,11 +1,11 @@
 /**
  * The accent ramp, sampled at build time.
  *
- * This is the same function as `hueAt` in `src/scripts/fx.ts`, and it exists
- * twice on purpose: this one produces the pre-JS colour baked into the markup,
- * so the plates are correctly tinted before (and without) any script running.
- * fx.ts then re-samples from *measured* positions once layout settles, which is
- * the only way the hue can be guaranteed to match the gradient behind it.
+ * Used in two places with different inputs: pages sample it at build time to
+ * bake the pre-JS colour into the markup, so the plates are correctly tinted
+ * before (and without) any script running; `src/scripts/fx.ts` imports it and
+ * re-samples from *measured* positions once layout settles, which is the only
+ * way the hue can be guaranteed to match the gradient behind it.
  *
  * Lightness and chroma stay locked; only hue moves. See docs/UI-DESIGN.md §2.
  */

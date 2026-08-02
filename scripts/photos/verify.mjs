@@ -15,6 +15,7 @@ import {
   ARCHIVE_BUCKET,
   PHOTOS_BASE_URL,
   PUBLIC_BUCKET,
+  derivativeKey,
   listObjects,
 } from './lib/r2.mjs';
 
@@ -23,8 +24,7 @@ const SPOT_CHECK_COUNT = 5;
 function expectedDerivativeKeys(entry) {
   const keys = [];
   for (const width of entry.variants) {
-    for (const format of entry.formats)
-      keys.push(`photos/${entry.id}/${width}.${format}`);
+    for (const format of entry.formats) keys.push(derivativeKey(entry.id, width, format));
   }
   return keys;
 }

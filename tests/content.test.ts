@@ -72,4 +72,23 @@ describe('readingTime', () => {
   test('markdown punctuation does not fuse or split words', () => {
     assert.equal(readingTime('**bold** _em_ [link](u)'), '1 MIN');
   });
+
+  test('tilde fences are code too', () => {
+    // ~~~ is a valid CommonMark fence, same as ```.
+    const prose = Array(400).fill('word').join(' ');
+    const withCode = `${prose}\n~~~\n${Array(4000).fill('x').join(' ')}\n~~~\n`;
+    assert.equal(readingTime(withCode), readingTime(prose));
+  });
+
+  test('an unclosed fence runs to the end of the document', () => {
+    /*
+     * CommonMark: a fence with no closer means everything after it is code.
+     * Pinned: that tail is excluded from the word count, for both fence styles.
+     */
+    const prose = Array(400).fill('word').join(' ');
+    for (const fence of ['```', '~~~']) {
+      const unclosed = `${prose}\n${fence}\n${Array(4000).fill('x').join(' ')}\n`;
+      assert.equal(readingTime(unclosed), readingTime(prose));
+    }
+  });
 });

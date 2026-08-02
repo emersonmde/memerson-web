@@ -20,12 +20,12 @@ interface Props {
   meta?: string;
   loading?: 'lazy' | 'eager';
   /**
-   * Where the tile goes when clicked. Defaults to the full-size derivative;
-   * the home page overrides this to `/photos#f-<slug>`, which lands on the
-   * frame in the gallery — there is no lightbox here, so the default would
-   * strand the visitor on a bare image file with no navigation back.
+   * Where the tile goes when clicked — e.g. `/photos#f-<slug>`, landing on
+   * the frame in the gallery. Required: there is no lightbox here, and the
+   * old raw-derivative fallback stranded the visitor on a bare image file
+   * with no navigation back.
    */
-  href?: string;
+  href: string;
 }
 
 const { photo, sizes, label, meta, loading = 'lazy', href } = Astro.props;
@@ -37,7 +37,7 @@ const full = widestUrl(id, variants);
 const alt = photoAlt(photo);
 ---
 
-<a class="tile" href={href ?? full} style={`--ar:${aspectRatio};`}>
+<a class="tile" href={href} style={`--ar:${aspectRatio};`}>
   <picture>
     {
       formats.includes('avif') && (

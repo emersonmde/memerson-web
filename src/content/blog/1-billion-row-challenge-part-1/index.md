@@ -37,7 +37,7 @@ compiler tricks, and JVM internals I could use. Most of which I barely knew the
 name of let alone how to use them. I was excited to dive in and learn as much
 as I could about what pushing the limits of Java would look like in practice.
 
-### The Rules
+## The Rules
 
 The rules of the challenge are simple:
 
@@ -50,7 +50,7 @@ The [README](https://github.com/gunnarmorling/1brc/blob/main/README.md)
 describes how to create the dataset which resulted in a ~13GB file. With my
 measurements generated, I was ready to dive in.
 
-### My Plan
+## My Plan
 
 From my brief exploration in C, I knew memory mapping a file was a fast way to
 read large files, leaning on the operating system to manage

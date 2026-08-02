@@ -20,7 +20,7 @@
 import { readFile, writeFile, mkdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 
-import { REPO_ROOT } from './photos/lib/r2.mjs';
+import { PHOTOS_BASE_URL, REPO_ROOT, derivativeKey } from './photos/lib/r2.mjs';
 
 const DIST = path.join(REPO_ROOT, 'dist');
 const OUT = path.join(REPO_ROOT, '.design-bundle');
@@ -163,10 +163,15 @@ async function buildSheet() {
  * part of the design.
  */
 async function buildLightbox(css, manifest) {
+  if (manifest.length === 0) {
+    throw new Error(
+      'src/data/photos.json is empty — the lightbox card needs at least one ' +
+        'photo. Import photos before running design:bundle.',
+    );
+  }
   const photo = manifest.find((entry) => entry.id === LIGHTBOX_SLUG) ?? manifest[0];
   const index = manifest.indexOf(photo);
-  const url = (slug, w, f = 'webp') =>
-    `https://photos.memerson.com/photos/${slug}/${w}.${f}`;
+  const url = (slug, w, f = 'webp') => `${PHOTOS_BASE_URL}/${derivativeKey(slug, w, f)}`;
 
   // A run centred on the sample, so prev/next cross a shoot boundary and the
   // bloom visibly changes colour — which is the thing worth judging.
@@ -307,7 +312,9 @@ async function buildPage(relPath, { card, group, subtitle, note }) {
 
 async function buildTokens(css) {
   const source = await readFile(path.join(REPO_ROOT, 'src/styles/global.css'), 'utf8');
-  const root = source.match(/:root\s*\{([\s\S]*?)\n\}/)?.[1];
+  // `\n\s*\}` rather than `\n\}`: the closing brace only has to start its own
+  // line, so a formatter indenting it doesn't silently break token extraction.
+  const root = source.match(/:root\s*\{([\s\S]*?)\n\s*\}/)?.[1];
   if (!root) throw new Error('src/styles/global.css has no :root block to render');
 
   const rows = [...root.matchAll(/^\s*(--[\w-]+):\s*([^;]+);/gm)].map(

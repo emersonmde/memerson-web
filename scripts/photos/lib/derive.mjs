@@ -8,6 +8,8 @@
  */
 import sharp from 'sharp';
 
+import { derivativeKey } from './r2.mjs';
+
 /** Never upscale: a 1600px original yields 640/1024/1536 and nothing wider. */
 export const WIDTHS = [640, 1024, 1536, 2048, 2560, 3840, 5120];
 
@@ -114,18 +116,54 @@ export async function deriveAll(slug, buffer) {
   const top = variants.at(-1) ?? 0;
   if (nativeCap > top * 1.1) variants.push(nativeCap);
 
+  /*
+   * Decode once, encode many. Each of the ~17 derivatives per photo used to
+   * start a fresh sharp(buffer) pipeline, paying a full decode of the
+   * multi-megabyte source every time; decoding once to a raw pixel buffer
+   * (with `.rotate()` baking in the EXIF orientation, as before) and feeding
+   * that to every encoder removes the redundant decodes.
+   *
+   * Colour was verified equivalent, not assumed: sharp 0.35.3 does not apply
+   * an embedded ICC transform in either path (measured on a P3-tagged source
+   * — identical output pixels with and without the raw hop), and the outputs
+   * never carried a profile anyway; assertNoMetadata proves that per object.
+   * Depth: raw output defaults to 8-bit, which would quantise 16-bit
+   * TIFF/PNG sources *before* resampling, so those carry 'ushort' through
+   * the hop. Sources in a colourspace a bare raw buffer cannot represent
+   * faithfully (CMYK and friends) keep the old decode-per-derivative path.
+   */
+  const RAW_SAFE_SPACES = new Set(['srgb', 'rgb', 'rgb16', 'b-w', 'grey16']);
+  let openImage;
+  if (RAW_SAFE_SPACES.has(metadata.space)) {
+    const depth = metadata.depth === 'uchar' ? 'uchar' : 'ushort';
+    const { data: pixels, info: rawInfo } = await sharp(buffer, { failOn: 'error' })
+      .rotate()
+      .raw({ depth })
+      .toBuffer({ resolveWithObject: true });
+    const rawInput = {
+      width: rawInfo.width,
+      height: rawInfo.height,
+      channels: rawInfo.channels,
+      ...(depth === 'ushort' ? { depth } : {}),
+    };
+    openImage = () => sharp(pixels, { raw: rawInput, failOn: 'error' });
+  } else {
+    openImage = () => sharp(buffer, { failOn: 'error' }).rotate();
+  }
+
   const objects = [];
   for (const targetWidth of variants) {
     for (const format of FORMATS) {
-      const resized = sharp(buffer, { failOn: 'error' })
-        .rotate()
-        .resize({ width: targetWidth, withoutEnlargement: true });
+      const resized = openImage().resize({
+        width: targetWidth,
+        withoutEnlargement: true,
+      });
 
       const output = await ENCODERS[format](resized, targetWidth).toBuffer();
       await assertNoMetadata(output, `${slug}/${targetWidth}.${format}`);
 
       objects.push({
-        key: `photos/${slug}/${targetWidth}.${format}`,
+        key: derivativeKey(slug, targetWidth, format),
         body: output,
         contentType: CONTENT_TYPES[format],
         cacheControl: DERIVATIVE_CACHE_CONTROL,
@@ -135,8 +173,7 @@ export async function deriveAll(slug, buffer) {
 
   // ~16px WebP inlined as a data URI: 300–500 bytes, so ~12 KB for a 30-photo
   // page, and it costs zero extra requests.
-  const lqipBuffer = await sharp(buffer, { failOn: 'error' })
-    .rotate()
+  const lqipBuffer = await openImage()
     .resize({ width: 16 })
     .webp({ quality: 50, effort: 4 })
     .toBuffer();

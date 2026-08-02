@@ -18,7 +18,7 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { PHOTOS_BASE_URL } from './r2.mjs';
+import { PHOTOS_BASE_URL, derivativeKey } from './r2.mjs';
 
 /**
  * Sonnet-class is the right tier here: small images and a short, heavily
@@ -64,8 +64,17 @@ export const READ_WIDTH = Number(process.env.PHOTOS_READ_WIDTH) || 640;
  */
 export function derivativeUrl(entry, width = READ_WIDTH) {
   const rungs = [...(entry.variants ?? [])].sort((a, b) => a - b);
-  const rung = rungs.find((w) => w >= width) ?? rungs.at(-1) ?? width;
-  return `${PHOTOS_BASE_URL}/photos/${entry.id}/${rung}.webp`;
+  if (rungs.length === 0) {
+    // Falling back to the requested width here would fabricate a key no
+    // upload ever produced — a guaranteed 404 blamed on the network. Name
+    // the real problem instead.
+    throw new Error(
+      `${entry.id}: manifest entry has no variants, so no derivative exists ` +
+        'to read. The entry is malformed — re-import or photos:rebuild this photo.',
+    );
+  }
+  const rung = rungs.find((w) => w >= width) ?? rungs.at(-1);
+  return `${PHOTOS_BASE_URL}/${derivativeKey(entry.id, rung, 'webp')}`;
 }
 
 /**
@@ -138,14 +147,17 @@ export async function askAboutImages(
 ) {
   const dir = await mkdtemp(path.join(tmpdir(), 'photos-describe-'));
   try {
-    const names = [];
-    for (const [index, url] of urls.entries()) {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`${response.status} fetching ${url}`);
-      const name = `${index + 1}.webp`;
-      await writeFile(path.join(dir, name), Buffer.from(await response.arrayBuffer()));
-      names.push(name);
-    }
+    // Downloaded concurrently — these are small derivatives and independent,
+    // so serialising them only added latency per sampled frame.
+    const names = await Promise.all(
+      urls.map(async (url, index) => {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`${response.status} fetching ${url}`);
+        const name = `${index + 1}.webp`;
+        await writeFile(path.join(dir, name), Buffer.from(await response.arrayBuffer()));
+        return name;
+      }),
+    );
 
     const reply = await runClaude(buildPrompt(names), { cwd: dir, model, effort });
     return parseJsonReply(reply);

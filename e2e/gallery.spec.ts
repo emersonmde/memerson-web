@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { gotoSettled, switchView, viewerImageDecoded } from './helpers';
+import { applyFilter, gotoSettled, switchView, viewerImageDecoded } from './helpers';
 import { PHOTO, PHOTO_TITLE, SHOOT_NAME } from './specimens';
 
 /*
@@ -119,12 +119,9 @@ test.describe('view switching', () => {
 test.describe('filter coherence', () => {
   test('the count, the query header and the viewer sequence agree', async ({ page }) => {
     const all = await total(page);
-    await page.fill('[data-find]', SHOOT_NAME.toLowerCase());
-
-    /* The input is debounced, so wait for the observable signal — the query
-       header appearing — before taking any raw counts. */
+    /* applyFilter waits out the debounce before any raw counts are taken. */
+    await applyFilter(page, SHOOT_NAME.toLowerCase());
     const qbar = page.locator('[data-qbar]');
-    await expect(qbar).toBeVisible();
 
     const matching = await shown(page);
     expect(matching).toBeGreaterThan(0);
@@ -158,9 +155,7 @@ test.describe('filter coherence', () => {
   });
 
   test('filtering scopes the rail counts to matching frames', async ({ page }) => {
-    await page.fill('[data-find]', SHOOT_NAME.toLowerCase());
-    /* Debounced input — wait for the filter to have landed before counting. */
-    await expect(page.locator('[data-qbar]')).toBeVisible();
+    await applyFilter(page, SHOOT_NAME.toLowerCase());
     const matching = await shown(page);
     const railState = await page.evaluate(() =>
       Array.from(document.querySelectorAll<HTMLElement>('[data-rail-item]')).map(
@@ -229,10 +224,14 @@ test.describe('the lightbox lifecycle', () => {
     await expect(lb).toBeVisible();
     await viewerImageDecoded(page);
     await expect(lb.locator('.lb-title')).toHaveText(PHOTO_TITLE);
-    /* The viewer writes the frame it shows back to the URL as you step. */
+    /*
+     * The viewer writes the frame it shows back to the URL — debounced to the
+     * settled frame (Safari rate-limits history writes), so poll rather than
+     * assert synchronously after the click.
+     */
     await lb.locator('[data-lb-step="1"]:visible').first().click();
+    await expect.poll(() => page.evaluate(() => location.hash)).not.toBe(`#f-${PHOTO}`);
     expect(await page.evaluate(() => location.hash)).toMatch(/^#f-/);
-    expect(await page.evaluate(() => location.hash)).not.toBe(`#f-${PHOTO}`);
 
     await lb.locator('.lb-close').click();
     await expect(lb).toBeHidden();

@@ -37,17 +37,30 @@ export async function switchView(page: Page, layout: 'sheet' | 'runs' | 'editori
   ).toHaveAttribute('aria-pressed', 'true');
 }
 
-/** Wait until the lightbox's main image has fully decoded. */
+/** Fill the gallery filter and wait for the debounce to land — the query
+ * header appearing is the observable signal that the filter has applied.
+ * Shared for the same reason as switchView: reimplementing the fill-then-wait
+ * pair invites a version that forgets the wait and races the debounce. */
+export async function applyFilter(page: Page, term: string) {
+  await page.fill('[data-find]', term);
+  await expect(page.locator('[data-qbar]')).toBeVisible();
+}
+
+/** The lightbox's main image — one home for the selector. */
+const LB_IMG = '.lb-img';
+
+/** Wait until the lightbox's main image has fully decoded. The
+ * waitForFunction is the real gate (element present, bitmap loaded); the
+ * decode() call then proves the bitmap is actually decodable — a rejection
+ * here is a broken image and must fail the test, not be swallowed. */
 export async function viewerImageDecoded(page: Page) {
-  await page.waitForFunction(() => {
-    const img = document.querySelector<HTMLImageElement>('.lb-img');
+  await page.waitForFunction((sel) => {
+    const img = document.querySelector<HTMLImageElement>(sel);
     return !!img && img.complete && img.naturalWidth > 0;
-  });
-  await page.evaluate(() =>
-    document
-      .querySelector<HTMLImageElement>('.lb-img')!
-      .decode()
-      .catch(() => {}),
+  }, LB_IMG);
+  await page.evaluate(
+    (sel) => document.querySelector<HTMLImageElement>(sel)!.decode(),
+    LB_IMG,
   );
 }
 
@@ -67,6 +80,9 @@ export async function hits(page: Page, selector: string): Promise<boolean> {
       box.left + box.width / 2,
       box.top + box.height / 2,
     );
-    return !!at && (at === el || el.contains(at) || at.contains(el));
+    /* Target or a descendant of it — never an ancestor: an ancestor under
+       the point is exactly the case where the target itself can't take the
+       click. */
+    return !!at && (at === el || el.contains(at));
   }, selector);
 }

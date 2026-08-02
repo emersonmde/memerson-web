@@ -20,9 +20,9 @@
  */
 import { readManifest, writeManifest } from './lib/manifest.mjs';
 import { DESCRIBE_EFFORT, DESCRIBE_MODEL, READ_WIDTH } from './lib/claude.mjs';
-import { describeEntry, needsDescription } from './lib/describe.mjs';
+import { describePending, mergeDescription, needsDescription } from './lib/describe.mjs';
 import { withLock } from './lib/lock.mjs';
-import { pool } from './lib/pool.mjs';
+import { serialWriter } from './lib/serial.mjs';
 
 /** Separate `claude` processes, so this bounds process count, not any API limit. */
 const CONCURRENCY = 4;
@@ -72,41 +72,27 @@ async function main() {
   );
 
   const byId = new Map(manifest.map((entry) => [entry.id, entry]));
-  let done = 0;
-  let failed = 0;
 
-  // Serialised so concurrent photos cannot interleave a read-modify-write.
-  let writeChain = Promise.resolve();
-  const commit = () => {
-    writeChain = writeChain.then(() => writeManifest([...byId.values()]));
-    return writeChain;
-  };
+  // Serialised so concurrent photos cannot interleave a read-modify-write; a
+  // failed write is recorded once and does not poison later commits.
+  const writer = serialWriter();
 
-  await pool(pending, CONCURRENCY, async (entry) => {
-    try {
-      const { tags, caption, title } = await describeEntry(entry);
-      done += 1;
-      console.log(
-        `  [${done + failed}/${pending.length}] ${entry.id}` +
-          `${title ? ` — "${title}"` : ''}\n      ${caption ?? '(no caption)'}` +
-          `\n      ${tags.join(', ')}`,
-      );
-
-      if (dryRun) return;
-      byId.set(entry.id, { ...byId.get(entry.id), tags, caption, title });
-      await commit();
-    } catch (error) {
-      failed += 1;
-      console.error(`  ! ${entry.id}: ${error.message}`);
-    }
+  const { described, failed } = await describePending(pending, {
+    concurrency: CONCURRENCY,
+    dryRun,
+    apply: (entry, description) => {
+      // mergeDescription keeps a hand-written title; the model only fills gaps.
+      byId.set(entry.id, mergeDescription(byId.get(entry.id), description));
+      return writer.write(() => writeManifest([...byId.values()]));
+    },
   });
 
-  await writeChain;
+  const writeErrors = await writer.done();
   console.log(
-    `\n${done} described, ${failed} failed.` +
+    `\n${described} described, ${failed} failed.` +
       (dryRun ? ' Dry run — manifest untouched.' : ' Review the diff before committing.'),
   );
-  if (failed) process.exitCode = 1;
+  if (failed || writeErrors.length > 0) process.exitCode = 1;
 }
 
 withLock(main).catch((error) => {

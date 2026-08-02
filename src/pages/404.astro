@@ -8,7 +8,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
  */
 ---
 
-<BaseLayout title="Not found" description="That page doesn't exist." shooting={true}>
+<BaseLayout
+  title="Not found"
+  description="That page doesn't exist."
+  shooting={true}
+  noindex={true}
+>
   <section class="nf">
     <div class="nf-kicker">SIGNAL LOST</div>
     <div class="nf-sign-wrap">

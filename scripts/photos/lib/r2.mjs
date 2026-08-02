@@ -34,6 +34,15 @@ export const ARCHIVE_BUCKET = 'memerson-photos-archive';
  */
 export const PHOTOS_BASE_URL = 'https://photos.memerson.com';
 
+/**
+ * The canonical shape of a public derivative key. Everything that builds or
+ * checks one — derive, verify, describe, the design bundle — goes through
+ * this, so the shape exists in exactly one place.
+ */
+export function derivativeKey(id, width, format) {
+  return `photos/${id}/${width}.${format}`;
+}
+
 /** Concurrent wrangler processes. Measured sweet spot; see docs/ARCHITECTURE.md §3. */
 const UPLOAD_CONCURRENCY = 8;
 const MAX_ATTEMPTS = 3;
@@ -232,7 +241,16 @@ let authPromise;
 
 /** Every object key in `bucket` under `prefix`, following pagination. */
 export async function listObjects(bucket, prefix = '') {
-  authPromise ??= wranglerAuth();
+  if (!authPromise) {
+    authPromise = wranglerAuth();
+    // A rejected promise cached here would replay the first failure (say, one
+    // transient network error resolving the account) to every later call.
+    // Clear it on rejection so the next call retries; the call that triggered
+    // the failure still sees its own error via the await below.
+    authPromise.catch(() => {
+      authPromise = undefined;
+    });
+  }
   const { token, accountId } = await authPromise;
 
   const keys = [];

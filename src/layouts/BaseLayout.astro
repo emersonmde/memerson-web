@@ -21,6 +21,14 @@ interface Props {
   back?: boolean;
   /** Blog posts are articles to link unfurlers; everything else is a page. */
   publishedAt?: Date;
+  /**
+   * Pages where the serif carries the above-the-fold text (the log's index
+   * and the posts) preload Newsreader alongside the chrome fonts — otherwise
+   * `font-display: swap` renders a cold-cache post in Georgia and reflows.
+   */
+  preloadSerif?: boolean;
+  /** Error pages: emit a robots noindex and no canonical/og:url. */
+  noindex?: boolean;
 }
 
 const {
@@ -30,6 +38,8 @@ const {
   shooting = false,
   back = false,
   publishedAt,
+  preloadSerif = false,
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, SITE_URL).href;
@@ -79,7 +89,7 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
     }
     <title>{title === SITE_TITLE ? title : `${title} | ${SITE_TITLE}`}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -89,7 +99,7 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
         <meta property="article:published_time" content={publishedAt.toISOString()} />
       )
     }
-    <meta property="og:url" content={canonical} />
+    {!noindex && <meta property="og:url" content={canonical} />}
     <meta
       property="og:image"
       content={new URL('/android-chrome-512x512.png', SITE_URL).href}
@@ -117,6 +127,20 @@ const canonical = new URL(Astro.url.pathname, SITE_URL).href;
       type="font/woff2"
       crossorigin
     />
+    {
+      /* The upright serif only — italic appears in <em> and blockquotes, which
+        are rarely above the fold, so preloading it would tax every post for a
+        face the first paint seldom needs. */
+      preloadSerif && (
+        <link
+          rel="preload"
+          href="/fonts/newsreader-var.woff2"
+          as="font"
+          type="font/woff2"
+          crossorigin
+        />
+      )
+    }
 
     {/* Mockup 6g, "Redraw". See docs/UI-DESIGN.md §5.5. */}
     <ClientRouter />

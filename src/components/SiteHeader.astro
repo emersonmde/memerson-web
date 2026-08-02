@@ -1,6 +1,4 @@
 ---
-import { SITE_TITLE } from '../consts';
-
 /**
  * The labels and the hrefs differ on purpose: blog slugs are a contract that has
  * to survive the errorsignal.dev redirect in M2, so the URL cannot become /log.
@@ -32,11 +30,7 @@ const LINKS = [
   <a class="nav-mark" href="/">{back ? '← ' : ''}M.EMERSON</a>
   {
     LINKS.map((link) => (
-      <a
-        href={link.href}
-        aria-current={active === link.key ? 'page' : undefined}
-        title={link.key === 'log' ? `Writing by ${SITE_TITLE}` : undefined}
-      >
+      <a href={link.href} aria-current={active === link.key ? 'page' : undefined}>
         {link.label}
       </a>
     ))

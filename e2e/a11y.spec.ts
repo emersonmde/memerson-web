@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { gotoSettled } from './helpers';
-import { PHOTO } from './specimens';
+import { PHOTO, POST } from './specimens';
 
 /*
  * Accessibility — docs/TESTING.md §3.5. build.test.ts already guards alt text
@@ -19,7 +19,14 @@ import { PHOTO } from './specimens';
 const audit = (page: Page) =>
   new AxeBuilder({ page }).disableRules(['color-contrast']).analyze();
 
-for (const path of ['/', '/photos/', '/blog/', '/about/', '/404.html']) {
+for (const path of [
+  '/',
+  '/photos/',
+  '/blog/',
+  `/blog/${POST}/`,
+  '/about/',
+  '/404.html',
+]) {
   test(`axe finds nothing on ${path}`, async ({ page }) => {
     await gotoSettled(page, path);
     const { violations } = await audit(page);

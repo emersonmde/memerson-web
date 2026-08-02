@@ -124,6 +124,8 @@ const LINKS = [
 
   .about-h1 {
     margin: 0 0 28px;
+    /* A long heading on a narrow column breaks far better balanced than ragged. */
+    text-wrap: balance;
     font: 700 54px/1.05 var(--display);
     letter-spacing: -0.045em;
     color: var(--tx-hi);

@@ -52,11 +52,17 @@
   /* Surfaces */
   --void: #03040a;
   --ink: #05070d;
+  /* Canonical plate/lift surface values. The rgba(8, 11, 19, α) and
+     rgba(11, 17, 32, α) literals below and in component styles are these two
+     tokens with alpha applied — rgba() can't take a hex var without
+     RGB-triplet tokens, and converting every site isn't worth the churn. */
   --plate: #080b13;
   --lift: #0b1120;
   --chrome: #04060c;
   --hairline: rgba(142, 180, 255, 0.13);
   --hairline-soft: rgba(142, 180, 255, 0.09);
+  --hairline-faint: rgba(142, 180, 255, 0.08);
+  --hairline-mid: rgba(142, 180, 255, 0.16);
   --hairline-strong: rgba(142, 180, 255, 0.28);
 
   /* Text */
@@ -284,7 +290,11 @@ label,
 }
 
 .sky-neb-b {
-  background: radial-gradient(42% 36% at 82% 42%, oklch(0.58 0.13 205 / 0.2), transparent 74%);
+  background: radial-gradient(
+    42% 36% at 82% 42%,
+    oklch(0.58 0.13 205 / 0.2),
+    transparent 74%
+  );
 }
 
 /* The log: the violet archive glow hangs high right, cyan pools low left. */
@@ -295,7 +305,11 @@ label,
 }
 
 .neb[data-page='log'] .sky-neb-b {
-  background: radial-gradient(38% 32% at 14% 52%, oklch(0.58 0.13 205 / 0.18), transparent 74%);
+  background: radial-gradient(
+    38% 32% at 14% 52%,
+    oklch(0.58 0.13 205 / 0.18),
+    transparent 74%
+  );
 }
 
 /* About: warm sodium weather, high left — the desk lamp's sky. */
@@ -306,16 +320,28 @@ label,
 }
 
 .neb[data-page='about'] .sky-neb-b {
-  background: radial-gradient(36% 30% at 86% 36%, oklch(0.58 0.13 205 / 0.14), transparent 74%);
+  background: radial-gradient(
+    36% 30% at 86% 36%,
+    oklch(0.58 0.13 205 / 0.14),
+    transparent 74%
+  );
 }
 
 /* Photos: barely there — the gallery is lit by the photographs, not the sky. */
 .neb[data-page='photos'] .sky-neb-a {
-  background: radial-gradient(40% 32% at 22% 26%, oklch(0.42 0.16 296 / 0.14), transparent 72%);
+  background: radial-gradient(
+    40% 32% at 22% 26%,
+    oklch(0.42 0.16 296 / 0.14),
+    transparent 72%
+  );
 }
 
 .neb[data-page='photos'] .sky-neb-b {
-  background: radial-gradient(34% 28% at 80% 40%, oklch(0.58 0.13 205 / 0.1), transparent 74%);
+  background: radial-gradient(
+    34% 28% at 80% 40%,
+    oklch(0.58 0.13 205 / 0.1),
+    transparent 74%
+  );
 }
 
 .sky-far {
@@ -490,8 +516,7 @@ label,
   margin-right: auto;
 }
 
-.nav a,
-.nav-link {
+.nav a {
   font: 500 10px var(--mono);
   letter-spacing: 0.2em;
   color: var(--dim);
@@ -519,7 +544,12 @@ label,
   height: 18px;
   margin-bottom: -18px;
   pointer-events: none;
-  background: linear-gradient(180deg, var(--chrome), rgba(4, 6, 12, 0.7) 45%, rgba(4, 6, 12, 0));
+  background: linear-gradient(
+    180deg,
+    var(--chrome),
+    rgba(4, 6, 12, 0.7) 45%,
+    rgba(4, 6, 12, 0)
+  );
 }
 
 .foot {
@@ -528,7 +558,7 @@ label,
      the screen rather than stopping short of it. */
   height: calc(var(--foot-h) + env(safe-area-inset-bottom, 0px));
   overflow: hidden;
-  border-top: 1px solid rgba(142, 180, 255, 0.08);
+  border-top: 1px solid var(--hairline-faint);
 }
 
 .foot-floor {
@@ -615,7 +645,7 @@ label,
 }
 
 .sec + .sec {
-  border-top: 1px solid rgba(142, 180, 255, 0.08);
+  border-top: 1px solid var(--hairline-faint);
 }
 
 .sec-head {
@@ -839,7 +869,7 @@ html[data-swapped] [data-fx='resolve'] {
   font: 400 9px var(--mono);
   letter-spacing: 0.1em;
   color: var(--dim-4);
-  border: 1px solid rgba(142, 180, 255, 0.16);
+  border: 1px solid var(--hairline-mid);
   padding: 3px 7px;
 }
 
@@ -850,7 +880,7 @@ html[data-swapped] [data-fx='resolve'] {
   padding: 6px 11px;
   cursor: pointer;
   color: var(--dim-4);
-  border: 1px solid rgba(142, 180, 255, 0.16);
+  border: 1px solid var(--hairline-mid);
   background: transparent;
   transition: all 0.16s;
 }
@@ -1117,14 +1147,6 @@ html[data-swapped] [data-fx='resolve'] {
  * components' own <style> blocks, next to the desktop rules they answer.
  * ------------------------------------------------------------------------ */
 
-/* Long headings on a narrow column break far better balanced than ragged. */
-.sign,
-.log-h1,
-.about-h1,
-.post-h1 {
-  text-wrap: balance;
-}
-
 /* ---------- 1100: the wide-desk gutter goes ---------- */
 @media (max-width: 1100px) {
   :root {
@@ -1137,14 +1159,11 @@ html[data-swapped] [data-fx='resolve'] {
   :root {
     --gutter-base: 32px;
     --rail-offset: 44px;
+    --foot-h: 250px;
   }
 
   .sec-title {
     font-size: clamp(38px, 6.6vw, 54px);
-  }
-
-  :root {
-    --foot-h: 250px;
   }
 }
 
@@ -1197,8 +1216,7 @@ html[data-swapped] [data-fx='resolve'] {
     padding: 0 var(--gutter);
   }
 
-  .nav a,
-  .nav-link {
+  .nav a {
     font-size: 9px;
     letter-spacing: 0.13em;
   }

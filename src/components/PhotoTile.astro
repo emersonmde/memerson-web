@@ -18,7 +18,11 @@ import { dottedDay } from '../lib/dates';
  *
  * The lightbox reads the `<source>` elements below rather than a duplicated
  * pair of `data-avif` / `data-webp` srcsets — at 118 tiles on one page that
- * duplication was the single largest thing in the document.
+ * duplication was the single largest thing in the document. The same argument
+ * retired `data-lqip`, `data-alt` and `data-title`: the LQIP is already the
+ * img's inline background-image (~42KB of data URIs, once duplicated), the alt
+ * is the img's own alt, and the title is recoverable from the aria-label — the
+ * script reads all three off the markup (see `src/scripts/tileData.ts`).
  */
 interface Props {
   photo: CollectionEntry<'photos'>;
@@ -85,6 +89,9 @@ const date = dottedDay(takenAt);
  */
 // `||`, not `??`: `date` is '' (never null) for an undated frame, and an
 // untitled, shootless, undated one still needs a name for its aria-label.
+// The aria-label is also where the script reads the title back from —
+// `tileTitle()` strips the "Open " prefix. Change one side of that contract
+// and you must change the other.
 const title = photo.data.title ?? shootName ?? (date || 'Frame');
 const capTitle = photo.data.title;
 const capMeta = [shootName?.toUpperCase(), date].filter(Boolean).join(' · ');
@@ -117,12 +124,9 @@ const capture = [
   data-tile
   data-id={id}
   data-accent={accent ?? undefined}
-  data-alt={alt}
-  data-title={title}
   data-shoot-name={shootName ?? undefined}
   data-series={series ?? undefined}
   data-date={date || undefined}
-  data-lqip={lqip}
   data-tags={photo.data.tags.join('|') || undefined}
   data-bloom={bloom}
   data-camera={photo.data.camera ?? undefined}

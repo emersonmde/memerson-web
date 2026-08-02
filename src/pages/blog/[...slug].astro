@@ -1,8 +1,9 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { AUTHOR } from '../../consts';
+import { publishedPosts } from '../../lib/queries';
 import { readingTime } from '../../lib/readingTime';
 import { dottedDay } from '../../lib/dates';
 
@@ -11,9 +12,7 @@ import { dottedDay } from '../../lib/dates';
  * reduced to a reading-progress hairline. See docs/UI-DESIGN.md §7.
  */
 export async function getStaticPaths() {
-  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-  );
+  const posts = await publishedPosts();
 
   // Prev/next are computed here so each page gets its neighbours as props
   // rather than re-reading the whole collection per route.
@@ -46,6 +45,7 @@ const minutes = readingTime(post.body);
   description={post.data.description}
   active="log"
   back={true}
+  preloadSerif={true}
   publishedAt={post.data.date}
 >
   <div class="progress" data-fx="progress" aria-hidden="true"></div>
@@ -202,6 +202,8 @@ const minutes = readingTime(post.body);
 
   .post-h1 {
     margin: 0;
+    /* A long title on a narrow column breaks far better balanced than ragged. */
+    text-wrap: balance;
     max-width: 640px;
     font: 700 44px/1.08 var(--display);
     letter-spacing: -0.04em;

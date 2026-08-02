@@ -33,19 +33,13 @@
  */
 
 import { chargeDistance, chargeOf, chaseCharge, clamp01, nodeLit } from '../lib/rail';
+// hueAt is shared with the build-time colouring in Astro components: it is a
+// pure function of its argument, so build and runtime sampling one source
+// cannot drift apart. Only the *positions* fed to it differ (index-spaced at
+// build, measured after layout here) — see the note in ramp.ts.
+import { hueAt } from '../lib/ramp';
 
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-/**
- * Sample the accent ramp. Lightness and chroma are locked; only hue moves,
- * which is the property that lets arbitrary sample points coexist. Mirrors the
- * `hueAt` in `src/lib/ramp.ts` and the formula in docs/UI-DESIGN.md §2.
- */
-function hueAt(t: number): string {
-  const u = clamp01(t);
-  const h = u < 0.5 ? 66 + (200 - 66) * (u * 2) : 200 + (286 - 200) * ((u - 0.5) * 2);
-  return `oklch(.80 .17 ${h.toFixed(1)})`;
-}
 
 interface RailNode {
   row: HTMLElement;
@@ -87,6 +81,9 @@ interface FxNode {
 
 let rails: RailScene[] = [];
 let fx: FxNode[] = [];
+
+/** The kinds paint() actually drives — everything else on [data-fx] is inert. */
+const PAINTED_KINDS = new Set(['haze', 'shaft', 'progress', 'proghead', 'resolve', 'tilt']);
 
 /* ------------------------------------------------------------------ measure */
 
@@ -155,6 +152,8 @@ function measure() {
   for (const el of document.querySelectorAll<HTMLElement>('[data-fx]')) {
     const kind = el.dataset.fx!;
     if (kind === 'rail' || kind === 'head' || kind === 'terminal') continue;
+    // Unknown kinds are dropped here rather than carried as per-frame dead work.
+    if (!PAINTED_KINDS.has(kind)) continue;
 
     fx.push({ el, kind, top: 0, last: NaN });
   }
@@ -464,9 +463,26 @@ start();
  */
 document.addEventListener('astro:page-load', start);
 
+/*
+ * Between the swap (and its scroll restoration) and astro:page-load, these
+ * arrays still reference the *previous* document's detached nodes — and a
+ * frame queued before the swap can land in that window. Empty them so a stray
+ * paint() finds nothing rather than writing into a dead tree; page-load's
+ * start() re-measures against the live document.
+ */
+document.addEventListener('astro:before-swap', () => {
+  rails = [];
+  fx = [];
+});
+
 REDUCED.addEventListener('change', () => {
   if (REDUCED.matches) {
+    // Mirror of start()'s add block — all four come off together, so a future
+    // refactor cannot leave one behind to stack on the next start().
     removeEventListener('scroll', onScroll);
+    removeEventListener('scrollend' as 'scroll', scheduleSettle);
+    removeEventListener('resize', scheduleSettle);
+    document.removeEventListener('toggle', scheduleSettle, true);
     listening = false;
     settleStatic();
   } else {

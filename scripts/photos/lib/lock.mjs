@@ -11,7 +11,7 @@
  * who holds it, and a lock whose owner is dead or an hour gone is treated as
  * debris from a crashed run and taken over.
  */
-import { readFile, writeFile, unlink } from 'node:fs/promises';
+import { readFile, stat, writeFile, unlink } from 'node:fs/promises';
 import { unlinkSync } from 'node:fs';
 import path from 'node:path';
 import { REPO_ROOT } from './r2.mjs';
@@ -32,39 +32,92 @@ function isAlive(pid) {
   }
 }
 
-async function acquire() {
+/**
+ * Decide whether an existing lock is genuinely held or debris.
+ *
+ * A lock whose recorded pid is verifiably alive is NEVER stolen, however old
+ * it is — a long run (a full-library re-describe) legitimately outlives any
+ * age cut-off, and stealing a live holder's lock recreates exactly the
+ * concurrent read-modify-write this file exists to prevent. The age check is
+ * only the fallback for locks whose liveness cannot be determined (unreadable
+ * file, no usable pid). Exported for tests; `alive` is injectable for them.
+ */
+export function lockDisposition(held, { now = Date.now(), alive = isAlive } = {}) {
+  if (held && Number.isInteger(held.pid)) {
+    return alive(held.pid) ? 'held' : 'stale';
+  }
+  const age = held?.startedAt ? now - Date.parse(held.startedAt) : Infinity;
+  // An invalid or missing timestamp gives NaN/Infinity, which fails the
+  // comparison — an unreadable lock is treated as debris, as before.
+  return age < STALE_MS ? 'held' : 'stale';
+}
+
+/**
+ * Remove a lock previously judged stale — but only if it is still the same
+ * file that was judged. Between judging and unlinking, another process may
+ * have cleared the debris and written its own live lock; unlinking blindly
+ * would steal it. The inode + mtime pair identifies "the file I judged".
+ * Returns whether the path is now clear. Exported for tests.
+ */
+export async function removeIfSame(lockPath, judged) {
+  try {
+    const current = await stat(lockPath);
+    if (current.ino !== judged.ino || current.mtimeMs !== judged.mtimeMs) return false;
+    await unlink(lockPath);
+    return true;
+  } catch (error) {
+    if (error.code === 'ENOENT') return true; // someone else cleared the debris
+    throw error;
+  }
+}
+
+/**
+ * Take the lock at `lockPath`, or throw if a live holder has it.
+ * Exported (with an injectable path) for tests; production use is `withLock`.
+ */
+export async function acquire(lockPath = LOCK_PATH, { alive = isAlive } = {}) {
   const payload = JSON.stringify({
     pid: process.pid,
     startedAt: new Date().toISOString(),
   });
 
-  // Two attempts: the second is for after clearing a stale lock. A live
-  // holder throws instead of waiting — failing fast is the point.
-  for (let attempt = 0; attempt < 2; attempt++) {
+  // Three attempts: a stale takeover and a lost takeover race each consume
+  // one. A live holder throws instead of waiting — failing fast is the point.
+  for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      await writeFile(LOCK_PATH, `${payload}\n`, { flag: 'wx' });
-      return;
+      await writeFile(lockPath, `${payload}\n`, { flag: 'wx' });
+      // Confirm we actually won. `wx` succeeding means we created the file,
+      // but the takeover path above has a residual window (stat → unlink), so
+      // read our own pid back rather than assuming.
+      const readBack = await readFile(lockPath, 'utf8')
+        .then((raw) => JSON.parse(raw))
+        .catch(() => null);
+      if (readBack?.pid === process.pid) return;
+      continue; // replaced under us — re-evaluate whoever holds it now
     } catch (error) {
       if (error.code !== 'EEXIST') throw error;
 
-      const held = await readFile(LOCK_PATH, 'utf8')
+      // Stat first, then read: if the file changes in between, the inode
+      // guard in removeIfSame refuses and the loop re-evaluates.
+      const judged = await stat(lockPath).catch(() => null);
+      const held = await readFile(lockPath, 'utf8')
         .then((raw) => JSON.parse(raw))
         .catch(() => null);
-      const age = held?.startedAt ? Date.now() - Date.parse(held.startedAt) : Infinity;
 
-      if (held && Number.isInteger(held.pid) && isAlive(held.pid) && age < STALE_MS) {
+      if (lockDisposition(held, { alive }) === 'held') {
         throw new Error(
-          `Another photo command holds the lock (pid ${held.pid}, started ` +
-            `${held.startedAt}). Concurrent runs would lose writes — wait for it, ` +
-            `or delete ${LOCK_PATH} if that process is truly gone.`,
+          `Another photo command holds the lock (pid ${held?.pid ?? 'unknown'}, ` +
+            `started ${held?.startedAt ?? 'unknown'}). Concurrent runs would lose ` +
+            `writes — wait for it, or delete ${lockPath} if that process is truly gone.`,
         );
       }
 
-      // Owner dead, unreadable, or an hour old: a crashed run. Take over.
-      await unlink(LOCK_PATH).catch(() => {});
+      // Judged debris (owner dead, or unreadable and old). Take over — but
+      // only this exact file; a third process may have already replaced it.
+      if (judged) await removeIfSame(lockPath, judged);
     }
   }
-  throw new Error(`Could not acquire ${LOCK_PATH} — another run keeps recreating it.`);
+  throw new Error(`Could not acquire ${lockPath} — another run keeps recreating it.`);
 }
 
 /**

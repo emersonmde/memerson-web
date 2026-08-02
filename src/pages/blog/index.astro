@@ -1,16 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { publishedPosts } from '../../lib/queries';
 import { readingTime } from '../../lib/readingTime';
 
 /**
  * Mockup 6c — the log index. The neon drops away here and serif takes over;
  * the year pins as you pass it. See docs/UI-DESIGN.md §7.
  */
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+const posts = await publishedPosts();
 
 // Grouped by year, newest first, preserving the sort within each group.
 const byYear = new Map<number, CollectionEntry<'blog'>[]>();
@@ -21,10 +19,8 @@ for (const post of posts) {
 }
 const years = [...byYear.entries()].sort((a, b) => b[0] - a[0]);
 
-const monthDay = (d: Date) =>
-  d
-    .toLocaleDateString('en-CA', { timeZone: 'UTC', month: '2-digit', day: '2-digit' })
-    .replace('-', '.');
+// MM.DD from the ISO form — locale-independent, matching isoDay in src/lib/dates.ts.
+const monthDay = (d: Date) => d.toISOString().slice(5, 10).replace('-', '.');
 ---
 
 <BaseLayout
@@ -32,6 +28,7 @@ const monthDay = (d: Date) =>
   description="Writing on side projects, tools, and systems programming."
   active="log"
   back={true}
+  preloadSerif={true}
 >
   <section class="log">
     <div class="page-haze" aria-hidden="true"></div>
@@ -85,6 +82,8 @@ const monthDay = (d: Date) =>
 
   .log-h1 {
     margin: 0;
+    /* A long heading on a narrow column breaks far better balanced than ragged. */
+    text-wrap: balance;
     font: 700 58px/1 var(--display);
     letter-spacing: -0.05em;
     color: var(--tx-hi);

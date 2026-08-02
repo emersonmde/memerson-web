@@ -57,8 +57,9 @@ const photos = defineCollection({
     /** Precomputed so layout needs no image loaded and produces no CLS. */
     aspectRatio: z.number().positive(),
 
-    /** Widths actually generated — never upscaled past the original. */
-    variants: z.array(z.number().int().positive()),
+    /** Widths actually generated — never upscaled past the original. Never
+     * empty: photoUrls.ts throws on an empty ladder, so reject it here too. */
+    variants: z.array(z.number().int().positive()).nonempty(),
     formats: z.array(z.enum(['avif', 'webp'])),
     /** ~16px WebP as a base64 data URI. Inlined; costs no extra request. */
     lqip: z.string(),

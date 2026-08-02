@@ -83,6 +83,10 @@ test('the rail charge, as rendered: on screen, monotonic, in rail order', async 
       expect(s.headOpacity).toBe('1');
       expect(s.headBottom).toBeGreaterThanOrEqual(-2);
       expect(s.headBottom).toBeLessThanOrEqual(s.vh + 2);
+      /* Mid-run the head must carry the `translate3d(0, …)` transform the
+         sampler parses — a null here means fx.ts's format drifted, which
+         would otherwise silently disarm the closed-form check below. */
+      expect(s.headY, 'head transform matches the sampled format').not.toBeNull();
     }
 
     /* The rendered head position agrees with the closed form the design is

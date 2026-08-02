@@ -6,9 +6,22 @@
 # by construction; icons change rarely and can tolerate a day of staleness.
 # HTML deliberately keeps the revalidate default — that is what makes deploys land.
 
+# Baseline security headers on every response. Rules combine: a request
+# matching several blocks gets the headers from all of them (same-named
+# headers are joined, distinct names simply accumulate), so this block adds
+# to the cache blocks below rather than replacing them. No CSP here — the
+# build inlines scripts and styles, which makes a useful CSP non-trivial.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
+# `immutable` under unhashed filenames is a rename-to-change promise: these
+# files are never edited in place — a font update must ship under a new
+# filename, or clients holding the year-long cache never see it.
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
 

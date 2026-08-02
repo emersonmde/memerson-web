@@ -21,11 +21,13 @@ test('every visible viewer control really is on top', async ({ page }) => {
 
   /* Whichever pair of step controls this layout shows — the stage arrows on a
      pointer device, the footer pair on touch — both must be reachable. */
+  let visibleSteps = 0;
   for (const sel of ['.lb-nav', '.lb-step'] as const) {
     const controls = page.locator(sel);
     for (let i = 0; i < (await controls.count()); i++) {
       const control = controls.nth(i);
       if (!(await control.isVisible())) continue;
+      visibleSteps++;
       await expect(control).toBeInViewport();
       const step = await control.getAttribute('data-lb-step');
       expect(
@@ -34,6 +36,9 @@ test('every visible viewer control really is on top', async ({ page }) => {
       ).toBe(true);
     }
   }
+  /* Every layout shows some pair of step controls — if none were visible the
+     loop above asserted nothing and would pass vacuously. */
+  expect(visibleSteps, 'this layout shows at least one step control').toBeGreaterThan(0);
 
   /* The info toggle, and — once open — the capture panel's own way out. */
   expect(await hits(page, '.lb-info')).toBe(true);
