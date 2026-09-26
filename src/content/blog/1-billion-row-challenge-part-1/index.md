@@ -78,7 +78,7 @@ My overall approach was:
 I was pretty familiar with Java's [ExecutorService](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html)
 and [Collections API](https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html)
 but I didn't know if it was even possible to memory map a file in Java.
-Thankfully, after a quick consultation with ChatGPT, I come to find Java
+Thankfully, after a quick consultation with ChatGPT, I came to find Java
 provides [RandomAccessFile](https://docs.oracle.com/javase/8/docs/api/java/io/RandomAccessFile.html)
 and [FileChannel](https://docs.oracle.com/javase/8/docs/api/java/nio/channels/FileChannel.html)
 which can be used to memory map a file. Just what I was looking for!
@@ -182,13 +182,14 @@ At my day job, I've built many Java services both large and small. I was
 familiar with the process of tuning the JVM and garbage collection but have
 rarely needed to do so. I went down the rabbit hole of JVM tuning and
 performance optimization when I learned about [GraalVM](https://www.graalvm.org/)
-and it's [native binary feature](https://www.graalvm.org/latest/reference-manual/native-image/)
+and its [native binary feature](https://www.graalvm.org/latest/reference-manual/native-image/)
 that would compile Java to native machine code. I was excited to see if this
 would provide an advantage over the standard JVM.
 
 In addition to using a native GraalVM binary, I also wanted the JVM to use
 all available system resources regardless of the hardware it was running on.
-This is no easy task as you have to specify at runtime the maximum heap size.
+By default HotSpot caps the heap at a quarter of physical memory, so using
+more means passing `-Xmx` at launch, sized for whatever machine it runs on.
 Off to ChatGPT to write a script to calculate the required settings and
 launch the program.
 
@@ -257,8 +258,11 @@ I also looked into the different garbage collector implementations and took
 note of the [G1 garbage collector](https://docs.oracle.com/en/java/javase/17/gctuning/garbage-first-g1-garbage-collector1.html#GUID-ED3AB6D3-FD9B-4447-9EDF-983ED2F7A573).
 It was designed to provide a high throughput and low latency by using multiple
 threads to perform the garbage collection concurrently with the application
-threads. Thankfully this is already set as the default in newer versions of
-GraalVM.
+threads. G1 has been HotSpot's default since JDK 9, so the JVM build was
+already using it. The native binary was not. GraalVM native images default to
+the Serial GC, and `--gc=G1` is an option to the `native-image` builder, only
+available in Oracle GraalVM on Linux. Passing it at runtime on my Mac, as the
+script above does, did nothing. I missed this at the time.
 
 ### The Results
 
@@ -317,10 +321,10 @@ ending of this journey? It was time to dig deeper!
 
 SIMD, single instruction multiple data, is a feature of most modern CPUs that
 executes the same operation on multiple data points in parallel (Figure 1).
-Utilizing Java's [Vector API](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.incubator.vector/jdk/incubator/vector/Vector.html),
+I used Java's [Vector API](https://docs.oracle.com/en/java/javase/17/docs/api/jdk.incubator.vector/jdk/incubator/vector/Vector.html),
 a platform independent API that compiles to native SIMD instructions on
-supported architectures. I expected to see a significant speed increase
-by preforming the addition, min, and max in parallel.
+supported architectures, and expected to see a significant speed increase
+by performing the addition, min, and max in parallel.
 
 ![SIMD processing pipeline](./SIMD2.png 'Figure 1. SIMD Processing 
 Pipeline By Vadikus - Own work, CC BY-SA 4.0')
@@ -353,7 +357,7 @@ for (; i < values.length - SPECIES.length(); i += SPECIES.length()) {
 
 The next problem was getting all the temperature values for a weather
 station into a single array. Since there is no way to know how many
-temperature values a weather station would have a dynamic list of
+temperature values a weather station would have, a dynamic list of
 temperature values would need to be maintained. I knew this would significantly
 increase the memory usage and introduce additional overhead to copy the data
 into the vector but was hoping the parallel processing would more than make up
@@ -375,10 +379,10 @@ with [`Executors.newVirtualThreadPerTaskExecutor()`](<https://docs.oracle.com/en
 and the JVM handles the rest.
 
 Records are a new feature in Java 16 that provide a compact syntax for
-declaring classes that are transparent holders for immutable data. In
-addition to reducing the amount of boilerplate code, records are designed to
-be more memory efficient and faster than traditional classes. Sounds like a
-win-win proposal to me.
+declaring classes that are transparent holders for immutable data. They are
+ordinary final classes underneath, so the real gain is less boilerplate, but I
+hoped the JIT might treat them more kindly too. Sounds like a win-win proposal
+to me.
 
 ```java
 public record TemperatureRecord(String station, double temperature) {}
@@ -393,7 +397,7 @@ little effect.
 
 So what happened? Surely processing an entire array of temperature values in
 parallel would be faster even with the overhead of copying the data. After
-digging around I found that the preferred species for the Apple's M1
+digging around I found that the preferred species for Apple's M1
 architecture only supports 2 data lanes for double values. This meant
 that the Vector API was only processing 2 temperature values at a time, not
 exactly the parallel processing I was hoping for.
@@ -415,7 +419,7 @@ over the chunk ranges. I'm a huge fan of the Stream API but I initially
 dismissed it assuming it would introduce additional overhead over the
 traditional `ExecutorService`.
 
-I also changed the way process `processChunk()` works. Instead of updating a
+I also changed the way `processChunk()` works. Instead of updating a
 shared `ConcurrentHashMap` I had created a local `HashMap` for each thread and
 merged them at the end. I was hoping this would reduce any lock contention
 and expensive atomic operations that were needed to safely share the `Map`
@@ -459,10 +463,11 @@ String resultString = IntStream.range(0, processors + 2).parallel().mapToObj(i -
 ### Make It So
 
 With some hesitation, I ran the program and was surprised to see it finished
-in almost half the time at 33 seconds. Overall I was pretty happy with the
-result. I could spend many more hours trying to learn the deprecated
+in about half the time, at 33 seconds. I had changed two things at once, the
+parallel stream and the per-thread maps, so I can't say how much of that came
+from each. Overall I was pretty happy with the result. I could spend many more hours trying to learn the deprecated
 `Unsafe` API or adding significant complexity, unrolling loops, and avoiding
-control structures and generic APIs for to squeeze out even more performance,
+control structures and generic APIs to squeeze out even more performance,
 but I'll save that exploration for another day.
 
 ## Lessons Learned
@@ -471,6 +476,6 @@ It seems abundantly obvious in retrospect but optimal performance is much
 more a function of good design and fundamentals than it is about clever
 tricks and exotic APIs. Sure there are many tricks for getting more
 performance out of a system, and they can be useful to know, but it is far
-more important to understand what is happening on a lower level and avoiding
+more important to understand what is happening on a lower level and to avoid
 the common foot-guns that are so tempting to use. Oh, and just use a profiler,
 it's much easier than pulling all levers!

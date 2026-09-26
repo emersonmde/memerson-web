@@ -5,14 +5,14 @@ description: Revisiting the 1 billion row challenge with Rust and Postgres.
 ---
 
 I recently wrote about my solution to the
-[The 1 Billion Row Challenge](/blog/1-billion-row-challenge-part-1), a challenge
+[1 Billion Row Challenge](/blog/1-billion-row-challenge-part-1), a challenge
 that requires you to read 1 billion rows from a text file then calculate the
 min, max, and mean temperature readings for each weather station. The goal was
 to push modern Java's performance to the limit. I have been curious how a
 similar approach would perform in other languages or tools. While I won't be
 accurately benchmarking every solution, I am interested in the rough
 comparison and what the final code would look like. With that out of the way,
-let's dive into a real complied language - Rust.
+let's dive into a real compiled language - Rust.
 
 ## Blazing Fast (TM)
 
@@ -21,7 +21,7 @@ Rust: memory map the file, split it into chunks, process each chunk with a
 thread, then combine the results from each thread. With Rust I knew you can
 customize the hasher for a HashMap, so I wanted to try using a faster hasher
 that did not need to be cryptographically secure. Finally, although SIMD
-didn't dramatically improve performance in Java, I was hoping still building a
+didn't dramatically improve performance in Java, I was still hoping building a
 vector would allow the compiler to optimize the min, max, and sum operations.
 
 With this in mind, I memory mapped the file:
@@ -163,9 +163,10 @@ let results = results.iter().fold(AHashMap::new(), combine_maps);
 Turns out it didn't even finish. I let it run for a few minutes before
 assuming there was an infinite loop or deadlock and killed it. After
 re-reading the code I quickly realized this was just a simple oversight. It
-was obvious once I thought about how the HashMap was being updated. The
-`f64` was being added to the `Vec<f64>` for every line, duplicating the memory
-that was already being read. The worst part was since `Vec` is a dynamic
+was obvious once I thought about how the HashMap was being updated. Every
+one of the billion temperatures was pushed into a `Vec<f64>`, so the program
+tried to hold about 8 GB of readings in memory at once, 8 bytes each, instead
+of a running total per station. The worst part was since `Vec` is a dynamic
 array, it was constantly being sized up requiring a new array to be allocated
 and the data to be painstakingly copied over.
 
@@ -217,8 +218,8 @@ let handle = thread::spawn(move || {
 ## The Race Is On
 
 After the updates, running the program resulted in processing all 1 billion
-rows in just 22 seconds, almost a 30% improvement over the previous Java
-solution.
+rows in just 22 seconds, about a third faster than the 33 seconds of my final
+Java solution.
 
 ```sh
 Benchmark 1: target/release/brc-rs
@@ -269,7 +270,9 @@ tweak to get better performance loading which recommended setting the
 `max_parallel_workers_per_gather`. When going to set this I saw some other
 worker counts and set them all to 10. This would probably cause an issue in a
 production database, but thankfully the load process and query process would
-be isolated.
+be isolated. In hindsight these settings only control parallel queries. `COPY`
+runs in a single backend process, so they did nothing for the load, though
+they may have helped the `SELECT` later.
 
 ```txt
 max_worker_processes = 10		# (change requires restart)
@@ -280,11 +283,13 @@ max_parallel_workers = 10		# maximum number of max_worker_processes that
 
 ## Crunch The Numbers
 
-In addition to the `postgres.conf` settings, I set `maintenance_work_mem`
-for good measure. With that I started copying the data:
+In addition to the `postgresql.conf` settings, I set `maintenance_work_mem`
+for good measure. That did nothing either. Each `psql -c` opens its own
+session, so the setting was gone before `COPY` started, and it mainly governs
+index builds and vacuuming anyway. With that I started copying the data:
 
 ```bash
-time (psql -h localhost -d "challenge" -c "SET maintenance_work_mem = '8GB';" && psql -h localhost -d "challenge" -c "\copy measurements(station_name, temperature) FROM 'measurements.txt' DELIMITER ';' CSV;")
+time (psql -h localhost -d "challenge" -c "SET maintenance_work_mem = '1GB';" && psql -h localhost -d "challenge" -c "\copy measurements(station_name, temperature) FROM 'measurements.txt' DELIMITER ';' CSV;")
 ```
 
 The full load took 5 minutes and 2 seconds and used 45GB of disk space.
@@ -303,7 +308,7 @@ du -ha /opt/homebrew/var/postgresql@14 | sort -h
 ```
 
 This was already many times slower than either of the previous solutions, but
-how long does the calculation actually take now the data is Postgres?
+how long does the calculation actually take now that the data is in Postgres?
 
 ```txt
 time psql -h localhost -d "challenge" -P pager=off -c "SELECT station_name, ROUND(MIN(temperature), 1) AS min_temp, ROUND(AVG(temperature), 1) AS mean_temp, ROUND(MAX(temperature), 1) AS max_temp FROM measurements GROUP BY station_name ORDER BY station_name;"
@@ -313,19 +318,20 @@ psql -h localhost -d "challenge" -P pager=off -c   0.01s user 0.02s system 0% cp
 
 The `SELECT` takes just over a minute to run. This makes sense thinking about
 all of the extra overhead Postgres needs to construct the table and query it.
-Each record needs to be saved in a fixed length format including updating all
-the metadata for the table and Postgres internals. Then the entire table needs
-to be scanned, reading from disk, while preforming arbitrary calculations over
+Every row carries a 23-byte header plus a 4-byte pointer in its page, which
+is roughly 28 GB of bookkeeping for a billion rows before any data is stored.
+That is most of why a 13GB text file became 45GB on disk. Then the entire
+table needs to be scanned, reading from disk, while performing arbitrary calculations over
 the data. It's pretty impressive this can still be done in just about a minute!
 
 ## Conclusion
 
 As expected the Rust solution ended up being the fastest of the three I tried.
-However it was surprising that there wasn't that much difference between the
-Rust and Java version, a real testament to all of the work that has gone into
+However, the gap to Java was smaller than I expected, 22 seconds against 33
+for the same design, a real testament to all of the work that has gone into
 optimizing modern JVM implementations. The results from Postgres were
 surprising in a few different ways. I was expecting loading the data
-efficiently would have been far easier than it turned to out be and I was
+efficiently would have been far easier than it turned out to be and I was
 surprised the final `SELECT` wasn't faster. The upside to the Postgres
 solution was it took me a fraction of the time of the others.
 

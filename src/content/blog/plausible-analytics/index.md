@@ -16,7 +16,7 @@ subjective, the second is more easily measured.
 
 In my day job, analytics is often a crucial part of the software we build.
 Metrics and statistics are collected for just about anything measurable,
-from clicks, to API calls, to host metrics, and everything inbetween. Amazon
+from clicks, to API calls, to host metrics, and everything in between. Amazon
 has a huge array of tools and services for collecting, storing, and analyzing
 metrics. However, for my personal projects, I don't need anything nearly as
 complex, leaving aside the effort it would take to recreate similar tooling
@@ -30,7 +30,7 @@ journey, one of the first videos I stumbled upon was
 [a video](https://www.youtube.com/watch?v=6xXSsu0YXWo) by
 [Theo - t3.gg](https://www.youtube.com/@t3dotgg) where he showcases two
 alternatives to Google Analytics: Plausible and PostHog. While PostHog is
-incredible powerful, it's overkill for my needs. Plausible is exactly what I
+incredibly powerful, it's overkill for my needs. Plausible is exactly what I
 was looking for: a simple, open source, privacy-friendly alternative to
 Google Analytics.
 
@@ -39,14 +39,14 @@ Google Analytics.
 Setting up Plausible can be incredibly simple. All you need to get started
 is an account and a script provided by Plausible that records events. Each
 new account comes with a 30 day free trial with no up front payment details
-required. After the free trial the service costs £9/month for up to 10,000
+required. After the free trial the service costs £9/month, about $12 at the time, for up to 10,000
 page views with the option of [self-hosting](https://plausible.io/self-hosted-web-analytics)
 for free. In my case, another $12/month subscription wasn't ideal, but
 something I would gladly pay for a privacy focused alternative to the big
 players in the space.
 
 Since there is no credit card required to sign up,
-[creating an account](https://plausible.io/register) was straight forward.
+[creating an account](https://plausible.io/register) was straightforward.
 After signing up, you register your domain in their dashboard and are
 presented with a script tag to include in your website.
 
@@ -71,7 +71,7 @@ to protect against cross domain tracking from companies like Google and Meta,
 but I'm not against website owners collecting metrics on their own site.
 Thankfully Plausible has a [guide on setting up a proxy](https://plausible.io/docs/proxy/introduction)
 to bypass the simple matching logic used by most ad blockers. In this guide
-they also provide a interesting breakdown of the privacy focused aspects of
+they also provide an interesting breakdown of the privacy focused aspects of
 using Plausible:
 
 > Plausible is simply doing web analytics the way it was at the start before
@@ -104,7 +104,7 @@ easier than I expected to get the new endpoint working.
 In Plausible's guide on [setting up a proxy](https://plausible.io/docs/proxy/introduction),
 they provide samples for many different hosting services but none for API
 Gateway or CDK. The good news is this is only a few lines of code if you
-already have a API Gateway defined in CDK.
+already have an API Gateway defined in CDK.
 
 ```typescript
 const api = new apigateway.RestApi(...);
@@ -124,9 +124,9 @@ ensures that the request is passed through to the target without modification.
 ![Plausible proxy setup in API Gateway](./apig_screenshot.png ' ')
 
 After setting up the proxy API, the [event script](https://plausible.io/js/script.js)
-can be downloaded and hosted in with the rest of the static files. Just make
+can be downloaded and hosted with the rest of the static files. Just make
 sure you don't name it `plausible.js` as your ad blocker will helpfully
-block anything that with that keyword.
+block anything with that keyword.
 
 Once the proxy and self hosted script are in place, the script tag can be
 updated with the new values.
@@ -142,7 +142,7 @@ updated with the new values.
 
 ### Referral Metrics
 
-One of the metrics I was interested in seeing was to see how many people
+One of the metrics I was interested in was how many people
 followed the link from my blog to my older site which mainly hosts my
 photography. When I first set up Plausible, I noticed all the sources
 were "None/Direct". In order to provide a more useful source, Plausible
@@ -152,8 +152,8 @@ supports using a `ref` query parameter that can be set on any shared links.
 <a href="https://your-domain.com?ref=blog" target="_blank" rel="noopener">Link</a>
 ```
 
-With this in place, metrics from both of my domains are now being flowing in
-with the correct referral source despite using an ad blocker.
+With this in place, metrics from both of my domains are now flowing in
+with the correct referral source, even from visitors using an ad blocker.
 
 ## Profit
 

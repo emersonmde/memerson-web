@@ -9,8 +9,8 @@ IDEs. It really started with using [IntelliJ](https://www.jetbrains.com/idea/)
 for Java at work. I was impressed with the number of useful tools and features
 that came with IntelliJ from refactoring code, to code completions including
 dependencies, to an excellent built in debugger and so much more. All of these
-made me far more efficent writing Java with IntelliJ than I was in other
-languages. At the time I was a a devout Vim acolyite and spent many late
+made me far more efficient writing Java with IntelliJ than I was in other
+languages. At the time I was a devout Vim acolyte and spent many late
 nights trying to find the optimal setup. As it turns out IntelliJ's default
 settings covered almost everything I wanted. In comparison my Vim setup was
 lacking many of the features I came to rely on which would take significant
@@ -18,12 +18,12 @@ effort to replicate with far less polish in Vim. It wasn't long before I was
 paying for the JetBrains All Products bundle for side projects as well.
 
 While [IdeaVim](https://github.com/JetBrains/ideavim) was good enough to
-provide familiar Vim motions and some basic features there were ocasionally
+provide familiar Vim motions and some basic features, there were occasionally
 more complex commands that I wanted to use that I found were missing. I also
 didn't get into fully configuring IdeaVim, relying more on the IntelliJ
 configuration options. Beyond IdeaVim, there were other downsides that are
 obvious from the start but were secondary to the functionality offered. The
-intense indexing process often made the IDE unusable at times and lead to very
+intense indexing process often made the IDE unusable at times and led to very
 slow start up times. There are few programs that devour RAM faster than
 Chrome, but IntelliJ often wins out. Also JetBrains releases specific versions
 of Idea with integrations and tools for specific languages such as PyCharm for
@@ -40,26 +40,26 @@ IntelliJ and other similar full featured IDEs. After some investigation, setups
 like these were pretty common and to my surprise they didn't take thousands of
 lines of custom VimScript or a host of plugins. Many of these context aware
 features came from the usage of [language servers](https://langserver.org/).
-These language servers implment the
+These language servers implement the
 [Language Server Protocol](https://microsoft.github.io/language-server-protocol/),
 a standard protocol originally developed by Microsoft and used in VSCode to
 allow language maintainers and communities to build code aware capabilities
-agosnotic of the editor.
+agnostic of the editor.
 
 Although I knew these setups existed and there were great video walkthroughs
 available, I knew this could be a significant time sink. To avoid the
-enividible start up cost I turned to a NeoVim distrobution,
+inevitable start up cost I turned to a NeoVim distribution,
 [LunarVim](https://www.lunarvim.org/). This distro looks great and comes with
 batteries included designed as a fully working IDE. As good as this sounded
 at first, I quickly ran into issues I had with the provided defaults and
 found myself diving into the config anyway. The downside was now I had to
 learn the LunarVim abstractions on top of the underlying plugins and NeoVim
-config. I ended up abandonding the exparimient and returning to the world of
+config. I ended up abandoning the experiment and returning to the world of
 JetBrains.
 
 ## NeoVim Kickstart
 
-After a few more months had past, I came across
+After a few more months had passed, I came across
 [NeoVim Kickstart](https://github.com/nvim-lua/kickstart.nvim), a small well
 documented starting config that includes completions, LSP servers, and looks
 great out of the box. There was also
@@ -70,8 +70,8 @@ does and how to further customize it.
 
 ![NeoVim Kickstart Screenshot](./neovim_beginning_screenshot.png ' ')
 
-This was a great way to get into NeoVim. Its written all in Lua, not my
-preference but signficiantly better than bespoke VimScript, and since it is
+This was a great way to get into NeoVim. It's written all in Lua, not my
+preference but significantly better than bespoke VimScript, and since it is
 well documented it was easy to add on to or change as needed. I found it struck
 the perfect balance between predefined functionality and customizability.
 
@@ -87,7 +87,7 @@ Mason can automatically install and configure the
 which works well enough but did not automatically recognize Lombok annotations.
 This seemed odd because it has a Lombok setting which defaults to true. Some
 posts online suggested including the Lombok JAR and specifying it in the Java
-falgs in the JDT-LS settings. Sounds easy enough.
+flags in the JDT-LS settings. Sounds easy enough.
 
 I spent the next few hours learning Lua and creating an
 [initialization function](https://github.com/emersonmde/.dotfiles/commit/ae30c7cd369348841817ea04191491d82aaa6488)
@@ -257,7 +257,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 ```
 
-## Whats Left?
+## What's Left?
 
 Java was the only real gap to fill. Besides Java, I added `vim-tmux-navigator`:
 
@@ -311,7 +311,7 @@ require('lualine').setup {
 }
 ```
 
-With these few changes, NeoVim has quickly become my go to IDE. It's snappy,
+With these few changes, NeoVim has quickly become my go-to IDE. It's snappy,
 functional, easy to add on to, and it looks great. I think I may have found the
 long awaited IntelliJ killer, it just happened to be lurking in the background
 all along.

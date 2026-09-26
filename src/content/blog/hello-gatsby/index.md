@@ -37,9 +37,9 @@ project that includes building, testing, linting, formatting, and code coverage.
 After years of working with proprietary and public CI/CD solutions, the ease of
 use and general applicability of GitHub Actions blew me away.
 
-One of the best parts of GitHub Actions is the extensive community that have built
+One of the best parts of GitHub Actions is the extensive community that has built
 out many common CI/CD tasks, one of which is deploying directly to [GitHub Pages](https://pages.github.com/).
-Without the need to setup any keys, permissions, or targets, an action such as
+Without the need to set up any keys, permissions, or targets, an action such as
 [JamesIves/github-pages-deploy-action](https://github.com/JamesIves/github-pages-deploy-action) can deploy any directory from the build
 directly to a branch (such as `gh-pages`).
 
@@ -82,12 +82,12 @@ This was exactly what I was looking for. The best part about this workflow, it d
 to GitHub Pages which is completely free! No more worrying about the hidden cost
 of auto scaling serverless solutions. The last piece of the puzzle was a way to
 manage and edit blog posts as markdown files without the need to create a bespoke
-backend solution. Thats where Gatsby comes in.
+backend solution. That's where Gatsby comes in.
 
 ## The Almost Great Gatsby
 
 [Gatsby](https://www.gatsbyjs.com/) is an open source framework based on React that includes a
-[GraphQL data layer](https://www.netlify.com/platform/connect/) and works out of the box to compile
+[GraphQL data layer](https://www.gatsbyjs.com/docs/reference/graphql-data-layer/) and works out of the box to compile
 and build fully featured React websites. There are also many starter templates that
 make it easy to get up and running. In this case, I chose to start with the
 [Gatsby's Starter Blog](https://github.com/gatsbyjs/gatsby-starter-blog):
@@ -124,10 +124,10 @@ be uploaded to any static website host. Also since Gatsby is a React based
 framework, there was no need for me to learn yet another frontend framework.
 
 Alright, what's the catch? So far everything I've wanted to do has been on the
-happy path. Its not clear how much trouble it would be to customize Gatsby,
+happy path. It's not clear how much trouble it would be to customize Gatsby,
 although it does support plugins. Also including a full GraphQL data layer on
 top of React with additional support for SEO, Server Side Rendering, Deferred
-Static Generation, and more means this is anything but light weight. I'm already
+Static Generation, and more means this is anything but lightweight. I'm already
 not a big fan of learning GraphQL to access files and data, but only time will tell
 if scaling or extending this website in the future proves to be more trouble than
 it's worth.
