@@ -140,11 +140,25 @@ test('no long frames during scroll and viewer open/close', async ({ page }) => {
    * long-animation-frame entry only exists at ≥50ms; what this asserts is
    * that no frame *blocks* meaningfully past the 50ms deadline.
    */
+  /*
+   * Only frames that *start* after this point count. Even with
+   * `buffered: false`, the observer is handed the page's own first render,
+   * which ends before it attaches: on /photos that frame lays out the whole
+   * unpaginated library, so its cost grows with every import. Counting it made
+   * this test fail on content churn (§1), and it measures load, not the scroll
+   * and viewer work this test is about.
+   */
   await page.evaluate(() => {
-    const w = window as never as { __loaf: number[]; __obs: PerformanceObserver };
+    const w = window as never as {
+      __loaf: number[];
+      __obs: PerformanceObserver;
+      __t0: number;
+    };
     w.__loaf = [];
+    w.__t0 = performance.now();
     w.__obs = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
+        if (entry.startTime < w.__t0) continue;
         w.__loaf.push(
           (entry as PerformanceEntry & { blockingDuration: number }).blockingDuration,
         );
@@ -167,8 +181,13 @@ test('no long frames during scroll and viewer open/close', async ({ page }) => {
      "sleep and hope the callback ran". */
   const blocking = await page.evaluate(async () => {
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-    const w = window as never as { __loaf: number[]; __obs: PerformanceObserver };
+    const w = window as never as {
+      __loaf: number[];
+      __obs: PerformanceObserver;
+      __t0: number;
+    };
     for (const entry of w.__obs.takeRecords()) {
+      if (entry.startTime < w.__t0) continue;
       w.__loaf.push(
         (entry as PerformanceEntry & { blockingDuration: number }).blockingDuration,
       );

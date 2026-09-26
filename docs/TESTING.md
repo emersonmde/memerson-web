@@ -5,7 +5,24 @@ npm test            # build, then every node:test suite
 npm run test:unit   # pure logic only, no build needed (~0.1s)
 npm run check       # astro check — types and diagnostics, keep at 0
 npm run test:e2e    # real-browser suite (Playwright); builds + previews dist itself
+npm run test:ui     # every project except perf (182 tests)
+npm run test:perf   # perf only, without its dependencies (3 tests, ~10s)
 ```
+
+Which of these a change needs is tabled in `AGENTS.md` under "Verification gates".
+Measured 2026-09-26 on a 16-core M-series Mac:
+
+| Step                      | Wall | CPU   |
+| ------------------------- | ---- | ----- |
+| `npm run build`           | ~1s  | ~1s   |
+| `npm run check`           | ~4s  | ~5s   |
+| `node --test` (all)       | <1s  | ~1s   |
+| `npm run test:e2e` (full) | ~61s | ~680s |
+| `npm run test:perf`       | ~10s | ~15s  |
+
+Nearly all the cost is Chromium. The perf project `dependencies` on every other
+project so its traces run on a quiet machine; the price is that
+`--project perf` without `--no-deps` re-runs the entire suite.
 
 Layers 1 and 2 use no test framework and no dependencies: Node 24 runs TypeScript
 and ships `node:test`. Note that `node --test` wants file paths or a glob, **not**

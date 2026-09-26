@@ -44,6 +44,8 @@ npm run check            # astro check — types + diagnostics; keep at 0 errors
 npm test                 # build, then the full suite
 npm run test:unit        # pure logic only, no build (~0.1s)
 npm run test:e2e         # real-browser suite (Playwright); builds + previews dist itself
+npm run test:ui          # the same minus perf — for markup, CSS and non-motion script changes
+npm run test:perf        # perf traces alone (--no-deps), ~10s — for fx/redraw/animation changes
 npm run format           # prettier
 npm run deploy           # build, then wrangler deploy (needs `wrangler login` first)
 npx wrangler deploy --dry-run   # validate wrangler.jsonc without deploying
@@ -70,12 +72,29 @@ npm run design:bundle    # snapshot the built site for Claude Design → .design
 Start the dev server in background mode so it doesn't block: `npx astro dev --background`,
 then `astro dev stop` / `status` / `logs [--follow]`.
 
-**Verification gates: `npm run check` at 0, `npm test` green, and `npm run test:e2e`
-green.** Layers 1–2 use Node's built-in runner — no framework, no dependencies — and
+**Verification gates scale with what changed.** `npm run check` at 0 and `npm test` green
+are always required; together they take about five seconds. The browser suite costs about
+a minute with most cores busy, so run the tier the change needs, and run it **once**:
+
+| Change                                                          | Also run                              |
+| --------------------------------------------------------------- | ------------------------------------- |
+| Content only: posts, projects YAML, photo imports, copy         | nothing more                          |
+| Markup, CSS, components, non-motion scripts (`photos.ts` etc.)  | `npm run test:ui`                     |
+| `fx.ts`, `redraw.ts`, scroll or animation CSS, viewer lifecycle | `npm run test:ui`, then `test:perf`   |
+| Dependency upgrades, config, anything unsure; before a release  | `npm run test:e2e` (all of the above) |
+
+Content needs no browser because the browser specs use fixed specimens (one post, the
+first tiles), and `tests/build.test.ts` already checks every built page's links, alt text
+and heading structure. To re-run one failure, target it:
+`npx playwright test e2e/<file>:<line> --project <name>`. Never re-run perf with
+`--project perf` alone — it depends on every other project and re-runs the whole suite;
+`npm run test:perf` passes `--no-deps`.
+
+Layers 1–2 use Node's built-in runner — no framework, no dependencies — and
 `node --test` needs file paths or a glob, not a bare directory. Layer 3 is Playwright
-(the one test devDependency besides axe), running against `astro preview` in seven
-breakpoint projects; its pixel baselines live in `e2e/__screenshots__/` and are
-macOS-only by policy.
+(the one test devDependency besides axe), running against `astro preview` in eight
+projects: desktop, six breakpoint widths, and a touch phone. Its pixel baselines live in
+`e2e/__screenshots__/` and are macOS-only by policy.
 
 Tests assert **invariants, not pixel values**, because content changes constantly: every
 project lengthens the rail, every photo lengthens the gallery. A test that would break
