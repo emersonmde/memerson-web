@@ -317,7 +317,7 @@ data or splitting the lines. It would have been easy to run this through a
 profiler and see exactly what the problem was but who wants to spoil the
 ending of this journey? It was time to dig deeper!
 
-### A wild SIMD appears
+### Reaching for SIMD
 
 SIMD, single instruction multiple data, is a feature of most modern CPUs that
 executes the same operation on multiple data points in parallel (Figure 1).
@@ -388,7 +388,7 @@ to me.
 public record TemperatureRecord(String station, double temperature) {}
 ```
 
-### Send It
+### The Second Results
 
 Ready to be blown away, I ran the program and.. it was about the same, this
 time around 63 seconds. This could easily be chalked up to a few extra
@@ -460,7 +460,7 @@ String resultString = IntStream.range(0, processors + 2).parallel().mapToObj(i -
 .collect(Collectors.joining(", "));
 ```
 
-### Make It So
+### Per-Thread Maps
 
 With some hesitation, I ran the program and was surprised to see it finished
 in about half the time, at 33 seconds. I had changed two things at once, the

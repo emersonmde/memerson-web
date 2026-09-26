@@ -31,7 +31,7 @@ Python or RubyMine for Ruby but that often results in managing multiple
 applications and switching between them or accepting some tradeoffs by using
 language specific plugins in IntelliJ.
 
-## Back To The Future
+## NeoVim, Again
 
 I saw coworkers, streamers, and YouTubers using NeoVim and noticed these new
 setups looked far better than what was available when I was daily driving Vim.
@@ -96,7 +96,7 @@ outside of Mason. In the end I realized this would be painful to maintain in
 the future. Some of the links had to be hard coded, some required special
 handlers to verify checksums, and all of the steps required seemed fragile.
 
-## This Is The Way
+## Letting Mason Do the Work
 
 I decided to start over, leaning on Mason to download and maintain the JDT
 language server and the Lombok JAR but instead of using Mason-LspConfig I would
@@ -257,7 +257,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 ```
 
-## What's Left?
+## The Rest of the Config
 
 Java was the only real gap to fill. Besides Java, I added `vim-tmux-navigator`:
 

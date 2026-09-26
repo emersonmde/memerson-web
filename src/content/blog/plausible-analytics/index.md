@@ -12,7 +12,7 @@ projects. However, I still hope to provide value to others who may be
 exploring these topics for the first time. While the first goal is mostly
 subjective, the second is more easily measured.
 
-## The World of Analytics
+## Choosing an Analytics Service
 
 In my day job, analytics is often a crucial part of the software we build.
 Metrics and statistics are collected for just about anything measurable,
@@ -155,7 +155,7 @@ supports using a `ref` query parameter that can be set on any shared links.
 With this in place, metrics from both of my domains are now flowing in
 with the correct referral source, even from visitors using an ad blocker.
 
-## Profit
+## What the Dashboard Shows
 
 So what do you get after all of this? Plausible provides a dashboard to view
 aggregated user metrics. The data updates in near real time and allows you
@@ -173,5 +173,5 @@ graphs for Top Sources, Top Pages, Locations, and Devices.
 Overall I've been extremely pleased with how simple this process was along with
 the great documentation which had an answer for most of the problems I faced.
 It remains to be seen if I will end up getting $12/month of value out of the
-service and start paying for it full time, but I cannot recommend it enough if
-you need a simple privacy focused analytics solution.
+service and start paying for it full time, but I'd recommend it to anyone who
+needs a simple, privacy focused analytics solution.

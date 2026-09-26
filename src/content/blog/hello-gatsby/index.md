@@ -35,7 +35,7 @@ which has a section on CI/CD pipelines. The book provides a single workflow
 configuration file, less than 100 lines, that can be used as a start for any Rust
 project that includes building, testing, linting, formatting, and code coverage.
 After years of working with proprietary and public CI/CD solutions, the ease of
-use and general applicability of GitHub Actions blew me away.
+use and general applicability of GitHub Actions surprised me.
 
 One of the best parts of GitHub Actions is the extensive community that has built
 out many common CI/CD tasks, one of which is deploying directly to [GitHub Pages](https://pages.github.com/).

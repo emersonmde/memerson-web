@@ -75,6 +75,13 @@ actually witnessed and measured, not because of verbal mannerisms.
 - **Short declaratives are load-bearing beams — budget one or two per post,** placed
   where the argument actually turns. An aphorism every paragraph reads as fortune
   cookies.
+- **Keep the connective tissue.** Matthew's sentences run long and link up with
+  conversational turns: "Granted", "Turns out", "Thankfully", "It seems abundantly
+  obvious in retrospect". Idioms he actually uses stay: "bread and butter", "down the
+  rabbit hole", "happy path", "foot-guns". Clipped subject-verb-number sentences read
+  as AI-generated to him (feedback, 2026-09-26). When removing a joke, keep the
+  sentence's shape and swap the one excited word, rather than rebuilding it as short
+  declaratives.
 - **The dramatic one-sentence paragraph is a single-use tool per post,** reserved for
   material that has earned the weight. As a repeated beat it's a laugh track.
 
@@ -143,8 +150,11 @@ something. One dry joke defuses the pretension of a big claim better than any he
 ## Calibration examples
 
 Old: "Ready to be blown away, I ran the program and.. it was about the same."
-New: "I ran the program expecting a large improvement. It finished in 63 seconds — about
-the same."
+Rejected as robotic (2026-09-26): "I ran the program expecting a large improvement. It
+finished in 63 seconds — about the same."
+Proposed, pending review: "With SIMD, virtual threads, and records all in place, I was expecting a big
+jump, but the program finished in around 63 seconds, about the same as before." The
+letdown lands through the list of what went in, not through an exclamation.
 
 Old header: "A wild SIMD appears" → New header: "Trying SIMD"
 

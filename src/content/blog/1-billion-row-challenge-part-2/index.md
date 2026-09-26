@@ -14,7 +14,7 @@ accurately benchmarking every solution, I am interested in the rough
 comparison and what the final code would look like. With that out of the way,
 let's dive into a real compiled language - Rust.
 
-## Blazing Fast (TM)
+## The Same Plan in Rust
 
 I had an approach from the Java solution that I wanted to try to implement in
 Rust: memory map the file, split it into chunks, process each chunk with a
@@ -158,7 +158,7 @@ let results = results.iter().fold(AHashMap::new(), combine_maps);
 
 ```
 
-## To Infinity
+## A Run That Never Finished
 
 Turns out it didn't even finish. I let it run for a few minutes before
 assuming there was an infinite loop or deadlock and killed it. After
@@ -170,7 +170,7 @@ of a running total per station. The worst part was since `Vec` is a dynamic
 array, it was constantly being sized up requiring a new array to be allocated
 and the data to be painstakingly copied over.
 
-## A New Hope
+## Totals Instead of Vectors
 
 I decided to forget about SIMD and compiler optimizations for
 now and change this implementation to more closely match the Java solution.
@@ -215,7 +215,7 @@ let handle = thread::spawn(move || {
 });
 ```
 
-## The Race Is On
+## The Results
 
 After the updates, running the program resulted in processing all 1 billion
 rows in just 22 seconds, about a third faster than the 33 seconds of my final
@@ -281,7 +281,7 @@ max_parallel_maintenance_workers = 10	# taken from max_parallel_workers
 max_parallel_workers = 10		# maximum number of max_worker_processes that
 ```
 
-## Crunch The Numbers
+## Five Minutes to Load, One to Query
 
 In addition to the `postgresql.conf` settings, I set `maintenance_work_mem`
 for good measure. That did nothing either. Each `psql -c` opens its own
